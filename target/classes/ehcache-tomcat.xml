@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="true" monitoring="autodetect"
+         dynamicConfig="true" >
+
+	<transactionManagerLookup class="net.sf.ehcache.transaction.manager.DefaultTransactionManagerLookup" properties="" propertySeparator=":"/>
+
+   	<defaultCache maxElementsInMemory="1000"
+        eternal="false"
+        overflowToDisk="false"
+        timeToIdleSeconds="1800"
+        timeToLiveSeconds="86400"
+        diskPersistent="false"
+        memoryStoreEvictionPolicy="LFU"/>
+    
+    <cache name="SimplePageFragmentCachingFilter"
+           maxElementsInMemory="100000"
+           eternal="false"
+           timeToIdleSeconds="1800"
+           timeToLiveSeconds="86400"
+           overflowToDisk="false">
+    </cache>
+
+	<cache name="com.siriuserp.sdk.dm.User" 
+		maxElementsInMemory="1000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"
+		memoryStoreEvictionPolicy="LFU"/>
+	
+	<cache name="com.siriuserp.sdk.dm.UserRole" 
+		maxElementsInMemory="1000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"
+		memoryStoreEvictionPolicy="LFU"/>
+		
+	<cache name="com.siriuserp.sdk.dm.Profile" 
+		maxElementsInMemory="100"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"
+		memoryStoreEvictionPolicy="LFU"/>
+	
+	<cache name="com.siriuserp.sdk.dm.Role" 
+		maxElementsInMemory="100"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"
+		memoryStoreEvictionPolicy="LFU"/>
+	
+	<cache name="com.siriuserp.sdk.dm.Currency" 
+		maxElementsInMemory="10"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"
+		memoryStoreEvictionPolicy="LFU"/>
+		
+	<cache name="com.siriuserp.sdk.dm.Tax" 
+		maxElementsInMemory="10"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"
+		memoryStoreEvictionPolicy="LFU"/>
+    
+    <cache name="com.siriuserp.sdk.dm.ModuleGroup" 
+		maxElementsInMemory="1000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"
+		memoryStoreEvictionPolicy="LFU"/>
+       
+    <cache name="com.siriuserp.sdk.dm.Module" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"
+		memoryStoreEvictionPolicy="LFU"/> 
+	
+	<cache name="com.siriuserp.sdk.dm.ModuleDetail" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"
+		memoryStoreEvictionPolicy="LFU"/> 
+	
+	<cache name="com.siriuserp.sdk.dm.AccessibleModule" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"
+		memoryStoreEvictionPolicy="LFU"/>
+		
+	<cache name="com.siriuserp.sdk.dm.AccountingPeriod" 
+		maxElementsInMemory="10000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.AccountingSchema" 
+		maxElementsInMemory="10000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.ClosingAccount" 
+		maxElementsInMemory="10000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.ClosingAccountType" 
+		maxElementsInMemory="1000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"/>
+    
+    <cache name="com.siriuserp.sdk.dm.ChartOfAccount" 
+		maxElementsInMemory="10000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"/>
+       
+    <cache name="com.siriuserp.sdk.dm.GLAccount" 
+		maxElementsInMemory="10000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.GLAccountType" 
+		maxElementsInMemory="100"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"/>
+	    
+    <cache name="com.siriuserp.sdk.dm.JournalEntry" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+	
+	<cache name="com.siriuserp.sdk.dm.JournalEntryDetail" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.Exchange" 
+		maxElementsInMemory="5000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+	
+	<cache name="com.siriuserp.sdk.dm.GLAccountBalance" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.BankAccount" 
+		maxElementsInMemory="200"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.PartyBankAccount" 
+		maxElementsInMemory="1000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.Billing" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.Billing.lineItems" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.LineItem" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.ConsignmentSalesOrderItem" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.GASSalesOrderItem" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+	
+	<cache name="com.siriuserp.sdk.dm.ManualBillingItem" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.DeliveryOrderRealizationItem" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.Shipment" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.ShipmentItem" 
+		maxElementsInMemory="250000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.Organization" 
+		maxElementsInMemory="10000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.Person" 
+		maxElementsInMemory="10000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.ProductCategory" 
+		maxElementsInMemory="10000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400"
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.Product" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.ProductPrice" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+	
+	<cache name="com.siriuserp.sdk.dm.VehicleType" 
+		maxElementsInMemory="1000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"/>
+	
+	<cache name="com.siriuserp.sdk.dm.Vehicle" 
+		maxElementsInMemory="1000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.VehicleMaintenance" 
+		maxElementsInMemory="1000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.VehicleComponent" 
+		maxElementsInMemory="1000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.FixedAssetGroup" 
+		maxElementsInMemory="1000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.FixedAssetClosingInformation" 
+		maxElementsInMemory="10000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.FixedAsset" 
+		maxElementsInMemory="10000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.Preasset" 
+		maxElementsInMemory="10000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.TransportOutsourceRoute" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.TransportOutsourceRoutePrice" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.TransportOutsourceContract" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.TransportOutsourceRouteCostComponent" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.TransportOutsourceMasterCost" 
+		maxElementsInMemory="1000"
+		eternal="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.TransportOutsourceRouteCostComponentHistory" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.ProductInOutTransaction" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.ProductInOutAveragePrice" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.GoodsReceipt" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+		
+	<cache name="com.siriuserp.sdk.dm.StandardSalesOrder" 
+		maxElementsInMemory="100000"
+		eternal="false" 
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="86400" 
+		overflowToDisk="false"/>
+  
+  	<cacheManagerPeerListenerFactory class="org.terracotta.ehcachedx.monitor.probe.ProbePeerListenerFactory" properties="monitorAddress=localhost, monitorPort=9889, memoryMeasurement=true"/>
+</ehcache>

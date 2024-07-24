@@ -1,0 +1,225 @@
+/**
+ * Jan 3, 2008 3:12:27 PM
+ * com.siriuserp.sdk.utility
+ * GeneratorHelper.java
+ */
+package com.siriuserp.sdk.utility;
+
+import java.lang.reflect.Method;
+import java.util.Date;
+
+import com.siriuserp.sdk.dao.CodeSequenceDao;
+import com.siriuserp.sdk.dm.CodeSequence;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.TableType;
+import com.siriuserp.sdk.exceptions.ServiceException;
+
+/**
+ * @author Agung Dodi Perdana
+ * Sirius Indonesia, PT
+ * www.siriuserp.com
+ */
+public class GeneratorHelper
+{
+	private static GeneratorHelper helper = null;
+
+	public GeneratorHelper()
+	{
+	}
+
+	public CodeSequence create(TableType type, Date date) throws ServiceException
+	{
+		return create(type, null, date);
+	}
+
+	public CodeSequence create(TableType type, String company, Date date) throws ServiceException
+	{
+		CodeSequence codeSequence = new CodeSequence();
+
+		if (SiriusValidator.validateParam(company))
+			codeSequence.setCompany(company);
+
+		codeSequence.setType(type);
+		codeSequence.setDay(DateHelper.getDayAsInt(date));
+		codeSequence.setMonth(DateHelper.toMonth(date));
+		codeSequence.setYear(DateHelper.getYear(date));
+
+		return codeSequence;
+	}
+
+	public static synchronized CodeSequence check(TableType type, CodeSequenceDao codeSequenceDao, String code, Date date)
+	{
+		return codeSequenceDao.load(date, code, type, CodeSequence.YEAR);
+	}
+
+	public static synchronized CodeSequence check(TableType type, CodeSequenceDao codeSequenceDao, String code, Date date, Long sequence)
+	{
+		return codeSequenceDao.load(date, code, type, sequence);
+	}
+
+	public static synchronized GeneratorHelper instance()
+	{
+		if (GeneratorHelper.helper == null)
+			GeneratorHelper.helper = new GeneratorHelper();
+
+		return GeneratorHelper.helper;
+	}
+
+	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao) throws ServiceException
+	{
+		return generate(tableType, codeSequenceDao, "", null, CodeSequence.YEAR);
+	}
+
+	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, String code) throws ServiceException
+	{
+		return generate(tableType, codeSequenceDao, code, null, CodeSequence.YEAR);
+	}
+
+	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, Party organization) throws ServiceException
+	{
+		return generate(tableType, codeSequenceDao, organization.getCode(), null, CodeSequence.YEAR);
+	}
+
+	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, Party organization, Date date) throws ServiceException
+	{
+		return generate(tableType, codeSequenceDao, organization.getCode(), date, CodeSequence.YEAR);
+	}
+
+	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, Date date, Long sequence) throws ServiceException
+	{
+		return generate(tableType, codeSequenceDao, null, date, sequence);
+	}
+
+	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, String code, Date date, Long sequence) throws ServiceException
+	{
+		if (date == null)
+			date = DateHelper.today();
+
+		CodeSequence codeSequence = codeSequenceDao.load(date, code, tableType, sequence);
+		int index = 0;
+
+		if (codeSequence == null)
+			codeSequence = create(tableType, code, date);
+
+		try
+		{
+			Method method = CodeSequence.class.getMethod("getSequence" + sequence, new Class[]
+			{});
+			if (method != null)
+			{
+				Object object = method.invoke(codeSequence, new Object[]
+				{});
+				if (object != null)
+					index = (Integer) object;
+
+				index++;
+			}
+
+			Method set = CodeSequence.class.getMethod("setSequence" + sequence, new Class[]
+			{ int.class });
+			if (set != null)
+			{
+				set.invoke(codeSequence, new Object[]
+				{ index });
+
+				codeSequenceDao.merge(codeSequence);
+			}
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new ServiceException("Code generation fail for " + tableType, e);
+		}
+
+		switch (tableType)
+		{
+		case BARCODE_PRODUCT:
+		case BARCODE_MOVING:
+			return barcode(codeSequence, index);
+		case RECEIVABLES_CONTRA_BON:
+		case RECEIVABLES_DEDUCTION:
+			return print(codeSequence, index);
+		case GOODS_ISSUE_SEQUENCE:
+		case MOVING_CONTAINER_ISSUE_SEQUENCE:
+			return sequence(codeSequence, index);
+		default:
+			return format(codeSequence, index);
+		}
+	}
+
+	private String format(CodeSequence codeSequence, Integer index)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(codeSequence.getType().getCode());
+		sb.append(" ");
+
+		if (SiriusValidator.validateParam(codeSequence.getCompany()))
+		{
+			sb.append(codeSequence.getCompany());
+			sb.append(" - ");
+		} else
+			sb.append("- ");
+
+		sb.append(String.valueOf(codeSequence.getYear()).substring(2));
+		sb.append(" ");
+
+		String sCode = "" + index;
+
+		for (int idx = 0; idx < (codeSequence.getType().getLength() - sCode.trim().length()); idx++)
+			sb.append("0");
+
+		sb.append(index);
+
+		return sb.toString();
+	}
+
+	private String sequence(CodeSequence codeSequence, Integer index)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(codeSequence.getCompany().split(",")[1]);
+		sb.append(".");
+		sb.append(index);
+
+		return sb.toString();
+	}
+
+	private String print(CodeSequence codeSequence, Integer index)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(codeSequence.getType().getCode());
+		sb.append("/");
+		sb.append(DateHelper.PRINT.format(DateHelper.today()));
+		sb.append(".");
+
+		if (SiriusValidator.validateParam(codeSequence.getCompany()))
+			sb.append(codeSequence.getCompany());
+
+		String sCode = "" + index;
+
+		for (int idx = 0; idx < (codeSequence.getType().getLength() - sCode.trim().length()); idx++)
+			sb.append("0");
+
+		sb.append(".");
+		sb.append(index);
+
+		return sb.toString();
+	}
+
+	private String barcode(CodeSequence codeSequence, Integer index)
+	{
+		StringBuilder barcode = new StringBuilder();
+
+		if (SiriusValidator.validateParam(codeSequence.getCompany()))
+			barcode.append(codeSequence.getCompany());
+
+		barcode.append(codeSequence.getYear());
+
+		String sCode = "" + index;
+
+		for (int idx = 0; idx < (codeSequence.getType().getLength() - sCode.trim().length()); idx++)
+			barcode.append("0");
+
+		barcode.append(index);
+
+		return barcode.toString();
+	}
+}

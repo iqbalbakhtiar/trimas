@@ -1,0 +1,39 @@
+@CHARSET "ISO-8859-1";
+
+.main_container
+{
+	border: 0px solid white;
+	height:100%;
+	position: relative;
+	visibility: inherit;
+	position:relative ;
+	left: 0px;
+	background-color: white;
+	page-break-before: auto;
+	page-break-after: auto;
+	font-size: 12px;
+}
+div#footer
+{
+	display:none;
+}
+
+div#quick_link_container
+{
+	display:none;
+}
+
+table
+{
+	font-family: Verdana;
+	font-size: 9px;
+}
+
+table td
+{
+	vertical-align: top;
+}
+div.page_end{
+	page-break-after: always !important;
+	page-break-inside: avoid;
+}

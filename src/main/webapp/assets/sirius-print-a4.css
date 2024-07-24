@@ -1,0 +1,159 @@
+@media print {
+	html, body {
+		display: block;
+		margin: 0;
+		padding: 0;
+	}
+	.hide-print {
+		display: none;
+	}
+	.main-container {
+		border: 0px;
+	}
+	.watermark {
+		background-image: url('images/watermark.png');
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: auto;
+	}
+	.main-box{
+		height: 100% !important;
+		min-height: 100% !important;
+		margin: 0px !important;
+		padding: 0px !important;
+	}
+	.area {
+		display: none !important;
+	}
+	#se-contents{
+		width: 100%;
+		margin: 0 !important;
+		padding: 0 !important;
+		height: 100% !important;
+
+	}
+	#se-navigator {
+		display: none;
+	}
+	#r11 {
+		height: auto;
+		width: 100%;
+		margin: 0 !important;
+		padding:0 !important;
+	}
+	#footer{
+		display: none;
+	}
+	.page-break{
+		page-break-after: always;
+	}
+	#se-containers {
+		width: 100%;
+		margin: none !important;
+		background : none !important;
+	}
+
+	td, th{
+		white-space: normal !important;
+	}
+}
+/* LAYOUT STYLE */
+
+body {
+	margin: 0px !important;
+	padding: 0px !important;
+}
+.main-box{
+	page-break-after: avoid !important;
+	padding: 0 ;
+	margin: 0;
+}
+.main_container {
+	background-color: white;
+	page-break-inside: auto !important;
+	page-break-before: avoid !important;
+	width: 100%;
+	margin: 0px;
+}
+
+.print-title {
+	display: block;
+	width: 100%;
+	position: relative;
+	text-align: left;
+}
+.print-address{
+	display: block;
+	width: 100%;
+	text-align: left;
+}
+
+.table-content {
+	table-layout: fixed;
+	page-break-inside: always !important;
+	width: 100%;
+	padding:0;
+	margin: 0px;
+}
+.table-content tr td{
+	vertical-align: top;
+	word-wrap: break-word;
+}
+.table-content tr td div{
+	height: 2.5em;
+	overflow: hidden;
+}
+.table-content tbody tr td{
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+/* BORDER STYLE */
+.border-left {
+	border-left: 2px solid black;
+}
+
+.border-right {
+	border-right: 2px solid black;
+}
+
+.border-top {
+	border-top: 2px solid black;
+}
+
+.border-bottom {
+	border-bottom: 2px solid black;
+}
+.border-bottom-thin {
+	border-bottom: 1px solid black;
+}
+
+.bordered {
+	border: 2px solid black;
+}
+
+/* FONT CSS */
+.main_container {
+	font-family: calibri;
+	letter-spacing: 2px;
+}
+.print-title-company{
+	font-size: 16px;
+	font-weight: bold;
+}
+.print-title {
+	font-size: 18px;
+	font-weight: bold;
+}
+.print-address{
+	font-size: 12px;
+}
+.table-content {
+	font-size: 12px;
+}
+.table-content thead th{
+	font-size: 14px;
+}
+.print-footer{
+	font-size:9px;
+}

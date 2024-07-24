@@ -1,0 +1,2 @@
+<input type="submit" class="btn" style="WIDTH:60px; HEIGHT:25px" value='<spring:message code="sirius.search"/>' onclick="searchPopup();"/>
+<input type="button" class="btn" style="WIDTH:60px; HEIGHT:25px" value='<spring:message code="sirius.reset"/>' onclick="reloadPopup();"/>

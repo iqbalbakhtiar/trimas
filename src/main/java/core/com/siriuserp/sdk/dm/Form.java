@@ -1,0 +1,85 @@
+/**
+ * 
+ */
+package com.siriuserp.sdk.dm;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import javolution.util.FastList;
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * @author Betsu Brahmana Restu
+ * Sirius Indonesia, PT
+ * betsu@siriuserp.com
+ *
+ */
+
+@Getter
+@Setter
+public class Form implements SiriusForm
+{
+	private static final long serialVersionUID = 2074583835581144873L;
+
+	private Date date;
+	private Date approvalDate;
+	private Date validFrom;
+	private Date validTo;
+
+	private String code;
+	private String name;
+	private String legend;
+	private String note;
+	private String reason;
+	private String requester;
+	private String contactPerson;
+	private String remark;
+	private String url;
+	private String uri;
+
+	private Long no;
+	private Long syncId;
+	private Long referenceId;
+
+	private Party organization;
+	private Facility facility;
+	private Party person;
+	private Party party;
+	private Party owner;
+	private Party customer;
+	private Party supplier;
+	private Party approver;
+	private Party forwardTo;
+	private Party completedBy;
+
+	private PostalAddress postalAddress;
+
+	private Tax tax;
+	private Tax extTax1;
+	private Tax extTax2;
+
+	private Currency currency;
+	private Exchange exchange;
+	private ExchangeType exchangeType;
+	private TableType tableType;
+
+	private BigDecimal amount = BigDecimal.ZERO;
+	private BigDecimal discount = BigDecimal.ZERO;
+	private BigDecimal rounding = BigDecimal.ZERO;
+	private BigDecimal deliveryCost = BigDecimal.ZERO;
+	private BigDecimal rate = BigDecimal.ONE;
+	private BigDecimal extTax1Rate = BigDecimal.ZERO;
+	private BigDecimal total = BigDecimal.ZERO;
+
+	private boolean base = true;
+	private boolean enabled = true;
+
+	private MultipartFile file;
+
+	private final List<Item> items = new FastList<Item>();
+}

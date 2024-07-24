@@ -1,0 +1,71 @@
+.main_container
+{
+	border: 0px solid white;
+	height:100%;
+	position: relative;
+	visibility: inherit;
+	position:relative ;
+	left: 0px;
+	background-color: white;
+	page-break-before: auto;
+	page-break-after: auto;	
+}
+
+.report-table {
+	width:100%;
+	font-family: Verdana;
+	font-size: 9px;
+}
+
+
+.report-table-scroll-horizontal {
+	
+	width:140%;
+	font-family: Verdana;
+	font-size: 9px;
+	overflow: scroll; /* Scrollbar are always visible */
+	overflow: auto; /* Scrollbar is displayed as it's needed */
+}
+
+.pageTitle{
+	color: #000080;
+	font-size: 20px;
+	font-weight: bold;
+}		
+
+.margin-left {margin-left:0px;}
+
+.report-table td
+{
+	vertical-align: top;
+}
+
+.report-table-scroll-horizontal td
+{
+	vertical-align: top;
+}
+
+.top{
+	border-top:solid 1px black;
+}
+
+.bottom{
+	border-bottom:solid 1px black;
+}
+
+.right{
+	border-right:solid 1px black;
+}
+
+.left{
+	border-left:solid 1px black;
+}
+
+.top{
+	border-top:solid 1px black;
+}
+
+.br{
+	border-bottom:solid 1px black;
+	border-right:solid 1px black;
+}
