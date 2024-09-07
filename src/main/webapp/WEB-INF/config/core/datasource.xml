@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:context="http://www.springframework.org/schema/context" xmlns:jee="http://www.springframework.org/schema/jee"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xmlns:osgi="http://www.springframework.org/schema/osgi"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+			http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd">
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>/WEB-INF/properties/hibernate.properties</value>
+		</property>
+	</bean>
+
+	<!-- 
+		<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+			<property name="jndiName" value="jdbc/siriusERP1.5" />
+		</bean>
+	
+		<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+			<property name="driverClass"><value>${hibernate.connection.driver_class}</value></property>
+		   	<property name="jdbcUrl"><value>${hibernate.connection.url}</value></property>
+		   	<property name="user"><value>${hibernate.connection.username}</value></property>
+		   	<property name="password"><value>${hibernate.connection.password}</value></property>
+		  	
+		  	<property name="minPoolSize" value="3" />
+			<property name="maxPoolSize" value="100" />
+			<property name="maxStatementsPerConnection" value="30" />
+			<property name="maxStatements" value="0" />
+			<property name="idleConnectionTestPeriod" value="3000" />
+			<property name="loginTimeout" value="300" />
+	</bean>
+	-->
+	
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<property name="dataSourceClassName"><value>${hibernate.hikari.dataSourceClassName}</value></property>
+		<property name="dataSourceProperties">
+	        <props>
+	            <prop key="url">${hibernate.connection.url}</prop>
+	            <prop key="user">${hibernate.connection.username}</prop>
+	            <prop key="password">${hibernate.connection.password}</prop>
+	        </props>
+   		</property>
+	   	<property name="idleTimeout" value="10000" />
+	   	<property name="maxLifetime" value="720000" />
+		<property name="minimumIdle" value="1" />
+		<property name="maximumPoolSize" value="20" />
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean" p:dataSource-ref="dataSource">
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				
+				<!-- 
+				use this if JTA datasource is used
+					
+				<prop key="hibernate.pretty">20</prop> 
+				<prop key="hibernate.show_sql">true</prop> 
+				<prop key="hibernate.connection.release_mode">after_statement</prop>
+				<prop key="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</prop>
+				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.SunONETransactionManagerLookup</prop>
+				 -->
+				<prop key="hibernate.connection.release_mode">auto</prop>
+				<prop key="hibernate.dynamic-update">true</prop>
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+			</props>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>com.siriuserp.*.dm</value>
+				<value>com.siriuserp.*.dm.*</value>
+				<value>com.siriuserp.*.*.dm</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 
+	<bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager"/>	
+	 -->
+	<bean class="org.springframework.orm.hibernate4.HibernateExceptionTranslator"/>
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" mode="proxy" proxy-target-class="true"/>
+</beans>

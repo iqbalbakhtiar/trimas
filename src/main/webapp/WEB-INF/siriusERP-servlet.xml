@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<context:component-scan base-package="com.siriuserp">
+		<context:include-filter type="regex" expression="(controller)\..*" />
+		<context:include-filter type="regex" expression="(remote)\..*" />
+	</context:component-scan>
+
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	
+	<mvc:interceptors>
+		<mvc:interceptor>
+	        <mvc:mapping path="/pages/*"/>
+	        <bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+	            <property name="cacheSeconds" value="0"/>
+	            <property name="useExpiresHeader" value="true"/>
+	            <property name="useCacheControlHeader" value="true"/>
+	            <property name="useCacheControlNoStore" value="true"/>
+	        </bean>
+	    </mvc:interceptor>
+	    <mvc:interceptor>
+	        <mvc:mapping path="/js/*"/>
+	        <bean id="jsContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+	            <property name="cacheSeconds" value="0"/>
+	            <property name="useExpiresHeader" value="true"/>
+	            <property name="useCacheControlHeader" value="true"/>
+	            <property name="useCacheControlNoStore" value="true"/>
+	        </bean>
+	    </mvc:interceptor>
+		<bean class="org.springframework.orm.hibernate4.support.OpenSessionInViewInterceptor">
+			<property name="sessionFactory" ref="sessionFactory" />
+		</bean>
+		<bean class="com.siriuserp.security.PageAccessLevelInterceptor"/>
+		<bean class="org.springmodules.validation.valang.javascript.taglib.ValangRulesExportInterceptor"/>
+	</mvc:interceptors>
+	
+	<bean id="exceptionResolver" class="com.siriuserp.sdk.springmvc.SiriusExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="com.siriuserp.sdk.exceptions.UserSessionExpired">login</prop>
+				<prop key="org.hibernate.LazyInitializationException">login</prop>
+				<prop key="java.lang.RuntimeException">dataAccessFailure</prop>
+				<prop key="javax.el.PropertyNotFoundException">dataAccessFailure</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages" />
+	</bean>
+
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize">
+			<value>300000</value>
+		</property>
+	</bean>
+
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"/>
+
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="order" value="2" />
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/pages/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<bean id="resourceBundleResolver" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+		<property name="order" value="1" />
+		<property name="cache" value="true" />
+	</bean>
+
+	<bean id="sessionConversationAttributeStore" class="com.siriuserp.security.SessionConversationAttributeStore">
+   		<property name="numConversationsToKeep" value="10"/>
+	</bean>
+
+	<bean id="globalBinding" class="com.siriuserp.security.GlobalBindingInitializer"/>
+
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+	    <property name="sessionAttributeStore">
+	        <ref bean="sessionConversationAttributeStore"/>
+	    </property>
+	    <property name="webBindingInitializer">
+	        <ref bean="globalBinding"/>
+	    </property>
+	</bean>
+</beans>

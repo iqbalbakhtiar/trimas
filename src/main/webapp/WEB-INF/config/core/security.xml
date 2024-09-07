@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <bean id="springSecurityFilterChain" class="org.springframework.security.util.FilterChainProxy">
+        <property name="filterInvocationDefinitionSource">
+            <value>
+                CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+                PATTERN_TYPE_APACHE_ANT
+                /**=httpSessionContextIntegrationFilter,authenticationProcessingFilter,remoteUserFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor
+            </value>
+        </property>        
+    </bean>
+		
+    <bean id="filterInvocationInterceptor" class="org.springframework.security.intercept.web.FilterSecurityInterceptor">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="accessDecisionManager" ref="accessDecisionManager"/>
+        <property name="objectDefinitionSource"><ref local="objectDefinitionSource"/></property>        
+    </bean>
+    
+    <bean id="objectDefinitionSource" class="com.siriuserp.security.DaoBasedFilterInvocationDefinitionSource"/>
+    
+    <bean id="authenticationManager" class="org.springframework.security.providers.ProviderManager">
+        <property name="providers">
+            <list>
+                <ref local="daoAuthenticationProvider"/>
+                <ref local="anonymousAuthenticationProvider"/>
+            </list>
+        </property>
+    </bean>
+   
+    <bean id="loggerListener" class="org.springframework.security.event.authentication.LoggerListener"/>
+    
+    <bean id="daoAuthenticationProvider" class="org.springframework.security.providers.dao.DaoAuthenticationProvider">
+         <property name="userDetailsService" ref="userService"/>
+         <property name="passwordEncoder" ref="passwordEncoder"/>
+    </bean>
+
+     <bean id="passwordEncoder" class="org.springframework.security.providers.encoding.ShaPasswordEncoder">
+     	<constructor-arg value="512"/>
+ 	</bean>
+
+    <bean id="anonymousAuthenticationProvider" class="org.springframework.security.providers.anonymous.AnonymousAuthenticationProvider">
+        <property name="key" value="anonymous"/>
+    </bean>
+
+    <bean id="roleVoter" class="org.springframework.security.vote.RoleVoter">
+        <property name="rolePrefix" value=""/>
+    </bean>
+
+    <bean id="accessDecisionManager" class="org.springframework.security.vote.AffirmativeBased">
+        <property name="allowIfAllAbstainDecisions" value="false"/>
+        <property name="decisionVoters">
+            <list>
+                <ref local="roleVoter"/>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="httpSessionContextIntegrationFilter" class="org.springframework.security.context.HttpSessionContextIntegrationFilter"/>
+    
+    <bean id="authenticationProcessingFilter" class="org.springframework.security.ui.webapp.AuthenticationProcessingFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authenticationFailureUrl" value="/page/signin.htm"/>
+        <property name="defaultTargetUrl" value="/page/dashboard.htm"/>
+        <property name="filterProcessesUrl" value="/j_spring_security_check"/>
+        <property name="alwaysUseDefaultTargetUrl" value="true"/>
+    </bean>
+    
+    <bean id="anonymousProcessingFilter" class="org.springframework.security.providers.anonymous.AnonymousProcessingFilter">
+        <property name="key" value="anonymous"/>
+        <property name="userAttribute" value="anonymous,ANONYMOUS"/>
+    </bean>
+        
+    <bean id="remoteUserFilter" class="org.springframework.security.wrapper.SecurityContextHolderAwareRequestFilter"/>
+
+    <bean id="authenticationProcessingFilterEntryPoint" class="org.springframework.security.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+        <property name="loginFormUrl" value="/page/signin.htm"/>
+        <property name="forceHttps" value="false"/>
+    </bean>
+   
+   <bean id="exceptionTranslationFilter" class="org.springframework.security.ui.ExceptionTranslationFilter">
+		<property name="authenticationEntryPoint" ref="authenticationProcessingFilterEntryPoint"/>
+		<property name="accessDeniedHandler">
+			<bean class="com.siriuserp.security.dao.impl.SiriusAccessDeniedHandlerImpl">
+				<property name="errorPage" value="/pages/accessDenied.jsp"/>
+			</bean>
+		</property>
+	</bean>
+   
+    <bean id="channelProcessingFilter" class="org.springframework.security.securechannel.ChannelProcessingFilter">
+        <property name="channelDecisionManager" ref="channelDecisionManager"/>
+        <property name="filterInvocationDefinitionSource">
+            <value>
+               PATTERN_TYPE_APACHE_ANT
+               /login*=REQUIRES_SECURE_CHANNEL
+               /j_spring_security_check*=REQUIRES_SECURE_CHANNEL
+               /signup.html*=REQUIRES_SECURE_CHANNEL
+               /page/*=REQUIRES_SECURE_CHANNEL
+            </value>
+        </property>
+    </bean>
+
+    <bean id="channelDecisionManager" class="org.springframework.security.securechannel.ChannelDecisionManagerImpl">
+        <property name="channelProcessors">
+            <list>
+                <bean class="org.springframework.security.securechannel.SecureChannelProcessor"/>
+                <bean class="org.springframework.security.securechannel.InsecureChannelProcessor"/>
+            </list>
+        </property>
+    </bean>
+</beans>

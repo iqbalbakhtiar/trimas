@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context" 
+		xmlns:jee="http://www.springframework.org/schema/jee"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xs">
+
+	<context:component-scan base-package="com.siriuserp.*.dao.impl, com.siriuserp.*.*.dao.impl"/>
+	
+	<context:component-scan base-package="com.siriuserp.*.editor, com.siriuserp.*.*.editor, com.siriuserp.*.springmvc.editor"/>
+
+	<context:component-scan base-package="com.siriuserp.*.aspect"/>
+	
+	<context:component-scan base-package="com.siriuserp.*.interceptor, com.siriuserp.*.*.interceptor"/>
+
+	<context:component-scan base-package="com.siriuserp.*.service, com.siriuserp.*.*.service"/>
+	
+	<context:component-scan base-package="com.siriuserp.*.process, com.siriuserp.*.*.process"/>
+	
+	<context:component-scan base-package="com.siriuserp.*.transformer"/>
+	
+	<context:component-scan base-package="com.siriuserp.*.utility, com.siriuserp.*.util, com.siriuserp.*.*.util"/>
+
+	<context:component-scan base-package="com.siriuserp.*.posting, com.siriuserp.*.*.posting"/>
+	
+	<context:component-scan base-package="com.siriuserp.*.sibling, com.siriuserp.*.*.sibling"/>
+</beans>

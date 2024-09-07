@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 	xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	
+	<bean id="cashBankTransactionExpenseValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ date : ? is not null : 'Date cannot be empty' : '' }
+				{ organization : ? is not null : 'Organization cannot be empty' : '' }
+				{ currency : ? is not null : 'Currency cannot be empty' : '' }
+				{ amount : ? is not null : 'Amount cannot be empty' : '' }
+				{ exchangeType : ? is not null : 'Exchange Type cannot be empty' : '' }
+				{ bankAccount : ? is not null : 'Bank Account cannot be empty' : '' }
+				{ journalSchema : ? is not null : 'Journal Schema cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="standardSalesOrderValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ billingAddress : ? is not null : 'Billing Address cannot be empty' : '' }
+				{ taxAddress : ? is not null : 'Tax Address cannot be empty' : '' }
+				{ shippingAddress : ? is not null : 'Shipping Address cannot be empty' : '' }
+				{ approver : ? is not null : 'Approver cannot be empty' : '' }
+				{ salesPerson : ? is not null : 'Sales Person cannot be empty' : '' }
+				{ currency : ? is not null : 'Currency cannot be empty' : '' }
+				{ exchangeType : ? is not null : 'Exchange Type cannot be empty' : '' }
+				{ customer : ? is not null : 'Customer cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="doRealizationCostComponentValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ currency : ? is not null : 'Currency cannot be empty' : '' }
+				{ tax : ? is not null : 'Tax cannot be empty' : '' }
+				{ supplier : ? is not null : 'Supplier cannot be empty' : '' }
+				{ cost : ? is not null : 'Sales Master Cost cannot be empty' : '' }
+				{ amount : ? is not null : 'Amount cannot be empty' : '' }
+				{ deliveryOrderRealization : ? is not null : 'Delivery Order Realization cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="salesMasterCostValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ name : ? is not blank : 'Name cannot be empty' : '' }
+				{ type : ? is not null : 'Type cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="spbuReceiptValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ organization : ? is not null : 'Organizaation cannot be empty' : '' }
+				{ date : ? is not null : 'Date cannot be empty' : '' }
+				{ receiveDate : ? is not null : 'Receive Date cannot be empty' : '' }
+				{ tank : ? is not null : 'Tank cannot be empty' : '' }
+				{ shift : ? is not null : 'Shift cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="spbuShiftValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ organization : ? is not null : 'Organizaation cannot be empty' : '' }
+				{ date : ? is not null : 'Date cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="spbuNozzleValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ name : (? is not blank and length(?) < 51) : 'Name cannot be empty' : ''}
+				{ organization : ? is not null : 'Organizaation cannot be empty' : '' }
+				{ tank : ? is not null : 'Tank cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="spbuTankLevelValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ level : ? is not null : 'Level cannot be empty' : '' }
+				{ volume : ? is not null : 'Volume cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="spbuTankValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ name : (? is not blank and length(?) < 51) : 'Name cannot be empty' : ''}
+				{ organization : ? is not null : 'Organizaation cannot be empty' : '' }
+				{ product : ? is not null : 'Product cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="gasSalesOrderValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ date : ? is not null : 'Date cannot be empty' : '' }
+				{ customer : ? is not null : 'Customer cannot be empty' : '' }
+				{ organization : ? is not null : 'Organizaation cannot be empty' : '' }
+				{ tax : ? is not null : 'Tax cannot be empty' : '' }
+				{ salesPerson : ? is not null : 'Sales Person 1 cannot be empty' : '' }
+				{ location : ? is not null : 'Location for Gas Station cannot be empty' : '' }
+				{ currency : ? is not null : 'Currency cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="shipmentItemValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ date : ? is not null : 'Date cannot be empty' : '' }
+				{ bankAccount : ? is not null : 'Bank Account cannot be empty' : '' }
+				{ customer : ? is not null : 'Customer cannot be empty' : '' }
+				{ contract : ? is not null : 'Contract cannot be empty' : '' }
+				{ destination : ? is not null : 'Destination cannot be empty' : '' }
+				{ driver : ? is not null : 'Driver cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="shipmentValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ date : ? is not null : 'Date cannot be empty' : '' }
+				{ organization : ? is not null : 'Company cannot be empty' : '' }
+				{ vehicle : ? is not null : 'Vehicle cannot be empty' : '' }				
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="vehicleValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ name : (? is not blank and length(?) < 51) : 'Name cannot be empty' : ''}
+				{ date : ? is not null : 'Date cannot be empty' : '' }
+				{ organization : ? is not null : 'Company cannot be empty' : '' }
+				{ type : ? is not null : 'Type cannot be empty' : '' }				
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="TOContractValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ origin : (? is not blank and length(?) < 51) : 'Origin cannot be empty' : ''}
+				{ date : ? is not null : 'Date cannot be empty' : '' }
+				{ customer : ? is not null : 'Customer cannot be empty' : '' }
+				{ customerService : ? is not null : 'Customer Service cannot be empty' : '' }
+				{ salesPerson : ? is not null : 'Sales Person cannot be empty' : '' }
+				{ organization : ? is not null : 'Company cannot be empty' : '' }
+				{ type : ? is not null : 'Type cannot be empty' : '' }				
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="transportOursourceMasterValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ name : (? is not blank and length(?) < 36) : 'Transport Outsource Master Cost Name cannot be empty and not more than 35 character' : ''}
+				{ type : ? is not null : 'Transport Outsource Master Cost Type cannot be empty' : '' }				
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="cityValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ city_id : (? is not blank and length(?) < 16) : 'City ID cannot be empty and not more than 15 character' : ''}
+				{ city : (? is not blank and length(?) < 50) : 'City Name cannot be empty and not more than 50 character' : '' }				
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="salesCommisionValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ commisionTotal : (? is not blank and length(?) < 16) : 'Country ID cannot be empty and not more than 15 character' : ''}
+				{ description : (? is not blank and length(?) < 50) : 'Country Name cannot be empty and not more than 50 character' : '' }				
+			]]>
+		</value>
+		</property>
+	</bean>
+	
+	<bean id="geographicValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ code : (? is not blank and length(?) < 16) : 'ID cannot be empty and not more than 15 character' : ''}
+				{ name : (? is not blank and length(?) < 50) : 'Name cannot be empty and not more than 50 character' : '' }				
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="currencyValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ name : (? is not blank and length(?) < 30) : 'Country ID cannot be empty and not more than 30 character' : ''}
+				{ symbol : (? is not blank and length(?) < 10) : 'Country Name cannot be empty and not more than 10 character' : '' }				
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="rateValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ rate : (? is not null and ? > 0) : 'Rate cannot be empty and must be grater or equal one (1)' : ''}
+				{ validFrom : ? is not null : 'Valid From cannot be empty' : '' }				
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="industrySegmentationValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ industryId : (? is not blank and length(?) < 16) : 'Industry ID cannot be empty and not more than 15 character' : ''}
+				{ name : (? is not blank and length(?) < 51) : 'Industry Name cannot be empty and not more than 50 character' : '' }				
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="unitOfMeasureValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ measureId : (? is not blank and length(?) < 16) : 'UoM ID cannot be empty and not more than 15 character' : ''}
+				{ name : (? is not blank and length(?) < 30) : 'UoM Name cannot be empty and not more than 30 character' : '' }
+				{ type : (? is not blank ) : 'UoM Type cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="productCategoryValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ code : (? is not blank and length(?) < 16) : 'ID cannot be empty and not more than 50 character' : ''}
+				{ name : (? is not blank and length(?) < 30) : 'Name cannot be empty and not more than 100 character' : '' }
+				{ type : (? is not blank ) : 'Type cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="itemGroupValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ code : (? is not blank and length(?) < 16) : 'ID cannot be empty and not more than 15 character' : ''}
+				{ name : (? is not blank and length(?) < 30) : 'Name cannot be empty and not more than 30 character' : '' }
+				{ itemCategory : (? is not blank ) : 'Item Category cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="facilityTypeValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ facilityId : (? is not blank and length(?) < 16) : 'Facility Type ID cannot be empty and not more than 15 character' : ''}
+				{ facilityName : (? is not blank and length(?) < 50) : 'Facility Type Name cannot be empty and not more than 50 character' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="taxValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ taxRate : (? is not blank and length(?) < 21) : 'Tax Rate cannot be empty and not more than 20 character' : ''}
+				{ taxId : (? is not blank and length(?) < 21) : 'Tax ID cannot be empty and not more than 20 character' : '' }
+				{ taxName : (? is not blank and length(?) < 30) : 'Tax Name cannot be empty and not more than 30 character' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="companyLevelValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ level : ? IS NOT NULL : 'Level cannot be empty' : ''}
+				{ levelId : (? is not blank and length(?) < 16) : 'Level ID cannot be empty and not more than 15 character' : '' }
+				{ levelName : (? is not blank and length(?) < 51) : 'Level Name cannot be empty and not more than 50 character' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="deliveryPlanningValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ date : ? IS NOT NULL : 'Date cannot be empty' : ''}
+				{ salesOrder : ? IS NOT NULL : 'Please select Sales Order first!' : '' }
+				{ companyFacility : ? IS NOT NULL : 'Please select Company Facility first!' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="fixedAssetGroupValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ name : (? IS NOT NULL and length(?) < 150) : 'Group Name cannot be empty and not more than 30 character' : ''}
+				{ accountingSchema : ? IS NOT NULL : 'Accounting Schema cannot be empty' : '' }
+				{ closingInformations : (? IS NOT NULL and length(?) > 0) : 'Account cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="fixedAssetValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ code : (? IS NOT NULL and length(?) < 301) : 'ID cannot be empty and not more than 30 character' : ''}
+				{ name : (? IS NOT NULL and length(?) < 101) : 'Name cannot be empty and not more than 100 character' : ''}
+				{ acquisitionDate : ? IS NOT NULL : 'Acquisition Date cannot be empty' : '' }
+				{ salvageValue : ? IS NOT NULL : 'Salvage Value cannot be empty' : '' }
+				{ acquisitionValue : ? IS NOT NULL : 'Acquisition Value cannot be empty' : '' }
+				{ depreciationMethod : ? IS NOT NULL : 'Depreciation Method Value cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="userValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ username : (? IS NOT NULL and length(?) < 31) : 'User Name cannot be empty and not more than 30 character' : ''}
+				{ person : ? IS NOT NULL : 'Person cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="cityAreaValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ area_id : (? IS NOT NULL and length(?) < 16) : 'Area ID cannot be empty and not more than 15 character' : ''}
+				{ areaName : (? IS NOT NULL and length(?) < 51) : 'Area Name cannot be empty and not more than 50 character' : ''}
+				{ city : ? IS NOT NULL : 'City cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="itemValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ itemId : (? IS NOT NULL and length(?) < 16) : 'Item ID cannot be empty and not more than 15 character' : ''}
+				{ name : (? IS NOT NULL and length(?) < 100) : 'Item Name cannot be empty and not more than 100 character' : ''}
+				{ group : ? IS NOT NULL : 'Item Group cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="divisionValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ name : (? IS NOT NULL and length(?) < 150) : 'Division Name cannot be empty and not more than 150 character' : ''}
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="applicantFormAddValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ identityNumber : (? IS NOT NULL and length(?) < 16) : 'ID cannot be empty and not more than 16 character' : ''}
+				{ firstName : (? IS NOT NULL and length(?) < 50) : 'First Name cannot be empty and not more than 50 character' : ''}
+				{ middleName : (? IS NOT NULL and length(?) < 50) : 'Middle Name cannot be empty and not more than 50 character' : '' }
+				{ lastName : (? IS NOT NULL and length(?) < 50) : 'Last Name cannot be empty and not more than 50 character' : '' }
+				{ gender : ? IS NOT BLANK : 'Gender must choiced' : '' }
+				{ dateOfBirt : ? IS NOT NULL : 'Date of Birth cannot be empty' : '' }
+				{ placeOfBirt : ? IS NOT BLANK : 'Place of Birth cannot be empty' : '' }
+				{ bloodType : ? IS NOT BLANK : 'Blood Type cannot be empty' : '' }
+				{ religion : ? IS NOT BLANK : 'Religion cannot be empty' : '' }
+				{ maritalStatus : ? IS NOT BLANK : 'Marital Status cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="applicantFormAdd2Validator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ current_address : ? IS NOT BLANK : 'Current Address cannot be empty' : ''}
+				{ current_city : ? IS NOT BLANK : 'Current City cannot be empty' : '' }
+				{ phone_number : ? IS NOT BLANK : 'Phone Number cannot be empty' : '' }
+				{ mobile_phone1 : ? IS NOT BLANK : 'Mobilephone cannot be empty' : '' }
+				{ email : ? IS NOT BLANK : 'Email cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="followupHistoryValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ followupType : ? IS NOT BLANK : 'Follow up type cannot be empty' : ''}
+				{ date : ? IS NOT BLANK : 'Action date cannot be empty' : '' }
+				{ salesPerson : ? IS NOT BLANK : 'Sales person cannot be empty' : '' }
+				{ contactPerson : ? IS NOT BLANK : 'Contact person cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="customerGroupValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ salutation : ? IS NOT BLANK : 'Salutation cannot be empty' : ''}
+				{ name : ? IS NOT BLANK : 'Name cannot be empty' : '' }
+				{ industrySegmentation : ? IS NOT NULL : 'Industry Segmentation cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="plafonValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ plafon : ? IS NOT NULL : 'Plafon cannot be empty' : ''}
+				{ start : ? IS NOT NULL : 'Valid From cannot be empty' : '' }
+				{ currency : ? IS NOT NULL : 'Currency cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="customerValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ salutation : ? IS NOT BLANK : 'Salutation cannot be empty' : ''}
+				{ customerName : ? IS NOT BLANK : 'Name cannot be empty' : '' }
+				{ companyFacility : ? IS NOT NULL : 'Company Facility Segmentation cannot be empty' : '' }
+				{ customerGroup : ? IS NOT NULL : 'Customer Group Segmentation cannot be empty' : '' }
+				{ customerSince : ? IS NOT NULL : 'Customer Sinch cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="salesEstimationGroupValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ name : ? IS NOT BLANK : 'Name cannot be empty' : ''}
+				{ start : ? IS NOT NULL : 'Period From cannot be empty' : '' }
+				{ end : ? IS NOT NULL : 'Period To cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="salesEstimationValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ salesPerson : ? IS NOT NULL : 'Sales Person cannot be empty' : '' }
+				{ firstApprover : ? IS NOT NULL : 'First Approver cannot be empty' : '' }
+				{ salesEstimationGroup : ? IS NOT NULL : 'Sales Estimation Group cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+	<bean id="salesOrderValidator" class="org.springmodules.validation.valang.ValangValidator">
+		<property name="valang">
+		<value>
+			<![CDATA[
+				{ salesOrderCreatedDate : ? IS NOT NULL : 'Date cannot be empty' : '' }
+				{ firstApprover : ? IS NOT NULL : 'First Approver cannot be empty' : '' }
+				{ division : ? IS NOT NULL : 'Division cannot be empty' : '' }
+				{ tax : ? IS NOT NULL : 'Tax cannot be empty' : '' }				
+				{ customer : ? IS NOT NULL : 'Customer cannot be empty' : '' }
+				{ contactPerson : ? IS NOT NULL : 'Contact Person cannot be empty' : '' }				
+				{ companyFacility : ? IS NOT NULL : 'Company Facility cannot be empty' : '' }
+				{ billingAddress : ? IS NOT NULL : 'Billing Address cannot be empty' : '' }
+			]]>
+		</value>
+		</property>
+	</bean>
+</beans>
