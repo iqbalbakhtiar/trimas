@@ -12,5 +12,6 @@ buildNumber.properties
 /work/
 .idea
 .metadata/
+.project
 .tomcatplugin
 /.settings/
