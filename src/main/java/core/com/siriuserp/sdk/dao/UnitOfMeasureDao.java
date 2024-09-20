@@ -6,9 +6,9 @@ package com.siriuserp.sdk.dao;
 
 import java.util.List;
 
+import com.siriuserp.inventory.dm.UnitOfMeasure;
+import com.siriuserp.inventory.dm.UnitType;
 import com.siriuserp.sdk.base.Dao;
-import com.siriuserp.sdk.dm.UnitOfMeasure;
-import com.siriuserp.sdk.dm.UnitType;
 
 
 /**

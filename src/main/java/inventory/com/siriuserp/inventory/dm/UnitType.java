@@ -3,7 +3,7 @@
  * com.siriuserp.sdk.dm
  * UnitType.java
  */
-package com.siriuserp.sdk.dm;
+package com.siriuserp.inventory.dm;
 
 /**
  * @author Agung Dodi Perdana
@@ -12,5 +12,5 @@ package com.siriuserp.sdk.dm;
  */
 public enum UnitType
 {
-    WEIGHT,UNIT,AREA,VOLUME,TIME,LENGTH
+    WEIGHT,LENGTH,UNIT,VOLUME,TIME,AREA
 }

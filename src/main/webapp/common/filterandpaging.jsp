@@ -77,4 +77,24 @@
 			}
 		});
 	}
+	
+	function searchPopup()
+	{
+		$.ajax({
+			url : getPopUrl(),
+			data : $('#popupForm').serialize(),
+			type : 'POST',
+			cache : false,
+			success : function(resp) {
+				$("#${param.popupid}").html(resp)
+			}
+		});
+	}
+
+	function reloadPopup()
+	{
+		$("#${param.popupid}").load("<c:url value='${url}'/>");
+	}
 </script>
+<input type="submit" class="btn" style="WIDTH:60px; HEIGHT:25px" value='<spring:message code="sirius.search"/>' onclick="searchPopup();"/>
+<input type="button" class="btn" style="WIDTH:60px; HEIGHT:25px" value='<spring:message code="sirius.reset"/>' onclick="reloadPopup();"/>

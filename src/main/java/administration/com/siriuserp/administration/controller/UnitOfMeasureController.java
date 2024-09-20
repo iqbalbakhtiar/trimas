@@ -17,9 +17,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.administration.service.UnitOfMeasureService;
+import com.siriuserp.inventory.dm.UnitOfMeasure;
+import com.siriuserp.inventory.dm.UnitType;
 import com.siriuserp.sdk.base.ControllerBase;
-import com.siriuserp.sdk.dm.UnitOfMeasure;
-import com.siriuserp.sdk.dm.UnitType;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.view.ViewHelper;
@@ -46,13 +46,13 @@ public class UnitOfMeasureController extends ControllerBase
 	@RequestMapping("/uomview.htm")
 	public ModelAndView view()
 	{
-		return new ModelAndView("/general-setting/unitOfMeasureList", "data", service.loadAllUoM());
+		return new ModelAndView("/inventory/item-management/unitOfMeasureList", "data", service.loadAllUoM());
 	}
 
 	@RequestMapping("/uompreadd.htm")
 	public ModelAndView preadd()
 	{
-		return new ModelAndView("/general-setting/unitOfMeasureAdd", service.preadd());
+		return new ModelAndView("/inventory/item-management/unitOfMeasureAdd", service.preadd());
 	}
 
 	@RequestMapping("/uomadd.htm")
@@ -76,7 +76,7 @@ public class UnitOfMeasureController extends ControllerBase
 	@RequestMapping("/uompreedit.htm")
 	public ModelAndView preedit(@RequestParam("id") Long id)
 	{
-		return new ModelAndView("/general-setting/unitOfMeasureUpdate", service.preedit(id));
+		return new ModelAndView("/inventory/item-management/unitOfMeasureUpdate", service.preedit(id));
 	}
 
 	@RequestMapping("/uomedithtm")

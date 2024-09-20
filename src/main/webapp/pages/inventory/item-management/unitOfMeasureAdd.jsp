@@ -8,7 +8,7 @@
 <base href="<%=basePath%>">
 <html>
 <head>
-	<title>${title}</title>
+	<title>${title}</title>	
 	<%@ include file="/common/sirius-header.jsp"%>
 </head>
 <body>
@@ -21,7 +21,7 @@
 <div id="se-containers">
 
 	<%@ include file="/common/sirius-menu.jsp"%>
-
+	
 	<div id="se-navigator">
 		<table border="0" cellpadding="0" cellspacing="0" width="100%">
 		<tr>
@@ -30,7 +30,7 @@
 		</tr>
 		</table>
 	</div>
-
+	
 	<div id="r11">
 		<div id="r12">
 			<div id="r13">
@@ -40,33 +40,44 @@
 						<h1 class="page-title">${pageTitle}</h1>
 						
 						<div class="toolbar">
-							<a class="item-button-list" href="<c:url value='/page/uomPrepareUpdate.htm?id=${unit_of_measure_factor_add.from.id}'/>"><span><spring:message code='sirius.list'/></span></a>
+							<a class="item-button-list" href="<c:url value='/page/uomview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 							<c:if test="${access.add}">
-								<a class="item-button-save"><span><spring:message code='sirius.save'/></span></a>
+								<a class="item-button-save" style="cursor: pointer;"><span><spring:message code="sirius.save"/></span></a>
 							</c:if>
 					 	</div>
 					  
 						<div class="main-box">
-							<sesform:form id="uomForm" name="uomForm" method="post" modelAttribute="unit_of_measure_factor_add">
+							<sesform:form id="uomForm" name="uomForm" method="post" modelAttribute="unitOfMeasure_add">
  							<table width="100%" border="0" cellpadding="3" cellspacing="0">
  							<tr>
-							  	<td width="19%" align="right"><spring:message code='sirius.from'/></td>
+ 								<td width="19%" align="right"><spring:message code="uom.code"/></td>
                               	<td width="1%" align="center">:</td>
-						  	  	<td width="80%"><input class="input-disabled" disabled size="35" value="${unit_of_measure_factor_add.from.name}"/></td>
+							  	<td width="80%"><form:input id="uomId" path="measureId" cssClass="inputbox" maxlength="15"/></td>
  							</tr>
  							<tr>
- 								<td align="right"><spring:message code='sirius.to'/></td>
+ 								<td align="right"><spring:message code="uom.name"/></td>
+                                <td align="center">:</td>
+								<td><form:input id="uomName" path="name" cssClass="inputbox" maxlength="30"/></td>
+ 							</tr>
+ 							<tr>
+ 								<td align="right"><spring:message code="uom.type"/></td>
                                 <td align="center">:</td>
 								<td>
-                                	<form:select path='to'>
-                                    	<form:options items='${uoms}' itemValue='id' itemLabel='name'/>
+	    							<form:select path="type" cssClass="combobox">
+		    							<c:forEach items="${types}" var="type">
+		    								<spring:message code="uom.${fn:toLowerCase(type)}" var="unit"/>
+	                                        <form:option value="${type}" label='${unit}'/>
+	                                    </c:forEach>
                                     </form:select>
-                                </td>
- 							</tr>
-                            <tr>
-							  	<td align="right"><spring:message code='uom.factor'/></td>
-                              	<td align="center">:</td>
-						  	  	<td><form:input id='factor' path='factor' class='factor' size="20" value="1.00" cssClass="input-currency"/></td>
+								</td>
+							</tr>
+ 							<tr>
+								<td align="right"><spring:message code="uom.packaging"/></td>
+								<td align="center">:</td>
+								<td>
+									<form:radiobutton path="pack" value="true"/><spring:message code="sirius.yes"/>
+									<form:radiobutton path="pack" value="false"/><spring:message code="sirius.no"/>
+								</td>
  							</tr>
  							</table>
  							</sesform:form>
@@ -77,24 +88,18 @@
 		</div>
 	</div>
 
-	  <%@ include file="/common/sirius-footer.jsp"%>
-	  
+	<%@ include file="/common/sirius-footer.jsp"%>
+
 </div>
 </body>
 </html>
 <script type="text/javascript">
 	$(function(){
-		var $dialog = $('<div></div>').dialog({autoOpen: false,title: '<spring:message code="uom"/> <spring:message code="uom.factor"/>',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
+		var $dialog = $('<div></div>').dialog({autoOpen: false,title: '<spring:message code="uom"/>',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
 	
 		$('.item-button-save').click(function(){
-			if(!$('#factor').val())
-			{
-				alert("<spring:message code='uom.factor'/> <spring:message code='notif.empty'/> !");
-				return;
-			}
-		
 			$.ajax({
-				url:"<c:url value='/page/unitofmeasurefactoradd.htm'/>",
+				url:"<c:url value='/page/uomadd.htm'/>",
 				data:$('#uomForm').serialize(),
 				type : 'POST',
 				dataType : 'json',
@@ -105,7 +110,7 @@
 						if(json.status == 'OK')
 						{
 							$dialog.dialog('close');
-							window.location="<c:url value='/page/uomPrepareUpdate.htm?id=${unit_of_measure_factor_add.from.id}'/>";
+							window.location="<c:url value='/page/uomview.htm'/>";
 						}
 						else
 								afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
@@ -115,16 +120,6 @@
 					console.log(xhr.responseText);
 				},
 			});		
-		});
-
-		$('.factor').change(function(){
-			if($(this).val() < 1)
-			{
-				alert('<spring:message code="uom"/> <spring:message code="uom.factor"/> <spring:message code="notif.lower"/> 1');
-				$(this).val(1);
-
-				return;
-			}
 		});
 	});
 </script>

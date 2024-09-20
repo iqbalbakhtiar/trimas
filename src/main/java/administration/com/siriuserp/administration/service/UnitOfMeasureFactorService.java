@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.siriuserp.inventory.dm.UnitOfMeasure;
+import com.siriuserp.inventory.dm.UnitofMeasureFactor;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.dao.UnitOfMeasureDao;
-import com.siriuserp.sdk.dm.UnitOfMeasure;
-import com.siriuserp.sdk.dm.UnitofMeasureFactor;
 import com.siriuserp.sdk.exceptions.ServiceException;
 
 import javolution.util.FastMap;

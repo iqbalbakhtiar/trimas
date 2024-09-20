@@ -5,8 +5,8 @@
  */
 package com.siriuserp.sdk.dao;
 
+import com.siriuserp.inventory.dm.UnitofMeasureFactor;
 import com.siriuserp.sdk.base.Dao;
-import com.siriuserp.sdk.dm.UnitofMeasureFactor;
 
 /**
  * @author Agung Dodi Perdana

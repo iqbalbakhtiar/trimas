@@ -72,17 +72,6 @@
 									</form:select>
 								</td>
 							</tr>
-							<tr>
-								<td align="right"><spring:message code="uom.pattern"/></td>
-							   	<td align="center">:</td>
-							   	<td>
-								   	<form:select path="pattern" cssClass="combobox">
-										<form:option value="#,##0" label='#,##0'/>
-										<form:option value="#,##0.00" label='#,##0.00'/>
-										<form:option value="#,##0.000" label='#,##0.000'/>
-								   	</form:select>
-							   	</td>
-							</tr>
  							<tr>
 								<td align="right"><spring:message code="uom.packaging"/></td>
 								<td align="center">:</td>
@@ -119,9 +108,9 @@
 					</div>
 				</div>
 			</div>
+			<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${unitOfMeasure_edit.createdBy.fullName}'/> (<fmt:formatDate value='${unitOfMeasure_edit.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${unitOfMeasure_edit.updatedBy.fullName}'/> (<fmt:formatDate value='${unitOfMeasure_edit.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
 		</div>
 	</div>
-
   	<%@ include file="/common/sirius-footer.jsp"%>
 
 </div>

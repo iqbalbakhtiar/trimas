@@ -8,9 +8,9 @@ package com.siriuserp.administration.dao.impl;
 import org.hibernate.Query;
 import org.springframework.stereotype.Component;
 
+import com.siriuserp.inventory.dm.UnitofMeasureFactor;
 import com.siriuserp.sdk.dao.UnitOfMeasureFactorDao;
 import com.siriuserp.sdk.db.DaoHelper;
-import com.siriuserp.sdk.dm.UnitofMeasureFactor;
 import com.siriuserp.sdk.utility.SiriusValidator;
 
 /**

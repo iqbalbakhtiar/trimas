@@ -9,6 +9,7 @@ import java.util.Date;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.siriuserp.administration.dm.Geographic;
+import com.siriuserp.inventory.dm.UnitOfMeasure;
 
 import lombok.Getter;
 import lombok.Setter;

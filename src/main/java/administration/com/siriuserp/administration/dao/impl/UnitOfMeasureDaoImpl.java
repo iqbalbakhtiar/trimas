@@ -9,10 +9,10 @@ import java.util.List;
 import org.hibernate.Query;
 import org.springframework.stereotype.Component;
 
+import com.siriuserp.inventory.dm.UnitOfMeasure;
+import com.siriuserp.inventory.dm.UnitType;
 import com.siriuserp.sdk.dao.UnitOfMeasureDao;
 import com.siriuserp.sdk.db.DaoHelper;
-import com.siriuserp.sdk.dm.UnitOfMeasure;
-import com.siriuserp.sdk.dm.UnitType;
 
 /**
  * @author Agung Dodi Perdana

@@ -18,9 +18,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.administration.service.UnitOfMeasureFactorService;
+import com.siriuserp.inventory.dm.UnitOfMeasure;
+import com.siriuserp.inventory.dm.UnitofMeasureFactor;
 import com.siriuserp.sdk.base.ControllerBase;
-import com.siriuserp.sdk.dm.UnitOfMeasure;
-import com.siriuserp.sdk.dm.UnitofMeasureFactor;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.view.ViewHelper;
@@ -46,7 +46,7 @@ public class UnitOfMeasureFactorController extends ControllerBase
     @RequestMapping("/unitofmeasurefactorpreadd.htm")
     public ModelAndView preadd(@RequestParam("id")Long id)
     {
-        return new ModelAndView("/general-setting/unitOfMeasureFactorAdd",service.preadd(id));
+        return new ModelAndView("/inventory/item-management/unitOfMeasureFactorAdd",service.preadd(id));
     }
     
     @RequestMapping("/unitofmeasurefactoradd.htm")
@@ -71,7 +71,7 @@ public class UnitOfMeasureFactorController extends ControllerBase
     @RequestMapping("/unitofmeasurefactorpreedit.htm")
     public ModelAndView preedit(@RequestParam("id")Long id)
     {
-        return new ModelAndView("/general-setting/unitOfMeasureFactorUpdate",service.preedit(id));
+        return new ModelAndView("/inventory/item-management/unitOfMeasureFactorUpdate",service.preedit(id));
     }
     
     @RequestMapping("/unitofmeasurefactoredit.htm")
@@ -99,6 +99,6 @@ public class UnitOfMeasureFactorController extends ControllerBase
         UnitofMeasureFactor factor = service.load(id);
         
         service.delete(factor);
-        return ViewHelper.redirectTo("uomPrepareUpdate.htm?id="+factor.getFrom().getId());
+        return ViewHelper.redirectTo("uompreedit.htm?id="+factor.getFrom().getId());
     }
 }
