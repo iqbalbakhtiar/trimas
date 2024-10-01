@@ -38,8 +38,10 @@ public class PartyForm extends Form
 	private String taxCode;
 	private String accountNumber;
 	private String address;
+	private String addressName;
 	private Long relationshipId;
 	private String uri;
+	private String postalCode;
 
 	private Date birthDate;
 	private Date joinDate;

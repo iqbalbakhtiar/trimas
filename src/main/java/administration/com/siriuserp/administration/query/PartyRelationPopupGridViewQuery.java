@@ -30,9 +30,7 @@ public class PartyRelationPopupGridViewQuery extends AbstractGridViewQuery
         
         if(SiriusValidator.validateParam(criteria.getName()))
         {
-            builder.append("AND (relation.fromRole.party.firstName like '%"+criteria.getName()+"%' ");
-            builder.append("OR relation.fromRole.party.middleName like '%"+criteria.getName()+"%' ");
-            builder.append("OR relation.fromRole.party.lastName like '%"+criteria.getName()+"%' ");
+            builder.append("AND (relation.fromRole.party.fullName like '%"+criteria.getName()+"%' ");
             builder.append("OR relation.fromRole.party.code like '%"+criteria.getName()+"%')");
         }
 
@@ -62,13 +60,11 @@ public class PartyRelationPopupGridViewQuery extends AbstractGridViewQuery
         
         if(SiriusValidator.validateParam(criteria.getName()))
         {
-            builder.append("AND (relation.fromRole.party.firstName like '%"+criteria.getName()+"%' ");
-            builder.append("OR relation.fromRole.party.middleName like '%"+criteria.getName()+"%' ");
-            builder.append("OR relation.fromRole.party.lastName like '%"+criteria.getName()+"%' ");
+            builder.append("AND (relation.fromRole.party.fullName like '%"+criteria.getName()+"%' ");
             builder.append("OR relation.fromRole.party.code like '%"+criteria.getName()+"%')");
         }
 
-        builder.append("ORDER BY relation.fromRole.party.firstName ASC");
+        builder.append("ORDER BY relation.fromRole.party.fullName ASC");
 
         Query query = getSession().createQuery(builder.toString());
         query.setCacheable(true);

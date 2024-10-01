@@ -67,22 +67,10 @@
 									<td><form:errors path="salutation"/></td>
 	 							</tr>
  								<tr>
- 									<td align="right"><spring:message code="party.name.first"/></td>
+ 									<td align="right">Party Name</td>
 									<td width="1%" align="center">:</td>
-									<td><form:input path="firstName" size='45'/></td>
-									<td><form:errors path="firstName"/></td>
-	 							</tr>
-								<tr>
- 									<td align="right"><spring:message code="party.name.middle"/></td>
-									<td width="1%" align="center">:</td>
-									<td><form:input path="middleName" size='45'/></td>
-									<td><form:errors path="middleName"/></td>
-	 							</tr>
-								<tr>
- 									<td align="right"><spring:message code="party.name.last"/></td>
-									<td width="1%" align="center">:</td>
-									<td><form:input path="lastName" size='45'/></td>
-									<td><form:errors path="lastName"/></td>
+									<td><form:input path="fullName" size='45'/></td>
+									<td><form:errors path="fullName"/></td>
 	 							</tr>
 								<tr>
  									<td align="right"><spring:message code="party.code.tax"/></td>

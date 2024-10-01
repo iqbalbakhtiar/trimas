@@ -9,12 +9,19 @@ import java.util.Date;
 
 import com.siriuserp.sdk.utility.DateHelper;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * @author Agung Dodi Perdana
  * Sirius Indonesia, PT
  * www.siriuserp.com
  */
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class CustomerFilterCriteria extends AbstractFilterCriteria
 {
 	private static final long serialVersionUID = 2929960869111820097L;
@@ -24,89 +31,21 @@ public class CustomerFilterCriteria extends AbstractFilterCriteria
 	private String name;
 	private String sort;
 	private String clean;
+	private String customer;
+	private String company;
+	private String status;
 	private Date date;
 
 	private Long facility;
-
-	public CustomerFilterCriteria()
-	{
-	}
-
-	public String getCode()
-	{
-		return code;
-	}
-
-	public void setCode(String code)
-	{
-		this.code = code;
-	}
-
-	public String getSalutation()
-	{
-		return salutation;
-	}
-
-	public void setSalutation(String salutation)
-	{
-		this.salutation = salutation;
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public String getSort()
-	{
-		return sort;
-	}
-
-	public void setSort(String sort)
-	{
-		this.sort = sort;
-	}
-
-	public String getClean()
-	{
-		return clean;
-	}
-
-	public void setClean(String clean)
-	{
-		this.clean = clean;
-	}
-
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-
-	public Date getDate()
-	{
-		return date;
-	}
-
-	public void setDate(Date date)
-	{
-		this.date = date;
-	}
-
+	
+	private Boolean base;
+	private Boolean active;
+	
 	public String getDateString()
 	{
 		if (this.date != null)
 			return DateHelper.format(getDate());
 
 		return null;
-	}
-
-	public Long getFacility()
-	{
-		return facility;
-	}
-
-	public void setFacility(Long facility)
-	{
-		this.facility = facility;
 	}
 }

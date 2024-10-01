@@ -40,8 +40,16 @@
 								</select>
 							</td>
 						</tr>
+						<tr> 	
+                            <td align="right"><spring:message code="postaladdress.postalcode"/> :</td>
+                            <td><form:input path="postalCode" size="10"/></td>
+                        </tr>
                         <tr>
-                            <td align="right"><spring:message code="postaladdress.address"/> :</td>
+                            <td align="right"><spring:message code="postaladdress.name"/> :</td>
+                            <td><form:input path="addressName" size="36"/></td>
+                        </tr>
+                        <tr>
+                            <td align="right"><spring:message code="postaladdress.detail"/> :</td>
                             <td><form:textarea path="address" cols="45" rows="6"/></td>
                         </tr>
                         <tr>
@@ -149,7 +157,7 @@
 								window.location="<c:url value='/page/partypreedit.htm?id=${postalAddress_edit.party.id}'/>";
 							</c:if>
 							<c:if test='${not empty redirectURL}'>
-								window.location="<c:url value='/page/${redirectURL}?id=${relationshipId}'/>";
+								window.location="<c:url value='/page/${redirectURL}?id=${relationshipId}&lastPanel=address'/>";
 							</c:if>
 						}
 						else
@@ -164,7 +172,7 @@
 				window.location="<c:url value='/page/partypreedit.htm?id=${postalAddress_edit.party.id}'/>";
 			</c:if>
 			<c:if test='${not empty redirectURL}'>
-				window.location="<c:url value='/page/${redirectURL}?id=${relationshipId}'/>";
+				window.location="<c:url value='/page/${redirectURL}?id=${relationshipId}&lastPanel=address'/>";
 			</c:if>
 		});
 	});

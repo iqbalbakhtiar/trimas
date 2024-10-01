@@ -179,7 +179,7 @@
 		timeToLiveSeconds="86400" 
 		overflowToDisk="false"/>
 		
-	<cache name="com.siriuserp.sdk.dm.BankAccount" 
+	<cache name="com.siriuserp.accounting.dm.BankAccount" 
 		maxElementsInMemory="200"
 		eternal="false" 
 		timeToIdleSeconds="0"

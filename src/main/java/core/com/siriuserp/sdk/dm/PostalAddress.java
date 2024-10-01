@@ -53,6 +53,12 @@ public class PostalAddress extends Model implements JSONSupport
 
 	@Column(name = "address")
 	private String address;
+	
+	@Column(name = "address_name")
+	private String addressName;
+	
+	@Column(name = "postal_code")
+	private String postalCode;
 
 	@Column(name = "active")
 	@Type(type = "yes_no")

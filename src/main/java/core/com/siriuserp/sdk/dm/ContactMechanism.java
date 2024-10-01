@@ -24,11 +24,18 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * @author Agung Dodi Perdana
  * Sirius Indonesia, PT
  * www.siriuserp.com
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name="contact_mechanism")
 public class ContactMechanism extends Model implements JSONSupport
@@ -37,6 +44,12 @@ public class ContactMechanism extends Model implements JSONSupport
 
     @Column(name="contact")
     private String contact;
+    
+    @Column(name="contact_name")
+    private String contactName;
+    
+    @Column(name="department")
+    private String department;
     
     @Column(name="active")
     @Type(type="yes_no")
@@ -54,58 +67,6 @@ public class ContactMechanism extends Model implements JSONSupport
     @Column(name="contact_mechanism_type")
     @Enumerated(EnumType.STRING)
     private ContactMechanismType contactMechanismType = ContactMechanismType.PHONE;
-    
-    public ContactMechanism(){}
-    
-    public String getContact()
-    {
-        return contact;
-    }
-
-    public void setContact(String contact)
-    {
-        this.contact = contact;
-    }
-
-    public ContactMechanismType getContactMechanismType()
-    {
-        return contactMechanismType;
-    }
-
-    public void setContactMechanismType(ContactMechanismType contactMechanismType)
-    {
-        this.contactMechanismType = contactMechanismType;
-    }
-
-    public boolean isActive()
-    {
-        return active;
-    }
-
-    public void setActive(boolean active)
-    {
-        this.active = active;
-    }
-
-    public String getNote()
-    {
-        return note;
-    }
-
-    public void setNote(String note)
-    {
-        this.note = note;
-    }
-
-    public Party getParty()
-    {
-        return party;
-    }
-
-    public void setParty(Party party)
-    {
-        this.party = party;
-    }
 
     @Override
     public String getAuditCode()

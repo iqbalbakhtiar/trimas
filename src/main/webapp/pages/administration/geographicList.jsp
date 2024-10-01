@@ -68,21 +68,21 @@
 						<tr>
 				  			<td class="tools">
                             	<c:if test='${access.edit}'>
-				  					<a class="item-button-edit" href="<c:url value='/page/geographicpreedit.htm?id=${geo.geographic.id}'/>" title="<spring:message code='sirius.edit'/>"><span><spring:message code='sirius.edit'/></span></a>
+				  					<a class="item-button-edit" href="<c:url value='/page/geographicpreedit.htm?id=${geo.id}'/>" title="<spring:message code='sirius.edit'/>"><span><spring:message code='sirius.edit'/></span></a>
                                 </c:if>
                                 <c:if test='${access.delete}'>
-				  					<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/geographicdelete.htm?id=${geo.geographic.id}'/>', '<spring:message code="notif.delete"/>');" title="<spring:message code='sirius.delete'/>"><span><spring:message code='sirius.delete'/></span></a>
+				  					<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/geographicdelete.htm?id=${geo.id}'/>', '<spring:message code="notif.delete"/>');" title="<spring:message code='sirius.delete'/>"><span><spring:message code='sirius.delete'/></span></a>
                                 </c:if>
 				  			</td>
-				  			<td nowrap="nowrap">${geo.geographic.code}</td> 
-							<td nowrap="nowrap">${geo.geographic.name}</td>
+				  			<td nowrap="nowrap">${geo.code}</td> 
+							<td nowrap="nowrap">${geo.name}</td>
 							<td nowrap="nowrap">
-								<c:if test="${geo.geographic.geographicType.name == 'Country'}"><spring:message code="geographic.country"/></c:if>
-								<c:if test="${geo.geographic.geographicType.name == 'Province'}"><spring:message code="geographic.province"/></c:if>
-								<c:if test="${geo.geographic.geographicType.name == 'City'}"><spring:message code="geographic.city"/></c:if>
-								<c:if test="${geo.geographic.geographicType.name == 'District'}"><spring:message code="geographic.district"/></c:if>
+								<c:if test="${geo.geographicType.name == 'Country'}"><spring:message code="geographic.country"/></c:if>
+								<c:if test="${geo.geographicType.name == 'Province'}"><spring:message code="geographic.province"/></c:if>
+								<c:if test="${geo.geographicType.name == 'City'}"><spring:message code="geographic.city"/></c:if>
+								<c:if test="${geo.geographicType.name == 'District'}"><spring:message code="geographic.district"/></c:if>
 							</td>
-                            <td>${geo.geographic.parent.name}</td>
+                            <td>${geo.parent.name}</td>
 				  		</tr>
 				  		</c:forEach>
 				  		<tr class="end-table"><td colspan="7">&nbsp;</td></tr>

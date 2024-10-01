@@ -13,8 +13,16 @@
 							<td width="40%"> <input class="input-disabled" value="${contactMechanism_add.party.fullName}" disabled="disabled" size="36"/></td>
  						</tr>
 						<tr>
-							<td align="right"><spring:message code="contactmechanism.contact"/> :</td>
+							<td align="right"><spring:message code="contactmechanism.name"/> :</td>
+							<td> <form:input path="contactName" cssClass="inputbox" size="15"/></td>
+						</tr>
+						<tr>
+							<td align="right"><spring:message code="contactmechanism.detail"/> :</td>
 							<td> <form:input path="contact" cssClass="inputbox" size="15"/></td>
+						</tr>
+						<tr>
+							<td align="right"><spring:message code="contactmechanism.department"/> :</td>
+							<td> <form:input path="department" cssClass="inputbox" size="15"/></td>
 						</tr>
  						<tr>
  							<td align="right"><spring:message code="contactmechanism.type"/> :</td>
@@ -71,7 +79,7 @@
 								window.location="<c:url value='/page/partypreedit.htm?id=${contactMechanism_add.party.id}'/>";
 							</c:if>
 							<c:if test='${not empty redirectURL}'>
-								window.location="<c:url value='/page/${redirectURL}?id=${relationshipId}'/>";
+								window.location="<c:url value='/page/${redirectURL}?id=${relationshipId}&lastPanel=contact'/>";
 							</c:if>
 						}
 						else
@@ -87,7 +95,7 @@
 				window.location="<c:url value='/page/partypreedit.htm?id=${contactMechanism_add.party.id}'/>";
 			</c:if>
 			<c:if test='${not empty redirectURL}'>
-				window.location="<c:url value='/page/${redirectURL}?id=${relationshipId}'/>";
+				window.location="<c:url value='/page/${redirectURL}?id=${relationshipId}&lastPanel=contact'/>";
 			</c:if>
 		});
 	});

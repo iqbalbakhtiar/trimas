@@ -30,6 +30,7 @@ public enum TableType
     BANK_TRANSACTION_INCOME("BTI"),
     BANK_TRANSACTION_EXPENSE("BTE"),
     BARCODE_GROUP("BAR"),
+    BANK_ACCOUNT("BA"),
 	
 	//C
 	CUSTOMER("CU"),

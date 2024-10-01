@@ -17,7 +17,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -30,7 +33,11 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
+
+import com.siriuserp.accounting.dm.BankAccount;
 
 import javolution.util.FastMap;
 import javolution.util.FastSet;
@@ -53,10 +60,7 @@ public class Party extends Model implements JSONSupport
 {
 	private static final long serialVersionUID = 3842499659117487905L;
 
-	@Formula(value = "CONCAT_WS(' ', NULLIF(first_name, ''), NULLIF(middle_name, ''), NULLIF(last_name, ''), NULLIF(', '+salutation, ''))")
-	private String fullName;
-
-	@Formula(value = "CONCAT_WS(' ', NULLIF(salutation, ''), NULLIF(first_name, ''), NULLIF(middle_name, ''), NULLIF(last_name, ''))")
+	@Formula(value = "CONCAT_WS(' ', NULLIF(salutation, ''), NULLIF(full_name, ''))")
 	private String printedName;
 
 	@Column(name = "code")
@@ -65,14 +69,8 @@ public class Party extends Model implements JSONSupport
 	@Column(name = "salutation")
 	private String salutation;
 
-	@Column(name = "first_name")
-	private String firstName;
-
-	@Column(name = "middle_name", length = 50)
-	private String middleName;
-
-	@Column(name = "last_name", length = 50)
-	private String lastName;
+	@Column(name = "full_name")
+	private String fullName;
 
 	@Column(name = "initial")
 	protected String initial;
@@ -82,6 +80,9 @@ public class Party extends Model implements JSONSupport
 
 	@Column(name = "tax_code", length = 50)
 	private String taxCode;
+	
+	@Column(name = "permit_code", length = 50)
+	private String permitCode;
 
 	@Column(name = "birth_date")
 	private Date birthDate;
@@ -89,6 +90,12 @@ public class Party extends Model implements JSONSupport
 	@Column(name = "active")
 	@Type(type = "yes_no")
 	private boolean active = Boolean.TRUE;
+	
+	// Untuk membedakan Customer Group atau bukan
+	// True = Group & False = Non Group
+	@Column(name = "base")
+	@Type(type = "yes_no")
+	private boolean base = Boolean.FALSE;
 
 	@Column(name = "level")
 	@Enumerated(EnumType.STRING)
@@ -99,6 +106,24 @@ public class Party extends Model implements JSONSupport
 
 	@Column(name = "note")
 	private String note;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_party_group")
+	@LazyToOne(LazyToOneOption.NO_PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Party partyGroup; // Relasi Customer dengan Customer Group
+	
+	@OneToOne(mappedBy = "party", fetch = FetchType.LAZY)
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private PaymentMethod paymentMethod;
+	
+	@OneToMany(mappedBy = "partyGroup", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	@OrderBy("id")
+	protected Set<Party> partyGroups = new FastSet<Party>();
 
 	@OneToMany(mappedBy = "partyFrom", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
@@ -120,6 +145,20 @@ public class Party extends Model implements JSONSupport
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@OrderBy("id")
 	private Set<ContactMechanism> contactMechanisms = new FastSet<ContactMechanism>();
+	
+	@OneToMany(mappedBy = "holder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	@OrderBy("id")
+	private Set<BankAccount> bankAccounts = new FastSet<BankAccount>();
+	
+	@OneToMany(mappedBy = "party", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	@OrderBy("id")
+	private Set<PartyBankAccount> partyBankAccounts = new FastSet<PartyBankAccount>();
 
 	@Transient
 	private Party organization;

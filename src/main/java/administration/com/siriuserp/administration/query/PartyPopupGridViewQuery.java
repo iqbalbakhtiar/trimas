@@ -27,9 +27,7 @@ public class PartyPopupGridViewQuery extends AbstractGridViewQuery
         
         if(SiriusValidator.validateParam(filter.getName()))
         {
-            builder.append(" WHERE (party.firstName like '%"+filter.getName()+"%' OR ");
-            builder.append("party.middleName like '%"+filter.getName()+"%' OR ");
-            builder.append("party.lastName like '%"+filter.getName()+"%' OR ");
+            builder.append(" WHERE (party.fullName like '%"+filter.getName()+"%' OR ");
             builder.append("party.code like '%"+filter.getName()+"%')");
         }
 
@@ -53,13 +51,11 @@ public class PartyPopupGridViewQuery extends AbstractGridViewQuery
         
         if(SiriusValidator.validateParam(filter.getName()))
         {
-            builder.append(" WHERE (party.firstName like '%"+filter.getName()+"%' OR ");
-            builder.append("party.middleName like '%"+filter.getName()+"%' OR ");
-            builder.append("party.lastName like '%"+filter.getName()+"%' OR ");
+            builder.append(" WHERE (party.fullName like '%"+filter.getName()+"%' OR ");
             builder.append("party.code like '%"+filter.getName()+"%')");
         }
 
-        builder.append(" ORDER BY party.code ASC,party.firstName ASC");
+        builder.append(" ORDER BY party.code ASC,party.fullName ASC");
 
         Query query = getSession().createQuery(builder.toString());
         query.setCacheable(true);

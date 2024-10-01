@@ -79,10 +79,10 @@
 						<c:forEach items="${partys}" var="com">
 						<tr>
 					  		<td class="tools">
-					  			<a class="item-button-add-row" href="javascript:setclient('${com.id}','${com.code}','${com.firstName} ${com.middleName} ${com.lastName}')"  title="Edit"><span>Edit</span></a>
+					  			<a class="item-button-add-row" href="javascript:setclient('${com.id}','${com.code}','${com.fullName}')"  title="Edit"><span>Edit</span></a>
 					  		</td>
 							<td nowrap="nowrap"><c:out value='${com.code}'/></td> 
-							<td nowrap="nowrap"><c:out value='${com.firstName} ${com.middleName} ${com.lastName}'/></td>
+							<td nowrap="nowrap"><c:out value='${com.fullName}'/></td>
 					  		</tr>
 						</c:forEach>
 					  	<tr class="end-table"><td colspan="3">&nbsp;</td></tr>

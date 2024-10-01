@@ -49,7 +49,7 @@ public class RoleBasedOrganizationQuery extends AbstractGridViewQuery
 		}
 
 		if (type.compareTo(ExecutorType.HQL) == 0)
-			builder.append("ORDER BY relationship.partyFrom.firstName ASC");
+			builder.append("ORDER BY relationship.partyFrom.fullName ASC");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setCacheable(true);
