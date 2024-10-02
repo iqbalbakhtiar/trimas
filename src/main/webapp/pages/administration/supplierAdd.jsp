@@ -70,10 +70,52 @@
 <script type="text/javascript">
 $(function(){
 	$('.item-button-save').click(function(){
-		save();
+		if(validateForm()) {
+			save();
+		}
 	});
-	
 });
+
+function validateForm() {
+	var organization = $('#org').val();
+	var salutation = $('input[name="salutation"]').val();
+	var fullName = $('input[name="fullName"]').val();
+	var taxCode = $('input[name="taxCode"]').val();
+	var permitCode = $('input[name="permitCode"]').val();
+	var active = $('input[name="active"]:checked').val();
+
+	if (organization == null || organization === "") {
+		alert('<spring:message code="sirius.organization"/> <spring:message code="notif.empty"/> !');
+		return false;
+	}
+	
+	if (salutation == null || salutation.trim() === "") {
+		alert('<spring:message code="party.salutation"/> <spring:message code="notif.empty"/> !');
+		return false;
+	}
+	
+	if (fullName == null || fullName.trim() === "") {
+		alert('<spring:message code="customer.name"/> <spring:message code="notif.empty"/> !');
+		return false;
+	}
+
+	if (taxCode == null || taxCode.trim() === "") {
+		alert('NPWP <spring:message code="notif.empty"/> !');
+		return false;
+	}
+	
+	if (permitCode == null || permitCode.trim() === "") {
+		alert('SIUP <spring:message code="notif.empty"/> !');
+		return false;
+	}
+
+	if (active == null || active === undefined) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="sirius.status"/> <spring:message code="notif.select2"/>');
+		return false;
+	}
+	
+	return true;
+}
 
 function save() {
 	var xhr = new XMLHttpRequest();

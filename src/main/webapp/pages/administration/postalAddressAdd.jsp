@@ -125,6 +125,12 @@
 		var $dialog = $('<div></div>').dialog({autoOpen: false, title: '${title}',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
 		$('.item-button-save').click(function()
 		{
+			if(!$('#country').val())
+			{
+				alert('<spring:message code="postaladdress.country"/> <spring:message code="notif.empty"/> !');
+				return;
+			}
+			
 			if(!$('#province').val())
 			{
 				alert('<spring:message code="postaladdress.province"/> <spring:message code="notif.empty"/> !');

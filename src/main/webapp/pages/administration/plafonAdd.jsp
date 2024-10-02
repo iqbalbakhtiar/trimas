@@ -46,9 +46,16 @@
 		var $dialog = $('<div></div>').dialog({autoOpen: false, title: '${title}',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
 		$('.item-button-save').click(function()
 		{
-			if(!$('#plafon').val())
+			var validFrom = $('#validFrom').val();
+			
+			if(!$('#plafon').val() || $('#plafon').val() === "0")
 			{
-				alert('Plafon cannot be empty!');
+				alert('<spring:message code="plafon"/> <spring:message code="notif.empty"/> <spring:message code="notif.or"/> <spring:message code="notif.zero"/> !');
+				return;
+			}
+			
+			if (validFrom.trim() === "") {
+				alert('<spring:message code="plafon.validfrom"/> <spring:message code="notif.empty"/> !');
 				return;
 			}
 				

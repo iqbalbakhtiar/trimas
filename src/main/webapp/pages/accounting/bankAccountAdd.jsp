@@ -105,61 +105,72 @@
 </body>
 </html>
 <script type="text/javascript">
-	$(function()
+$(function()
+{
+	var $dialog = $('<div></div>').dialog({autoOpen: false,title: '<spring:message code="bankaccount"/>',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
+	$('.item-button-save').click(function(e)
 	{
-		var $dialog = $('<div></div>').dialog({autoOpen: false,title: '<spring:message code="bankaccount"/>',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
-		$('.item-button-save').click(function(e)
-		{
-			if(!$('#code').val())
-			{
-				alert('<spring:message code="bankaccount.code"/> <spring:message code="notif.empty"/> !!!');
-				return;
-			}
-
-			if(!$('#bankName').val())
-			{
-				alert('<spring:message code="bankaccount.bankname"/> <spring:message code="notif.empty"/> !!!');
-				return;
-			}
-
-			if(!$('#accountName').val())
-			{
-				alert('<spring:message code="bankaccount.accountname"/> <spring:message code="notif.empty"/> !!!');
-				return;
-			}
-
-			if(!$('#accountNo').val())
-			{
-				alert('<spring:message code="bankaccount.accountno"/> <spring:message code="notif.empty"/> !!!');
-				return;
-			}
-
-			if(!$('#org').val())
-			{
-				alert('<spring:message code="notif.select1"/> <spring:message code="bankaccount.holder"/> <spring:message code="notif.select2"/> !!!');
-				return;
-			}
-
-			$.ajax({
-				url:"<c:url value='/page/bankaccountadd.htm'/>",
-				data:$('#addForm').serialize(),
-				type : 'POST',
-				dataType : 'json',
-				beforeSend : beforeSend($dialog, '<spring:message code="notif.saving"/>'),
-				success : function(json) {
-					if(json)
-					{
-						if(json.status == 'OK')
-						{
-							$dialog.dialog('close');
-							window.location="<c:url value='/page/bankaccountview.htm'/>";
-						}
-						else
-								afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
-					}
-				}
-			});
-		});
-	
+		if(validateForm()) {
+			save();	
+		}
+		
 	});
+
+});
+
+function validateForm() {
+	if(!$('#code').val())
+	{
+		alert('<spring:message code="bankaccount.code"/> <spring:message code="notif.empty"/> !!!');
+		return false;
+	}
+
+	if(!$('#bankName').val())
+	{
+		alert('<spring:message code="bankaccount.bankname"/> <spring:message code="notif.empty"/> !!!');
+		return false;
+	}
+
+	if(!$('#accountName').val())
+	{
+		alert('<spring:message code="bankaccount.accountname"/> <spring:message code="notif.empty"/> !!!');
+		return false;
+	}
+
+	if(!$('#accountNo').val())
+	{
+		alert('<spring:message code="bankaccount.accountno"/> <spring:message code="notif.empty"/> !!!');
+		return false;
+	}
+
+	if(!$('#org').val())
+	{
+		alert('<spring:message code="notif.select1"/> <spring:message code="bankaccount.holder"/> <spring:message code="notif.select2"/> !!!');
+		return false;
+	}
+	
+	return true;
+}
+
+function save() {
+	$.ajax({
+		url:"<c:url value='/page/bankaccountadd.htm'/>",
+		data:$('#addForm').serialize(),
+		type : 'POST',
+		dataType : 'json',
+		beforeSend : beforeSend($dialog, '<spring:message code="notif.saving"/>'),
+		success : function(json) {
+			if(json)
+			{
+				if(json.status == 'OK')
+				{
+					$dialog.dialog('close');
+					window.location="<c:url value='/page/bankaccountview.htm'/>";
+				}
+				else
+						afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
+			}
+		}
+	});
+}
 </script>

@@ -30,7 +30,7 @@
 			<td><form:input path="salutation" size="10" class="input-disabled" disabled='true'/></td>
 		</tr>
 		<tr>
-			<td align="right">Customer Group</td>
+			<td align="right"><spring:message code="customer.group"/></td>
 			<td width="1%" align="center">:</td>
 			<td>
 				<form:select id="partyGroup" path="partyGroup" cssClass="combobox-ext input-disabled" disabled='true'>
@@ -187,7 +187,9 @@
 				</tr>
 			</table>
 			<div id="paymentScheduleDiv" class="toolbar-clean">
-				<a class="item-button-new" href="<c:url value='/page/paymentschedulepreadd.htm?payment=${customer_edit.paymentMethod.id}&relationshipId=${relationship.id}&uri=customerpreedit.htm'/>"><span><spring:message code="payment.new.schedule"/></span></a>
+				<a class="item-button-new" data-url="<c:url value='/page/paymentschedulepreadd.htm?payment=${customer_edit.paymentMethod.id}&relationshipId=${relationship.id}&uri=customerpreedit.htm'/>" onclick="saveAndRedirect(this); return false;">
+				    <span><spring:message code="payment.new.schedule"/></span>
+				</a>
 				<div class="item-navigator">&nbsp;</div>
 			</div>
 			<table id="paymentScheduleTable" class="table-list" cellspacing="0" cellpadding="0" width="100%">
@@ -319,7 +321,9 @@
 <script type="text/javascript">
 $(function(){
 	$('.item-button-save').click(function(){
-		save();
+		if(validateForm()) {
+			save();
+		}
 	});
 	
     // Call the function on page load to set the initial state
@@ -331,35 +335,89 @@ $(function(){
     });
 });
 
-function save() {
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', "<c:url value='/page/customeredit.htm?relationshipId='/>" + ${relationship.id});
-	xhr.responseType = 'json';
-	
-	if(xhr.readyState == 1) {
-		$dialog.empty();
-		$dialog.html('<spring:message code="notif.saving"/>');
-		$dialog.dialog('open');
+function validateForm() {
+	var organization = $('#org').val();
+	var salutation = $('input[name="salutation"]').val();
+	var fullName = $('input[name="fullName"]').val();
+	var taxCode = $('input[name="taxCode"]').val();
+	var permitCode = $('input[name="permitCode"]').val();
+	var active = $('input[name="active"]:checked').val();
+
+	if (organization == null || organization === "") {
+		alert('<spring:message code="sirius.organization"/> <spring:message code="notif.empty"/> !');
+		return false;
 	}
 	
-	xhr.onreadystatechange = function () {
-		if(xhr.readyState == 4) {
-			var json = xhr.response;
-			if(json) {
-				if(json.status == 'OK') {
-					$dialog.dialog('close');
-					
-					let url = "<c:url value='/page/customerpreedit.htm?id='/>"+json.data.relationshipId;;
-					
-					window.location=url;
-				} else {
-					afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
-				}
-			}
-		}
-	};
+	if (salutation == null || salutation.trim() === "") {
+		alert('<spring:message code="party.salutation"/> <spring:message code="notif.empty"/> !');
+		return false;
+	}
 	
-	xhr.send(new FormData($('#addForm')[0]));
+	if (fullName == null || fullName.trim() === "") {
+		alert('<spring:message code="customer.name"/> <spring:message code="notif.empty"/> !');
+		return false;
+	}
+
+	if (taxCode == null || taxCode.trim() === "") {
+		alert('NPWP <spring:message code="notif.empty"/> !');
+		return false;
+	}
+	
+	if (permitCode == null || permitCode.trim() === "") {
+		alert('SIUP <spring:message code="notif.empty"/> !');
+		return false;
+	}
+
+	if (active == null || active === undefined) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="sirius.status"/> <spring:message code="notif.select2"/>');
+		return false;
+	}
+	
+	return true;
+}
+
+//Save Customer Before go to Payment Schedule (Contra Bon)
+function saveAndRedirect(element) {
+    var href = element.getAttribute('data-url');
+
+    if(validateForm()) {
+        save(function() {
+            window.location.href = href;
+        });
+    }
+}
+
+function save(callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "<c:url value='/page/customeredit.htm?relationshipId='/>" + ${relationship.id});
+    xhr.responseType = 'json';
+
+    if(xhr.readyState == 1) {
+        $dialog.empty();
+        $dialog.html('<spring:message code="notif.saving"/>');
+        $dialog.dialog('open');
+    }
+
+    xhr.onreadystatechange = function () {
+        if(xhr.readyState == 4) {
+            var json = xhr.response;
+            if(json) {
+                if(json.status == 'OK') {
+                    $dialog.dialog('close');
+                    if (typeof callback === 'function') {
+                        callback();
+                    } else {
+                        let url = "<c:url value='/page/customerpreedit.htm?id='/>"+json.data.relationshipId;
+                        window.location = url;
+                    }
+                } else {
+                    afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
+                }
+            }
+        }
+    };
+
+    xhr.send(new FormData($('#addForm')[0]));
 }
 
 function togglePaymentSchedule() { // For show / hide Payment Schedule depend on Payment Collection

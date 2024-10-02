@@ -9,7 +9,7 @@
 <sesform:form id="addForm" name="addForm" method="post" modelAttribute="customer_group_add" enctype="multipart/form-data">
 	<table style="border:none" width="100%">
 		<tr>
-			<td width="34%" align="right"><span>Customer ID</td>
+			<td width="34%" align="right"><spring:message code="sirius.code"/></td>
 			<td width="1%" align="center">:</td>
 			<td width="64%"><input class="inputbox input-disabled" value="Auto Number" disabled/></td>
 			<td width="1%"><form:errors path="code"/></td>
@@ -27,7 +27,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right"><span>Customer Group Name</td>
+			<td align="right"><spring:message code="customer.group.name"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="fullName" cssClass="inputbox" /></td>
 			<td><form:errors path="fullName"/></td>
@@ -53,10 +53,35 @@
 <script type="text/javascript">
 $(function(){
 	$('.item-button-save').click(function(){
-		save();
+		if(validateForm()) {
+			save();
+		}
 	});
 	
 });
+
+function validateForm() {
+	var organization = $('#org').val();
+	var fullName = $('input[name="fullName"]').val();
+	var active = $('input[name="active"]:checked').val();
+
+	if (organization == null || organization === "") {
+		alert('<spring:message code="sirius.organization"/> <spring:message code="notif.empty"/> !');
+		return false;
+	}
+
+	if (fullName == null || fullName.trim() === "") {
+		alert('<spring:message code="customer.group.name"/> <spring:message code="notif.empty"/> !');
+		return false;
+	}
+
+	if (active == null || active === undefined) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="sirius.status"/> <spring:message code="notif.select2"/>');
+		return false;
+	}
+
+	return true;
+}
 
 function save() {
 	var xhr = new XMLHttpRequest();

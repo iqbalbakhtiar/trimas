@@ -58,7 +58,7 @@
 						<tr>
 							<th width="4%">&nbsp;</th>
 					  	  	<th width="12%"><span><spring:message code="party.code"/></th>
-					  	  	<th width="15%"><span><spring:message code="party.new"/></th>
+					  	  	<th width="15%"><span><spring:message code="party.name"/></th>
 					  	  	<th width="72%"><span><spring:message code="party.note"/></th>
 						</tr>
 						<c:forEach items="${partys}" var="party">
