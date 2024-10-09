@@ -9,6 +9,7 @@ import java.util.Date;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.siriuserp.administration.dm.Geographic;
+import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.dm.UnitOfMeasure;
 
 import lombok.Getter;
@@ -36,6 +37,7 @@ public class Item extends SiriusItem
 	private BigDecimal commission = BigDecimal.ZERO;
 	private BigDecimal receipted = BigDecimal.ZERO;
 	private BigDecimal adjustment = BigDecimal.ZERO;
+	private BigDecimal amount = BigDecimal.ZERO;
 
 	private BigDecimal returned = BigDecimal.ZERO;
 	private BigDecimal returnedPrice = BigDecimal.ZERO;
@@ -60,6 +62,7 @@ public class Item extends SiriusItem
 	private Date date;
 	private Currency currency;
 	private Tax tax;
+	private Product product;
 
 	private Long reference;
 

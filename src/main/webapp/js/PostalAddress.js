@@ -4,6 +4,7 @@
  * www.siriuserp.com
  */
 var PostalAddress = new Object();
+PostalAddress.data = null;
 
 PostalAddress.init = function($plugin)
 {
@@ -93,3 +94,27 @@ PostalAddress.init = function($plugin)
 		});
 	});
 }
+
+PostalAddress.load = function(id) {
+    $.ajax({
+        url: $('base').attr('href') + 'page/popuppostaladdressjson.htm',
+        data: { id: id },
+        method: 'GET',
+        dataType: 'json',
+        async: false,
+        success: function(json) {
+            if (json) {
+                if (json.status === 'OK') {
+                    PostalAddress.data = json.postalAddress;
+                } else {
+                    alert('Error: ' + json.message);
+                }
+            } else {
+                alert('No data received.');
+            }
+        },
+        error: function(xhr, status, error) {
+            alert('AJAX error: ' + error);
+        }
+    });
+};

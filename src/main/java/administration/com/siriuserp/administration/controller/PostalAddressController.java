@@ -142,4 +142,22 @@ public class PostalAddressController extends ControllerBase
 
 		return response;
 	}
+	
+	@RequestMapping("/popuppostaladdressjson.htm")
+	public ModelAndView view(@RequestParam("id") Long id) throws ServiceException
+	{
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			response.store("postalAddress", service.load(id));
+		} catch (Exception e)
+		{
+			response.statusError();
+			response.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
 }

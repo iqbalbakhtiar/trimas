@@ -42,7 +42,7 @@ public class Currency extends Model implements JSONSupport
 
 	@Column(name = "is_default", length = 1)
 	@Type(type = "yes_no")
-	private boolean base;
+	private boolean base = false;
 
 	public static final synchronized Currency newInstance(String id)
 	{

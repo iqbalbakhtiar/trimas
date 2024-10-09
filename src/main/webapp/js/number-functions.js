@@ -296,25 +296,25 @@ String.prototype.toNumber = function(){
 		return 0;
 }
 
-String.duplicate = function(value) {
-    var $elems = $('.'+value);
+String.duplicate = function(className) {
+    var $elems = $('.' + className);
 
     var values = [];
     var isDuplicated = "";
 
     $elems.each(function () {
-        $value = $(this).val();
+        var value = $(this).val();
 
-        if(!$value) return true;
+        if (!value) return true;
 
-        if(values.indexOf($value) !== -1) {
-            isDuplicated = $value;
-            
+        if (values.indexOf(value) !== -1) {
+            isDuplicated = value;
             return false;
         }
 
-        values.push($value);
-    });   
-     
-    return isDuplicated;     
-}
+        values.push(value);
+    });
+
+    return isDuplicated;
+};
+

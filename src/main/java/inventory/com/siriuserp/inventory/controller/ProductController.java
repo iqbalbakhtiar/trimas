@@ -106,4 +106,14 @@ public class ProductController extends ControllerBase {
 		service.delete(service.load(id));
 		return ViewHelper.redirectTo("productview.htm");
 	}
+	
+	@RequestMapping("/popupproductview.htm")
+	public ModelAndView popup(HttpServletRequest request, @RequestParam(value = "target", required = false) String target) throws Exception
+	{
+		ModelAndView view = new ModelAndView("/inventory-popup/productPopup");
+		view.addAllObjects(service.view(criteriaFactory.createPopup(request, ProductFilterCriteria.class), ProductGridViewQuery.class));
+		view.addObject("target", target);
+
+		return view;
+	}
 }

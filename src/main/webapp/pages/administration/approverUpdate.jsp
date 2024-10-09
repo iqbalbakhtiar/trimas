@@ -1,15 +1,15 @@
 <%@ include file="/common/sirius-general-top.jsp"%>
 
 <div class="toolbar">
-	<a class="item-button-list" href="<c:url value='/page/supplierview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
+	<a class="item-button-list" href="<c:url value='/page/approverview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
 </div>
 
 <div class="main-box">
-<sesform:form id="addForm" name="addForm" method="post" modelAttribute="supplier_edit" enctype="multipart/form-data">
+<sesform:form id="addForm" name="addForm" method="post" modelAttribute="approver_edit" enctype="multipart/form-data">
 	<table style="border:none" width="100%">
 		<tr>
-			<td width="34%" align="right"><span>Supplier ID</td>
+			<td width="34%" align="right"><span>Approver ID</td>
 			<td width="1%" align="center">:</td>
 			<td width="64%"><form:input id='code' path="code" disabled='true' class='input-disabled'/></td>
 		</tr>
@@ -30,7 +30,7 @@
 			<td><form:input path="salutation" size="10" class="input-disabled" disabled='true'/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>Supplier Name</td>
+			<td align="right"><span>Approver Name</td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="fullName" cssClass="inputbox input-disabled" disabled='true'/></td>
 			<td><form:errors path="fullName"/></td>
@@ -68,7 +68,7 @@
 	<div id="mainTab" dojoType="TabContainer" style="width:100% ; height: 250px;">
 		<div id="address" dojoType="ContentPane" label='<spring:message code="customer.address.information"/>' class="tab-pages" ${lastPanel == 'address' ? 'selected="true"' : ''}>
 			<div class="toolbar-clean">
-				<a class="item-button-new" href="<c:url value='/page/postaladdresspreadd.htm?party=${supplier_edit.id}&relationshipId=${relationship.id}&uri=supplierpreedit.htm'/>"><span><spring:message code="postaladdress.new"/></span></a>
+				<a class="item-button-new" href="<c:url value='/page/postaladdresspreadd.htm?party=${approver_edit.id}&relationshipId=${relationship.id}&uri=approverpreedit.htm'/>"><span><spring:message code="postaladdress.new"/></span></a>
 				<div class="item-navigator">&nbsp;</div>
 			</div>
 			<table class="table-list" cellspacing="0" cellpadding="0" width="100%">
@@ -83,11 +83,11 @@
 	  	  	  	<th width="5%"><spring:message code="sirius.status"/></th>
 				<th width="15%"><spring:message code="sirius.note"/></th>
 			</tr>
-			<c:forEach items="${supplier_edit.postalAddresses}" var="postal">
+			<c:forEach items="${approver_edit.postalAddresses}" var="postal">
 			<tr>
 				<td class="tools">
-					<a class="item-button-edit" href="<c:url value='/page/postaladdresspreedit.htm?id=${postal.id}&relationshipId=${relationship.id}&uri=supplierpreedit.htm'/>" title="Edit"><span><spring:message code="sirius.edit"/></span></a>
-					<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/postaladdressdelete.htm?id=${postal.id}&party=${postal.party.id}&relationshipId=${relationship.id}&uri=supplierpreedit.htm'/>');" title="Del"><span><spring:message code="sirius.delete"/></span></a>
+					<a class="item-button-edit" href="<c:url value='/page/postaladdresspreedit.htm?id=${postal.id}&relationshipId=${relationship.id}&uri=approverpreedit.htm'/>" title="Edit"><span><spring:message code="sirius.edit"/></span></a>
+					<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/postaladdressdelete.htm?id=${postal.id}&party=${postal.party.id}&relationshipId=${relationship.id}&uri=approverpreedit.htm'/>');" title="Del"><span><spring:message code="sirius.delete"/></span></a>
 				</td>
 				<td nowrap="nowrap">
 					<c:forEach items='${postal.addressTypes}' var='type'>
@@ -117,7 +117,7 @@
 									
 		<div id="contact" dojoType="ContentPane" label='<spring:message code="sirius.contact.information"/>' class="tab-pages" refreshOnShow="true" ${lastPanel == 'contact' ? 'selected="true"' : ''}>
 			<div class="toolbar-clean">
-				<a class="item-button-new" href="<c:url value='/page/contactmechanismpreadd.htm?party=${supplier_edit.id}&relationshipId=${relationship.id}&uri=supplierpreedit.htm'/>"><span><spring:message code="contactinformation.new"/></span></a>
+				<a class="item-button-new" href="<c:url value='/page/contactmechanismpreadd.htm?party=${approver_edit.id}&relationshipId=${relationship.id}&uri=approverpreedit.htm'/>"><span><spring:message code="contactinformation.new"/></span></a>
 				<div class="item-navigator">&nbsp;</div>
 			</div>
 			<table class="table-list" cellspacing="0" cellpadding="0" width="100%">
@@ -130,11 +130,11 @@
 				<th width="15%"><spring:message code="sirius.status"/></th>
 				<th width="20%"><spring:message code="sirius.note"/></th>
 			</tr>
-			<c:forEach items="${supplier_edit.contactMechanisms}" var="contact">
+			<c:forEach items="${approver_edit.contactMechanisms}" var="contact">
 				<tr>
 					<td class="tools">
-						<a class="item-button-edit" href="<c:url value='/page/contactmechanismpreedit.htm?id=${contact.id}&relationshipId=${relationship.id}&uri=supplierpreedit.htm'/>" title="Edit"><span><spring:message code="sirius.edit"/></span></a>			
-						<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/contactmechanismdelete.htm?id=${contact.id}&party=${contact.party.id}&relationshipId=${relationship.id}&uri=supplierpreedit.htm'/>');" title="Del"><span><spring:message code="sirius.delete"/></span></a>
+						<a class="item-button-edit" href="<c:url value='/page/contactmechanismpreedit.htm?id=${contact.id}&relationshipId=${relationship.id}&uri=approverpreedit.htm'/>" title="Edit"><span><spring:message code="sirius.edit"/></span></a>			
+						<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/contactmechanismdelete.htm?id=${contact.id}&party=${contact.party.id}&relationshipId=${relationship.id}&uri=approverpreedit.htm'/>');" title="Del"><span><spring:message code="sirius.delete"/></span></a>
 					</td>
 <!-- 					Isi setiap Baris disini -->
 					<td>${contact.contactName}</td>
@@ -152,40 +152,6 @@
 			</table>
 		</div>
 		
-		<div id="bank" dojoType="ContentPane" label='<spring:message code="customer.bank.information"/>' class="tab-pages" refreshOnShow="true" ${lastPanel == 'bank' ? 'selected="true"' : ''}>
-			<div class="toolbar-clean">
-				<a class="item-button-new" href="<c:url value='/page/partybankaccountpreadd.htm?party=${supplier_edit.id}&relationshipId=${relationship.id}&uri=supplierpreedit.htm'/>"><span><spring:message code="bankaccount.information.new"/></span></a>
-				<div class="item-navigator">&nbsp;</div>
-			</div>
-			<table class="table-list" cellspacing="0" cellpadding="0" width="100%">
-			<tr>
-				<th width="1%"><div style="width: 45px;">&nbsp;</div></th>
-				<th width="10%"><spring:message code="bankaccount.name"/></th>
-				<th width="10%"><spring:message code="bankaccount.account.holder"/></th>
-				<th width="10%"><spring:message code="bankaccount.accountno"/></th>
-				<th width="10%"><spring:message code="sirius.status"/></th>
-				<th width="10%"><spring:message code="sirius.note"/></th>
-			</tr>
-			<c:forEach items="${supplier_edit.partyBankAccounts}" var="bank">
-			<tr>
-				<td class="tools">
-					<a class="item-button-edit" href="<c:url value='/page/partybankaccountpreedit.htm?id=${bank.id}&relationshipId=${relationship.id}&uri=supplierpreedit.htm'/>" title="Edit"><span><spring:message code="sirius.edit"/></span></a>			
-					<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/partybankaccountdelete.htm?id=${bank.id}&party=${contact.party.id}&relationshipId=${relationship.id}&uri=supplierpreedit.htm'/>');" title="Del"><span><spring:message code="sirius.delete"/></span></a>
-				</td>
-				<td>${bank.bankAccount.bankName}</td> 
-				<td>${bank.bankAccount.holder.fullName}</td>
-				<td>${bank.bankAccount.accountNo}</td>          
-				<td>
-					<c:if test='${bank.enabled}'><spring:message code="sirius.active"/></c:if>
-					<c:if test='${!bank.enabled}'><spring:message code="sirius.inactive"/></c:if>
-				</td>
-				<td>${bank.bankAccount.note}</td>
-			</tr>
-			</c:forEach>
-			<tr class="end-table"><td colspan="6">&nbsp;</td></tr>
-			</table>
-		</div>
-			
 	</div>
 </sesform:form>
 </div>
@@ -199,7 +165,7 @@ $(function(){
 
 function save() {
 	var xhr = new XMLHttpRequest();
-	xhr.open('POST', "<c:url value='/page/supplieredit.htm?relationshipId='/>" + ${relationship.id});
+	xhr.open('POST', "<c:url value='/page/approveredit.htm?relationshipId='/>" + ${relationship.id});
 	xhr.responseType = 'json';
 	
 	if(xhr.readyState == 1) {
@@ -215,7 +181,7 @@ function save() {
 				if(json.status == 'OK') {
 					$dialog.dialog('close');
 					
-					let url = "<c:url value='/page/supplierpreedit.htm?id='/>"+json.data.relationshipId;;
+					let url = "<c:url value='/page/approverpreedit.htm?id='/>"+json.data.relationshipId;;
 					
 					window.location=url;
 				} else {

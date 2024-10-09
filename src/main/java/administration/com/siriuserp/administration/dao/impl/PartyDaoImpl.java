@@ -29,25 +29,13 @@ public class PartyDaoImpl extends DaoHelper<Party> implements PartyDao
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("FROM Party party ");
-		builder.append("WHERE party.firstName =:firstName ");
-
-		if (SiriusValidator.validateParam(middleName))
-			builder.append("AND party.middleName =:middleName ");
-
-		if (SiriusValidator.validateParam(lastName))
-			builder.append("AND party.lastName =:lastName ");
+		builder.append("WHERE party.fullName =:fullName ");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setCacheable(true);
 		query.setReadOnly(true);
 		query.setMaxResults(1);
-		query.setParameter("firstName", firstName);
-
-		if (SiriusValidator.validateParam(middleName))
-			query.setParameter("middleName", middleName);
-
-		if (SiriusValidator.validateParam(lastName))
-			query.setParameter("lastName", lastName);
+		query.setParameter("fullName", firstName);
 
 		return (Party) query.uniqueResult();
 	}
@@ -85,17 +73,13 @@ public class PartyDaoImpl extends DaoHelper<Party> implements PartyDao
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT p FROM Party party ");
-		builder.append("WHERE party.firstName LIKE :firstName ");
-		builder.append("OR party.middleName LIKE :middleName ");
-		builder.append("OR party.lastName LIKE :lastName ");
+		builder.append("WHERE party.fullName LIKE :fullName ");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setCacheable(true);
 		query.setReadOnly(true);
 		query.setMaxResults(1);
-		query.setParameter("firstName", "%" + name + "%");
-		query.setParameter("middleName", "%" + name + "%");
-		query.setParameter("lastName", "%" + name + "%");
+		query.setParameter("fullName", "%" + name + "%");
 
 		return (Party) query.list().get(0);
 	}
@@ -103,7 +87,7 @@ public class PartyDaoImpl extends DaoHelper<Party> implements PartyDao
 	@SuppressWarnings("unchecked")
 	public List<Party> loadAllNoUser()
 	{
-		Query query = getSession().createQuery("FROM Party p WHERE p.id not in(SELECT user.person.id FROM User user) ORDER BY p.firstName,p.middleName,p.lastName ASC");
+		Query query = getSession().createQuery("FROM Party p WHERE p.id not in(SELECT user.person.id FROM User user) ORDER BY p.fullName ASC");
 		query.setCacheable(true);
 		query.setReadOnly(true);
 

@@ -61,10 +61,10 @@
                         <tr>
                           <td>
                               <fieldset>
-                                  <legend><strong><spring:message code="app.approval.decision"/></strong></legend>
+                                  <legend><strong><spring:message code="approver.approval.decision"/></strong></legend>
                                   <table width="100%" style="border:none">
                                   <tr>
-                                          <td nowrap="nowrap" align="right"><spring:message code="app.company"/> </td>
+                                          <td nowrap="nowrap" align="right"><spring:message code="approver.company"/> </td>
                                           <td>:</td>
                                           <td>
                                                 <select id="org" name="organization" class="combobox-ext" disabled='true'>
@@ -73,7 +73,7 @@
                                           </td>
                                   </tr>
                                   <tr>
-                                      <td align="right"><spring:message code="app.decision"/></td>
+                                      <td align="right"><spring:message code="approver.decision"/></td>
                                       <td>:</td>
                                       <td>
                                           <select id="decision" name="decision" class="combobox">
@@ -82,7 +82,7 @@
                                       </td>
                                   </tr>
                                   <tr>
-                                      <td align="right"><spring:message code="app.current"/></td>
+                                      <td align="right"><spring:message code="approver.current"/></td>
                                       <td>:</td>
                                       <td>
                                           <select id="current" name="current" class="combobox">
@@ -91,7 +91,7 @@
                                       </td>
                                   </tr>
                                   <tr>
-                                      <td align="right"><spring:message code="app.new"/></td>
+                                      <td align="right"><spring:message code="approver.new"/></td>
                                       <td>:</td>
                                       <td>
                                           <select id="forwardTo" name="forwardTo" class="combobox">
@@ -101,7 +101,7 @@
                                       </td>
                                   </tr>
                                   <tr>
-                                      <td align="right"><spring:message code="app.remark"/></td>
+                                      <td align="right"><spring:message code="approver.remark"/></td>
                                       <td>:</td>
                                       <td valign="top"><textarea id="remark" name="remark" cols="45" rows="3" value="${approvalDecision.remark}"></textarea></td>
                                   </tr>

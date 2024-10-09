@@ -94,7 +94,7 @@ public class PostalAddressService extends Service
 			}
 		}
 
-		if (!postalAddress.isEnabled())
+		if (!postalAddress.isEnabled()) // Set Default ( Selected ) menjai 'false' apabila pada form apabila statusnya (enabled) 'inactive'
 			postalAddress.setSelected(false);
 
 		postalAddressDao.add(postalAddress);
@@ -103,9 +103,9 @@ public class PostalAddressService extends Service
 		party.setUpdatedBy(getPerson());
 		party.setUpdatedDate(DateHelper.now());
 
-		partyDao.update(party);
+		partyDao.update(party); // Update status terakhir kali party diupdate
 
-		for (PostalAddress address : party.getPostalAddresses())
+		for (PostalAddress address : party.getPostalAddresses()) // Update default address ke alamat yang baru, apabila alamat baru menjadi default
 		{
 			if (postalAddress.isSelected())
 			{

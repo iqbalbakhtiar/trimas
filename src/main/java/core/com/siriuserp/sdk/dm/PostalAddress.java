@@ -121,6 +121,9 @@ public class PostalAddress extends Model implements JSONSupport
 		map.put("postalTypes", getAddressTypes());
 		map.put("postalCity", getCity());
 		map.put("isDefault", isSelected());
+		map.put("addressName", getAddressName());
+		map.put("postalCode", getPostalCode());
+		map.put("city", getCity().getName());
 
 		return map;
 	}
