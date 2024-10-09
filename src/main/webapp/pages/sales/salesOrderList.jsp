@@ -57,11 +57,14 @@
 					  	<table class="table-list" cellspacing="0" cellpadding="0" width="100%">
 						<tr>
 							<th width="3%">&nbsp;</th>
-					  	  	<th width="20%"><spring:message code="sirius.id"/></th>
-					  	  	<th width="20%"><spring:message code="sirius.date"/></th>
-					  	  	<th width="20%"><spring:message code="customer"/></th>
-					  	  	<th width="20%"><spring:message code="sirius.tax"/></th>
-							<th width="20%"><spring:message code="sirius.approver"/></th>
+					  	  	<th width="10%"><spring:message code="sirius.id"/></th>
+					  	  	<th width="10%"><spring:message code="salesorder.date"/></th>
+					  	  	<th width="10%"><spring:message code="salesorder.shipping.date"/></th>
+					  	  	<th width="10%"><spring:message code="customer"/></th>
+					  	  	<th width="10%"><spring:message code="sirius.tax"/></th>
+							<th width="10%"><spring:message code="sirius.approver"/></th>
+							<th width="10%"><spring:message code="salesorder.customer.pocode"/></th>
+							<th width="10%"><spring:message code="salesorder.total.transaction"/></th>
 						</tr>
 						<c:forEach items="${salesOrders}" var="sales">
 						<tr>
@@ -70,12 +73,15 @@
 							</td>
  							<td nowrap="nowrap">${sales.code}</td>
 							<td nowrap="nowrap"><fmt:formatDate value='${sales.date}' pattern='dd-MM-yyyy'/></td>
+							<td nowrap="nowrap"><fmt:formatDate value='${sales.shippingDate}' pattern='dd-MM-yyyy'/></td>
  							<td nowrap="nowrap">${sales.customer.fullName}</td>
  							<td nowrap="nowrap">${sales.tax.taxName}</td>
  							<td nowrap="nowrap">${sales.approver.fullName}</td>
+ 							<td nowrap="nowrap">${sales.poCode}</td>
+ 							<td nowrap="nowrap"><fmt:formatNumber value='${sales.money.amount}' pattern=',##0.00'/></td>
 						</tr>
 						</c:forEach>
-						<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
+						<tr class="end-table"><td colspan="9">&nbsp;</td></tr>
 						</table>
 						<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
 						<tr>
