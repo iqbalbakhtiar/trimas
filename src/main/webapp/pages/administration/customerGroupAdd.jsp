@@ -23,7 +23,7 @@
 						<form:option value='${customer_group_add.organization.id}' label='${customer_group_add.organization.fullName}'/>
 		    		</c:if>
 				</form:select>
-				<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupcompanystructurerolebasedview.htm?target=org'/>');" title="Company Structure" />
+				<a class="item-popup" onclick="openpopup('<c:url value='/page/popupcompanystructurerolebasedview.htm?target=org'/>');" title="Company Structure"></a>
 			</td>
 		</tr>
 		<tr>
@@ -41,7 +41,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right"><span><spring:message code="party.note"/></td>
+			<td align="right"><spring:message code="party.note"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:textarea path="note" rows="6" cols="45"/></td>
 			<td>&nbsp;</td>
@@ -100,10 +100,8 @@ function save() {
 			if(json) {
 				if(json.status == 'OK') {
 					$dialog.dialog('close');
-					
-					let url = "<c:url value='/page/customergrouppreedit.htm?id='/>"+json.data.id;;
-					
-					window.location=url;
+
+					window.location="<c:url value='/page/customerview.htm'/>";
 				} else {
 					afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
 				}

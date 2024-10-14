@@ -10,7 +10,7 @@
 <sesform:form id="addForm" name="addForm" method="post" modelAttribute="salesOrder_form" enctype="multipart/form-data">
 	<table width="100%" border="0">
 		<tr>
-			<td width="60%">
+			<td width="60%" valign="top">
 				<table style="border:none" width="100%">
 				<tr>
 					<td width="34%" align="right">Sales Order ID</td>
@@ -75,7 +75,7 @@
 					<td>
 						<form:select id="approver" path="approver" cssClass="combobox-ext input-disabled" disabled="true">
 							<c:if test='${not empty salesOrder_form.approver}'>
-								<form:option value="${salesOrder_form.approver.id}">${salesOrder_form.approver.code} ${salesOrder_form.approver.fullName}</form:option>
+								<form:option value="${approvalDecision.forwardTo.id}">${approvalDecision.forwardTo.code} ${approvalDecision.forwardTo.fullName}</form:option>
 							</c:if>
 						</form:select>
 					</td>
@@ -118,6 +118,8 @@
 									</tr>
 								</table>
 							</fieldset>
+							<%@ include file="/pages/sales/approval-history.jsp" %>
+							<%@ include file="/pages/sales/approval.jsp" %>
 						</td>
 					</tr>
 				</table>
@@ -407,7 +409,7 @@ function save() {
 				if(json.status == 'OK') {
 					$dialog.dialog('close');
 
-					let url = "<c:url value='/page/salesorderpreedit.htm?id='/>"+json.data.id;;
+					let url = "<c:url value='/page/salesorderpreedit.htm?id='/>"+json.id;;
 
 					window.location=url;
 				} else {

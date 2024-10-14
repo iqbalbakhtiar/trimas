@@ -67,6 +67,7 @@ public class Form implements SiriusForm
 	private Exchange exchange;
 	private ExchangeType exchangeType;
 	private TableType tableType;
+	private ApprovalDecisionStatus approvalDecisionStatus;
 
 	private BigDecimal amount = BigDecimal.ZERO;
 	private BigDecimal discount = BigDecimal.ZERO;

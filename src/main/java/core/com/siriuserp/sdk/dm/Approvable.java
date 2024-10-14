@@ -3,24 +3,16 @@ package com.siriuserp.sdk.dm;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
-import javax.persistence.Column;
+import javax.persistence.*;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import javolution.util.FastSet;
 import org.codehaus.jackson.annotate.JsonValue;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.*;
 
 import com.siriuserp.sales.dm.ApprovableType;
 
@@ -32,7 +24,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "planable")
+@Table(name = "approvable")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Approvable extends Model implements JSONSupport, Siblingable {
 
@@ -69,11 +61,17 @@ public abstract class Approvable extends Model implements JSONSupport, Siblingab
     @Fetch(FetchMode.SELECT)
     protected Party approver;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="fk_approval_decision")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     protected ApprovalDecision approvalDecision;
+
+    @OneToMany(mappedBy="approvable",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @Fetch(FetchMode.SELECT)
+    @Type(type="com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+    protected Set<ApprovableInterceptorName> interceptors = new FastSet<ApprovableInterceptorName>();
 
 	@Override
 	public String getAuditCode() {
@@ -93,14 +91,14 @@ public abstract class Approvable extends Model implements JSONSupport, Siblingab
 	public String getSubmit()
     {
 		int idx = getUri().length();
-		
+
 		StringBuilder builder = new StringBuilder();
 		builder.append(getUri().substring(0, idx-11));
 		builder.append(getUri().substring(getUri().length()-11, getUri().length()).replace("pre", ""));
-		
+
 		return builder.toString();
     }
-	
+
 	@JsonValue
 	public Map<String, Object> val()
 	{

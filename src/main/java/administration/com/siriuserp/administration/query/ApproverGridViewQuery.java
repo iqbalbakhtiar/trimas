@@ -40,6 +40,9 @@ public class ApproverGridViewQuery extends AbstractGridViewQuery {
 		
 		if(criteria.getActive() != null)
 			builder.append("AND relationship.partyFrom.active =:active");
+
+		if (criteria.getExcept() != null)
+			builder.append("AND relationship.partyFrom.id !=:except");
 		
 		builder.append(" ORDER BY relationship.id DESC ");
 		
@@ -63,6 +66,9 @@ public class ApproverGridViewQuery extends AbstractGridViewQuery {
 		
 		if(criteria.getActive() != null)
 			query.setParameter("active", criteria.getActive());
+
+		if (criteria.getExcept() != null)
+			query.setParameter("except", criteria.getExcept());
 
 		return query;
 	}

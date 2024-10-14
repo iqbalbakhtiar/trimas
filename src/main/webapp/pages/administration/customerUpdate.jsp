@@ -41,19 +41,19 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right"><span>Customer Name</td>
+			<td align="right"><spring:message code="customer.name"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="fullName" cssClass="inputbox input-disabled" disabled='true'/></td>
 			<td><form:errors path="fullName"/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>NPWP</td>
+			<td align="right">NPWP</td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="taxCode" cssClass="inputbox input-disabled" disabled='true'/></td>
 			<td><form:errors path="taxCode"/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>SIUP</td>
+			<td align="right">SIUP</td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="permitCode" cssClass="inputbox input-disabled" disabled='true'/></td>
 			<td><form:errors path="permitCode"/></td>
@@ -67,7 +67,7 @@
 			</td>
 		</tr>	
 		<tr>
-			<td align="right"><span>Keterangan Tambahan</td>
+			<td align="right"><spring:message code="sirius.note"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:textarea path="note" rows="6" cols="45"/></td>
 			<td>&nbsp;</td>
@@ -355,16 +355,6 @@ function validateForm() {
 	
 	if (fullName == null || fullName.trim() === "") {
 		alert('<spring:message code="customer.name"/> <spring:message code="notif.empty"/> !');
-		return false;
-	}
-
-	if (taxCode == null || taxCode.trim() === "") {
-		alert('NPWP <spring:message code="notif.empty"/> !');
-		return false;
-	}
-	
-	if (permitCode == null || permitCode.trim() === "") {
-		alert('SIUP <spring:message code="notif.empty"/> !');
 		return false;
 	}
 

@@ -62,6 +62,7 @@
 					  	  	<th width="10%"><spring:message code="salesorder.shipping.date"/></th>
 					  	  	<th width="10%"><spring:message code="customer"/></th>
 					  	  	<th width="10%"><spring:message code="sirius.tax"/></th>
+					  	  	<th width="10%"><spring:message code="salesorder.approvalstatus"/></th>
 							<th width="10%"><spring:message code="sirius.approver"/></th>
 							<th width="10%"><spring:message code="salesorder.customer.pocode"/></th>
 							<th width="10%"><spring:message code="salesorder.total.transaction"/></th>
@@ -76,12 +77,13 @@
 							<td nowrap="nowrap"><fmt:formatDate value='${sales.shippingDate}' pattern='dd-MM-yyyy'/></td>
  							<td nowrap="nowrap">${sales.customer.fullName}</td>
  							<td nowrap="nowrap">${sales.tax.taxName}</td>
- 							<td nowrap="nowrap">${sales.approver.fullName}</td>
+ 							<td nowrap="nowrap">${sales.approvable.approvalDecision.approvalDecisionStatus.normalizedName}</td>
+ 							<td nowrap="nowrap">${sales.approvable.approvalDecision.forwardTo.fullName}</td>
  							<td nowrap="nowrap">${sales.poCode}</td>
  							<td nowrap="nowrap"><fmt:formatNumber value='${sales.money.amount}' pattern=',##0.00'/></td>
 						</tr>
 						</c:forEach>
-						<tr class="end-table"><td colspan="9">&nbsp;</td></tr>
+						<tr class="end-table"><td colspan="10">&nbsp;</td></tr>
 						</table>
 						<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
 						<tr>

@@ -42,6 +42,11 @@ public class ApprovalDecision extends Model {
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private Party forwardTo;
+
+	@OneToOne(mappedBy="approvalDecision",fetch=FetchType.LAZY)
+    @LazyToOne(LazyToOneOption.PROXY)
+    @Fetch(FetchMode.SELECT)
+    private Approvable approvable;
 	
 	@Enumerated(EnumType.STRING)
     @Column(name="decision_status")

@@ -26,6 +26,7 @@ public class ApproverFilterCriteria extends AbstractFilterCriteria {
 	private Date date;
 
 	private Long facility;
+	private Long except;
 	
 	private Boolean base;
 	private Boolean active;

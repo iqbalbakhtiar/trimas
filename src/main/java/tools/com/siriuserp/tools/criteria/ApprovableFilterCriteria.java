@@ -25,6 +25,7 @@ public class ApprovableFilterCriteria extends AbstractFilterCriteria
     private static final long serialVersionUID = -7767625718601533896L;
 
     private String code;
+    private String name;
     private String type;
     private String approver;
     

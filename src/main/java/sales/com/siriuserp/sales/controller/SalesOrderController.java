@@ -2,6 +2,7 @@ package com.siriuserp.sales.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.siriuserp.sdk.dm.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -26,10 +27,6 @@ import com.siriuserp.sales.query.SalesOrderGridViewQuery;
 import com.siriuserp.sales.service.SalesOrderService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
-import com.siriuserp.sdk.dm.Currency;
-import com.siriuserp.sdk.dm.Party;
-import com.siriuserp.sdk.dm.PostalAddress;
-import com.siriuserp.sdk.dm.Tax;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.utility.FormHelper;
 
@@ -55,6 +52,7 @@ public class SalesOrderController extends ControllerBase {
 		binder.registerCustomEditor(SalesOrderItem.class, modelEditor.forClass(SalesOrderItem.class));
 		binder.registerCustomEditor(SalesType.class, enumEditor.forClass(SalesType.class));
 		binder.registerCustomEditor(SOStatus.class, enumEditor.forClass(SOStatus.class));
+		binder.registerCustomEditor(ApprovalDecisionStatus.class, enumEditor.forClass(ApprovalDecisionStatus.class));
 		
 	}
 	
@@ -74,6 +72,7 @@ public class SalesOrderController extends ControllerBase {
 	@RequestMapping("/salesorderadd.htm")
 	public ModelAndView add(@ModelAttribute("salesOrder_form") SalesForm salesForm, BindingResult result, SessionStatus status) throws Exception
 	{
+		System.out.println("Controller sales order add");
 		JSONResponse response = new JSONResponse();
 
 		try {
@@ -101,13 +100,10 @@ public class SalesOrderController extends ControllerBase {
 		JSONResponse response = new JSONResponse();
 
 		try {
-	        SalesOrder salesOrder = salesForm.getSalesOrder();
-	        FormHelper.update(salesOrder, salesForm);
-
-			FastMap<String, Object> map = service.edit(salesOrder);
+			service.edit(FormHelper.update(salesForm.getSalesOrder(), salesForm));
 			status.setComplete();
 
-			response.store("data", map);
+			response.store("id", salesForm.getSalesOrder().getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.statusError();

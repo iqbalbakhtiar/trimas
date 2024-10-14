@@ -67,7 +67,7 @@ public class PostalAddressService extends Service
 	public FastMap<String, Object> preadd(Long party)
 	{
 		PartyForm form = new PartyForm();
-		form.setEnabled(false);
+		form.setEnabled(true);
 		form.setParty(genericDao.load(Party.class, party));
 
 		FastMap<String, Object> map = new FastMap<String, Object>();

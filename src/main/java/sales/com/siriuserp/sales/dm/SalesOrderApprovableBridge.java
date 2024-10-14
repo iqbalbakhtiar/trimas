@@ -1,9 +1,6 @@
 package com.siriuserp.sales.dm;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -26,6 +23,7 @@ public class SalesOrderApprovableBridge extends Approvable {
 	private static final long serialVersionUID = 2412332120016135956L;
 	
 	@OneToOne(mappedBy = "approvable", fetch = FetchType.LAZY)
+//	@JoinColumn(name="fk_sales_order")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private SalesOrder salesOrder;
@@ -41,9 +39,5 @@ public class SalesOrderApprovableBridge extends Approvable {
 		
 		return String.valueOf(getSalesOrder().getId());
 	}
-	
-	@Override
-	public String getSubmit() {
-		return "salesorderpreedit.htm";
-	}
+
 }

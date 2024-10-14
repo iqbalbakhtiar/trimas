@@ -47,13 +47,13 @@
 			<td><form:errors path="fullName"/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>NPWP</td>
+			<td align="right">NPWP</td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="taxCode" cssClass="inputbox" /></td>
 			<td><form:errors path="taxCode"/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>SIUP</td>
+			<td align="right">SIUP</td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="permitCode" cssClass="inputbox" /></td>
 			<td><form:errors path="permitCode"/></td>
@@ -105,16 +105,6 @@ function validateForm() {
 	
 	if (fullName == null || fullName.trim() === "") {
 		alert('<spring:message code="customer.name"/> <spring:message code="notif.empty"/> !');
-		return false;
-	}
-
-	if (taxCode == null || taxCode.trim() === "") {
-		alert('NPWP <spring:message code="notif.empty"/> !');
-		return false;
-	}
-	
-	if (permitCode == null || permitCode.trim() === "") {
-		alert('SIUP <spring:message code="notif.empty"/> !');
 		return false;
 	}
 

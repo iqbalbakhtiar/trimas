@@ -1,15 +1,17 @@
 package com.siriuserp.sales.service;
 
-import com.siriuserp.sdk.utility.DateHelper;
-import com.siriuserp.sdk.utility.FormHelper;
+import com.siriuserp.sales.dm.*;
+import com.siriuserp.sdk.annotation.AutomaticSibling;
+import com.siriuserp.sdk.dao.CreditTermDao;
+import com.siriuserp.sdk.dao.PartyRelationshipDao;
+import com.siriuserp.sdk.dm.*;
+import com.siriuserp.sdk.exceptions.ServiceException;
+import com.siriuserp.sdk.utility.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.siriuserp.sales.dm.SalesOrder;
-import com.siriuserp.sales.dm.SalesOrderItem;
-import com.siriuserp.sales.dm.SalesType;
 import com.siriuserp.sales.form.SalesForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
@@ -18,15 +20,8 @@ import com.siriuserp.sdk.base.Service;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
-import com.siriuserp.sdk.dm.Currency;
-import com.siriuserp.sdk.dm.Item;
-import com.siriuserp.sdk.dm.Money;
-import com.siriuserp.sdk.dm.TableType;
-import com.siriuserp.sdk.dm.Tax;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
-import com.siriuserp.sdk.utility.GeneratorHelper;
-import com.siriuserp.sdk.utility.QueryFactory;
 
 import javolution.util.FastMap;
 
@@ -39,6 +34,12 @@ public class SalesOrderService extends Service {
 	
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
+
+	@Autowired
+	private PartyRelationshipDao partyRelationshipDao;
+
+	@Autowired
+	private CreditTermDao creditTermDao;
 	
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws Exception {
@@ -74,7 +75,17 @@ public class SalesOrderService extends Service {
 		salesOrder.setMoney(moneySalesOrder);
 		salesOrder.setSalesType(SalesType.STANDARD);
 		salesOrder.setCreatedBy(getPerson());
-		
+
+		// TODO: Add Active Credit Term [DONE]
+		// Credit Term harus didapatkan dari party relation ship
+		PartyRelationship relationship = partyRelationshipDao.load(salesOrder.getCustomer().getId(), salesOrder.getOrganization().getId(), PartyRelationshipType.CUSTOMER_RELATIONSHIP);
+		CreditTerm creditTerm = creditTermDao.loadByRelationship(relationship.getId(), true);
+		if (creditTerm == null)
+			throw new ServiceException("Customer doesn't have active Credit Term, please set it first on customer page.");
+
+		salesOrder.setCreditTerm(creditTerm);
+
+		// Add every Sales Order Item
 		for (Item item : form.getItems()) {
 			SalesOrderItem salesOrderItem = new SalesOrderItem();
 			Money money = new Money();
@@ -99,6 +110,12 @@ public class SalesOrderService extends Service {
 			
 			salesOrder.getItems().add(salesOrderItem);
 		}
+
+		//Add ApprovableBridge using Helper
+		SalesOrderApprovableBridge approvableBridge = ApprovableBridgeHelper.create(SalesOrderApprovableBridge.class, salesOrder);
+		approvableBridge.setApprovableType(ApprovableType.SALES_ORDER);
+		approvableBridge.setUri("salesorderpreedit.htm");
+		salesOrder.setApprovable(approvableBridge);
 		
 		genericDao.add(salesOrder);
 		
@@ -117,12 +134,16 @@ public class SalesOrderService extends Service {
 		
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("salesOrder_form", salesForm);
-		
+		map.put("approvalDecisionStatuses", ApprovalDecisionStatus.values());
+		map.put("approvalDecision", salesForm.getSalesOrder().getApprovable().getApprovalDecision());
+
 		return map;
 	}
 
+	@AutomaticSibling(roles = "ApprovableSiblingRole")
 	@AuditTrails(className = SalesOrder.class, actionType = AuditTrailsActionType.UPDATE)
 	public FastMap<String, Object> edit(SalesOrder salesOrder) throws Exception {
+		System.out.println("service - edit");
 		salesOrder.setUpdatedBy(getPerson());
 		salesOrder.setUpdatedDate(DateHelper.now());
 

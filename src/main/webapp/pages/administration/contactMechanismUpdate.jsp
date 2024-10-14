@@ -15,15 +15,7 @@
 								<td> <form:input path="contactName" cssClass="inputbox" size="15"/></td>
 							</tr>
 							<tr>
-								<td align="right"><spring:message code="contactmechanism.detail"/> :</td>
-								<td> <form:input path="contact" cssClass="inputbox" size="15"/></td>
-							</tr>
-							<tr>
-								<td align="right"><spring:message code="contactmechanism.department"/> :</td>
-								<td> <form:input path="department" cssClass="inputbox" size="15"/></td>
-							</tr>
-							<tr>
-	 							<td align="right"><spring:message code="contactmechanism.type"/> :</td>
+								<td align="right"><spring:message code="contactmechanism.type"/> :</td>
 								<td>
 									<form:select path="contactMechanismType">
 										<form:option value="PHONE" label="PHONE"/>
@@ -33,7 +25,15 @@
 										<form:option value="WEBSITE" label="WEBSITE"/>
 									</form:select>
 								</td>
-	 						</tr>
+							</tr>
+							<tr>
+								<td align="right"><spring:message code="contactmechanism.detail"/> :</td>
+								<td> <form:input path="contact" cssClass="inputbox" size="15"/></td>
+							</tr>
+							<tr>
+								<td align="right"><spring:message code="contactmechanism.department"/> :</td>
+								<td> <form:input path="department" cssClass="inputbox" size="15"/></td>
+							</tr>
 	 						<tr>
 								<td align="right"><spring:message code="sirius.status"/> :</td>
 								<td>

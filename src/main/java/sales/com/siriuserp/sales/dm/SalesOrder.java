@@ -19,6 +19,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.siriuserp.sdk.dm.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
@@ -28,15 +29,6 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
-
-import com.siriuserp.sdk.dm.CreditTerm;
-import com.siriuserp.sdk.dm.Facility;
-import com.siriuserp.sdk.dm.JSONSupport;
-import com.siriuserp.sdk.dm.Model;
-import com.siriuserp.sdk.dm.Money;
-import com.siriuserp.sdk.dm.Party;
-import com.siriuserp.sdk.dm.PostalAddress;
-import com.siriuserp.sdk.dm.Tax;
 
 import javolution.util.FastSet;
 import lombok.Getter;
@@ -50,7 +42,7 @@ import lombok.Setter;
 @Table(name = "sales_order")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class SalesOrder extends Model implements JSONSupport {
+public class SalesOrder extends Model implements JSONSupport, ApprovableBridge {
 	
 	private static final long serialVersionUID = -5053662637061845245L;
 	
@@ -149,4 +141,21 @@ public class SalesOrder extends Model implements JSONSupport {
 		return id + "," + code;
 	}
 
+	@Override
+	public ApprovableType getApprovableType() {
+		return ApprovableType.SALES_ORDER;
+	}
+
+	@Override
+	public String getUri() {
+		return "";
+	}
+
+	@Override
+	public Set<String> getInterceptorNames() {
+		Set<String> interceptors = new FastSet<String>();
+		interceptors.add("salesOrderApprovableInterceptor");
+
+		return interceptors;
+	}
 }

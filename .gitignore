@@ -16,3 +16,4 @@ buildNumber.properties
 .tomcatplugin
 /.settings/
 /siriuserp-1.5-cocina.iml
+/.smarttomcat/
