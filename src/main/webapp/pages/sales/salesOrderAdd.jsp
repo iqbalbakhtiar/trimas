@@ -218,20 +218,37 @@ $(function(){
     });
 });
 
-function updateShippingAddress(element){
-    var selectedId = element.value;
-    PostalAddress.load(selectedId);
-    if (PostalAddress.data) {
-        var addressDetail = PostalAddress.data.postalAddress || '';
-        var postalCode = PostalAddress.data.postalCode || '';
-        var city = PostalAddress.data.postalCity ? PostalAddress.data.postalCity.name : '';
+function updateShippingAddress(element) {
+	var selectedId = element.value;
 
-        // Update field dalam form
-        $('#addressDetail').val(addressDetail);
-        $('#addressPostalCode').val(postalCode);
-        $('#addressCity').val(city);
-    }
+	// Check if selectedId is valid
+	if (!selectedId || selectedId.trim() === "") {
+		// Clear the address fields
+		$('#addressDetail').val('');
+		$('#addressPostalCode').val('');
+		$('#addressCity').val('');
+		return;
+	}
+
+	PostalAddress.load(selectedId);
+
+	if (PostalAddress.data) {
+		var addressDetail = PostalAddress.data.postalAddress || '';
+		var postalCode = PostalAddress.data.postalCode || '';
+		var city = PostalAddress.data.postalCity ? PostalAddress.data.postalCity.name : '';
+
+		// Update fields in the form
+		$('#addressDetail').val(addressDetail);
+		$('#addressPostalCode').val(postalCode);
+		$('#addressCity').val(city);
+	} else {
+		// If no data is returned, clear the fields
+		$('#addressDetail').val('');
+		$('#addressPostalCode').val('');
+		$('#addressCity').val('');
+	}
 }
+
 
 function validateForm() {
     // Validasi organisasi (sudah ada sebelumnya)

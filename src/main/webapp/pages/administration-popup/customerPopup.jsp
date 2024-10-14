@@ -17,6 +17,11 @@
 			
 			if(id && code && name)
 			{
+				if (!Party.data.partyAddresses || Party.data.partyAddresses.length === 0) {
+					alert('The selected customer does not have any addresses. Please add an address before selecting this customer.');
+					return; // Exit the function
+				}
+
 				var _client = self.opener.document.getElementById('${param.target}');
 				if(_client)
 				{
