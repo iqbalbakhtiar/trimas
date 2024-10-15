@@ -21,8 +21,11 @@ public class ApproverGridViewQuery extends AbstractGridViewQuery {
 		else
 			builder.append("SELECT DISTINCT(relationship) ");
 		
-		builder.append("FROM PartyRelationship relationship ");
-		builder.append("WHERE relationship.partyRoleTypeFrom.id =:fromRoleType ");
+		builder.append("FROM PartyRelationship relationship WHERE 1=1 ");
+
+		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getPartyRoleTypeFrom()))
+			builder.append("AND relationship.partyRoleTypeFrom.id =:fromRoleType ");
+
 		builder.append("AND relationship.partyRoleTypeTo.id =:toRoleType ");
 		builder.append("AND relationship.relationshipType.id =:relationshipType ");
 		
@@ -48,7 +51,6 @@ public class ApproverGridViewQuery extends AbstractGridViewQuery {
 		
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);
-//		query.setParameter("fromRoleType", PartyRoleType.SALES_APPROVER);
 
 		if (SiriusValidator.validateParam(criteria.getPartyRoleTypeFrom()))
 			query.setParameter("fromRoleType", criteria.getPartyRoleTypeFrom());
