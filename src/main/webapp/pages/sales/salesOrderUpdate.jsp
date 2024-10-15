@@ -514,6 +514,12 @@ function openProduct(index) {
 	openpopup("<c:url value='/page/popupproductview.htm?&target=product['/>"+index+"]&index="+index);
 }
 
+function openapprover${apprIdx}() {
+	let approverId = document.getElementById('approver').value;
+
+	openpopup('<c:url value='/page/popupapproverview.htm?target=forwardTo${apprIdx}&partyRoleTypeFrom=8&except='/>' + approverId);
+}
+
 function checkDuplicate(element) {
 	// Memanggil String.duplicate untuk mengecek duplikasi pada kelas html 'productInput'
 	var isDuplicated = String.duplicate('productInput');

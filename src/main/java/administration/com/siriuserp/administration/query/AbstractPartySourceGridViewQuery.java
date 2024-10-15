@@ -59,15 +59,15 @@ public abstract class AbstractPartySourceGridViewQuery extends AbstractGridViewQ
 			query.setParameter("org", criteria.getOrganization());
 
 			if (criteria.getSource().equalsIgnoreCase("SALESPERSON"))
-				RelationshipHelper.build(query, PartyRoleType.SALES_PERSON, PartyRoleType.FACILITY, PartyRelationshipType.EMPLOYMENT_RELATIONSHIP);
+				RelationshipHelper.build(query, PartyRoleType.SALES_PERSON, PartyRoleType.COMPANY, PartyRelationshipType.EMPLOYMENT_RELATIONSHIP);
 			else if (criteria.getSource().equalsIgnoreCase("CUSTOMER"))
 				RelationshipHelper.build(query, PartyRoleType.CUSTOMER, PartyRoleType.SUPPLIER, PartyRelationshipType.CUSTOMER_RELATIONSHIP);
 			else if (criteria.getSource().equalsIgnoreCase("SUPPLIER"))
 				RelationshipHelper.build(query, PartyRoleType.SUPPLIER, PartyRoleType.CUSTOMER, PartyRelationshipType.SUPPLIER_RELATIONSHIP);
 			else if (criteria.getSource().equalsIgnoreCase("EMPLOYEE"))
-				RelationshipHelper.build(query, PartyRoleType.EMPLOYEE, PartyRoleType.FACILITY, PartyRelationshipType.EMPLOYMENT_RELATIONSHIP);
+				RelationshipHelper.build(query, PartyRoleType.EMPLOYEE, PartyRoleType.COMPANY, PartyRelationshipType.EMPLOYMENT_RELATIONSHIP);
 			else if (criteria.getSource().equalsIgnoreCase("DRIVER"))
-				RelationshipHelper.build(query, PartyRoleType.DRIVER, PartyRoleType.FACILITY, PartyRelationshipType.EMPLOYMENT_RELATIONSHIP);
+				RelationshipHelper.build(query, PartyRoleType.DRIVER, PartyRoleType.COMPANY, PartyRelationshipType.EMPLOYMENT_RELATIONSHIP);
 
 			getAccessibleParties().addAll(query.list());
 		}

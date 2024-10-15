@@ -61,12 +61,10 @@
         $('#f_img_${apprIdx}').hide();
     }
 
-    function openapprover${apprIdx}() {
-        let approverId = document.getElementById('approver').value;
-
-        openpopup('<c:url value='/page/popupapproverview.htm?target=forwardTo${apprIdx}&except='/>' + approverId);
+    // Override this function on original JSP
+    function openapprover${apprIdx}(){
+        alert("Popup not implmented yet, function code position is wrong(put function on bottom)");
     }
-
 
     //Can be redeclare for custom notification, validation, or else
     function approve${apprIdx}() {

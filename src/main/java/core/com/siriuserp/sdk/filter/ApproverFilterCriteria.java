@@ -27,6 +27,7 @@ public class ApproverFilterCriteria extends AbstractFilterCriteria {
 
 	private Long facility;
 	private Long except;
+	private Long partyRoleTypeFrom;
 	
 	private Boolean base;
 	private Boolean active;

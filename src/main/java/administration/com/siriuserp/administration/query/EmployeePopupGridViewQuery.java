@@ -67,7 +67,7 @@ public class EmployeePopupGridViewQuery extends AbstractPartySourceGridViewQuery
 			Query query = getSession().createQuery(builder.toString());
 			query.setReadOnly(true);
 			query.setParameter("fromType", PartyRoleType.EMPLOYEE);
-			query.setParameter("toType", PartyRoleType.FACILITY);
+			query.setParameter("toType", PartyRoleType.COMPANY);
 			query.setParameter("relationshipType", PartyRelationshipType.EMPLOYMENT_RELATIONSHIP);
 			query.setParameterList("orgs", getAccessibleOrganizations());
 

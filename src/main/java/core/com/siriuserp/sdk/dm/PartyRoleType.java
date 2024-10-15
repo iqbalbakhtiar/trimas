@@ -39,13 +39,12 @@ public class PartyRoleType extends Model implements JSONSupport
 
 	public static final Long HOLDING = Long.valueOf(1);
 	public static final Long COMPANY = Long.valueOf(2);
-	public static final Long FACILITY = Long.valueOf(3);
-	public static final Long EMPLOYEE = Long.valueOf(4);
-	public static final Long CUSTOMER = Long.valueOf(5);
-	public static final Long SUPPLIER = Long.valueOf(6);
-	public static final Long DRIVER = Long.valueOf(7);
-	public static final Long SALES_PERSON = Long.valueOf(8);
-	public static final Long SALES_APPROVER = Long.valueOf(9);
+	public static final Long EMPLOYEE = Long.valueOf(3);
+	public static final Long CUSTOMER = Long.valueOf(4);
+	public static final Long SUPPLIER = Long.valueOf(5);
+	public static final Long DRIVER = Long.valueOf(6);
+	public static final Long SALES_PERSON = Long.valueOf(7);
+	public static final Long SALES_APPROVER = Long.valueOf(8);
 
 	@Column(name = "name", nullable = false)
 	private String name;

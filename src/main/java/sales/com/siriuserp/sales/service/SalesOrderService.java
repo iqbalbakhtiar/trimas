@@ -143,7 +143,6 @@ public class SalesOrderService extends Service {
 	@AutomaticSibling(roles = "ApprovableSiblingRole")
 	@AuditTrails(className = SalesOrder.class, actionType = AuditTrailsActionType.UPDATE)
 	public FastMap<String, Object> edit(SalesOrder salesOrder) throws Exception {
-		System.out.println("service - edit");
 		salesOrder.setUpdatedBy(getPerson());
 		salesOrder.setUpdatedDate(DateHelper.now());
 

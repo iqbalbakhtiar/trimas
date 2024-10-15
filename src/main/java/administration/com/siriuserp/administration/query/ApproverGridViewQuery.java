@@ -48,7 +48,11 @@ public class ApproverGridViewQuery extends AbstractGridViewQuery {
 		
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);
-		query.setParameter("fromRoleType", PartyRoleType.SALES_APPROVER);
+//		query.setParameter("fromRoleType", PartyRoleType.SALES_APPROVER);
+
+		if (SiriusValidator.validateParam(criteria.getPartyRoleTypeFrom()))
+			query.setParameter("fromRoleType", criteria.getPartyRoleTypeFrom());
+
 		query.setParameter("toRoleType", PartyRoleType.COMPANY);
 		query.setParameter("relationshipType", PartyRelationshipType.EMPLOYMENT_RELATIONSHIP);
 		

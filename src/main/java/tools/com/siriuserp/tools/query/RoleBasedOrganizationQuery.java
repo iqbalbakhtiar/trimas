@@ -54,7 +54,7 @@ public class RoleBasedOrganizationQuery extends AbstractGridViewQuery
 		Query query = getSession().createQuery(builder.toString());
 		query.setCacheable(true);
 		query.setReadOnly(true);
-		query.setParameter("roleTypeFrom", PartyRoleType.FACILITY);
+		query.setParameter("roleTypeFrom", PartyRoleType.COMPANY);
 		query.setParameter("roleTypeTo", PartyRoleType.COMPANY);
 		query.setParameter("relationshipType", PartyRelationshipType.ORGANIZATION_STRUCTURE_RELATIONSHIP);
 

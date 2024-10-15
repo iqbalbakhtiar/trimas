@@ -73,7 +73,8 @@
 					<td>
 						<form:select id="approver" path="approver" cssClass="combobox-ext">
 						</form:select>
-						<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupapproverview.htm?target=approver'/>');" title="Approver" />
+<%--						Party Role Type From 9 Untuk Sales Approver--%>
+						<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupapproverview.htm?target=approver&partyRoleTypeFrom=8'/>');" title="Approver" />
 					</td>
 				</tr>
 				<tr>
