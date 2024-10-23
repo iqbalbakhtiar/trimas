@@ -78,7 +78,7 @@
 							<td nowrap="nowrap"><c:out value='${fac.code}'/></td>
 							<td nowrap="nowrap"><c:out value='${fac.name}'/></td>
 							<td nowrap="nowrap"><c:out value='${fac.facilityType.name}'/></td>
-							<td nowrap="nowrap"><c:out value='${fac.owner.firstName} ${fac.owner.middleName} ${fac.owner.lastName}'/></td>
+							<td nowrap="nowrap"><c:out value='${fac.owner.fullName}'/></td>
 							<td><c:out value='${fac.note}'/></td>
 						</tr>
 						</c:forEach>

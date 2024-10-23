@@ -12,8 +12,6 @@ public class ApprovableGridViewQuery extends AbstractGridViewQuery {
     public Query getQuery(ExecutorType type) {
         ApprovableFilterCriteria criteria = (ApprovableFilterCriteria)getFilterCriteria();
 
-        System.out.println(criteria.getActivePerson());
-
         StringBuilder builder = new StringBuilder();
 
         if(type.equals(ExecutorType.COUNT))

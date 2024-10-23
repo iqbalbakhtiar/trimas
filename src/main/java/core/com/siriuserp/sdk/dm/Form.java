@@ -30,6 +30,8 @@ public class Form implements SiriusForm
 	private Date approvalDate;
 	private Date validFrom;
 	private Date validTo;
+	private Date createdDate;
+	private Date updatedDate;
 
 	private String code;
 	private String name;
@@ -56,6 +58,8 @@ public class Form implements SiriusForm
 	private Party approver;
 	private Party forwardTo;
 	private Party completedBy;
+	private Party createdBy;
+	private Party updatedBy;
 
 	private PostalAddress postalAddress;
 

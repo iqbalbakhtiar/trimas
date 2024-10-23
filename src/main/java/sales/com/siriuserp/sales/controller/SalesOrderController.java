@@ -72,7 +72,6 @@ public class SalesOrderController extends ControllerBase {
 	@RequestMapping("/salesorderadd.htm")
 	public ModelAndView add(@ModelAttribute("salesOrder_form") SalesForm salesForm, BindingResult result, SessionStatus status) throws Exception
 	{
-		System.out.println("Controller sales order add");
 		JSONResponse response = new JSONResponse();
 
 		try {

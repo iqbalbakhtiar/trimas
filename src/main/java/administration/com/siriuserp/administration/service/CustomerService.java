@@ -1,5 +1,6 @@
 package com.siriuserp.administration.service;
 
+import com.siriuserp.sdk.exceptions.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -38,7 +39,7 @@ public class CustomerService extends Service {
 	private CodeSequenceDao codeSequenceDao;
 	
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws Exception {
+	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws ServiceException {
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("customers", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
 		map.put("filterCriteria", filterCriteria);

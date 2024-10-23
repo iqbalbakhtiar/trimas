@@ -1,41 +1,26 @@
 package com.siriuserp.sdk.dm;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
-import org.hibernate.annotations.Type;
-
 import com.siriuserp.inventory.dm.Product;
+import com.siriuserp.sales.dm.DeliveryOrderItem;
 import com.siriuserp.sales.dm.SalesType;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.*;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "sales_reference")
+@Table(name = "sales_reference_item")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class SalesReference extends Model implements JSONSupport {
+public abstract class SalesReferenceItem extends Model implements JSONSupport {
 
 	private static final long serialVersionUID = 4479431094475781734L;
 	
@@ -66,7 +51,16 @@ public abstract class SalesReference extends Model implements JSONSupport {
 	
 	@Column(name = "discount")
 	private BigDecimal discount = BigDecimal.ZERO;
-	
+
+	@Column(name = "delivered")
+	protected BigDecimal delivered = BigDecimal.ZERO;
+
+	@Column(name = "accepted")
+	protected BigDecimal accepted = BigDecimal.ZERO;
+
+	@Column(name = "shrinkage")
+	protected BigDecimal shrinkage = BigDecimal.ZERO;
+
 	@Column(name = "note")
 	private String note;
 	
@@ -132,4 +126,8 @@ public abstract class SalesReference extends Model implements JSONSupport {
     @Fetch(FetchMode.SELECT)
     private Tax extTax1;
 
+	@OneToOne(mappedBy = "salesReferenceItem", fetch = FetchType.LAZY)
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private DeliveryOrderItem deliveryOrderItem;
 }

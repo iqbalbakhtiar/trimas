@@ -22,7 +22,6 @@ public class ApprovableSiblingRole extends AbstractSiblingRole implements Applic
 
     @Override
     public void execute() throws Exception {
-		System.out.println("ApprovableSiblingRole - execute");
         Model object = (Model) getSiblingable();
 		Form form = object.getForm();
 

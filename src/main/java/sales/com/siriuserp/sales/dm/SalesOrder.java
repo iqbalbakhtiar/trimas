@@ -127,8 +127,7 @@ public class SalesOrder extends Model implements JSONSupport, ApprovableBridge {
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private PostalAddress shippingAddress;
-	
-	// Set Sales Order Item
+
 	@OneToMany(mappedBy = "salesOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)

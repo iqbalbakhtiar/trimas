@@ -2,6 +2,9 @@ package com.siriuserp.administration.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.siriuserp.administration.criteria.PartyFilterCriteria;
+import com.siriuserp.administration.query.PartyRelationPopupGridViewQuery;
+import com.siriuserp.sdk.exceptions.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -43,7 +46,8 @@ public class CustomerController extends ControllerBase {
 	@RequestMapping("/customerview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception	
 	{
-		return new ModelAndView("/administration/customerList", customerService.view(criteriaFactory.create(request, CustomerFilterCriteria.class), CustomerGridViewQuery.class));
+		return new ModelAndView("/administration/customerList",
+				customerService.view(criteriaFactory.create(request, CustomerFilterCriteria.class), CustomerGridViewQuery.class));
 	}
 	
 	@RequestMapping("/customerpreadd.htm")
@@ -106,12 +110,11 @@ public class CustomerController extends ControllerBase {
 	}
 	
 	@RequestMapping("/popupcustomerview.htm")
-	public ModelAndView popup(HttpServletRequest request, @RequestParam(value = "target", required = false) String target) throws Exception
+	public ModelAndView popup(HttpServletRequest request, @RequestParam("target") String target) throws ServiceException
 	{
-		ModelAndView view = new ModelAndView("/administration-popup/customerPopup");
-		view.addAllObjects(customerService.view(criteriaFactory.createPopup(request, CustomerFilterCriteria.class), CustomerGridViewQuery.class));
-		view.addObject("target", target);
+		FastMap<String, Object> map = customerService.view(criteriaFactory.createPopup(request, CustomerFilterCriteria.class), CustomerGridViewQuery.class);
+		map.put("target", target);
 
-		return view;
+		return new ModelAndView("/administration-popup/customerPopup", map);
 	}
 }

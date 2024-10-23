@@ -19,6 +19,9 @@ public class SalesOrderFilterCriteria extends AbstractFilterCriteria {
 	private String customer;
 	private String tax;
 	private String approver;
+
+	// For Checking if SO Approve and finish and Approve and Forward
+	private Boolean approved;
 	
 	private Date date;
 }

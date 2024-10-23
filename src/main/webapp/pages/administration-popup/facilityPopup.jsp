@@ -23,6 +23,27 @@
 			<div id="r13">
 				<div id="r14">
 					<div id="se-contents">
+						<table border="0" width="100%" cellpadding="0" cellspacing="0">
+							<tr><td>
+								<form id="filterPopup" name="filterPopup" method="post">
+									<table width="100%" cellspacing="0" cellpadding="0" align="center">
+										<tr>
+											<td width="130" align="right" style="WIDTH:130px;">Code / Name&nbsp;&nbsp;</td>
+											<td width="7">:&nbsp;</td>
+											<td width="295" height="28" align="left">
+												<input type="text" id="approver" name="approver" value="${filterCriteria.name}" size="35" class="inputbox"/>
+											</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+											<td><%@ include file="/common/button.jsp"%></td>
+										</tr>
+									</table>
+								</form>
+							</td></tr>
+						</table>
+						<br/>
 						<table class="table-list" cellspacing="0" cellpadding="0" width="80%">
 					  	<tr>
 					  		<th width="4%">&nbsp;</th>

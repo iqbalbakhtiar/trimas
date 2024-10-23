@@ -7,6 +7,7 @@ package com.siriuserp.administration.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.siriuserp.administration.query.FacilityGridViewQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +38,7 @@ public class FacilityPopupController extends ControllerBase
 	{
 		FacilityFilterCriteria criteria = (FacilityFilterCriteria) criteriaFactory.createPopup(request, FacilityFilterCriteria.class);
 
-		return new ModelAndView("/administration-popup/facilityPopup", service.view(criteria, FacilityPopupGirdViewQuery.class));
+		return new ModelAndView("/administration-popup/facilityPopup", service.view(criteria, FacilityGridViewQuery.class));
 	}
 	
 	@RequestMapping("/popupfacilityjson.htm")

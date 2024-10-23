@@ -1023,6 +1023,13 @@ td, th{
 	display   : block;
 	cursor	:pointer;
 }
+.item-button-sent {
+	background-image: url('icons/save.gif');
+	background-repeat:  no-repeat;
+	float     : left;
+	display   : block;
+	cursor	:pointer;
+}
 
 .item-button-closing-accounting-period {
 	background-image: url('icons/btn_closing_accounting_period.png');

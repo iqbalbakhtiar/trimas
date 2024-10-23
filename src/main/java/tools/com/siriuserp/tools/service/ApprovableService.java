@@ -22,7 +22,6 @@ public class ApprovableService {
 
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception {
-        System.out.println("approvables service");
         FastMap<String, Object> map = new FastMap<String, Object>();
         map.put("filterCriteria", filterCriteria);
         map.put("approvables", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));

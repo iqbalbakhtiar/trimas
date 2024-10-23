@@ -76,7 +76,6 @@ public class SalesOrderService extends Service {
 		salesOrder.setSalesType(SalesType.STANDARD);
 		salesOrder.setCreatedBy(getPerson());
 
-		// TODO: Add Active Credit Term [DONE]
 		// Credit Term harus didapatkan dari party relation ship
 		PartyRelationship relationship = partyRelationshipDao.load(salesOrder.getCustomer().getId(), salesOrder.getOrganization().getId(), PartyRelationshipType.CUSTOMER_RELATIONSHIP);
 		CreditTerm creditTerm = creditTermDao.loadByRelationship(relationship.getId(), true);
@@ -85,40 +84,44 @@ public class SalesOrderService extends Service {
 
 		salesOrder.setCreditTerm(creditTerm);
 
-		// Add every Sales Order Item
-		for (Item item : form.getItems()) {
-			SalesOrderItem salesOrderItem = new SalesOrderItem();
-			Money money = new Money();
-			
-	        money.setAmount(item.getAmount());
-	        money.setCurrency(genericDao.load(Currency.class, 1L));
-			
-			salesOrderItem.setProduct(item.getProduct());
-			salesOrderItem.setQuantity(item.getQuantity());
-			salesOrderItem.setMoney(money);
-			salesOrderItem.setDiscount(item.getDiscount());
-			salesOrderItem.setNote(item.getNote());
-			salesOrderItem.setSalesType(SalesType.STANDARD);
-			salesOrderItem.setOrganization(salesOrder.getOrganization());
-			salesOrderItem.setCustomer(salesOrder.getCustomer());
-			salesOrderItem.setApprover(salesOrder.getApprover());
-			salesOrderItem.setFacility(salesOrder.getFacility());
-			salesOrderItem.setShippingAddress(salesOrder.getShippingAddress());
-			salesOrderItem.setTax(salesOrder.getTax());
-			salesOrderItem.setCreatedBy(getPerson());
-			salesOrderItem.setSalesOrder(salesOrder);
-			
-			salesOrder.getItems().add(salesOrderItem);
-		}
-
 		//Add ApprovableBridge using Helper
 		SalesOrderApprovableBridge approvableBridge = ApprovableBridgeHelper.create(SalesOrderApprovableBridge.class, salesOrder);
 		approvableBridge.setApprovableType(ApprovableType.SALES_ORDER);
 		approvableBridge.setUri("salesorderpreedit.htm");
 		salesOrder.setApprovable(approvableBridge);
-		
+
 		genericDao.add(salesOrder);
-		
+
+		// Add every Sales Order Item
+		for (Item item : form.getItems()) {
+			if (item.getProduct() != null) { // Untuk menghindari bug line item kosong
+				SalesOrderItem salesOrderItem = new SalesOrderItem();
+				Money money = new Money();
+
+				money.setAmount(item.getAmount());
+				money.setCurrency(genericDao.load(Currency.class, 1L));
+
+				salesOrderItem.setReferenceId(salesOrder.getId());
+				salesOrderItem.setReferenceCode(salesOrder.getCode());
+				salesOrderItem.setProduct(item.getProduct());
+				salesOrderItem.setQuantity(item.getQuantity());
+				salesOrderItem.setMoney(money);
+				salesOrderItem.setDiscount(item.getDiscount());
+				salesOrderItem.setNote(item.getNote());
+				salesOrderItem.setSalesType(SalesType.STANDARD);
+				salesOrderItem.setOrganization(salesOrder.getOrganization());
+				salesOrderItem.setCustomer(salesOrder.getCustomer());
+				salesOrderItem.setApprover(salesOrder.getApprover());
+				salesOrderItem.setFacility(salesOrder.getFacility());
+				salesOrderItem.setShippingAddress(salesOrder.getShippingAddress());
+				salesOrderItem.setTax(salesOrder.getTax());
+				salesOrderItem.setCreatedBy(getPerson());
+				salesOrderItem.setSalesOrder(salesOrder);
+
+				genericDao.add(salesOrderItem);
+			}
+		}
+
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("id", salesOrder.getId());
 		

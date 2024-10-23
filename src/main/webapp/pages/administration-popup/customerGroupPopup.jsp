@@ -53,7 +53,7 @@
 												<td width="130" align="right" style="WIDTH:130px;">Code / Name&nbsp;&nbsp;</td>
 												<td width="7">:&nbsp;</td>
 												<td width="295" height="28" align="left">
-                          							<input type="text" id="name" name="name" value="${filterCriteria.name}" size="35" class="inputbox"/>
+                          							<input type="text" id="customer" name="customer" value="${filterCriteria.customer}" size="35" class="inputbox"/>
                       							</td>
                     						</tr>
                    							<tr>

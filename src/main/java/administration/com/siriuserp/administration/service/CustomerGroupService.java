@@ -55,7 +55,6 @@ public class CustomerGroupService extends Service {
 	
 	@AuditTrails(className = Party.class, actionType = AuditTrailsActionType.CREATE)
 	public FastMap<String, Object> add(Party customerGroup) throws Exception {
-		System.out.println("Customer Service Add");
 		customerGroup.setCode(GeneratorHelper.instance().generate(TableType.CUSTOMER_GROUP, codeSequenceDao));
 		customerGroup.setBase(true); // True, Karena Group
 		

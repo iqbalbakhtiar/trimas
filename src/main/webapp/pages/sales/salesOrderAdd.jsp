@@ -364,34 +364,35 @@ function validateForm() {
 }
 
 function save() {
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', "<c:url value='/page/salesorderadd.htm'/>");
-	xhr.responseType = 'json';
-	
-	if(xhr.readyState == 1) {
-		$dialog.empty();
-		$dialog.html('<spring:message code="notif.saving"/>');
-		$dialog.dialog('open');
-	}
-	
-	xhr.onreadystatechange = function () {
-		if(xhr.readyState == 4) {
-			var json = xhr.response;
-			if(json) {
-				if(json.status == 'OK') {
+	$.ajax({
+		url:"<c:url value='/page/salesorderadd.htm'/>",
+		data:$('#addForm').serialize(),
+		type : 'POST',
+		dataType : 'json',
+		beforeSend:function()
+		{
+			$dialog.empty();
+			$dialog.html('<spring:message code="notif.saving"/>');
+			$dialog.dialog('open');
+		},
+		success : function(json) {
+			if(json)
+			{
+				if(json.status === 'OK')
+				{
 					$dialog.dialog('close');
-					
-					let url = "<c:url value='/page/salesorderpreedit.htm?id='/>"+json.data.id;;
-					
-					window.location=url;
-				} else {
-					afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
+					<%--window.location="<c:url value='/page/deliveryorderview.htm'/>";--%>
+					// Or Can use This
+					window.location="<c:url value='/page/salesorderpreedit.htm?id='/>"+json.data.id;
+				}
+				else
+				{
+					$dialog.empty();
+					$dialog.html('<spring:message code="notif.profailed"/> :<br/>'+json.message);
 				}
 			}
 		}
-	};
-	
-	xhr.send(new FormData($('#addForm')[0]));
+	});
 }
 
 function updateDisplay() {

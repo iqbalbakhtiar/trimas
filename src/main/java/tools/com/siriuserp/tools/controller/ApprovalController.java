@@ -36,7 +36,6 @@ public class ApprovalController extends ControllerBase {
 
     @RequestMapping("/approvalview.htm")
     public ModelAndView view(HttpServletRequest request)throws Exception {
-        System.out.println("approvalview controller");
         return new ModelAndView("/tools/approvableList", service.view(criteriaFactory.create(request, ApprovableFilterCriteria.class), ApprovableGridViewQuery.class));
     }
 }

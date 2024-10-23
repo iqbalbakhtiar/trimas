@@ -1,5 +1,5 @@
 package com.siriuserp.sales.dm;
 
 public enum SOStatus {
-	OPEN,CLOSE,LOCK,UNLOCK
+	OPEN,CLOSE,LOCK,UNLOCK,SENT,DELIVERED
 }
