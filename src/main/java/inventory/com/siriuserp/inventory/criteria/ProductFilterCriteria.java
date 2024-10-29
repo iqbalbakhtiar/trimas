@@ -9,8 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductFilterCriteria extends AbstractFilterCriteria {
-	
+public class ProductFilterCriteria extends AbstractFilterCriteria 
+{
 	private static final long serialVersionUID = -7718288990415896562L;
 	
 	private String code;
@@ -22,10 +22,11 @@ public class ProductFilterCriteria extends AbstractFilterCriteria {
 	private String unitOfMeasure;
 	private String productCategory;
 	private String type;
+	private String uom;
 	
 	private Boolean status;
 	private Boolean base;
 	
 	private Long categoryId;
-
+	private Long container;
 }

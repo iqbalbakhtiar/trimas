@@ -7,51 +7,25 @@ package com.siriuserp.administration.criteria;
 
 import com.siriuserp.sdk.filter.AbstractFilterCriteria;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author Agung Dodi Perdana
  * Sirius Indonesia, PT
  * www.siriuserp.com
  */
 
+@Getter
+@Setter
 public class ContainerFilterCriteria extends AbstractFilterCriteria
 {
 	private static final long serialVersionUID = 3835529002495532441L;
 
+	private String code;
+	private String name;
+	
 	private Long grid;
 	private Long product;
 	private Long facility;
-
-	public ContainerFilterCriteria()
-	{
-	}
-
-	public Long getGrid()
-	{
-		return grid;
-	}
-
-	public void setGrid(Long grid)
-	{
-		this.grid = grid;
-	}
-
-	public Long getProduct()
-	{
-		return product;
-	}
-
-	public void setProduct(Long product)
-	{
-		this.product = product;
-	}
-
-	public Long getFacility()
-	{
-		return facility;
-	}
-
-	public void setFacility(Long facility)
-	{
-		this.facility = facility;
-	}
 }

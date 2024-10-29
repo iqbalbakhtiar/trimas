@@ -1,5 +1,7 @@
 package com.siriuserp.inventory.dm;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -7,12 +9,15 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
@@ -20,6 +25,7 @@ import org.hibernate.annotations.Type;
 import com.siriuserp.sdk.dm.JSONSupport;
 import com.siriuserp.sdk.dm.Model;
 
+import javolution.util.FastSet;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,8 +42,8 @@ import lombok.Setter;
 @Entity
 @Table(name = "product")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Product extends Model implements JSONSupport {
-
+public class Product extends Model implements JSONSupport 
+{
 	private static final long serialVersionUID = -3594353574616790831L;
 	
 	@Column(name = "code")
@@ -84,6 +90,12 @@ public class Product extends Model implements JSONSupport {
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private ProductCategory productCategory;
+	
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	private Set<InventoryItem> items = new FastSet<InventoryItem>();
 
 	@Override
 	public String getAuditCode() {

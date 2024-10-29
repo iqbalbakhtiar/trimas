@@ -6,23 +6,30 @@
 package com.siriuserp.sdk.dm;
 
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.Type;
 
+import com.siriuserp.inventory.dm.InventoryItem;
 import com.siriuserp.sdk.utility.SiriusValidator;
 
 import javolution.util.FastMap;
+import javolution.util.FastSet;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -60,6 +67,12 @@ public class Container extends Model implements JSONSupport
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private ContainerType containerType;
+	
+	@OneToMany(mappedBy = "container", fetch = FetchType.LAZY)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	private Set<InventoryItem> items = new FastSet<InventoryItem>();
 
 	@Transient
 	private Long facilityId;

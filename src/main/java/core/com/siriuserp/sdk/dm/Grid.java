@@ -25,7 +25,10 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
+import com.siriuserp.inventory.dm.InventoryItem;
+
 import javolution.util.FastMap;
+import javolution.util.FastSet;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -63,6 +66,12 @@ public class Grid extends Model implements JSONSupport
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	private Set<Container> containers = new HashSet<Container>();
+	
+	@OneToMany(mappedBy = "grid", fetch = FetchType.LAZY)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	private Set<InventoryItem> items = new FastSet<InventoryItem>();
 
 	public boolean isDeletable()
 	{

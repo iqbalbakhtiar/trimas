@@ -1,0 +1,95 @@
+/**
+ * 
+ */
+package com.siriuserp.inventory.controller;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.siriuserp.inventory.criteria.StockAdjustmentFilterCriteria;
+import com.siriuserp.inventory.dm.Product;
+import com.siriuserp.inventory.dm.StockAdjustment;
+import com.siriuserp.inventory.form.InventoryForm;
+import com.siriuserp.inventory.query.StockAdjustmentGridViewQuery;
+import com.siriuserp.inventory.service.StockAdjustmentService;
+import com.siriuserp.sdk.annotation.DefaultRedirect;
+import com.siriuserp.sdk.base.ControllerBase;
+import com.siriuserp.sdk.dm.Container;
+import com.siriuserp.sdk.dm.Currency;
+import com.siriuserp.sdk.dm.ExchangeType;
+import com.siriuserp.sdk.dm.Facility;
+import com.siriuserp.sdk.dm.Grid;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.exceptions.ServiceException;
+import com.siriuserp.sdk.springmvc.JSONResponse;
+import com.siriuserp.sdk.springmvc.ResponseStatus;
+import com.siriuserp.sdk.utility.FormHelper;
+
+/**
+ * @author ferdinand
+ */
+
+@Controller
+@SessionAttributes(value = { "adjustment_add", "adjustment_edit" }, types = { StockAdjustment.class, InventoryForm.class })
+@DefaultRedirect(url = "stockadjustmentview.htm")
+public class StockAdjustmentController extends ControllerBase 
+{
+	@Autowired
+	private StockAdjustmentService service;
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder, WebRequest request)
+	{
+		binder.registerCustomEditor(Grid.class, modelEditor.forClass(Grid.class));
+		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
+		binder.registerCustomEditor(Product.class, modelEditor.forClass(Product.class));
+		binder.registerCustomEditor(Currency.class, modelEditor.forClass(Currency.class));
+		binder.registerCustomEditor(Facility.class, modelEditor.forClass(Facility.class));
+		binder.registerCustomEditor(Container.class, modelEditor.forClass(Container.class));
+		binder.registerCustomEditor(ExchangeType.class, enumEditor.forClass(ExchangeType.class));
+	}
+	
+	@RequestMapping("/stockadjustmentview.htm")
+	public ModelAndView view(HttpServletRequest request) throws ServiceException
+	{
+		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentList", service.view(criteriaFactory.create(request, StockAdjustmentFilterCriteria.class), StockAdjustmentGridViewQuery.class));
+	}
+	
+	@RequestMapping("/stockadjustmentpreadd.htm")
+	public ModelAndView preadd() throws ServiceException
+	{
+		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentAdd", service.preadd());
+	}
+	
+	@RequestMapping("/stockadjustmentadd.htm")
+	public ModelAndView add(@ModelAttribute("adjustment_add") InventoryForm form, SessionStatus status) throws Exception
+	{
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			service.add(FormHelper.create(StockAdjustment.class, form));
+			status.setComplete();
+			
+			response.store("id", form.getStockAdjustment().getId());
+		} 
+		catch (Exception e)
+		{
+			response.setStatus(ResponseStatus.ERROR);
+			response.setMessage(e.getLocalizedMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+}

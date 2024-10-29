@@ -1,0 +1,69 @@
+/**
+ * 
+ */
+package com.siriuserp.inventory.dm;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+
+import com.siriuserp.sdk.dm.Container;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ * @author ferdinand
+ */
+
+@Getter
+@Setter
+@Entity
+@NoArgsConstructor
+@Table(name = "stock_adjustment_item_stockable_bridge")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class StockAdjustmentItemStockableBridge	extends Stockable
+{
+	private static final long serialVersionUID = 9059472629400291128L;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_stock_adjustment_item")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private StockAdjustmentItem stockAdjustmentItem;
+
+	@Override
+	public WarehouseTransactionItem getWarehouseTransactionItem() {
+		return null;
+	}
+
+	@Override
+	public Container getSourceContainer() {
+		return getStockAdjustmentItem().getContainer();
+	}
+
+	@Override
+	public ProductCategory getProductCategory() {
+		return getStockAdjustmentItem().getProduct().getProductCategory();
+	}
+
+	@Override
+	public Product getProduct() {
+		return getStockAdjustmentItem().getProduct();
+	}
+	
+	@Override
+	public String getAuditCode() {
+		return this.id + "";
+	}
+}

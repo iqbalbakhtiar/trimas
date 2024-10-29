@@ -6,6 +6,11 @@ import lombok.Setter;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
 
+import com.siriuserp.inventory.dm.WarehouseReferenceItem;
+import com.siriuserp.inventory.dm.WarehouseTransaction;
+import com.siriuserp.inventory.dm.WarehouseTransactionSource;
+import com.siriuserp.sdk.dm.Money;
+
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -17,8 +22,8 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "delivery_order_realization_item")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class DeliveryOrderRealizationItem extends WarehouseReferenceItem {
-
+public class DeliveryOrderRealizationItem extends WarehouseReferenceItem
+{
     private static final long serialVersionUID = 3807540226776848698L;
 
     @Column(name = "accepted")
@@ -38,4 +43,25 @@ public class DeliveryOrderRealizationItem extends WarehouseReferenceItem {
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private DeliveryOrderItem deliveryOrderItem;
+
+    @Override
+	public Money getMoney() {
+		Money money = new Money();
+		money.setAmount(getDeliveryOrderItem().getSalesReferenceItem().getMoney().getAmount());
+		money.setCurrency(getCurrency());
+		money.setExchangeType(getDeliveryOrderItem().getSalesReferenceItem().getMoney().getExchangeType());
+		money.setRate(getDeliveryOrderItem().getSalesReferenceItem().getMoney().getRate());
+		
+		return money;
+	}
+
+	@Override
+	public WarehouseTransaction getWarehouseTransaction() {
+		return null;
+	}
+
+	@Override
+	public WarehouseTransactionSource getTransactionSource() {
+		return WarehouseTransactionSource.DELIVERY_ORDER_REALIZATION;
+	}
 }
