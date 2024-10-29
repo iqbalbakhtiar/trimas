@@ -1,8 +1,7 @@
-package com.siriuserp.sdk.dm;
+package com.siriuserp.sales.dm;
 
 import com.siriuserp.inventory.dm.Product;
-import com.siriuserp.sales.dm.DeliveryOrderItem;
-import com.siriuserp.sales.dm.SalesType;
+import com.siriuserp.sdk.dm.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -61,6 +60,9 @@ public abstract class SalesReferenceItem extends Model implements JSONSupport {
 	@Column(name = "shrinkage")
 	protected BigDecimal shrinkage = BigDecimal.ZERO;
 
+	@Column(name = "term")
+	private Integer term = 1;
+
 	@Column(name = "note")
 	private String note;
 	
@@ -77,20 +79,22 @@ public abstract class SalesReferenceItem extends Model implements JSONSupport {
 	
 	@Embedded
 	private Lot lot;
+
+    /* Many-to-One Relationship */
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_party_organization")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private Party organization;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_party_customer")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private Party customer;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_party_approver")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
@@ -102,29 +106,31 @@ public abstract class SalesReferenceItem extends Model implements JSONSupport {
 	@Fetch(FetchMode.SELECT)
 	private Facility facility;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_shipping_address")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private PostalAddress shippingAddress;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_product")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private Product product;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_tax")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private Tax tax;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_tax_ext")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private Tax extTax1;
+
+    /* One-to-One Relationship */
 
 	@OneToOne(mappedBy = "salesReferenceItem", fetch = FetchType.LAZY)
 	@LazyToOne(LazyToOneOption.PROXY)

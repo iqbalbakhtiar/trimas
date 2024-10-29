@@ -17,3 +17,4 @@ buildNumber.properties
 /.settings/
 /siriuserp-1.5-cocina.iml
 /.smarttomcat/
+/src/main/webapp/WEB-INF/properties/hotswap-agent.properties

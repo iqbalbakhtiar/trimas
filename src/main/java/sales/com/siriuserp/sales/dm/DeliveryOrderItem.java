@@ -1,7 +1,6 @@
 package com.siriuserp.sales.dm;
 
 import com.siriuserp.sdk.dm.Model;
-import com.siriuserp.sdk.dm.SalesReferenceItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -47,7 +47,7 @@ public class DeliveryOrderRealization extends Model implements JSONSupport {
     @Column(name = "note_ext")
     private String noteExt;
 
-    @OneToOne(fetch= FetchType.LAZY)
+    @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="fk_party_organization")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
@@ -59,13 +59,13 @@ public class DeliveryOrderRealization extends Model implements JSONSupport {
     @Fetch(FetchMode.SELECT)
     private Facility facility;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_party_customer")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private Party customer;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_party_expedition")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)

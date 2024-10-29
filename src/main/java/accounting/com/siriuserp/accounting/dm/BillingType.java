@@ -1,0 +1,38 @@
+package com.siriuserp.accounting.dm;
+
+import com.siriuserp.sdk.dm.Model;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "billing_type")
+public class BillingType extends Model {
+
+    private static final long serialVersionUID = 1725317245148646705L;
+
+    public static final Long DELIVERY_ORDER_REALIZATION = Long.valueOf(1);
+
+    @Column(name = "code")
+    private String code;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "url")
+    private String url;
+
+    @Override
+    public String getAuditCode() {
+        return id + "," + code;
+    }
+}

@@ -5,6 +5,7 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -14,7 +15,7 @@ public class ObjectPrinter {
 
     // Field default untuk dicetak dalam nested object
     private static final List<String> DEFAULT_INCLUDED_FIELDS =
-            Arrays.asList("id", "name", "code", "fullName");
+            Arrays.asList("id", "name", "code", "fullName", "amount", "rate");
 
     // Field yang akan di-exclude dari output
     private static final Set<String> EXCLUDED_FIELDS = new HashSet<>(
@@ -245,7 +246,8 @@ public class ObjectPrinter {
                 type.equals(Integer.class) ||
                 type.equals(Long.class) ||
                 type.equals(Float.class) ||
-                type.equals(Double.class);
+                type.equals(Double.class) ||
+                type.equals(BigDecimal.class);
     }
 
     private static String formatDate(Date date) {

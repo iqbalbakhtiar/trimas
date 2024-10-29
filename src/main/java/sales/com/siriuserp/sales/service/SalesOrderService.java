@@ -78,7 +78,7 @@ public class SalesOrderService extends Service {
 
 		// Credit Term harus didapatkan dari party relation ship
 		PartyRelationship relationship = partyRelationshipDao.load(salesOrder.getCustomer().getId(), salesOrder.getOrganization().getId(), PartyRelationshipType.CUSTOMER_RELATIONSHIP);
-		CreditTerm creditTerm = creditTermDao.loadByRelationship(relationship.getId(), true);
+		CreditTerm creditTerm = creditTermDao.loadByRelationship(relationship.getId(), true, salesOrder.getDate());
 		if (creditTerm == null)
 			throw new ServiceException("Customer doesn't have active Credit Term, please set it first on customer page.");
 
@@ -101,6 +101,7 @@ public class SalesOrderService extends Service {
 				money.setAmount(item.getAmount());
 				money.setCurrency(genericDao.load(Currency.class, 1L));
 
+				salesOrderItem.setDate(salesOrder.getDate());
 				salesOrderItem.setReferenceId(salesOrder.getId());
 				salesOrderItem.setReferenceCode(salesOrder.getCode());
 				salesOrderItem.setProduct(item.getProduct());
@@ -117,6 +118,7 @@ public class SalesOrderService extends Service {
 				salesOrderItem.setTax(salesOrder.getTax());
 				salesOrderItem.setCreatedBy(getPerson());
 				salesOrderItem.setSalesOrder(salesOrder);
+				salesOrderItem.setTerm(salesOrder.getCreditTerm().getTerm());
 
 				genericDao.add(salesOrderItem);
 			}

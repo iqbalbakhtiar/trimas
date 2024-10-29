@@ -121,5 +121,25 @@ public class PostalAddressDaoImpl extends DaoHelper<PostalAddress> implements Po
 		
 		return postaladdress;
 	}
-	
+
+	@Override
+	public PostalAddress loadAddressByPartyAndType(Long partyId, AddressType type) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT type.postalAddress FROM PostalAddressType type ")
+				.append("WHERE type.postalAddress.party.id = :partyId ")
+				.append("AND type.type = :addressType ")
+				.append("AND type.enabled = true ")
+				.append("AND type.postalAddress.enabled = true ")
+				.append("ORDER BY type.postalAddress.selected DESC"); // Prioritaskan yang selected (default) = true
+
+		Query query = getSession().createQuery(builder.toString());
+		query.setParameter("partyId", partyId);
+		query.setParameter("addressType", type);
+
+		List<PostalAddress> results = query.setMaxResults(1).list(); // Ambil hanya 1 hasil
+
+		// Jika ada hasil, kembalikan, jika tidak kembalikan null
+		return results.isEmpty() ? null : results.get(0);
+	}
+
 }

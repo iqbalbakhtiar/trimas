@@ -1,0 +1,72 @@
+package com.siriuserp.accounting.adapter;
+
+import com.siriuserp.accounting.dm.Billing;
+import com.siriuserp.accounting.dm.BillingItem;
+import com.siriuserp.accounting.dm.BillingReferenceItem;
+import com.siriuserp.sdk.adapter.AbstractUIAdapter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class BillingAdapter extends AbstractUIAdapter {
+
+    private static final long serialVersionUID = 3889107143175166569L;
+
+    private Billing billing;
+
+    public BigDecimal getTotalLineAmount() {
+        BigDecimal totalLineAmount = BigDecimal.ZERO;
+
+        if (billing != null && billing.getItems() != null) {
+            for (BillingItem item : billing.getItems()) {
+                BillingReferenceItem refItem = item.getBillingReferenceItem();
+                if (refItem != null) {
+                    BigDecimal itemTotal = refItem.getTotalAmount();
+                    totalLineAmount = totalLineAmount.add(itemTotal);
+                }
+            }
+        }
+
+        return totalLineAmount;
+    }
+
+
+    public BigDecimal getTaxAmount() {
+        BigDecimal totalLineAmount = getTotalLineAmount();
+
+        if (billing == null || billing.getTax() == null || billing.getTax().getTaxRate() == null) {
+            return BigDecimal.ZERO;
+        }
+
+        BigDecimal taxRate = billing.getTax().getTaxRate();
+
+        if (totalLineAmount == null || taxRate == null) {
+            return BigDecimal.ZERO;
+        }
+
+        // Calculate tax amount: (TotalLineAmount * TaxRate) / 100
+        return totalLineAmount.multiply(taxRate)
+                .divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
+    }
+
+    public BigDecimal getTotalAfterTax() {
+        return this.getTotalLineAmount().add(getTaxAmount());
+    }
+
+    // TODO: Mendapatkan Total Credit Memo dari Billing terkait apabila CreditMemo sudah dimplementasikan
+    public BigDecimal getTotalCreditMemo() {
+        return BigDecimal.ZERO;
+    }
+
+    public BigDecimal getTotalBillingAmount() {
+        return this.getTotalAfterTax().subtract(this.getTotalCreditMemo());
+    }
+}

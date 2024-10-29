@@ -47,7 +47,7 @@ public class WarehouseReferenceItem extends Model implements JSONSupport {
     @Type(type = "yes_no")
     private boolean verificated = Boolean.FALSE;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_party_organization")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
@@ -59,7 +59,7 @@ public class WarehouseReferenceItem extends Model implements JSONSupport {
     @Fetch(FetchMode.SELECT)
     private Facility facility;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_party")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
@@ -95,19 +95,19 @@ public class WarehouseReferenceItem extends Model implements JSONSupport {
     @Fetch(FetchMode.SELECT)
     private Product product;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_tax")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private Tax tax;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_tax_ext")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private Tax extTax1;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_currency")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)

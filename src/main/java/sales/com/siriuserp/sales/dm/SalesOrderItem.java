@@ -9,8 +9,6 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
-import com.siriuserp.sdk.dm.SalesReferenceItem;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

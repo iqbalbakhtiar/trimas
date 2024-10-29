@@ -12,7 +12,7 @@ import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.dm.Item;
-import com.siriuserp.sdk.dm.SalesReferenceItem;
+import com.siriuserp.sales.dm.SalesReferenceItem;
 import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.exceptions.DataEditException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;

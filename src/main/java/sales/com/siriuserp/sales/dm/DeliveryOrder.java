@@ -47,7 +47,7 @@ public class DeliveryOrder extends Model implements JSONSupport {
     @Enumerated(EnumType.STRING)
     protected SOStatus status = SOStatus.OPEN;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_party_organization")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
@@ -59,13 +59,13 @@ public class DeliveryOrder extends Model implements JSONSupport {
     @Fetch(FetchMode.SELECT)
     private Facility facility;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_party_customer")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private Party customer;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_shipping_address")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)

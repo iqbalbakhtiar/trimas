@@ -23,4 +23,5 @@ public interface PostalAddressDao extends Dao<PostalAddress>,Filterable
     public PostalAddress loadByDefault(String selected, Long party);
     public List<PostalAddress> loadAll(Long Party);
     public List<PostalAddress> loadByAddressType(Long organizatiton);
+    public PostalAddress loadAddressByPartyAndType(Long partyId, AddressType type);
 }

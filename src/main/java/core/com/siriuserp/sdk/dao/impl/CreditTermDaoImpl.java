@@ -7,6 +7,8 @@ import com.siriuserp.sdk.utility.DateHelper;
 import org.hibernate.Query;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 public class CreditTermDaoImpl extends DaoHelper<CreditTerm> implements CreditTermDao {
     @Override
@@ -32,7 +34,7 @@ public class CreditTermDaoImpl extends DaoHelper<CreditTerm> implements CreditTe
     }
 
     @Override
-    public CreditTerm loadByRelationship(Long relationshipId, boolean active) {
+    public CreditTerm loadByRelationship(Long relationshipId, boolean active, Date date) {
         StringBuilder builder = new StringBuilder();
         builder.append("FROM CreditTerm term ");
         builder.append("WHERE term.partyRelationship.id =:relationshipId ");
@@ -49,7 +51,7 @@ public class CreditTermDaoImpl extends DaoHelper<CreditTerm> implements CreditTe
         Query query = getSession().createQuery(builder.toString());
         query.setMaxResults(1);
         query.setParameter("relationshipId", relationshipId);
-        query.setParameter("today", DateHelper.today());
+        query.setParameter("today", (date != null) ? date : DateHelper.today());
 
         Object object = (Object) query.uniqueResult();
         if (object != null)
