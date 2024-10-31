@@ -8,93 +8,64 @@ var List = new Object();
 
 List.get = function(gen, id, value)
 {
-    const dom = $(gen);
-    dom.attr('id', id);
+    $obj = $(gen);
+    $obj.attr('id', id);
 
-    const start = id.indexOf('[');
-    const index = id.substring(start+1, id.length-1);
-    const parameter = id.substring(0, start);
+    var start = id.indexOf('[');
+    var idex = id.substring(start+1, id.length-1);
+    var pram = id.substring(0, start);
 
     if(start > 0) {
-        if(!dom.attr('disabled'))
-        dom.attr('name', 'items['+index+'].'+parameter);
+        if(!$obj.attr('disabled'))
+            $obj.attr('name', 'items['+idex+'].'+pram);
         
-        dom.attr('index', index);
-        dom.attr('next', parameter);
+        $obj.attr('index', idex);
+        $obj.attr('next', pram);
     }
 
     if(value)
-        dom.attr('value', value);
+        $obj.attr('value', value);
 
-    return dom;
+    return $obj;
 }
 
-List.img = function(title,index,event,css)
+List.img = function(title,index,event)
 {
     $a = $('<a/>');
+    $a.attr('class',"item-popup");
     $a.attr('title',title);
     $a.attr('index',index);
-    $a.attr('data-index',index);
     $a.attr('onclick',event);
-    
-    if(css)
-        $a.attr('class',css);
-    else
-        $a.attr('class',"item-popup");
 
-    return $a
+    return $a;
 }
 
 List.del = function(title)
 {
-    const del = $('<a/>');
-    del.attr('class', 'item-button-delete');
-    del.attr('title', title);
-    del.click(function(){
+    $a = $('<a/>');
+    $a.attr('style',"cursor:pointer;");
+    $a.attr('class','item-button-delete');
+    $a.attr('title',title);
+    $a.click(function(){
         $(this).parent().parent().remove();
     });
 
-    return del;
+    return $a;
 }
 
-List.col = function(...objs)
+List.col = function(obj, css, style)
 {
-    return List.colCSS('', objs);
-}
-
-List.colCSS = function(css, ...objs)
-{
-    const td = $('<td nowrap="nowrap"/>');
+    $td = $('<td nowrap="nowrap"/>');
     
     if(css)
-        td.attr('class', css)
+        $td.attr('class', css)
+    
+    if(style)
+        $td.attr('style', style)
 
-    $.each(objs, function(index, obj) {
-        td.append(obj);
+    $.each(obj, function(index, value) {
+        $td.append(value);
     });
 
-    return td;
-}
-
-List.addLine = function(id, ...cols) 
-{
-    const table = $('#' + id);
-    const tr = $('<tr/>');
-
-    $.each(cols, function(index, col) {
-        tr.append(col);
-    });
-
-    table.append(tr);
-}
-
-List.addRow = function(td)
-{
-	let tr = document.createElement('tr');
-
-	new Array(td).fill(0).forEach(function(){
-		tr.appendChild(document.createElement('td'));	
-	});
-
-	return tr;
+    return $td;
 }

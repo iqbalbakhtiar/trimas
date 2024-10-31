@@ -148,6 +148,9 @@
 	var index = 0;
 	function addLineItem()
 	{
+		$tbody = $('#lineItemTable');
+		$tr = $('<tr/>');
+		
 		const checkbox = List.get('<input type="checkbox" class="check"/>','check['+index +']');	
 		const grid = List.get('<select class="combobox-min" onchange='+"changeGrid("+index+");"+'/>','grid['+index+']');
 		const gridImg = List.img('Grid', index, 'opengridpopup("'+index+'")');
@@ -171,22 +174,20 @@
 		type.append('<option value="MIDDLE">MIDDLE</option>');
 		type.append('<option value="SPOT">SPOT</option>');
 		type.append('<option value="TAX">TAX</option>'); */
+		
+		$tr.append(List.col([checkbox]));
+		$tr.append(List.col([grid, gridImg]));
+		$tr.append(List.col([container, containerImg]));
+		$tr.append(List.col([codeProduct]));
+		$tr.append(List.col([product, productImg]));
+		$tr.append(List.col([category]));
+		$tr.append(List.col([uom]));
+		$tr.append(List.col([onHand]));
+		$tr.append(List.col([quantity]));
+		$tr.append(List.col([price]));
 
-		List.addLine('lineItemTable', 
-			List.col(checkbox),
-			List.col(grid, gridImg),
-			List.col(container, containerImg),
-			List.col(codeProduct),
-			List.col(product, productImg),
-			List.col(category),
-			List.col(uom),
-			List.col(onHand),
-			List.col(quantity),
-			List.col(price)
-			/* List.col(currency)
-			List.col(type) */
-		);
-
+		$tbody.append($tr);
+		
 		index++;
 
 		$(".input-number").bind(inputNumber);
