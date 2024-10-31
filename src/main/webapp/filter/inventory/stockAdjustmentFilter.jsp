@@ -2,12 +2,12 @@
 	<form id="filterForm" name="filterForm" method="post">
 		<table width="100%" style="border:none">
 		<tr>
-			<td align="right"><spring:message code="sirius.code"/>&nbsp;&nbsp;</td>
+			<td align="right"><spring:message code="sirius.code"/></td>
 			<td>:&nbsp;</td>
 			<td><input type="text" id="code" name="code" value="${filterCriteria.code}" size="35" class="inputbox"/></td>
 		</tr>
 		<tr>
-			<td align="right"><spring:message code="organization"/>&nbsp;&nbsp;</td>
+			<td align="right"><spring:message code="organization"/></td>
 			<td>:&nbsp;</td>
 			<td>
 				<select id="org" name="organization" class="combobox-ext">
@@ -31,7 +31,7 @@
 			</td>
 		</tr>
 		<tr>
-            <td align="right"><spring:message code="sirius.datefrom"/>&nbsp;&nbsp;</td>
+            <td align="right"><spring:message code="sirius.datefrom"/></td>
             <td>:&nbsp;</td>
             <td>
                 <input id="dateFrom" name="dateFrom" value="<fmt:formatDate value='${filterCriteria.dateFrom}' pattern='dd-MM-yyyy'/>" class="datepicker"/>
@@ -55,10 +55,10 @@ function openfacility()
 	var org = document.getElementById('org');
 	if(org.value == '')
 	{
-		alert('Please select Organization first!');
+		alert('<spring:message code="organization"/> <spring:message code="notif.empty"/> !');
 		return;
 	}
 	
-	openpopup("<c:url value='/page/popupfacilitygridroleview.htm?target=facility&roleType=NONE&organization='/>"+org.value);
+	openpopup("<c:url value='/page/popupfacilityview.htm?target=facility&organization='/>"+org.value);
 }
 </script>

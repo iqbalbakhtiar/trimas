@@ -215,7 +215,7 @@ public class InventoryItemTagUtil
 				List<Inventory> invents = inventories(inventory, inventoriable); 
 				
 				Assert.notEmpty(invents, inventoriable.getProduct().getName()+" ["+inventoriable.getContainer().getName()+"]"+ "["+LotHelper.getCompare(inventoriable.getLot())+"]" 
-					+ "doesnot exist, Stock Adjustment/Transfer Order/Goods Receipt first !");
+					+ "does not exist, Stock Adjustment/Transfer Order/Goods Receipt first !");
 
 				BigDecimal buffer = inventoriable.getQuantity().abs();
 				

@@ -1,0 +1,19 @@
+/**
+ * 
+ */
+package com.siriuserp.inventory.dao;
+
+import java.math.BigDecimal;
+
+import com.siriuserp.inventory.dm.InventoryItem;
+import com.siriuserp.sdk.base.Dao;
+import com.siriuserp.sdk.base.Filterable;
+
+/**
+ * @author ferdinand
+ */
+
+public interface InventoryItemDao extends Dao<InventoryItem>, Filterable 
+{
+	public BigDecimal getOnHand(Long productId, Long containerId);
+}

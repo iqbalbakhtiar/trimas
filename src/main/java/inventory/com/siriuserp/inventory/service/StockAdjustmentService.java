@@ -21,6 +21,7 @@ import com.siriuserp.inventory.dm.InventoryType;
 import com.siriuserp.inventory.dm.ProductInOutTransaction;
 import com.siriuserp.inventory.dm.StockAdjustment;
 import com.siriuserp.inventory.dm.StockAdjustmentItem;
+import com.siriuserp.inventory.dm.StockAdjustmentItemControllableBridge;
 import com.siriuserp.inventory.dm.StockAdjustmentItemStockableBridge;
 import com.siriuserp.inventory.dm.StockControl;
 import com.siriuserp.inventory.dm.StockControlType;
@@ -32,6 +33,7 @@ import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
+import com.siriuserp.sdk.dao.CurrencyDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.GridViewQuery;
 import com.siriuserp.sdk.dm.Currency;
@@ -60,6 +62,9 @@ public class StockAdjustmentService
 {
 	@Autowired
 	private GenericDao genericDao;
+
+	@Autowired
+	private CurrencyDao currencyDao;
 	
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
@@ -127,7 +132,7 @@ public class StockAdjustmentService
 		InventoryConfiguration configuration = genericDao.load(InventoryConfiguration.class, Long.valueOf(1));
 		Assert.notNull(configuration, "Inventory configuration does not exist !");
 		
-		stockAdjustment.setCode(GeneratorHelper.instance().generate(TableType.STOCK_ADJUSTMENT, codeSequenceDao, stockAdjustment.getOrganization()));
+		stockAdjustment.setCode(GeneratorHelper.instance().generate(TableType.STOCK_ADJUSTMENT, codeSequenceDao));
 		
 		for (Item item : stockAdjustment.getForm().getItems())
 			if (SiriusValidator.nz(item.getQuantity()))
@@ -139,16 +144,21 @@ public class StockAdjustmentService
 				adjustmentItem.setGrid(item.getGrid());
 				adjustmentItem.setQuantity(item.getQuantity());
 				
-				adjustmentItem.getMoney().setExchangeType(ExchangeType.MIDDLE);
-				adjustmentItem.getMoney().setCurrency(item.getCurrency());
+				adjustmentItem.getMoney().setExchangeType(ExchangeType.SPOT);
+				adjustmentItem.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
 				adjustmentItem.getMoney().setAmount(item.getPrice());
+				
+				StockAdjustmentItemControllableBridge controllableBridge = new StockAdjustmentItemControllableBridge();
+				controllableBridge.setStockAdjustmentItem(adjustmentItem);
+				
+				adjustmentItem.setControllableBridge(controllableBridge);
 				
 				stockAdjustment.getItems().add(adjustmentItem);
 			}
 		
 		genericDao.add(stockAdjustment);
 		
-		for(StockAdjustmentItem item : stockAdjustment.getItems())
+		for (StockAdjustmentItem item : stockAdjustment.getItems())
 		{
 			if (item.getQuantity().compareTo(BigDecimal.ZERO) > 0)
 			{
@@ -176,7 +186,7 @@ public class StockAdjustmentService
 				
 				StockAdjustmentItemStockableBridge bridgeItem  = new StockAdjustmentItemStockableBridge();
 				bridgeItem.setStockAdjustmentItem(item);
-
+				
 				//ProductInOut get product
 				bridgeItem.getStockControls().addAll(stockControlService.get(ProductInOutTransaction.class, item.getControllableBridge(), bridgeItem, configuration.getTransactionType()));
 				
@@ -196,8 +206,6 @@ public class StockAdjustmentService
 		}
 		
 		genericDao.merge(stockAdjustment);
-		
-		throw new ServiceException();
 	}
 	
 	@AuditTrails(className = StockAdjustment.class, actionType = AuditTrailsActionType.UPDATE)
@@ -206,25 +214,27 @@ public class StockAdjustmentService
 		genericDao.update(stockAdjustment);
 	}
 
-	@AuditTrails(className = StockAdjustment.class, actionType = AuditTrailsActionType.DELETE)
-	public void delete(StockAdjustment stockAdjustment) throws Exception
-	{
+//	@AuditTrails(className = StockAdjustment.class, actionType = AuditTrailsActionType.DELETE)
+//	public void delete(StockAdjustment stockAdjustment) throws Exception
+//	{
 //		for (StockAdjustmentItem item : stockAdjustment.getItems())
 //		{
 //			if (item.getQuantity().compareTo(BigDecimal.ZERO) > 0)
 //			{
-//				inventoryitemUtil.out(InventoryItem.class, item, item.getQuantity());
-//				balanceUtil.in(DWInventoryItemBalance.class, item, DecimalHelper.negative(item.getQuantity()));
-//				balanceDetailUtil.in(DWInventoryItemBalanceDetail.class, item, DecimalHelper.negative(item.getQuantity()), item.getCogs());
-//			} else
+//				inventoryUtil.out(InventoryItem.class, item.getControllableBridge());
+//				balanceUtil.in(DWInventoryItemBalance.class, item.getControllableBridge(), DecimalHelper.negative(item.getQuantity()));
+//				balanceDetailUtil.in(DWInventoryItemBalanceDetail.class, item.getControllableBridge(), item, stockAdjustment, DecimalHelper.negative(item.getQuantity()), 
+//						item.getControllableBridge().getUnitPrice(), stockAdjustment.getReason());
+//			} 
+//			else
 //			{
-//				inventoryitemUtil.in(InventoryItem.class, item, item.getQuantity());
-//				balanceUtil.out(DWInventoryItemBalance.class, item, item.getQuantity());
-//				balanceDetailUtil.out(DWInventoryItemBalanceDetail.class, item, item.getQuantity(), item.getCogs());
+//				inventoryUtil.in(InventoryItem.class, item.getControllableBridge());
+//				balanceUtil.out(DWInventoryItemBalance.class, item.getControllableBridge(), DecimalHelper.negative(item.getQuantity()));
+//				balanceDetailUtil.out(DWInventoryItemBalanceDetail.class, item.getControllableBridge(), item, stockAdjustment, item.getQuantity(), 
+//						item.getControllableBridge().getUnitPrice(), stockAdjustment.getReason());
 //			}
 //		}
-
-		genericDao.delete(stockAdjustment);
-		throw new ServiceException();
-	}
+//
+//		genericDao.delete(stockAdjustment);
+//	}
 }

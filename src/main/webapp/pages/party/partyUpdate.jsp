@@ -146,7 +146,7 @@
 											</td>
 										</tr>
 										</c:forEach>
-										<tr class="end-table"><td colspan="5">&nbsp;</td></tr>
+										<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
 										</table>
 									</div>
 										<div id="contact" dojoType="ContentPane" label="<spring:message code="contactmechanism"/>" class="tab-pages" refreshOnShow="true">

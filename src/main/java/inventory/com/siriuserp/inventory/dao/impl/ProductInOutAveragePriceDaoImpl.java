@@ -5,6 +5,7 @@ package com.siriuserp.inventory.dao.impl;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Component;
 
 import com.siriuserp.inventory.dao.ProductInOutAveragePriceDao;
 import com.siriuserp.inventory.dm.ProductInOutAveragePrice;
@@ -13,6 +14,8 @@ import com.siriuserp.sdk.db.DaoHelper;
 /**
  * @author ferdinand
  */
+
+@Component
 public class ProductInOutAveragePriceDaoImpl extends DaoHelper<ProductInOutAveragePrice> implements ProductInOutAveragePriceDao 
 {
 	@Override

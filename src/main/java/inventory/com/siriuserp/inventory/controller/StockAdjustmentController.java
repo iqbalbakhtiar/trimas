@@ -11,6 +11,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
@@ -92,4 +93,39 @@ public class StockAdjustmentController extends ControllerBase
 
 		return response;
 	}
+	
+	@RequestMapping("/stockadjustmentpreedit.htm")
+	public ModelAndView preedit(@RequestParam("id") Long id) throws ServiceException
+	{
+		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentUpdate", service.preedit(id));
+	}
+
+	@RequestMapping("/stockadjustmentedit.htm")
+	public ModelAndView edit(@ModelAttribute("adjustment_edit") StockAdjustment stockAdjustment, SessionStatus status) throws ServiceException
+	{
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			service.edit(stockAdjustment);
+			status.setComplete();
+			
+			response.store("id", stockAdjustment.getId());
+		} 
+		catch (Exception e)
+		{
+			response.setStatus(ResponseStatus.ERROR);
+			response.setMessage(e.getLocalizedMessage());
+		}
+
+		return response;
+	}
+	
+//	@RequestMapping("/stockadjustmentdelete.htm")
+//	public ModelAndView delete(@RequestParam("id") Long id) throws Exception
+//	{
+//		service.delete(service.load(id));
+//
+//		return ViewHelper.redirectTo("stockadjustmentview.htm");
+//	}
 }

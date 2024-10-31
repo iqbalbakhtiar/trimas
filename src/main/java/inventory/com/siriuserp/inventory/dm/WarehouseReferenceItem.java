@@ -112,13 +112,13 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 	@JoinColumn(name = "fk_facility_destination")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
-	protected Facility destination;
+	protected Facility facilityDestination;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_facility_source")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
-	protected Facility source;
+	protected Facility facilitySource;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_grid_source")
@@ -185,12 +185,12 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 
 	public String getRefTo()
 	{
-		return getDestination().getName();
+		return getFacilityDestination().getName();
 	}
 
 	public String getRefFrom()
 	{
-		return getSource().getName();
+		return getFacilitySource().getName();
 	}
 	
 	public void setSourceContainer(Container container)

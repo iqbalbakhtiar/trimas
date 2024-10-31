@@ -56,7 +56,7 @@ public class StockAdjustmentItemControllableBridge extends Controllable
 
 	@Override
 	public Product getProduct() {
-		return getProduct();
+		return getStockAdjustmentItem().getProduct();
 	}
 
 	@Override

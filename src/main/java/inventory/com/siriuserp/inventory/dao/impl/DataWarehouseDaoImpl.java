@@ -138,7 +138,7 @@ public class DataWarehouseDaoImpl extends DaoHelper<Object> implements DataWareh
 		if(tag != null && tag.getInventoryType() != null)
 			builder.append(" AND inventory.tag.inventoryType =:type");
 
-		builder.append(" ORDER BY inventory.tag.inventoryType, inventory.tag.inventoryReference ");
+		builder.append(" ORDER BY inventory.tag.inventoryType ");
 		builder.append(orderType);
 		
 		Query criteria = getSession().createQuery(builder.toString());
@@ -197,7 +197,7 @@ public class DataWarehouseDaoImpl extends DaoHelper<Object> implements DataWareh
 		if(tag != null && tag.getInventoryType() != null)
 			builder.append(" AND inventory.tag.inventoryType =:type");
 
-		builder.append(" ORDER BY inventory.tag.inventoryType, inventory.tag.inventoryReference ");
+		builder.append(" ORDER BY inventory.tag.inventoryType ");
 		builder.append(orderType);
 
 		Query criteria = getSession().createQuery(builder.toString());
