@@ -123,12 +123,17 @@
 										</td>
 									</tr>
 									<tr>
-										<td width="80%" align="right"><spring:message code="receipt.references"/>:&nbsp;</td>
-										<td width="20%" align="right">DUMMY RECEIPT</td>
+										<td width="80%" align="right" valign="top"><spring:message code="receipt.references"/>:&nbsp;</td>
+										<td width="20%" align="right">
+											<c:forEach items="${billing_edit.billing.receipts}" var="receipt" varStatus="status">
+												<a href="<c:url value='/page/receiptpreedit.htm?id=${receipt.receipt.id}'/>"><c:out value="${receipt.receipt.code}"></c:out></a>
+												<br>
+											</c:forEach>
+										</td>
 									</tr>
 									<tr>
-										<td width="80%" align="right"><spring:message code="billing.creditmemo.reference"/>:&nbsp;</td>
-										<td width="20%" align="right">DUMMY CREDIT MEMO</td>
+										<td width="80%" align="right" valign="top"><spring:message code="billing.creditmemo.reference"/>:&nbsp;</td>
+										<td width="20%" align="right"></td>
 									</tr>
 								</table>
 							</fieldset>

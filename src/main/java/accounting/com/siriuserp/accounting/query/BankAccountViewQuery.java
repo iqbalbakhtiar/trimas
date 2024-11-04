@@ -1,5 +1,6 @@
 package com.siriuserp.accounting.query;
 
+import com.siriuserp.sdk.utility.ObjectPrinter;
 import org.hibernate.Query;
 
 import com.siriuserp.accounting.criteria.BankAccountFilterCriteria;
@@ -24,6 +25,9 @@ public class BankAccountViewQuery extends AbstractGridViewQuery {
 		builder.append("FROM BankAccount acc ");
 		builder.append("WHERE acc.code IS NOT NULL ");
 
+		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()))
+			builder.append("AND acc.holder.id =:org ");
+
 		if (SiriusValidator.validateParam(criteria.getCode()))
 			builder.append("AND acc.code LIKE :code ");
 
@@ -46,6 +50,9 @@ public class BankAccountViewQuery extends AbstractGridViewQuery {
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);
+
+		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()))
+			query.setParameter("org", criteria.getOrganization());
 
 		if (SiriusValidator.validateParam(criteria.getCode()))
 			query.setParameter("code", "%" + criteria.getCode() + "%");

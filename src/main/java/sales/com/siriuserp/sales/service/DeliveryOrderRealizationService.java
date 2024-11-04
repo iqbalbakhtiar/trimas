@@ -152,8 +152,6 @@ public class DeliveryOrderRealizationService extends Service {
             }
         }
 
-        ObjectPrinter.printJson(deliveryOrderRealization);
-
         map.put("dor_form", form);
 
         return map;

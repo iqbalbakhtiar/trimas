@@ -1,6 +1,8 @@
 package com.siriuserp.accounting.dm;
 
 import com.siriuserp.sdk.dm.*;
+import com.siriuserp.sdk.utility.DateHelper;
+import javolution.util.FastMap;
 import javolution.util.FastSet;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 @Getter
@@ -131,8 +134,32 @@ public class Billing extends Model implements JSONSupport {
     @OrderBy("id")
     private Set<BillingItem> items = new FastSet<BillingItem>();
 
+    @OneToMany(mappedBy = "billing", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @Fetch(FetchMode.SELECT)
+    @Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+    @OrderBy("id")
+    private Set<ReceiptApplication> receipts = new FastSet<>();
+
     @Override
     public String getAuditCode() {
         return id + "," + code;
+    }
+
+    @Override
+    public Map<String, Object> val()
+    {
+        FastMap<String, Object> map = new FastMap<String, Object>();
+        map.put("billId", getId());
+        map.put("billCode", getCode());
+
+        map.put("amount", money.getAmount());
+        map.put("unpaid", getUnpaid());
+        map.put("paid", money.getAmount().subtract(getUnpaid()));
+
+        map.put("customer", getCustomer());
+        map.put("date", DateHelper.format(getDate()));
+
+        return map;
     }
 }

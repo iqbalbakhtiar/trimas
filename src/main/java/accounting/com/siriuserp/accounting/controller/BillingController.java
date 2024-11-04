@@ -2,6 +2,7 @@ package com.siriuserp.accounting.controller;
 
 import com.siriuserp.accounting.criteria.BillingFilterCriteria;
 import com.siriuserp.accounting.form.AccountingForm;
+import com.siriuserp.accounting.query.Billing4PaymentPopupViewQuery;
 import com.siriuserp.accounting.service.BillingService;
 import com.siriuserp.sales.query.BillingViewQuery;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
@@ -63,5 +64,11 @@ public class BillingController extends ControllerBase {
 		}
 
 		return response;
+	}
+
+	@RequestMapping("/popupbillingviewjson.htm")
+	public ModelAndView getbillings(HttpServletRequest request) throws Exception
+	{
+		return new JSONResponse(service.viewJson(criteriaFactory.create(request, BillingFilterCriteria.class), Billing4PaymentPopupViewQuery.class));
 	}
 }

@@ -110,4 +110,22 @@ public class BankAccountController extends ControllerBase {
 
 		return new ModelAndView("/accounting-popup/bankAccountPopup", map);
 	}
+
+	@RequestMapping("/popupbankaccountjson.htm")
+	public ModelAndView view(@RequestParam("id") Long id) throws ServiceException
+	{
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			response.store("bank", bankAccountService.load(id));
+		} catch (Exception e)
+		{
+			response.statusError();
+			response.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
 }

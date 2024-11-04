@@ -14,6 +14,7 @@ import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.GridViewQuery;
 import com.siriuserp.sdk.dm.Item;
 import com.siriuserp.sdk.dm.TableType;
+import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.*;
@@ -82,8 +83,6 @@ public class BillingService extends Service {
 		AccountingForm form = FormHelper.bind(AccountingForm.class, billing);
 		BillingAdapter adapter = new BillingAdapter(form.getBilling());
 
-		ObjectPrinter.printJson(billing);
-
 		map.put("billing_form", form);
 		map.put("billing_edit", adapter);
 
@@ -97,4 +96,13 @@ public class BillingService extends Service {
 
         genericDao.update(form.getBilling()); // Update Billing Directly from JSP
     }
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> viewJson(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws ServiceException
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("billings", genericDao.filter(QueryFactory.create(filterCriteria, queryclass)));
+
+		return map;
+	}
 }

@@ -37,7 +37,7 @@
 			<td>
 				<form:select id="partyGroup" path="partyGroup" cssClass="combobox-ext">
 				</form:select>
-				<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupcustomergroupview.htm?target=partyGroup'/>');" title="Costomer Group" />
+				<a class="item-popup" onclick="openCustomerGroup()" title="Costomer Group" />
 			</td>
 		</tr>
 		<tr>
@@ -145,5 +145,25 @@ function save() {
 	};
 	
 	xhr.send(new FormData($('#addForm')[0]));
+}
+
+function openCustomerGroup() {
+	if (!$('#org').val()) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
+		return;
+	}
+
+	const orgId = $('#org').val();
+	const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
+	const params = {
+		target: 'partyGroup', // Id Dropdown (Select) element
+		organization: orgId, // Org (PartyTo)
+		fromRoleType: 4, // Customer
+		toRoleType: 5, // Supplier
+		relationshipType: 3, // Customer Relationship
+		base: true // Filter Only Customer Group
+	};
+
+	openpopup(buildUrl(baseUrl, params));
 }
 </script>

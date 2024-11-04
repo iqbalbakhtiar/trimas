@@ -38,9 +38,9 @@
 					<td align="right"><spring:message code="customer"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
-						<form:select id="customer" path="customer" cssClass="combobox-ext">
+						<form:select id="customer" path="customer" cssClass="combobox-ext" onchange="updateShippingAddress(this)">
 						</form:select>
-						<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupcustomerview.htm?target=customer&base=false'/>');" title="Customer" />
+						<a class="item-popup" onclick="openCustomer()" title="Customer" />
 					</td>
 				</tr>
 				<tr>
@@ -73,8 +73,7 @@
 					<td>
 						<form:select id="approver" path="approver" cssClass="combobox-ext">
 						</form:select>
-<%--						Party Role Type From 9 Untuk Sales Approver--%>
-						<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupapproverview.htm?target=approver&partyRoleTypeFrom=7'/>');" title="Approver" />
+						<a class="item-popup" onclick="openApprover()" title="Approver" />
 					</td>
 				</tr>
 				<tr>
@@ -130,7 +129,7 @@
 					<td align="right"><spring:message code="salesorder.shipping.name"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
-						<form:select id="shippingAddress" path="shippingAddress" cssClass="combobox-ext" onchange="updateShippingAddress(this)">
+						<form:select id="shippingAddress" path="shippingAddress" cssClass="combobox-ext" onchange="updatedShippingAddressDetail(this.value)">
 						</form:select>
 					</td>
 				</tr>
@@ -220,14 +219,46 @@ $(function(){
 });
 
 function updateShippingAddress(element) {
-	var selectedId = element.value;
+	let customerId = $('#customer').val();
 
-	// Check if selectedId is valid
-	if (!selectedId || selectedId.trim() === "") {
-		// Clear the address fields
-		$('#addressDetail').val('');
-		$('#addressPostalCode').val('');
-		$('#addressCity').val('');
+	Party.load(customerId);
+
+	let _shippingAddress = $('#shippingAddress');
+	if (_shippingAddress.find('option').length > 0) { // Clear options if any
+		_shippingAddress.empty();
+	}
+
+	let addresses = Party.data.partyAddresses;
+
+	addresses.forEach(address => {
+		// Periksa apakah postalTypes memiliki tipe 'SHIPPING' dengan enabled == true
+		let hasShippingEnabled = address.postalTypes.some(postalType =>
+				postalType.type === 'SHIPPING' && postalType.enabled === true
+		);
+
+		if (hasShippingEnabled) {
+			let option = $('<option></option>')
+					.val(address.postalId)
+					.text(address.addressName);
+
+			if (address.isDefault) { // Jika alamat ini adalah default, set sebagai selected
+				option.attr('selected', 'selected');
+			}
+
+			_shippingAddress.append(option); // Tambahkan opsi ke elemen _shippingAddress
+		}
+	});
+
+	updatedShippingAddressDetail(_shippingAddress.val());
+}
+
+function updatedShippingAddressDetail(selectedId) {
+	// Clear Detail Address
+	$('#addressDetail').val('');
+	$('#addressPostalCode').val('');
+	$('#addressCity').val('');
+
+	if (!selectedId || selectedId.trim() === "") { // Cancel if customer does not have shipping address
 		return;
 	}
 
@@ -252,7 +283,7 @@ function updateShippingAddress(element) {
 
 
 function validateForm() {
-    // Validasi organisasi (sudah ada sebelumnya)
+    // Validasi organisasi
     var organization = $('#org').val();
     if (organization == null || organization === "") {
         alert('<spring:message code="sirius.organization"/> <spring:message code="notif.empty"/> !');
@@ -298,13 +329,6 @@ function validateForm() {
     var approver = $('#approver').val();
     if (approver == null || approver === "") {
         alert('<spring:message code="approver"/> <spring:message code="notif.empty"/> !');
-        return false;
-    }
-
-    // Validasi shippingAddress
-    var shippingAddress = $('#shippingAddress').val();
-    if (shippingAddress == null || shippingAddress === "") {
-        alert('<spring:message code="salesorder.shipping.name"/> <spring:message code="notif.empty"/> !');
         return false;
     }
     
@@ -495,5 +519,44 @@ function checkDuplicate(element) {
 		alert('<spring:message code="product"/>  <strong>'+ $(element).find('option:selected').text() +'</strong> <spring:message code="notif.duplicate"/> !');
 		$(element).closest('tr').remove();
 	}
+}
+
+function openCustomer() {
+	if (!$('#org').val()) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
+		return;
+	}
+
+	const orgId = $('#org').val();
+	const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
+	const params = {
+		target: 'customer', // Id Dropdown (Select) element
+		organization: orgId, // Org (PartyTo)
+		fromRoleType: 4, // Customer
+		toRoleType: 5, // Supplier
+		relationshipType: 3, // Customer Relationship
+		base: false // Filter Only Customer (Not Group)
+	};
+
+	openpopup(buildUrl(baseUrl, params));
+}
+
+function openApprover() {
+	if (!$('#org').val()) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
+		return;
+	}
+
+	const orgId = $('#org').val();
+	const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
+	const params = {
+		target: 'approver', // Id Dropdown (Select) element
+		organization: orgId, // Org (PartyTo)
+		fromRoleType: 8, // Sales Approver
+		toRoleType: 2, // Company
+		relationshipType: 2, // Employment Relationship
+	};
+
+	openpopup(buildUrl(baseUrl, params));
 }
 </script>

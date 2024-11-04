@@ -135,7 +135,7 @@
 					<td align="right"><spring:message code="salesorder.shipping.name"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
-						<form:select id="shippingAddress" path="shippingAddress" cssClass="combobox-ext input-disabled" disabled="true" onchange="updateShippingAddress(this)">
+						<form:select id="shippingAddress" path="shippingAddress" cssClass="combobox-ext input-disabled" disabled="true">
 							<c:if test='${not empty salesOrder_form.shippingAddress}'>
 								<form:option value="${salesOrder_form.shippingAddress.id}">${salesOrder_form.shippingAddress.addressName}</form:option>
 							</c:if>
@@ -264,21 +264,6 @@ $(function(){
         $('.checkall').prop("checked", false);
     });
 });
-
-function updateShippingAddress(element){
-    var selectedId = element.value;
-    PostalAddress.load(selectedId);
-    if (PostalAddress.data) {
-        var addressDetail = PostalAddress.data.postalAddress || '';
-        var postalCode = PostalAddress.data.postalCode || '';
-        var city = PostalAddress.data.postalCity ? PostalAddress.data.postalCity.name : '';
-
-        // Update field dalam form
-        $('#addressDetail').val(addressDetail);
-        $('#addressPostalCode').val(postalCode);
-        $('#addressCity').val(city);
-    }
-}
 
 function validateForm() {
     // Validasi organisasi (sudah ada sebelumnya)
@@ -516,10 +501,25 @@ function openProduct(index) {
 	openpopup("<c:url value='/page/popupproductview.htm?&target=product['/>"+index+"]&index="+index);
 }
 
-function openapprover${apprIdx}() {
-	let approverId = document.getElementById('approver').value;
+function openapprover() {
+	if (!$('#org').val()) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
+		return;
+	}
 
-	openpopup('<c:url value='/page/popupapproverview.htm?target=forwardTo${apprIdx}&partyRoleTypeFrom=8&except='/>' + approverId);
+	const orgId = $('#org').val();
+	const approver = $('#approver').val();
+	const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
+	const params = {
+		target: 'approver', // Id Dropdown (Select) element
+		organization: orgId, // Org (PartyTo)
+		fromRoleType: 8, // Sales Approver
+		toRoleType: 2, // Company
+		relationshipType: 2, // Employment Relationship
+		except: approver // Except this approver
+	};
+
+	openpopup(buildUrl(baseUrl, params));
 }
 
 function checkDuplicate(element) {

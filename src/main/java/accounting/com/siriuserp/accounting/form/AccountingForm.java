@@ -2,6 +2,8 @@ package com.siriuserp.accounting.form;
 
 import com.siriuserp.accounting.dm.BankAccount;
 import com.siriuserp.accounting.dm.Billing;
+import com.siriuserp.accounting.dm.Receipt;
+import com.siriuserp.accounting.dm.ReceiptInformation;
 import com.siriuserp.sdk.dm.*;
 
 import lombok.Getter;
@@ -41,6 +43,8 @@ public class AccountingForm extends Form {
 	private PostalAddress billingAddress;
 	private PostalAddress taxAddress;
 	private Money money;
+	private ReceiptInformation receiptInformation;
+	private Receipt receipt;
 
 	private PaymentMethodType paymentMethodType;
 	private AccountType accountType;

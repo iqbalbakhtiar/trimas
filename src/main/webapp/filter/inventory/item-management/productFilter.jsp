@@ -1,4 +1,4 @@
-<div dojoType="FloatingPane" id="filter" title="Filter" constrainToContainer="true" style="width: 45%; height: 580px; left: 350px; display:none;" toggle="explode" bg>
+<div dojoType="FloatingPane" id="filter" title="Filter" constrainToContainer="true" style="width: 45%; height: 400px; left: 350px; display:none;" toggle="explode" bg>
 	<form id="filterForm" name="filterForm" method="post">
 	<table width="100%" cellspacing="0" cellpadding="1" align="right">
 	<tr>

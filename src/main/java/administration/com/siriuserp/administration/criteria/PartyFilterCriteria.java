@@ -34,5 +34,10 @@ public class PartyFilterCriteria extends AbstractFilterCriteria
 	private Long partyRole;
 	private Long charge;
 	private Long fromRoleType;
+	private Long toRoleType;
 	private Long toParty;
+	private Long relationshipType;
+	private Long except;
+
+	private Boolean base;
 }

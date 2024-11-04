@@ -3,16 +3,7 @@ package com.siriuserp.accounting.dm;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -55,6 +46,9 @@ public class BankAccount extends Model implements JSONSupport {
 	
 	@Column(name = "account_no")
 	private String accountNo;
+
+	@Column(name = "bank_branch")
+	private String bankBranch;
 	
 	@Column(name = "note")
 	private String note;
@@ -63,7 +57,7 @@ public class BankAccount extends Model implements JSONSupport {
     @Enumerated(EnumType.STRING)
     private AccountType accountType = AccountType.BANK;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="fk_party_holder")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)

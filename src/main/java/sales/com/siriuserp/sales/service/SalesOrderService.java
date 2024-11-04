@@ -66,6 +66,10 @@ public class SalesOrderService extends Service {
 	public FastMap<String, Object> add(SalesOrder salesOrder) throws Exception {
 		SalesForm form = (SalesForm) salesOrder.getForm();
 
+		if (salesOrder.getShippingAddress() == null) {
+			throw new ServiceException("Customer doesn't have Shipping Address, please set it first on customer page.");
+		}
+
 		Money moneySalesOrder = new Money();
 		Currency currencyIdr = genericDao.load(Currency.class, 1L);
 		moneySalesOrder.setCurrency(currencyIdr);

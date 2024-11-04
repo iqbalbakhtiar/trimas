@@ -106,13 +106,4 @@ public class CustomerController extends ControllerBase {
 		customerService.delete(id);
 		return ViewHelper.redirectTo("customerview.htm");
 	}
-	
-	@RequestMapping("/popupcustomerview.htm")
-	public ModelAndView popup(HttpServletRequest request, @RequestParam("target") String target) throws ServiceException
-	{
-		FastMap<String, Object> map = customerService.view(criteriaFactory.createPopup(request, CustomerFilterCriteria.class), CustomerGridViewQuery.class);
-		map.put("target", target);
-
-		return new ModelAndView("/administration-popup/customerPopup", map);
-	}
 }

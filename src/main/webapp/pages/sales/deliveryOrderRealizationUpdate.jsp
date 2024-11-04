@@ -180,6 +180,7 @@
  	</div>
 </sesform:form>
 </div>
+<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${dor_form.createdBy.fullName}'/> (<fmt:formatDate value='${dor_form.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${dor_form.updatedBy.fullName}'/> (<fmt:formatDate value='${dor_form.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
 <%@ include file="/common/sirius-general-bottom.jsp"%>
 <script type="text/javascript">
 $(function(){

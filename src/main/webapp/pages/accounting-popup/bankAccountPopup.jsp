@@ -10,22 +10,55 @@
 	<head>
 	<title>${title}</title>
 	<%@ include file="/common/filterandpaging.jsp"%>
+	<script type="text/javascript" src="<c:url value='/js/bank.js'/>"></script>
 	<script type="text/javascript">
-		function setclient(id,code,name)
+		function setclient(id)
 		{
-			if(id && code && name)
+			Bank.load(id);
+			var bank = Bank.data;
+
+			if(!jQuery.isEmptyObject(bank))
 			{
-				var _client = self.opener.document.getElementById('${target}');
+				var _client = self.opener.document.getElementById('${param.target}');
 				if(_client)
 				{
 					_client.remove(_client.selectedIndex);
-					
+
 					var _opt = document.createElement('option');
-					_opt.value = id;
-					_opt.text = code+" "+name;
-					
+					_opt.value = bank.bankId;
+					_opt.text = bank.bankName;
+
 					_client.appendChild(_opt);
 				}
+
+				var accountName = self.opener.document.getElementById('accountName');
+				if(accountName)
+					accountName.value = bank.bankAccountName;
+
+				var bankName = self.opener.document.getElementById('bankName');
+				if(bankName)
+					bankName.value = bank.bankName;
+
+				// For now bank_branch is not filled
+				// var bankBranch = self.opener.document.getElementById('bankBranch');
+				// if(bankBranch)
+				// 	bankBranch.value = bank.bankBranch;
+
+				var accountNo = self.opener.document.getElementById('accountNo');
+				if(accountNo)
+					accountNo.value = bank.bankAccountNo;
+
+				var accountHolder = self.opener.document.getElementById('accountHolder');
+				if(accountHolder)
+					accountHolder.value = bank.bankAcountHolder.partyName;
+
+				var gl = self.opener.document.getElementById('glAccount');
+				if(gl)
+					gl.value = bank.glAccount.accountCode+" - "+bank.glAccount.accountCode;
+
+				window.close();
+			} else {
+				console.log("empty")
 			}
 			
 			window.close();
@@ -82,7 +115,7 @@
 						<c:forEach items="${accounts}" var="account">
 						<tr>
 					  		<td class="tools">
-					  			<a class="item-button-add-row" href="javascript:setclient('${account.id}','${account.code}','${account.bankName}')"  title="Edit"><span>Edit</span></a>
+					  			<a class="item-button-add-row" href="javascript:setclient('${account.id}')"  title="Edit"><span>Edit</span></a>
 					  		</td>
 							<td nowrap="nowrap"><c:out value="${account.code}" /></td> 
                             <td nowrap="nowrap"><c:out value="${account.bankName}" /></td>      

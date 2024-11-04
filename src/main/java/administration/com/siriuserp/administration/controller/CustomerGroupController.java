@@ -95,10 +95,4 @@ public class CustomerGroupController extends ControllerBase {
 		service.delete(id);
 		return ViewHelper.redirectTo("customerview.htm");
 	}
-	
-	@RequestMapping("/popupcustomergroupview.htm")
-	public ModelAndView popup(HttpServletRequest request) throws Exception
-	{
-		return new ModelAndView("/administration-popup/customerGroupPopup", service.view(criteriaFactory.createPopup(request, CustomerFilterCriteria.class), CustomerGroupGridViewQuery.class));
-	}
 }

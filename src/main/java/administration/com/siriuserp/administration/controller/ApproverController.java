@@ -108,14 +108,4 @@ public class ApproverController extends ControllerBase {
 		service.delete(id);
 		return ViewHelper.redirectTo("approverview.htm");
 	}
-	
-	@RequestMapping("/popupapproverview.htm")
-	public ModelAndView popup(HttpServletRequest request, @RequestParam(value = "target", required = false) String target) throws Exception
-	{
-		ModelAndView view = new ModelAndView("/administration-popup/approverPopup");
-		view.addAllObjects(service.view(criteriaFactory.createPopup(request, ApproverFilterCriteria.class), ApproverGridViewQuery.class));
-		view.addObject("target", target);
-
-		return view;
-	}
 }

@@ -69,7 +69,7 @@
                             <tr>
 								<td width="29%" align="right"><spring:message code="bankaccount.type"/> :</td>
 				  				<td width="70%">
-                                	<form:select path='paymentMethodType'>
+                                	<form:select path='accountType'>
                                     	<form:option value='CASH' label='CASH'/>
                                         <form:option value='BANK' label='BANK'/>
                                     </form:select>
@@ -83,7 +83,7 @@
 										<form:option value='${bankAccount_form.organization.id}' label='${bankAccount_form.organization.fullName}' />
 									</c:if>
 									</form:select>
-									<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popuppartyview.htm?target=org'/>');"  title='<spring:message code="organization.structure"/>' />
+									<a class="item-popup" onclick="openHolder()"  title='<spring:message code="organization.structure"/>' />
                                 </td>
 							</tr>
                             <tr>
@@ -172,5 +172,15 @@ function save() {
 			}
 		}
 	});
+}
+
+function openHolder() {
+	const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
+	const params = {
+		target: 'partyGroup',
+		base: false
+	};
+
+	openpopup(buildUrl(baseUrl, params));
 }
 </script>
