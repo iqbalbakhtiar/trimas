@@ -111,7 +111,7 @@
 									   name="items[${idx.index}].soquantity" index="${idx.index}" next="soquantity" disabled/>
 							</td>
 							<td>
-								<input id="delivered[${idx.index}]" size="10" value="0.00" class="input-decimal"
+								<input id="delivered[${idx.index}]" size="10" value="0.00" class="input-number"
 									   name="items[${idx.index}].delivered" index="${idx.index}" next="delivered"/>
 							</td>
 							<td>

@@ -146,14 +146,14 @@
                         <tr>
                             <td nowrap="nowrap" align="right"><spring:message code="receipt.amount"/> : </td>
                             <td>
-                                <form:input id='amount' path='receiptInformation.amount' value="0.00" cssClass='input-currency applied'/>
+                                <form:input id='amount' path='receiptInformation.amount' value="0.00" cssClass='applied input-number'/>
                                 <input type="hidden" id="amountdef" value="0"/>
                             </td>
                         </tr>
                         <tr>
                             <td nowrap="nowrap" align="right"><spring:message code="receipt.charge"/> : </td>
                             <td>
-                                <form:input id='bankCharges' path='receiptInformation.bankCharges' value="0.00" cssClass='input-number applied'/>
+                                <form:input id='bankCharges' path='receiptInformation.bankCharges' value="0.00"  cssClass='applied input-number'/>
                             </td>
                         </tr>
                         <tr>
@@ -239,7 +239,7 @@
     function receiptTypeChange(element) {
         if($(element).val() != 'CASH')
         {
-            $('#bankCharges').attr('class', 'input-currency');
+            $('#bankCharges').attr('class', 'input-number');
             $('#bankCharges').removeAttr('disabled');
 
             $('#clearing').attr('class', 'inputbox');
@@ -421,7 +421,7 @@
 
         $date = List.get('<input size="8" class="input-disabled" disabled/>', 'date['+index+']');
         $unpaid = List.get('<input size="20" class="number-disabled" disabled/>', 'unpaid['+index+']', '0.00');
-        $paid = List.get('<input size="20" class="input-decimal paid"/>', 'price['+index+']', '0.00');
+        $paid = List.get('<input size="20" class="input-number paid"/>', 'price['+index+']', '0.00');
         $paid.change(function() {
             updateDisplay();
         });
@@ -436,7 +436,7 @@
         $tbody.append($tr);
         index++;
 
-        $(".input-decimal").bind(inputFormat);
+        $(".input-number").bind(inputFormat);
     }
 
     function clearLineItem() {

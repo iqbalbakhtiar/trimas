@@ -71,6 +71,39 @@ var inputNumber = {
 	}
 };
 
+var inputFormat = {
+	keydown : function(event) {
+		if (((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) &&
+			!(event.keyCode == 46 || event.keyCode == 110 || event.keyCode == 13 || event.keyCode == 8
+				|| event.keyCode == 109 ||  event.keyCode == 173 || event.keyCode == 9
+				|| (event.keyCode > 187 && event.keyCode < 191))){
+			event.preventDefault();
+		}
+	},
+	keyup : function(event) {
+		if(event.keyCode==188){
+			if(!$(this).val().indexOf(".")===1)
+				$(this).val(Number.parse($(this).val()).numberFormat(getFormat(this)));
+		}else if(event.keyCode==13){
+			$(this).val(Number.parse($(this).val()).numberFormat(getFormat(this)));
+			$nextrow = $(this).parents("tr").next().find($('[next='+$(this).attr("next")+']'));
+			$nextrow.focus();
+			//$nextrow.val('');
+			$nextrow.select();
+		}
+		else
+		if(!$(this).val().indexOf(".")===1)
+			$(this).val(Number.parse($(this).val()).numberFormat(getFormat(this)));
+	},
+	blur : function() {
+		if($(this).val()!=""){
+			$(this).val(Number.parse($(this).val()).numberFormat(getFormat(this)));
+		}else{
+			$(this).val(0);
+		}
+	}
+};
+
 const debounce = (fn, delay) => {
   let t = null;
   return function(...args) {
@@ -472,4 +505,30 @@ function deleted() {
 
 function submit(id, url) {
 	$('#'+id).attr('action', url)[0].submit();
+}
+
+/**
+ * Membuat URL lengkap dari base URL dan objek parameter.
+ * @param {string} baseUrl - URL dasar tanpa parameter query.
+ * @param {Object} params - Objek yang berisi pasangan kunci-nilai untuk parameter query.
+ * @returns {string} URL lengkap dengan parameter query.
+ *
+ * @example
+ * // Contoh penggunaan:
+ * const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
+ * const params = {
+ *     target: 'customer',
+ *     organization: '5',
+ *     fromRoleType: 4,
+ *     toRoleType: 5,
+ *     relationshipType: 3,
+ *     base: false
+ * };
+ * const fullUrl = buildUrl(baseUrl, params);
+ */
+function buildUrl(baseUrl, params) {
+	const queryString = Object.keys(params)
+		.map(key => key + '=' + encodeURIComponent(params[key]))
+		.join('&');
+	return `${baseUrl}?${queryString}`;
 }

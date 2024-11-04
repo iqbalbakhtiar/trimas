@@ -150,11 +150,11 @@
 									   name="items[${idx.index}].doquantity" index="${idx.index}" next="doquantity" disabled/>
 							</td>
 							<td>
-								<input id="accepted[${idx.index}]" size="10" value="0.00" class="input-decimal"
+								<input id="accepted[${idx.index}]" size="10" value="0.00" class="input-number"
 									   name="items[${idx.index}].accepted" index="${idx.index}" next="accepted"/>
 							</td>
 							<td>
-								<input id="shrinkage[${idx.index}]" size="10" value="0.00" class="input-decimal"
+								<input id="shrinkage[${idx.index}]" size="10" value="0.00" class="input-number"
 									   name="items[${idx.index}].shrinkage" index="${idx.index}" next="shrinkage"/>
 							</td>
 							<td>
