@@ -18,7 +18,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "receipt_application")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ReceiptApplication extends Model {
     private static final long serialVersionUID = -1192304649271117720L;
 
