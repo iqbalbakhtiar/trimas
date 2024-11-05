@@ -33,5 +33,4 @@ public class SalesOrderItem extends SalesReferenceItem {
 	public String getAuditCode() {
 		return getId() + "," + getReferenceCode();
 	}
-
 }

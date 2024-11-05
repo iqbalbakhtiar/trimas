@@ -4,6 +4,7 @@
 <div class="toolbar">
 	<a class="item-button-list" href="<c:url value='/page/salesorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
+	<a class="item-button-print"  href="<c:url value='/page/salesorderprint.htm?id=${salesOrder_form.salesOrder.id}'/>"><span><spring:message code="sirius.print"/></span></a>
 </div>
 
 <div class="main-box">

@@ -111,4 +111,9 @@ public class SalesOrderController extends ControllerBase {
 
 		return response;
 	}
+
+	@RequestMapping("/salesorderprint.htm")
+	public ModelAndView print(@RequestParam("id") Long id) throws Exception {
+		return new ModelAndView("/sales/salesOrderPrint", service.preedit(id));
+	}
 }

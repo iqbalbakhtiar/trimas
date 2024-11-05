@@ -1,5 +1,6 @@
 package com.siriuserp.sales.service;
 
+import com.siriuserp.sales.adapter.SalesOrderAdapter;
 import com.siriuserp.sales.dm.*;
 import com.siriuserp.sdk.annotation.AutomaticSibling;
 import com.siriuserp.sdk.dao.CreditTermDao;
@@ -138,6 +139,7 @@ public class SalesOrderService extends Service {
 	public FastMap<String, Object> preedit(Long id) throws Exception {
 		SalesOrder salesOrder = genericDao.load(SalesOrder.class, id);
 		SalesForm salesForm = FormHelper.bind(SalesForm.class, salesOrder);
+		SalesOrderAdapter adapter = new SalesOrderAdapter(salesOrder);
 
 		salesForm.setSalesOrder(salesOrder);
 		
@@ -145,6 +147,7 @@ public class SalesOrderService extends Service {
 		map.put("salesOrder_form", salesForm);
 		map.put("approvalDecisionStatuses", ApprovalDecisionStatus.values());
 		map.put("approvalDecision", salesForm.getSalesOrder().getApprovable().getApprovalDecision());
+		map.put("adapter", adapter);
 
 		return map;
 	}

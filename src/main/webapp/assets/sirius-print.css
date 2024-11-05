@@ -346,6 +346,10 @@
 		margin: none !important;
 		background : none !important;
 	}
+
+	#menuzord, #footer, #se-navigator, .toolbar, .area, .page-title {
+		display: none !important;
+	}
 }
 
 div.page_end {
