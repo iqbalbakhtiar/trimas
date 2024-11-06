@@ -1,9 +1,6 @@
 package com.siriuserp.sales.service;
 
-import com.siriuserp.sales.dm.DeliveryOrder;
-import com.siriuserp.sales.dm.DeliveryOrderItem;
-import com.siriuserp.sales.dm.SOStatus;
-import com.siriuserp.sales.dm.SalesOrder;
+import com.siriuserp.sales.dm.*;
 import com.siriuserp.sales.form.DeliveryOrderForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
@@ -12,7 +9,6 @@ import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.dm.Item;
-import com.siriuserp.sales.dm.SalesReferenceItem;
 import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.exceptions.DataEditException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
@@ -120,9 +116,10 @@ public class DeliveryOrderService extends Service {
 
 		// Set Reference Code from one of the Sales Reference
 		for (DeliveryOrderItem item: deliveryOrder.getItems()) {
-			if (item.getSalesReferenceItem().getReferenceCode() != null &&
-				!item.getSalesReferenceItem().getReferenceCode().isEmpty()) {
-				map.put("referenceCode", item.getSalesReferenceItem().getReferenceCode());
+			if (item.getSalesReferenceItem().getReferenceId() != null) {
+				SalesOrder salesOrder = genericDao.load(SalesOrder.class, item.getSalesReferenceItem().getReferenceId());
+				map.put("referenceCode", salesOrder.getCode());
+				map.put("poCode", salesOrder.getPoCode());
 				break;
 			}
 		}
