@@ -38,7 +38,7 @@ public class BillingAdapter extends AbstractUIAdapter {
         return totalLineAmount;
     }
 
-
+    /* Method Calculation For Billing Pre-edit */
     public BigDecimal getTaxAmount() {
         BigDecimal totalLineAmount = getTotalLineAmount();
 
@@ -68,5 +68,16 @@ public class BillingAdapter extends AbstractUIAdapter {
 
     public BigDecimal getTotalBillingAmount() {
         return this.getTotalAfterTax().subtract(this.getTotalCreditMemo());
+    }
+
+    // Used In Billing Print Out
+    public BigDecimal getTotalLineItemAmountForPrint() {
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (BillingItem item : billing.getItems()) {
+            total = total.add(item.getBillingReferenceItem().getTotalAmountPerItemDiscounted());
+        }
+
+        return total;
     }
 }

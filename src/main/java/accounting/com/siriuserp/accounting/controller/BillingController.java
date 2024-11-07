@@ -71,4 +71,9 @@ public class BillingController extends ControllerBase {
 	{
 		return new JSONResponse(service.viewJson(criteriaFactory.create(request, BillingFilterCriteria.class), Billing4PaymentPopupViewQuery.class));
 	}
+
+	@RequestMapping("/billingprint.htm")
+	public ModelAndView print(@RequestParam("id") Long id) throws Exception {
+		return new ModelAndView("/accounting/billingPrint", service.preedit(id));
+	}
 }

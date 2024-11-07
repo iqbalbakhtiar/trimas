@@ -103,6 +103,7 @@ public class BillingReferenceItem extends Model {
     @Fetch(FetchMode.SELECT)
     private Product product;
 
+    // Used In Billing Preedit
     /* (Qty * Amount) */
     public BigDecimal getSubtotal() {
         BigDecimal amount = (money != null && money.getAmount() != null) ? money.getAmount() : BigDecimal.ZERO;
@@ -125,6 +126,26 @@ public class BillingReferenceItem extends Model {
 
         /* TotalAmount = Subtotal - Discount Amount */
         return subtotal.subtract(discountAmount);
+    }
+
+    /**
+     * Method to calculate the discounted price per item (Price - Discount).
+     * Used in Billing Print Out
+     */
+    public BigDecimal getDiscountedPricePerItem() {
+        return money.getAmount()
+                .subtract(
+                        money.getAmount().multiply(discount).divide(new BigDecimal(100))
+                );
+    }
+
+    /**
+     * Method to calculate the total amount after discount on a per-item basis
+     * i.e., (Price - Discount) * Qty.
+     * Used in Billing Print Out
+     */
+    public BigDecimal getTotalAmountPerItemDiscounted() {
+        return getDiscountedPricePerItem().multiply(quantity);
     }
 
     @Override
