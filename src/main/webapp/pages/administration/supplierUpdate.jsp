@@ -185,6 +185,40 @@
 			<tr class="end-table"><td colspan="6">&nbsp;</td></tr>
 			</table>
 		</div>
+
+		<div id="creditTerm" dojoType="ContentPane" label='<spring:message code="creditterm"/>' class="tab-pages" refreshOnShow="true" ${lastPanel == 'term' ? 'selected="true"' : ''}>
+			<div class="toolbar-clean">
+				<a class="item-button-new" href="<c:url value='/page/credittermpreadd.htm?party=${supplier_edit.id}&relationshipId=${relationship.id}&uri=customerpreedit.htm'/>"><span><spring:message code="creditterm.new"/></span></a>
+				<div class="item-navigator">&nbsp;</div>
+			</div>
+			<table class="table-list" cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<th width="1%"><div style="width: 45px;">&nbsp;</div></th>
+					<th width="15%"><spring:message code="creditterm.validfrom"/></th>
+					<th width="15%"><spring:message code="creditterm.validto"/></th>
+					<th width="10%"><spring:message code="creditterm.term"/></th>
+					<th width="10%"><spring:message code="sirius.status"/></th>
+					<th width="70%"><spring:message code="sirius.note"/></th>
+				</tr>
+				<c:forEach items="${relationship.creditTerms}" var="term">
+					<tr>
+						<td class="tools">
+							<a class="item-button-edit" href="<c:url value='/page/credittermpreedit.htm?id=${term.id}&relationshipId=${relationship.id}&uri=supplierpreedit.htm'/>" title="Edit"><span><spring:message code="sirius.edit"/></span></a>
+								<%-- 					<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/credittermdelete.htm?id=${term.id}&party=${term.partyRelationship.partyFrom.id}&relationshipId=${relationship.id}&uri=customerpreedit.htm'/>');" title="Del"><span><spring:message code="sirius.delete"/></span></a> --%>
+						</td>
+						<td nowrap="nowrap"><fmt:formatDate value='${term.validFrom}' pattern='dd-MM-yyyy'/></td>
+						<td nowrap="nowrap"><fmt:formatDate value='${term.validTo}' pattern='dd-MM-yyyy'/></td>
+						<td align="right">${term.term}</td>
+						<td>
+							<c:if test='${term.active}'><spring:message code="sirius.active"/></c:if>
+							<c:if test='${!term.active}'><spring:message code="sirius.inactive"/></c:if>
+						</td>
+						<td>${term.note}</td>
+					</tr>
+				</c:forEach>
+				<tr class="end-table"><td colspan="6">&nbsp;</td></tr>
+			</table>
+		</div>
 			
 	</div>
 </sesform:form>

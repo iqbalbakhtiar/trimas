@@ -85,17 +85,17 @@
 			<table class="table-list" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<th width="1%"><div style="width: 45px;">&nbsp;</div></th>
-	  	  	  	<th width="10%"><spring:message code="postaladdress.type"/></th>
-	  	  	  	<th width="10%"><spring:message code="postaladdress.name"/></th>
-	  	  	  	<th width="10%"><spring:message code="postaladdress.detail"/></th>
-	  	  	  	<th width="5%"><spring:message code="postaladdress.postalcode"/></th>
-	  	  	  	<th width="8%"><spring:message code="postaladdress.city"/></th>
-	  	  	  	<th width="5%"><spring:message code="sirius.default"/></th>
-	  	  	  	<th width="5%"><spring:message code="sirius.status"/></th>
-				<th width="15%"><spring:message code="sirius.note"/></th>
+				<th width="10%"><spring:message code="postaladdress.type"/></th>
+				<th width="8%"><spring:message code="postaladdress.name"/></th>
+				<th width="10%"><spring:message code="postaladdress.detail"/></th>
+				<th width="5%"><spring:message code="postaladdress.postalcode"/></th>
+				<th width="5%"><spring:message code="postaladdress.city"/></th>
+				<th width="5%"><spring:message code="sirius.default"/></th>
+				<th width="5%"><spring:message code="sirius.status"/></th>
+				<th width="10%"><spring:message code="sirius.note"/></th>
 			</tr>
 			<c:forEach items="${customer_edit.postalAddresses}" var="postal">
-			<tr>
+			<tr valign="top">
 				<td class="tools">
 					<a class="item-button-edit" href="<c:url value='/page/postaladdresspreedit.htm?id=${postal.id}&relationshipId=${relationship.id}&uri=customerpreedit.htm'/>" title="Edit"><span><spring:message code="sirius.edit"/></span></a>
 					<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/postaladdressdelete.htm?id=${postal.id}&party=${postal.party.id}&relationshipId=${relationship.id}&uri=customerpreedit.htm'/>');" title="Del"><span><spring:message code="sirius.delete"/></span></a>
@@ -108,7 +108,7 @@
 					</c:forEach>
 				</td>  
 				<td>${postal.addressName}</td>
-				<td>${postal.address}</td>
+				<td style="white-space: normal">${postal.address}</td>
 				<td>${postal.postalCode}</td>
 				<td>${postal.city.name}</td>
 				<td>
@@ -119,7 +119,7 @@
 					<c:if test='${postal.enabled}'><spring:message code="sirius.active"/></c:if>
 					<c:if test='${!postal.enabled}'><spring:message code="sirius.inactive"/></c:if>
 				</td>
-				<td>${postal.note}</td>
+				<td style="white-space: normal">${postal.note}</td>
 			</tr>
 			</c:forEach>
 			<tr class="end-table"><td colspan="9">&nbsp;</td></tr>

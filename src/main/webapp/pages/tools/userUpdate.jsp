@@ -95,9 +95,8 @@
 			</div>
 		</div>
 	</div>
-
+	<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${user_edit.createdBy.fullName}'/> (<fmt:formatDate value='${user_edit.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${user_edit.updatedBy.fullName}'/> (<fmt:formatDate value='${user_edit.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
   	<%@ include file="/common/sirius-footer.jsp"%>
-  	
 </div>
 </body>
 </html><script type="text/javascript">

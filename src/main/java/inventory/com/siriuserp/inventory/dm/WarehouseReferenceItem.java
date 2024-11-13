@@ -85,6 +85,9 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 			
 	@Embedded
 	protected Lot lot = new Lot();
+
+	@Embedded
+	private Money money = new Money();
 	
 	@Column(name = "verificated")
 	@Type(type = "yes_no")
@@ -150,11 +153,12 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
     @Fetch(FetchMode.SELECT)
     protected Tax extTax1;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fk_currency")
-	@LazyToOne(LazyToOneOption.PROXY)
-	@Fetch(FetchMode.SELECT)
-	protected Currency currency;
+	// Move To Money
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "fk_currency")
+//	@LazyToOne(LazyToOneOption.PROXY)
+//	@Fetch(FetchMode.SELECT)
+//	protected Currency currency;
 	
 	@OneToOne(mappedBy = "referenceItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
@@ -162,7 +166,9 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 	protected WarehouseTransactionItem transactionItem;
 
 	@Override
-	public abstract Money getMoney();
+	public Money getMoney() {
+		return this.money;
+	};
 	
 	public abstract WarehouseTransaction getWarehouseTransaction();
 	

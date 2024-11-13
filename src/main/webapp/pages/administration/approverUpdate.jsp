@@ -56,7 +56,7 @@
 			</td>
 		</tr>	
 		<tr>
-			<td align="right"><span>Keterangan Tambahan</td>
+			<td align="right"><spring:message code="sirius.note"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:textarea path="note" rows="6" cols="45"/></td>
 			<td>&nbsp;</td>

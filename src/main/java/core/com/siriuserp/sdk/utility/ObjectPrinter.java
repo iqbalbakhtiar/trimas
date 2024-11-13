@@ -15,7 +15,7 @@ public class ObjectPrinter {
 
     // Field default untuk dicetak dalam nested object
     private static final List<String> DEFAULT_INCLUDED_FIELDS =
-            Arrays.asList("id", "name", "code", "fullName", "amount", "rate");
+            Arrays.asList("id", "name", "code", "fullName", "amount", "rate", "addressName");
 
     // Field yang akan di-exclude dari output
     private static final Set<String> EXCLUDED_FIELDS = new HashSet<>(

@@ -5,6 +5,9 @@
  */
 package com.siriuserp.administration.query;
 
+import com.siriuserp.sales.criteria.SalesOrderFilterCriteria;
+import com.siriuserp.sdk.db.ExecutorType;
+import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
 import org.hibernate.Query;
 
 import com.siriuserp.administration.criteria.FacilityFilterCriteria;
@@ -20,77 +23,33 @@ import javolution.util.FastList;
  * Sirius Indonesia, PT
  * www.siriuserp.com
  */
-public class FacilityPopupGirdViewQuery extends AbstractGridViewQuery
-{
-
+public class FacilityPopupGirdViewQuery extends AbstractGridViewQuery {
     @Override
-    public Long count()
-    {
-        FacilityFilterCriteria criteria =  (FacilityFilterCriteria)getFilterCriteria();
+    public Query getQuery(ExecutorType executorType) {
+        FacilityFilterCriteria criteria = (FacilityFilterCriteria) getFilterCriteria();
 
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT COUNT(DISTINCT role.facility) FROM FacilityRole role WHERE role.id IS NOT NULL");
 
-        if(SiriusValidator.validateLongParam(criteria.getOrganization()))
-        	builder.append(" AND role.party.id =:org");
-        
-        if(SiriusValidator.validateParamWithZeroPosibility(criteria.getType()))
-            builder.append(" AND role.facility.facilityType.id =:type");
+        if (executorType.equals(ExecutorType.COUNT))
+            builder.append("SELECT COUNT(DISTINCT facility) ");
+        else
+            builder.append("SELECT DISTINCT(facility) ");
 
-        if(SiriusValidator.validateParam(criteria.getImplementation()))
-            builder.append(" AND role.facility.implementation =:implementation");
-        
-        Query query = getSession().createQuery(builder.toString());
-        
-        if(SiriusValidator.validateLongParam(criteria.getOrganization()))
-        	query.setParameter("org",criteria.getOrganization());
+        builder.append("FROM Facility facility WHERE 1=1 ");
 
-        if(SiriusValidator.validateParamWithZeroPosibility(criteria.getType()))
-            query.setParameter("type",criteria.getType());
+        //WHERE CLAUSE
+        if (SiriusValidator.validateLongParam(criteria.getOrganization()))
+            builder.append("AND facility.owner.id =:organization ");
 
-        if(SiriusValidator.validateParam(criteria.getImplementation()))
-            query.setParameter("implementation", FacilityImplementation.valueOf(criteria.getImplementation()));
-        
-        Object object = query.uniqueResult();
-        if(object != null)
-            return (Long)object;
-        
-        return Long.valueOf(0);
-    }
-
-    @SuppressWarnings("unchecked")
-    public Object execute()
-    {
-        FastList<Facility> list = new FastList<Facility>();
-
-        FacilityFilterCriteria criteria =  (FacilityFilterCriteria)getFilterCriteria();
-
-        StringBuilder builder = new StringBuilder();
-        builder.append("SELECT DISTINCT(role.facility) FROM FacilityRole role WHERE role.id IS NOT NULL");
-        
-        if(SiriusValidator.validateLongParam(criteria.getOrganization()))
-        	builder.append(" AND role.party.id =:org");
-        
-        if(SiriusValidator.validateParamWithZeroPosibility(criteria.getType()))
-            builder.append(" AND role.facility.facilityType.id =:type");
-        
-        if(SiriusValidator.validateParam(criteria.getImplementation()))
-            builder.append(" AND role.facility.implementation =:implementation");
+        builder.append(" ORDER BY facility.id DESC ");
 
         Query query = getSession().createQuery(builder.toString());
-        
-        if(SiriusValidator.validateLongParam(criteria.getOrganization()))
-        	query.setParameter("org",criteria.getOrganization());
+        query.setReadOnly(true);
 
-        if(SiriusValidator.validateParamWithZeroPosibility(criteria.getType()))
-            query.setParameter("type",criteria.getType());
-        
-        if(SiriusValidator.validateParam(criteria.getImplementation()))
-            query.setParameter("implementation", FacilityImplementation.valueOf(criteria.getImplementation()));
-        
-        list.addAll(query.list());
+        //SET QUERY PARAM
+        if (SiriusValidator.validateLongParam(criteria.getOrganization()))
+            query.setParameter("organization", criteria.getOrganization());
 
-        return list;
+        return query;
     }
-
 }

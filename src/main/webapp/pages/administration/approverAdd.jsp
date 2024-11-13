@@ -31,7 +31,8 @@
 			<td width="1%" align="center">:</td>
 			<td>
 				<form:select path="partyRoleTypeFrom">
-					<option value="9">Sales Approver</option>									
+					<option value="8">Sales Approver</option>
+					<option value="9">Purchase Approver</option>
 				</form:select>
 			</td>
 		</tr>

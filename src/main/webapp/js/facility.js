@@ -24,6 +24,24 @@ Facility.load = function($plugin)
 	});
 }
 
+Facility.loadByOrg = function($plugin)
+{
+	$.ajax({
+		url:$('base').attr('href')+"page/popupfacilityjsonview.htm",
+		data:{id:$plugin},
+		method : 'POST',
+		async: false,
+		dataType : 'json',
+		success : function(json) {
+			if(json.status == "OK")
+			{
+				if(!$.isEmptyObject(json.facilitys))
+					Facility.data = json.facilitys;
+			}
+		}
+	});
+}
+
 Facility.alias = function($plugin)
 {
 	$.ajax({

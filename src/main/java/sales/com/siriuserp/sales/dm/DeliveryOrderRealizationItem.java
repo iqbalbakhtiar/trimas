@@ -48,7 +48,7 @@ public class DeliveryOrderRealizationItem extends WarehouseReferenceItem
 	public Money getMoney() {
 		Money money = new Money();
 		money.setAmount(getDeliveryOrderItem().getSalesReferenceItem().getMoney().getAmount());
-		money.setCurrency(getCurrency());
+		money.setCurrency(getDeliveryOrderItem().getSalesReferenceItem().getMoney().getCurrency());
 		money.setExchangeType(getDeliveryOrderItem().getSalesReferenceItem().getMoney().getExchangeType());
 		money.setRate(getDeliveryOrderItem().getSalesReferenceItem().getMoney().getRate());
 		

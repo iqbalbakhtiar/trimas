@@ -94,6 +94,7 @@
 				_opt.text = organization.partyName;
 
 				_client.appendChild(_opt);
+				_client.dispatchEvent(new Event('change'));
 			}
 
 			var _taxAddress = self.opener.document.getElementById('taxAddress');

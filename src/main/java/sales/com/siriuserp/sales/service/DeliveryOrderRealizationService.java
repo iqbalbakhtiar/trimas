@@ -107,7 +107,7 @@ public class DeliveryOrderRealizationService extends Service {
             dorItem.setFacilitySource(dor.getFacility());
             dorItem.setProduct(item.getSalesReferenceItem().getProduct());
             dorItem.setTax(item.getSalesReferenceItem().getTax());
-            dorItem.setCurrency(item.getSalesReferenceItem().getMoney().getCurrency());
+            dorItem.getMoney().setCurrency(item.getSalesReferenceItem().getMoney().getCurrency());
             dorItem.setNote(item.getNote());
 
             genericDao.add(dorItem);
@@ -206,10 +206,7 @@ public class DeliveryOrderRealizationService extends Service {
             referenceItem.setReferenceCode(dor.getCode());
             referenceItem.setReferenceDate(dor.getDate());
             referenceItem.setReferenceName(SiriusValidator.getEnumName(dor.getClass())); // Jadi DELIVERY_ORDER_REALIZATION
-            referenceItem.setQuantity(
-                    /* Quantity Billing Ref dari (Accepted - Shrinkage) DOR Item */
-                    dorItem.getAccepted().subtract(dorItem.getShrinkage())
-            );
+            referenceItem.setQuantity(dorItem.getAccepted());
             referenceItem.getMoney().setAmount(dorItem.getDeliveryOrderItem().getSalesReferenceItem().getMoney().getAmount());
             referenceItem.getMoney().setRate(dorItem.getDeliveryOrderItem().getSalesReferenceItem().getMoney().getRate());
             referenceItem.getMoney().setCurrency(dorItem.getDeliveryOrderItem().getSalesReferenceItem().getMoney().getCurrency());
