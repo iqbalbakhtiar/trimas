@@ -2,9 +2,12 @@ package com.siriuserp.tools.service;
 
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.GridViewQuery;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.QueryFactory;
+import com.siriuserp.tools.dao.ApprovableDao;
 import javolution.util.FastMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,6 +21,9 @@ import java.util.Map;
 public class ApprovableService {
 
     @Autowired
+    private ApprovableDao approvableDao;
+
+    @Autowired
     private GenericDao genericDao;
 
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
@@ -28,4 +34,9 @@ public class ApprovableService {
 
         return map;
     }
+
+    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public Long loadTotalApproval(Party party) throws ServiceException {
+		return approvableDao.getTotalRequisition(party);
+	}
 }

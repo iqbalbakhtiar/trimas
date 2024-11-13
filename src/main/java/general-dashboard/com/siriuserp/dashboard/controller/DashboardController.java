@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.siriuserp.tools.dao.ApprovableDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,9 @@ public class DashboardController extends ControllerBase
 
 	@Autowired
 	private NewsDao newsDao;
+
+	@Autowired
+	private ApprovableDao approvableDao;
 
 	@RequestMapping("/dashboard.htm")
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception
@@ -68,6 +72,7 @@ public class DashboardController extends ControllerBase
 			profileService.intializeUser(user, locale);
 
 			view.addObject("dashboard", profileService.loadDashBoard(user));
+			view.addObject("requested", approvableDao.getTotalRequisition(user.getPerson()));
 			view.setViewName("dashBoard");
 		}
 
