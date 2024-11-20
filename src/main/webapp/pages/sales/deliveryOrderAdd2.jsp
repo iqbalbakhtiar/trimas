@@ -261,7 +261,7 @@ function validateForm() {
 
 function save() {
 	$.ajax({
-		url:"<c:url value='/page/deliveryorderadd1.htm'/>",
+		url:"<c:url value='/page/deliveryorderadd.htm'/>",
 		data:$('#addForm').serialize(),
 		type : 'POST',
 		dataType : 'json',
