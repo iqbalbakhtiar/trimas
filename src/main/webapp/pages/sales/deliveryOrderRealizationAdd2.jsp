@@ -8,6 +8,8 @@
 
 <div class="main-box">
 <sesform:form id="addForm" name="addForm" method="post" modelAttribute="dor_form" enctype="multipart/form-data">
+<%--	To Avoid Hibernate No Session trigger Currency and Tax--%>
+	<input style="display: none" datafld="<c:out value="${dor_form.tax}"></c:out><c:out value="${dor_form.currency}"></c:out>">
 	<table width="100%" border="0">
 		<tr>
 			<td width="60%">

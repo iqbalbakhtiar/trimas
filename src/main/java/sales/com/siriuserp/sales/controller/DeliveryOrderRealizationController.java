@@ -78,8 +78,11 @@ public class DeliveryOrderRealizationController extends ControllerBase {
         JSONResponse response = new JSONResponse();
 
 		try {
-			FastMap<String, Object> map = dorService.add(FormHelper.create(DeliveryOrderRealization.class, deliveryOrderForm));
+			dorService.add(FormHelper.create(DeliveryOrderRealization.class, deliveryOrderForm));
 			status.setComplete();
+
+			FastMap<String, Object> map = new FastMap<String, Object>();
+			map.put("id", deliveryOrderForm.getDeliveryOrderRealization().getId());
 
 			response.store("data", map);
 		} catch (Exception e) {

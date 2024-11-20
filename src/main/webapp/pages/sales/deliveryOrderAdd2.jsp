@@ -93,9 +93,11 @@
 				    	<tr>
 				    		<th width="1%" nowrap="nowrap">&nbsp;</th>
 							<th width="20%" nowrap="nowrap"><spring:message code="product"/></th>
+							<th width="20%" nowrap="nowrap"><spring:message code="product.onhand"/></th>
 							<th width="5%" ><spring:message code="deliveryorder.soquantity"/></th>
 							<th width="5%" ><spring:message code="deliveryorder.doquantity"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
+							<th width="20%" nowrap="nowrap"><spring:message code="container"/></th>
 							<th width="60%" nowrap="nowrap"><spring:message code="deliveryorder.note"/></th>
 						</tr>
 					</thead>
@@ -103,8 +105,15 @@
 					<c:forEach items="${deliveryOrder_form.items}" var="item" varStatus="idx">
 						<tr>
 							<td></td>
-							<td><input id="product[${idx.index}]" size="40" value="${item.salesReferenceItem.product.name}" class="input-disabled productInput"
-									   name="items[${idx.index}].product" index="${idx.index}" next="product" disabled/>
+							<td>
+								<select id="product[${idx.index}]" class="combobox-ext input-disabled productInput"
+										name="items[${idx.index}].product" index="${idx.index}" next="product" disabled>
+										<option value="${item.salesReferenceItem.product.id}">${item.salesReferenceItem.product.name}</option>
+								</select>
+							</td>
+							<td>
+								<input id="onhand[${idx.index}]" size="10" value="0.00" class="input-disabled input-decimal"
+									   name="items[${idx.index}].onhand" index="${idx.index}" next="onhand" disabled/>
 							</td>
 							<td>
 								<input id="soquantity[${idx.index}]" size="10" value="${item.salesReferenceItem.quantity}" class="input-disabled input-decimal"
@@ -117,6 +126,12 @@
 							<td>
 								<input id="uom[${idx.index}]" size="6" value="${item.salesReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled"
 									   name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/>
+							</td>
+							<td>
+								<select id="container[${idx.index}]" name="items.[${idx.index}].container" index="${idx.index}"
+										onchange="updateOnHand(this, ${idx.index});" next="container" class="combobox">
+								</select>
+								<a class="item-popup" onclick="openContainer(this, ${idx.index});" title="Container"></a>
 							</td>
 							<td>
 								<input id="note[${idx.index}]" type="text" size="60" name="items[${idx.index}].note"
@@ -155,7 +170,7 @@ function validateForm() {
 	// Validasi date
 	var date = $('#date').val();
 	if (date == null || date === "") {
-		alert('<spring:message code="salesorder.date"/> <spring:message code="notif.empty"/> !');
+		alert('<spring:message code="deliveryorder.do.date"/> <spring:message code="notif.empty"/> !');
 		return false;
 	}
 
@@ -172,8 +187,8 @@ function validateForm() {
 		var $row = $(this);
 
 		// Ambil input product
-		var $productInput = $row.find('input[id^="product["]');
-		var productName = $productInput.val();
+		var $productInput = $row.find('select[id^="product["]');
+		var productName = $productInput.text();
 
 		// Ambil input quantity dan soquantity
 		var $quantityInput = $row.find('input[id^="delivered["]');
@@ -207,6 +222,33 @@ function validateForm() {
 			isValid = false;
 			return false;
 		}
+
+		// Cek Container
+		var $containerSelect = $row.find('select[id^="container["]');
+		var containerValue = $containerSelect.val();
+
+		// Validasi bahwa container tidak kosong
+		if (containerValue == null || containerValue.trim() === "") {
+			alert('<strong>' + productName + '</strong> - <spring:message code="container"/> <spring:message code="notif.empty"/>');
+			$containerSelect.focus();
+			isValid = false;
+			return false;
+		}
+
+
+		var $onhandInput = $row.find('input[id^="onhand["]');
+		var $doQuantityInput = $row.find('input[id^="delivered["]');
+
+		var onhandStr = $onhandInput.val().replace(/,/g, '');
+
+		var onhand = parseFloat(onhandStr) || 0;
+
+		if (quantity > onhand) {
+			alert('<spring:message code="deliveryorder.doquantity"/> <spring:message code="notif.greater"/> <spring:message code="product.onhand"/>');
+			$doQuantityInput.focus();
+			isValid = false;
+			return false;
+		}
 	});
 
 	if (!isValid) {
@@ -219,7 +261,7 @@ function validateForm() {
 
 function save() {
 	$.ajax({
-		url:"<c:url value='/page/deliveryorderadd.htm'/>",
+		url:"<c:url value='/page/deliveryorderadd1.htm'/>",
 		data:$('#addForm').serialize(),
 		type : 'POST',
 		dataType : 'json',
@@ -294,5 +336,45 @@ function updateDisplay() {
 	$('#totalBeforeTax').val(totalBeforeTax.numberFormat('#,##0.00'));
 	$('#totalTax').val(totalTax.numberFormat('#,##0.00'));
 	$('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
+}
+
+function openContainer(element, idx) {
+	if (!$('#facility').val()) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="facility"/> <spring:message code="notif.select2"/> !!!');
+		return;
+	}
+
+	// http://127.0.0.1:8181/sirius/page/popupcontainerview.htm?target=container%5B1%5D&grid=1&popupid=popup0
+
+	const facilityId = $('#facility').val();
+	const baseUrl = '<c:url value="/page/popupcontainerview.htm"/>';
+	const params = {
+		target: 'container[' + idx + ']',
+		facility: facilityId
+	}
+
+	openpopup(buildUrl(baseUrl, params));
+}
+
+function updateOnHand(element, index) {
+	const productId = $('#product\\['+index+'\\]').val();
+	const containerId = $('#container\\['+index+'\\]').val();
+
+	$('#onhand\\['+index+'\\]').val(0.00);
+	if(productId) {
+		$.ajax({
+			url:"<c:url value='/page/onhandquantityviewonhandjson.htm'/>",
+			data:{product:productId, container:containerId},
+			method : 'GET',
+			dataType : 'json',
+			success : function(json) {
+				if(json)
+				{
+					if(json.status == 'OK')
+						$('#onhand\\['+index+'\\]').val(parseFloat(json.onHand).numberFormat('#,##0.00'));
+				}
+			}
+		});
+	}
 }
 </script>

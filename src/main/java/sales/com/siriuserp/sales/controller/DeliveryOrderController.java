@@ -11,6 +11,7 @@ import com.siriuserp.sales.service.DeliveryOrderService;
 import com.siriuserp.sales.service.SalesOrderService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
+import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.PostalAddress;
@@ -46,6 +47,7 @@ public class DeliveryOrderController extends ControllerBase {
 		binder.registerCustomEditor(SalesOrder.class, modelEditor.forClass(SalesOrder.class));
 		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
 		binder.registerCustomEditor(Facility.class, modelEditor.forClass(Facility.class));
+		binder.registerCustomEditor(Container.class, modelEditor.forClass(Container.class));
 		binder.registerCustomEditor(PostalAddress.class, modelEditor.forClass(PostalAddress.class));
 		binder.registerCustomEditor(SalesOrderItem.class, modelEditor.forClass(SalesOrderItem.class));
 		binder.registerCustomEditor(SalesReferenceItem.class, modelEditor.forClass(SalesReferenceItem.class));

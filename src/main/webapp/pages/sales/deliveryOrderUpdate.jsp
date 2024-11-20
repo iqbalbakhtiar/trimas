@@ -129,6 +129,7 @@
 							<th width="5%" ><spring:message code="deliveryorder.soquantity"/></th>
 							<th width="5%" ><spring:message code="deliveryorder.doquantity"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
+							<th width="5%" nowrap="nowrap"><spring:message code="container"/></th>
 							<th width="60%" nowrap="nowrap"><spring:message code="deliveryorder.note"/></th>
 						</tr>
 					</thead>
@@ -149,6 +150,10 @@
 							</td>
 							<td>
 								<input id="uom[${idx.index}]" size="6" value="${item.salesReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled"
+									   name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/>
+							</td>
+							<td>
+								<input id="uom[${idx.index}]" size="30" value="${item.container.name}" class="input-disabled"
 									   name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/>
 							</td>
 							<td>
@@ -178,7 +183,6 @@ $(function(){
 	});
 
 	$('.item-button-sent').click(function(){
-		console.log("button sent clicked");
 		sent();
 	});
 });

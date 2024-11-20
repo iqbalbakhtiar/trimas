@@ -1,5 +1,6 @@
 package com.siriuserp.sales.dm;
 
+import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,12 @@ public class DeliveryOrderItem extends Model {
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private DeliveryOrder deliveryOrder;
+
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name="fk_container")
+    @LazyToOne(LazyToOneOption.PROXY)
+    @Fetch(FetchMode.SELECT)
+    private Container container;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_sales_reference", referencedColumnName = "id")

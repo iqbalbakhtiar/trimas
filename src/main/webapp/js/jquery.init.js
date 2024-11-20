@@ -528,7 +528,7 @@ function submit(id, url) {
  */
 function buildUrl(baseUrl, params) {
 	const queryString = Object.keys(params)
-		.map(key => key + '=' + encodeURIComponent(params[key]))
+		.map(key => key + '=' + params[key])
 		.join('&');
 	return `${baseUrl}?${queryString}`;
 }

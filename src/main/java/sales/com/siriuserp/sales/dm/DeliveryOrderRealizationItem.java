@@ -1,5 +1,6 @@
 package com.siriuserp.sales.dm;
 
+import com.siriuserp.sdk.dm.Container;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +23,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "delivery_order_realization_item")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class DeliveryOrderRealizationItem extends WarehouseReferenceItem
+public class DeliveryOrderRealizationItem extends WarehouseReferenceItem implements Comparable<DeliveryOrderRealizationItem>
 {
     private static final long serialVersionUID = 3807540226776848698L;
 
@@ -57,11 +58,26 @@ public class DeliveryOrderRealizationItem extends WarehouseReferenceItem
 
 	@Override
 	public WarehouseTransaction getWarehouseTransaction() {
-		return null;
+		return this.getDeliveryOrderRealization();
 	}
 
 	@Override
 	public WarehouseTransactionSource getTransactionSource() {
 		return WarehouseTransactionSource.DELIVERY_ORDER_REALIZATION;
 	}
+
+    @Override
+    public int compareTo(DeliveryOrderRealizationItem item) {
+        return getAccepted().compareTo(item.getAccepted());
+    }
+
+    @Override
+    public String getRefTo() {
+        return this.getDeliveryOrderRealization().getCustomer().getFullName();
+    }
+
+    @Override
+    public Container getSourceContainer() {
+        return this.getDeliveryOrderItem().getContainer();
+    }
 }

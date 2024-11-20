@@ -5,19 +5,13 @@ package com.siriuserp.inventory.dm;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.siriuserp.sdk.dm.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
@@ -28,19 +22,6 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 import org.springframework.security.userdetails.ldap.Person;
-
-import com.siriuserp.sdk.dm.Container;
-import com.siriuserp.sdk.dm.CreditTerm;
-import com.siriuserp.sdk.dm.Currency;
-import com.siriuserp.sdk.dm.Facility;
-import com.siriuserp.sdk.dm.Grid;
-import com.siriuserp.sdk.dm.Lot;
-import com.siriuserp.sdk.dm.MemoReferenceItem;
-import com.siriuserp.sdk.dm.Model;
-import com.siriuserp.sdk.dm.Money;
-import com.siriuserp.sdk.dm.Party;
-import com.siriuserp.sdk.dm.Tag;
-import com.siriuserp.sdk.dm.Tax;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -152,13 +133,6 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     protected Tax extTax1;
-
-	// Move To Money
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "fk_currency")
-//	@LazyToOne(LazyToOneOption.PROXY)
-//	@Fetch(FetchMode.SELECT)
-//	protected Currency currency;
 	
 	@OneToOne(mappedBy = "referenceItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
@@ -277,19 +251,19 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 //		return receipts;	
 //	}
 //	
-//	public Set<GoodsIssue> getIssueds() 
-//	{
-//		Set<GoodsIssue> issueds = new HashSet<GoodsIssue>();
-//		if(getTransactionItem() != null)
-//			issueds.addAll(getTransactionItem().getIssuedItems().stream().map(item -> item.getGoodsIssue()).collect(Collectors.toSet()));
-//
-//		return issueds;	
-//	}
-//	
-//	public ReserveBridge getReserveBridge() 
-//	{
-//		return null;
-//	}
+	public Set<GoodsIssue> getIssueds()
+	{
+		Set<GoodsIssue> issueds = new HashSet<GoodsIssue>();
+		if(getTransactionItem() != null)
+			issueds.addAll(getTransactionItem().getIssuedItems().stream().map(item -> item.getGoodsIssue()).collect(Collectors.toSet()));
+
+		return issueds;
+	}
+
+	public ReserveBridge getReserveBridge()
+	{
+		return null;
+	}
 	
 	public BigDecimal getQuantity() 
 	{

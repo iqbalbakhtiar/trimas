@@ -6,18 +6,7 @@ package com.siriuserp.inventory.dm;
 import java.math.BigDecimal;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -91,7 +80,7 @@ public class WarehouseTransactionItem extends Model implements TransactionItem
 	@Column(name = "warehouse_transaction_source")
 	protected WarehouseTransactionSource transactionSource;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_reference_item")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
@@ -103,11 +92,11 @@ public class WarehouseTransactionItem extends Model implements TransactionItem
 	@Fetch(FetchMode.SELECT)
 	protected WarehouseTransactionItem transactionItem;
 	
-//	@OneToMany(mappedBy = "warehouseTransactionItem", fetch = FetchType.LAZY)
-//	@LazyCollection(LazyCollectionOption.EXTRA)
-//	@Fetch(FetchMode.SELECT)
-//	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
-//	protected Set<GoodsIssueItem> issuedItems = new FastSet<GoodsIssueItem>();
+	@OneToMany(mappedBy = "transactionItem", fetch = FetchType.LAZY)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	protected Set<GoodsIssueItem> issuedItems = new FastSet<GoodsIssueItem>();
 //
 //	@OneToMany(mappedBy = "warehouseTransactionItem", fetch = FetchType.LAZY)
 //	@LazyCollection(LazyCollectionOption.EXTRA)

@@ -84,6 +84,7 @@ public class DeliveryOrderService extends Service {
 			deliveryOrderItem.setDeliveryOrder(deliveryOrder);
 			deliveryOrderItem.setCreatedBy(getPerson());
 			deliveryOrderItem.setCreatedDate(DateHelper.now());
+			deliveryOrderItem.setContainer(item.getContainer());
 
 			deliveryOrder.getItems().add(deliveryOrderItem);
 

@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
+import com.siriuserp.sdk.dm.ReserveControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -408,69 +409,69 @@ public class InventoryItemTagUtil
 //		reserved(inventory, controlls, inventoriable, IN);
 //	}
 //	
-//	public void revout(Class inventory, Set<ReserveControl> controlls, Inventoriable inventoriable) throws Exception {
-//		reserved(inventory, controlls, inventoriable, OUT);
-//	}
-//
-//	private void reserved(Class inventory, Set<ReserveControl> controlls, Inventoriable inventoriable, int type) throws Exception {
-//		Inventory inventoryItem = (Inventory) load(inventory, inventoriable.getProduct().getId(), inventoriable.getGrid().getId(),
-//			inventoriable.getContainer().getId(), inventoriable.getLot(), inventoriable.getTag());
-//		
-//		Assert.notNull(inventoryItem,"Product doesnot exist,Maybe u can do Stock Adjustment/Transfer Order/Goods Receipt first!");
-//		
-//		if(type == IN) {
-//			BigDecimal buffer = inventoriable.getQuantity();
-//
-//			for(ReserveControl control : controlls)
-//			{
-//				if (buffer.compareTo(BigDecimal.ZERO) <= 0)
-//					break;
-//
-//				if (control.getQuantity().compareTo(buffer) >= 0)
-//				{
-//					control.setBuffer(control.getBuffer().add(buffer));
-//
-//					buffer = BigDecimal.ZERO;
-//				} 
-//				else
-//				{
-//					buffer = buffer.subtract(control.getQuantity());
-//
-//					control.setBuffer(control.getQuantity());
-//				}
-//			}
-//			
-//			inventoryItem.setReserved(inventoryItem.getReserved().add(inventoriable.getQuantity()));
-//		}
-//		
-//		if(type == OUT)  {
-//			BigDecimal buffer = inventoriable.getQuantity();
-//
-//			for(ReserveControl control : controlls)
-//				if(SiriusValidator.gz(control.getBuffer()))
-//				{
-//					if (buffer.compareTo(BigDecimal.ZERO) <= 0)
-//						break;
-//		
-//					if (control.getBuffer().compareTo(buffer) >= 0)
-//					{
-//						control.setBuffer(control.getBuffer().subtract(buffer));
-//		
-//						buffer = BigDecimal.ZERO;
-//					} 
-//					else
-//					{
-//						buffer = buffer.subtract(control.getQuantity());
-//		
-//						control.setBuffer(BigDecimal.ZERO);
-//					}
-//				}
-//			
-//			inventoryItem.setReserved(inventoryItem.getReserved().subtract(inventoriable.getQuantity()));
-//		}
-//
-//		dataWarehouseDao.update(inventoryItem);
-//	}
+	public void revout(Class inventory, Set<ReserveControl> controlls, Inventoriable inventoriable) throws Exception {
+		reserved(inventory, controlls, inventoriable, OUT);
+	}
+
+	private void reserved(Class inventory, Set<ReserveControl> controlls, Inventoriable inventoriable, int type) throws Exception {
+		Inventory inventoryItem = (Inventory) load(inventory, inventoriable.getProduct().getId(), inventoriable.getGrid().getId(),
+			inventoriable.getContainer().getId(), inventoriable.getLot(), inventoriable.getTag());
+
+		Assert.notNull(inventoryItem,"Product doesnot exist,Maybe u can do Stock Adjustment/Transfer Order/Goods Receipt first!");
+
+		if(type == IN) {
+			BigDecimal buffer = inventoriable.getQuantity();
+
+			for(ReserveControl control : controlls)
+			{
+				if (buffer.compareTo(BigDecimal.ZERO) <= 0)
+					break;
+
+				if (control.getQuantity().compareTo(buffer) >= 0)
+				{
+					control.setBuffer(control.getBuffer().add(buffer));
+
+					buffer = BigDecimal.ZERO;
+				}
+				else
+				{
+					buffer = buffer.subtract(control.getQuantity());
+
+					control.setBuffer(control.getQuantity());
+				}
+			}
+
+			inventoryItem.setReserved(inventoryItem.getReserved().add(inventoriable.getQuantity()));
+		}
+
+		if(type == OUT)  {
+			BigDecimal buffer = inventoriable.getQuantity();
+
+			for(ReserveControl control : controlls)
+				if(SiriusValidator.gz(control.getBuffer()))
+				{
+					if (buffer.compareTo(BigDecimal.ZERO) <= 0)
+						break;
+
+					if (control.getBuffer().compareTo(buffer) >= 0)
+					{
+						control.setBuffer(control.getBuffer().subtract(buffer));
+
+						buffer = BigDecimal.ZERO;
+					}
+					else
+					{
+						buffer = buffer.subtract(control.getQuantity());
+
+						control.setBuffer(BigDecimal.ZERO);
+					}
+				}
+
+			inventoryItem.setReserved(inventoryItem.getReserved().subtract(inventoriable.getQuantity()));
+		}
+
+		dataWarehouseDao.update(inventoryItem);
+	}
 	
 	private Inventory create(Class inventory, Inventoriable inventoriable) throws Exception {
 		Inventory inventoryItem = (Inventory) Class.forName(inventory.getCanonicalName()).getDeclaredConstructor().newInstance();

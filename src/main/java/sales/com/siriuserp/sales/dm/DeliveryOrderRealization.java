@@ -1,23 +1,24 @@
 package com.siriuserp.sales.dm;
 
-import com.siriuserp.sdk.dm.Facility;
-import com.siriuserp.sdk.dm.JSONSupport;
-import com.siriuserp.sdk.dm.Model;
-import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.inventory.dm.GoodsIssue;
+import com.siriuserp.inventory.dm.Issueable;
+import com.siriuserp.sdk.dm.*;
 import javolution.util.FastSet;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.*;
 
-import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -25,7 +26,7 @@ import java.util.Set;
 @Entity
 @Table(name = "delivery_order_realization")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class DeliveryOrderRealization extends Model implements JSONSupport {
+public class DeliveryOrderRealization extends Model implements JSONSupport, Issueable {
 
     private static final long serialVersionUID = -1654445314172791626L;
 
@@ -84,8 +85,61 @@ public class DeliveryOrderRealization extends Model implements JSONSupport {
 	@OrderBy("id")
 	private Set<DeliveryOrderRealizationItem> items = new FastSet<DeliveryOrderRealizationItem>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_currency")
+    @LazyToOne(LazyToOneOption.PROXY)
+    @Fetch(FetchMode.SELECT)
+    private Currency currency;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_tax")
+    @LazyToOne(LazyToOneOption.PROXY)
+    @Fetch(FetchMode.SELECT)
+    private Tax tax;
+
     @Override
     public String getAuditCode() {
         return id + "," + code;
+    }
+
+    @Override
+    public Set<DeliveryOrderRealizationItem> getIssueables()
+    {
+        return this.items;
+    }
+
+    @Override
+    public Set<GoodsIssue> getIssueds() {
+        HashSet<GoodsIssue> issueds = new HashSet<>();
+
+        issueds.addAll(getIssueables().stream().flatMap(item -> item.getIssueds().stream()).collect(Collectors.toSet()));
+
+        return issueds;
+    }
+
+    @Override
+    public Tax getTax() {
+        return this.tax;
+    }
+
+    @Override
+    public Currency getCurrency() {
+        return this.currency;
+    }
+
+    @Override
+    public String getSelf()
+    {
+        return "Delivery Order Realization";
+    }
+
+    @Override
+    public Party getParty() {
+        return null;
+    }
+
+    @Override
+    public String getRef() {
+        return "";
     }
 }

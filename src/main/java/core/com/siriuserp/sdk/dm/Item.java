@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.siriuserp.accounting.dm.BillingReferenceItem;
+import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.sales.dm.SalesReferenceItem;
 import com.siriuserp.sales.dm.SalesType;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +47,7 @@ public class Item extends SiriusItem
 	private BigDecimal delivered = BigDecimal.ZERO;
 	private BigDecimal accepted = BigDecimal.ZERO;
 	private BigDecimal shrinkage = BigDecimal.ZERO;
+	private BigDecimal issued = BigDecimal.ZERO;
 
 	private BigDecimal returnedPrice = BigDecimal.ZERO;
 
@@ -75,6 +77,7 @@ public class Item extends SiriusItem
 	private Product product;
 	private SalesReferenceItem salesReferenceItem;
 	private BillingReferenceItem billingReferenceItem;
+	private WarehouseTransactionItem warehouseTransactionItem;
 
 	private Long reference;
 
