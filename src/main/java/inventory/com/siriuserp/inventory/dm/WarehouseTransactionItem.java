@@ -76,7 +76,8 @@ public class WarehouseTransactionItem extends Model implements TransactionItem
 	@Column(name = "goods_type")
 	protected GoodsType goodsType = GoodsType.STOCK;
 
-	@Enumerated(EnumType.STRING)
+	@Setter
+    @Enumerated(EnumType.STRING)
 	@Column(name = "warehouse_transaction_source")
 	protected WarehouseTransactionSource transactionSource;
 	
@@ -97,12 +98,12 @@ public class WarehouseTransactionItem extends Model implements TransactionItem
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	protected Set<GoodsIssueItem> issuedItems = new FastSet<GoodsIssueItem>();
-//
-//	@OneToMany(mappedBy = "warehouseTransactionItem", fetch = FetchType.LAZY)
-//	@LazyCollection(LazyCollectionOption.EXTRA)
-//	@Fetch(FetchMode.SELECT)
-//	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
-//	protected Set<GoodsReceiptItem> receiptedItems = new FastSet<GoodsReceiptItem>();
+
+	@OneToMany(mappedBy = "warehouseTransactionItem", fetch = FetchType.LAZY)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	protected Set<GoodsReceiptItem> receiptedItems = new FastSet<GoodsReceiptItem>();
 
 	@OneToMany(mappedBy = "originItem", fetch = FetchType.LAZY)
 	@LazyCollection(LazyCollectionOption.EXTRA)
@@ -188,12 +189,7 @@ public class WarehouseTransactionItem extends Model implements TransactionItem
 		return transactionSource;
 	}
 
-	public void setTransactionSource(WarehouseTransactionSource transactionSource)
-	{
-		this.transactionSource = transactionSource;
-	}
-
-	public Lot getLot()
+    public Lot getLot()
 	{
 		return getReferenceItem().getLot();
 	}

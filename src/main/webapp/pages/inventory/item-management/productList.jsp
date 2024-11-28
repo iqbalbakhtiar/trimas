@@ -43,7 +43,7 @@
 	        	<c:if test='${access.edit}'>
 	            	<a class="item-button-edit" href="<c:url value='/page/productpreedit.htm?id=${product.id}'/>" title="Edit"><span><spring:message code="sirius.edit"/></span></a>                               
 	            </c:if>
-				<c:if test='${access.delete}'>
+				<c:if test='${access.delete && product.status}'>
 	            	<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/productdelete.htm?id=${product.id}'/>');" title="Delete"><span><spring:message code="sirius.delete"/></span></a>                             
 	            </c:if>			
 	        </td>

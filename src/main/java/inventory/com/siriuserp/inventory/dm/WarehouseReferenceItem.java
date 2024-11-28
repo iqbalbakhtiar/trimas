@@ -3,28 +3,22 @@
  */
 package com.siriuserp.inventory.dm;
 
+import com.siriuserp.sdk.dm.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.*;
+import org.springframework.security.userdetails.ldap.Person;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.persistence.*;
-
-import com.siriuserp.sdk.dm.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
-import org.hibernate.annotations.Type;
-import org.springframework.security.userdetails.ldap.Person;
-
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * @author
@@ -242,15 +236,15 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 		return GoodsType.STOCK;
 	}
 	
-//	public Set<GoodsReceipt> getReceipts()
-//	{
-//		Set<GoodsReceipt> receipts = new HashSet<GoodsReceipt>();
-//		if(getTransactionItem() != null)
-//			receipts.addAll(getTransactionItem().getReceiptedItems().stream().map(item -> item.getGoodsReceipt()).collect(Collectors.toSet()));
-//		
-//		return receipts;	
-//	}
-//	
+	public Set<GoodsReceipt> getReceipts()
+	{
+		Set<GoodsReceipt> receipts = new HashSet<GoodsReceipt>();
+		if(getTransactionItem() != null)
+			receipts.addAll(getTransactionItem().getReceiptedItems().stream().map(item -> item.getGoodsReceipt()).collect(Collectors.toSet()));
+
+		return receipts;
+	}
+
 	public Set<GoodsIssue> getIssueds()
 	{
 		Set<GoodsIssue> issueds = new HashSet<GoodsIssue>();
@@ -274,5 +268,10 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 	public String getAuditCode() 
 	{
 		return this.id+" ";
+	}
+
+	// Needed for PO Item
+	public Date getDeliveryDate() {
+		return null;
 	}
 }

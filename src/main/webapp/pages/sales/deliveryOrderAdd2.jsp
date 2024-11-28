@@ -344,12 +344,11 @@ function openContainer(element, idx) {
 		return;
 	}
 
-	// http://127.0.0.1:8181/sirius/page/popupcontainerview.htm?target=container%5B1%5D&grid=1&popupid=popup0
-
 	const facilityId = $('#facility').val();
 	const baseUrl = '<c:url value="/page/popupcontainerview.htm"/>';
 	const params = {
 		target: 'container[' + idx + ']',
+		index: idx,
 		facility: facilityId
 	}
 

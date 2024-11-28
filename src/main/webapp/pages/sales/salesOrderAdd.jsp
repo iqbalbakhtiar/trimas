@@ -118,7 +118,7 @@
 					</tr>
 				</table>
 			</td>
-			
+
 		</tr>
 	</table>
 	<br/>
@@ -508,7 +508,13 @@ function addLine($index) {
 }
 
 function openProduct(index) {
-	openpopup("<c:url value='/page/popupproductview.htm?&target=product['/>"+index+"]&index="+index);
+	const baseUrl = '<c:url value="/page/popupproductview.htm"/>';
+	const params = {
+		target: 'product[' + index + ']', // Id Dropdown (Select) element
+		index: index,
+		status: true // Filter Only Active Products
+	};
+	openpopup(buildUrl(baseUrl, params));
 }
 
 function checkDuplicate(element) {

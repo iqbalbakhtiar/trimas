@@ -1,21 +1,25 @@
 package com.siriuserp.procurement.dm;
 
+import com.siriuserp.inventory.dm.GoodsReceipt;
+import com.siriuserp.inventory.dm.Receiptable;
 import com.siriuserp.sales.dm.ApprovableType;
 import com.siriuserp.sdk.dm.*;
 import javolution.util.FastSet;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.*;
 
-import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -24,7 +28,7 @@ import java.util.Set;
 @Table(name = "purchase_order")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridge{
+public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridge, Receiptable {
     private static final long serialVersionUID = -7099548148106157972L;
 
     @Column(name = "code")
@@ -132,5 +136,36 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
         interceptors.add("purchaseOrderApprovableInterceptor");
 
         return interceptors;
+    }
+
+    @Override
+    public Set<PurchaseOrderItem> getReceiptables() {
+        Set<PurchaseOrderItem> items = new FastSet<PurchaseOrderItem>();
+        items.addAll(getItems().stream().filter(item -> !item.isLocked()).collect(Collectors.toSet()));
+
+        return items;
+    }
+
+    @Override
+    public Set<GoodsReceipt> getReceipts() {
+        Set<GoodsReceipt> receipts = new HashSet<GoodsReceipt>();
+        receipts.addAll(getReceiptables().stream().flatMap(item -> item.getReceipts().stream()).collect(Collectors.toSet()));
+
+        return receipts;
+    }
+
+    @Override
+    public Currency getCurrency() {
+        return this.money.getCurrency();
+    }
+
+    @Override
+    public Party getParty() {
+        return getSupplier();
+    }
+
+    @Override
+    public String getRef() {
+        return "";
     }
 }

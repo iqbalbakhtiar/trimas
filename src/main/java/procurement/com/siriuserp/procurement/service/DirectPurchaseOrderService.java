@@ -1,5 +1,6 @@
 package com.siriuserp.procurement.service;
 
+import com.siriuserp.inventory.dm.WarehouseTransactionType;
 import com.siriuserp.procurement.adapter.PurchaseOrderAdapter;
 import com.siriuserp.procurement.dm.*;
 import com.siriuserp.procurement.form.PurchaseForm;
@@ -17,7 +18,6 @@ import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.*;
 import javolution.util.FastMap;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -125,6 +125,8 @@ public class DirectPurchaseOrderService extends Service {
                 orderItem.setCreatedBy(getPerson());
                 orderItem.setCreatedDate(DateHelper.now());
                 orderItem.setParty(purchaseOrder.getSupplier());
+                // Set Transaction Item using helper
+                orderItem.setTransactionItem(ReferenceItemHelper.init(genericDao, item.getQuantity(), WarehouseTransactionType.IN, orderItem));
 
                 genericDao.add(orderItem);
             }

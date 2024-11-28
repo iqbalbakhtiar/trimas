@@ -22,7 +22,8 @@ public enum WarehouseTransactionSource
 	TRANSFER_ORDER_REQUEST,
 	TRANSFER_ORDER_LOADING,
 	MOVING_CONTAINER_ISSUE_COMPLETION,
-	MOVING_CONTAINER_RECEIPT_COMPLETION;
+	MOVING_CONTAINER_RECEIPT_COMPLETION,
+	PURCHASE_ORDER_CONFIRMATION;
 	
 	public String getNormalizedName()
     {
@@ -106,6 +107,19 @@ public enum WarehouseTransactionSource
 //			case MOVING_CONTAINER_ISSUE_SEQUENCE:
 //			case PURCHASE_RETURN:
 //			case PURCHASE_RETURN_MANUAL:
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	public boolean isAutoLocked()
+	{
+		switch(this)
+		{
+			case DIRECT_PURCHASE_ORDER:
+			case PURCHASE_ORDER:
+			case PURCHASE_ORDER_CONFIRMATION:
 				return true;
 			default:
 				return false;

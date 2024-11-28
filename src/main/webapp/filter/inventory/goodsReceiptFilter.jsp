@@ -52,30 +52,23 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right"><spring:message code="goodsreceipt.reftype"/>&nbsp;&nbsp;</td>
-			<td>:</td>
-			<td>
-				<select id="referenceType" name="referenceType">
-				<option value=''><spring:message code="sirius.all"/></option>
-				<c:forEach items='${sourcesIn}' var='source' varStatus="status">
-					<option value='${source}' ${filterCriteria.referenceType eq source ? 'selected' : '' }><spring:message code="${source.message}"/></option>
-				</c:forEach>
-				</select>
-			</td>
-		</tr>
-		<tr>
 			<td align="right"><spring:message code="goodsreceipt.refdoc"/>&nbsp;&nbsp;</td>
 			<td>:</td>
 			<td><input type="text" id="reference" name="reference" value="${filterCriteria.reference}" size="35" class="inputbox"/></td>
 		</tr>
 		<tr>
-            <td align="right"><spring:message code="sirius.datefrom"/>&nbsp;&nbsp;</td>
-            <td>:&nbsp;</td>
-            <td>
-                <input id="dateFrom" name="dateFrom" formatLength="long" dojoType="dropdowndatepicker" lang="en-us" value="<fmt:formatDate value='${filterCriteria.dateFrom}' pattern='MM/dd/yyyy'/>" displayFormat="dd-MM-yyyy" saveFormat="dd-MM-yyyy"/>
-                &nbsp;<spring:message code="sirius.dateto"/>&nbsp;:&nbsp;
-                <input id="dateTo" name="dateTo" formatLength="long" dojoType="dropdowndatepicker" lang="en-us" value="<fmt:formatDate value='${filterCriteria.dateTo}' pattern='MM/dd/yyyy'/>" displayFormat="dd-MM-yyyy" saveFormat="dd-MM-yyyy"/>
-            </td>
+			<td align="right"><spring:message code="sirius.createdby"/>&nbsp;&nbsp;</td>
+			<td>:</td>
+			<td><input type="text" id="createdBy" name="createdBy" value="${filterCriteria.createdBy}" size="35" class="inputbox"/></td>
+		</tr>
+		<tr>
+			<td align="right"><spring:message code="sirius.datefrom"/> &nbsp;</td>
+			<td align="center">:</td>
+			<td>
+				<input id="dateFrom" name="dateFrom" class="datepicker" value="<fmt:formatDate value='${filterCriteria.dateFrom}' pattern='dd-MM-yyyy'/>"/>
+				&nbsp;<spring:message code="sirius.dateto"/> &nbsp;:&nbsp;
+				<input id="dateTo" name="dateTo" class="datepicker" value="<fmt:formatDate value='${filterCriteria.dateTo}' pattern='dd-MM-yyyy'/>"/>
+			</td>
 		</tr>
 		<tr><td colspan="3">&nbsp;</td></tr>
 		<tr>

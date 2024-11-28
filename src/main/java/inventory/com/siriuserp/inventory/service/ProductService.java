@@ -80,9 +80,10 @@ public class ProductService extends Service {
 		genericDao.update(product);
 	}
 	
-	@AuditTrails(className = Product.class, actionType = AuditTrailsActionType.DELETE)
+	@AuditTrails(className = Product.class, actionType = AuditTrailsActionType.UPDATE)
 	public void delete(Product product) throws Exception
 	{
-		genericDao.delete(product);
+		product.setStatus(false);
+		genericDao.update(product);
 	}
 }

@@ -3,17 +3,16 @@ package com.siriuserp.procurement.dm;
 import com.siriuserp.inventory.dm.WarehouseReferenceItem;
 import com.siriuserp.inventory.dm.WarehouseTransaction;
 import com.siriuserp.inventory.dm.WarehouseTransactionSource;
-import com.siriuserp.sdk.dm.Model;
+import com.siriuserp.sdk.dm.JSONSupport;
 import com.siriuserp.sdk.dm.Money;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -22,7 +21,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "purchase_order_item")
-public class PurchaseOrderItem extends WarehouseReferenceItem {
+public class PurchaseOrderItem extends WarehouseReferenceItem implements JSONSupport {
     private static final long serialVersionUID = 6323790446769057283L;
 
     @Column(name = "delivery_date")
@@ -51,16 +50,27 @@ public class PurchaseOrderItem extends WarehouseReferenceItem {
 
     @Override
     public WarehouseTransaction getWarehouseTransaction() {
-        return null;
+        return getPurchaseOrder();
     }
 
     @Override
     public WarehouseTransactionSource getTransactionSource() {
-        return null;
+        return WarehouseTransactionSource.DIRECT_PURCHASE_ORDER;
     }
 
     // (Qty * Amount)
     public BigDecimal getTotalAmount() {
         return this.quantity.multiply(this.getMoney().getAmount());
+    }
+
+    @Override
+    public String getRefFrom()
+    {
+        return getPurchaseOrder().getSupplier().getFullName();
+    }
+
+    @Override
+    public Date getDeliveryDate() {
+        return this.deliveryDate;
     }
 }

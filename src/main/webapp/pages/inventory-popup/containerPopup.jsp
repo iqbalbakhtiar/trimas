@@ -31,6 +31,22 @@
 					var event = new Event('change');
 					_client.dispatchEvent(event);
 				}
+
+				let _grid = self.opener.document.getElementById('grid[${param.index}]');
+				if(_grid)
+				{
+					_grid.remove(_grid.selectedIndex);
+
+					Container.load(id);
+
+					let _opt = document.createElement('option');
+					_opt.value = Container.data.grid.gridId;
+					_opt.text = Container.data.grid.gridName;
+
+					_grid.appendChild(_opt);
+
+					_grid.dispatchEvent(new Event('change'));
+				}
 			}
 			
 			window.close();
@@ -87,8 +103,9 @@
 						<table class="table-list" cellspacing="0" cellpadding="0" width="80%">
 					  	<tr>
 					  		<th width="6%"><div style="width:10px"></div></th>
-					  		<th width="20%">Code</th>
-				  		  	<th width="74%">Name</th>
+					  		<th width="30%"><spring:message code="sirius.code"/></th>
+				  		  	<th width="30%"><spring:message code="sirius.name"/></th>
+				  		  	<th width="30%"><spring:message code="grid"/></th>
 				  		</tr>
 						<c:forEach items="${containers}" var="com">
 							<tr>
@@ -97,9 +114,10 @@
 						  		</td>
 								<td>${com.code}</td> 
 								<td>${com.name}</td>
+								<td>${com.grid.name}</td>
 						  	</tr>
 						</c:forEach>
-					  	<tr class="end-table"><td colspan="3">&nbsp;</td></tr>
+					  	<tr class="end-table"><td colspan="4">&nbsp;</td></tr>
 					  	</table>
 
 						<table border="0" cellpadding="0" cellspacing="0" width="99%" align="center" height="20">

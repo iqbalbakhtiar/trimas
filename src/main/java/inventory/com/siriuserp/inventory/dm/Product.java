@@ -101,5 +101,4 @@ public class Product extends Model implements JSONSupport
 	public String getAuditCode() {
 		return this.id + "," + this.code;
 	}
-
 }
