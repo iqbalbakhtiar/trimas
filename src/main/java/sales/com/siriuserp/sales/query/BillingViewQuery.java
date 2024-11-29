@@ -47,7 +47,7 @@ public class BillingViewQuery extends AbstractGridViewQuery {
         }
 
         if (executorType.equals(ExecutorType.HQL))
-            builder.append("ORDER BY bill.id DESC");
+            builder.append("ORDER BY bill.date ");
 
         Query query = getSession().createQuery(builder.toString());
         query.setReadOnly(true);
