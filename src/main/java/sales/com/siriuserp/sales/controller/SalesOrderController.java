@@ -2,7 +2,6 @@ package com.siriuserp.sales.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.siriuserp.sdk.dm.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -27,6 +26,12 @@ import com.siriuserp.sales.query.SalesOrderGridViewQuery;
 import com.siriuserp.sales.service.SalesOrderService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
+import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
+import com.siriuserp.sdk.dm.Currency;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.PostalAddress;
+import com.siriuserp.sdk.dm.Tax;
+import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.utility.FormHelper;
 
@@ -115,5 +120,23 @@ public class SalesOrderController extends ControllerBase {
 	@RequestMapping("/salesorderprint.htm")
 	public ModelAndView print(@RequestParam("id") Long id) throws Exception {
 		return new ModelAndView("/sales/salesOrderPrint", service.preedit(id));
+	}
+	
+	@RequestMapping("/salesorderbyproductjson.htm")
+	public ModelAndView viewJson(@RequestParam("productId") Long productId) throws ServiceException
+	{
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			response.store("product", service.load(productId));
+		} catch (Exception e)
+		{
+			response.statusError();
+			response.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
 	}
 }

@@ -1,28 +1,46 @@
 package com.siriuserp.sales.service;
 
-import com.siriuserp.sales.adapter.SalesOrderAdapter;
-import com.siriuserp.sales.dm.*;
-import com.siriuserp.sdk.annotation.AutomaticSibling;
-import com.siriuserp.sdk.dao.CreditTermDao;
-import com.siriuserp.sdk.dao.PartyRelationshipDao;
-import com.siriuserp.sdk.dm.*;
-import com.siriuserp.sdk.exceptions.ServiceException;
-import com.siriuserp.sdk.utility.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.siriuserp.sales.adapter.SalesOrderAdapter;
+import com.siriuserp.sales.dm.ApprovableType;
+import com.siriuserp.sales.dm.SalesOrder;
+import com.siriuserp.sales.dm.SalesOrderApprovableBridge;
+import com.siriuserp.sales.dm.SalesOrderItem;
+import com.siriuserp.sales.dm.SalesReferenceItem;
+import com.siriuserp.sales.dm.SalesType;
 import com.siriuserp.sales.form.SalesForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
+import com.siriuserp.sdk.annotation.AutomaticSibling;
 import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.base.Service;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
+import com.siriuserp.sdk.dao.CreditTermDao;
 import com.siriuserp.sdk.dao.GenericDao;
+import com.siriuserp.sdk.dao.PartyRelationshipDao;
+import com.siriuserp.sdk.dao.SalesReferenceItemDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
+import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
+import com.siriuserp.sdk.dm.CreditTerm;
+import com.siriuserp.sdk.dm.Currency;
+import com.siriuserp.sdk.dm.Item;
+import com.siriuserp.sdk.dm.Money;
+import com.siriuserp.sdk.dm.PartyRelationship;
+import com.siriuserp.sdk.dm.PartyRelationshipType;
+import com.siriuserp.sdk.dm.TableType;
+import com.siriuserp.sdk.dm.Tax;
+import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
+import com.siriuserp.sdk.utility.ApprovableBridgeHelper;
+import com.siriuserp.sdk.utility.DateHelper;
+import com.siriuserp.sdk.utility.FormHelper;
+import com.siriuserp.sdk.utility.GeneratorHelper;
+import com.siriuserp.sdk.utility.QueryFactory;
 
 import javolution.util.FastMap;
 
@@ -32,6 +50,9 @@ public class SalesOrderService extends Service {
 	
 	@Autowired
 	private GenericDao genericDao;
+	
+	@Autowired
+	private SalesReferenceItemDao salesReferenceItemDao;
 	
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
@@ -165,4 +186,11 @@ public class SalesOrderService extends Service {
 
 		return map;
 	}
+	
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public SalesReferenceItem load(Long productId)
+	{
+		return salesReferenceItemDao.loadByProduct(productId);
+	}
+
 }

@@ -63,83 +63,10 @@
 								<form id="filterPopup" name="filterPopup" method="post">
 									<table width="100%" cellspacing="0" cellpadding="0" align="center">
 										<tr>
-											<td width="130" align="right" style="WIDTH:130px;"><spring:message code="product.code"/></td>
-											<td width="7">&nbsp;:&nbsp;</td>
-											<td width="295" height="28" align="left">
-												<input type="text" id="code" name="code" value="${filterCriteria.code}" size="35" class="inputbox"/>
-											</td>
-										</tr>
-										<tr>
 											<td width="130" align="right" style="WIDTH:130px;"><spring:message code="product.name"/></td>
 											<td width="7">&nbsp;:&nbsp;</td>
 											<td width="295" height="28" align="left">
 												<input type="text" id="name" name="name" value="${filterCriteria.name}" size="35" class="inputbox"/>
-											</td>
-										</tr>
-										<tr>
-											<td width="130" align="right" style="WIDTH:130px;"><spring:message code="sirius.uom"/></td>
-											<td width="7">&nbsp;:&nbsp;</td>
-											<td width="295" height="28" align="left">
-												<input type="text" id="unitOfMeasure" name="unitOfMeasure" value="${filterCriteria.unitOfMeasure}" size="35" class="inputbox"/>
-											</td>
-										</tr>
-										<tr>
-											<td width="130" align="right" style="WIDTH:130px;"><spring:message code="sirius.type"/></td>
-											<td width="7">&nbsp;:&nbsp;</td>
-											<td width="295" height="28" align="left">
-												<select id="type" name="type">
-													<option value=""><spring:message code="sirius.all"/></option>
-													<option value="GOODS" ${not empty filterCriteria.type and filterCriteria.type == "GOODS" ? "selected" : ""}>GOODS</option>
-													<option value="SERVICE" ${not empty filterCriteria.type and filterCriteria.type == "SERVICE" ? "selected" : ""}>SERVICE</option>
-													<option value="ASSET" ${not empty filterCriteria.type and filterCriteria.type == "ASSET" ? "selected" : ""}>ASSET</option>
-													<option value="NON_ASSET" ${not empty filterCriteria.type and filterCriteria.type == "NON_ASSET" ? "selected" : ""}>NON ASSET</option>
-												</select>
-											</td>
-										</tr>
-										<tr>
-											<td width="130" align="right" style="WIDTH:130px;"><spring:message code="productcategory"/></td>
-											<td width="7">&nbsp;:&nbsp;</td>
-											<td width="295" height="28" align="left">
-												<input type="text" id="productCategory" name="productCategory" class="inputbox" value="${filterCriteria.productCategory}"/>
-											</td>
-										</tr>
-										<tr>
-											<td width="130" align="right" style="WIDTH:130px;"><spring:message code="sirius.status"/></td>
-											<td width="7">&nbsp;:&nbsp;</td>
-											<td width="295" height="28" align="left">
-												<select id="status" name="status">
-													<option value=""><spring:message code="sirius.all"/></option>
-													<option value="true" ${not empty filterCriteria.status and filterCriteria.status ? "selected" : ""}><spring:message code="sirius.active"/></option>
-													<option value="false" ${not empty filterCriteria.status and !filterCriteria.status ? "selected" : ""}><spring:message code="sirius.inactive"/></option>
-												</select>
-											</td>
-										</tr>
-										<tr>
-											<td width="130" align="right" style="WIDTH:130px;"><spring:message code="product.origin"/></td>
-											<td width="7">&nbsp;:&nbsp;</td>
-											<td width="295" height="28" align="left">
-												<input type="text" id="origin" name="origin" class="inputbox" value="${filterCriteria.origin}"/>
-											</td>
-										</tr>
-										<tr>
-											<td width="130" align="right" style="WIDTH:130px;"><spring:message code="product.brand"/></td>
-											<td width="7">&nbsp;:&nbsp;</td>
-											<td width="295" height="28" align="left">
-												<input type="text" id="brand" name="brand" class="inputbox" value="${filterCriteria.brand}"/>
-											</td>
-										</tr>
-										<tr>
-											<td width="130" align="right" style="WIDTH:130px;"><spring:message code="product.grade"/></td>
-											<td width="7">&nbsp;:&nbsp;</td>
-											<td width="295" height="28" align="left">
-												<input type="text" id="grade" name="grade" class="inputbox" value="${filterCriteria.grade}"/>
-											</td>
-										</tr>
-										<tr>
-											<td width="130" align="right" style="WIDTH:130px;"><spring:message code="product.part"/></td>
-											<td width="7">&nbsp;:&nbsp;</td>
-											<td width="295" height="28" align="left">
-												<input type="text" id="part" name="part" class="inputbox" value="${filterCriteria.part}"/>
 											</td>
 										</tr>
 										<tr>

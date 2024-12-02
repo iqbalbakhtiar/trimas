@@ -1,11 +1,11 @@
 package com.siriuserp.sales.query;
 
-import com.siriuserp.sales.criteria.DeliveryOrderFilterCriteria;
+import org.hibernate.Query;
+
 import com.siriuserp.sales.criteria.DeliveryOrderRealizationFilterCriteria;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
 import com.siriuserp.sdk.utility.SiriusValidator;
-import org.hibernate.Query;
 
 public class DeliveryOrderRealizationGridViewQuery extends AbstractGridViewQuery {
     @Override

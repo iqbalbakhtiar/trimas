@@ -519,11 +519,34 @@ function openProduct(index) {
 
 function checkDuplicate(element) {
 	// Memanggil String.duplicate untuk mengecek duplikasi pada kelas html 'productInput'
+
+	var productId = $(element).val();
+	var index = element.getAttribute('index');
+
 	var isDuplicated = String.duplicate('productInput');
 
 	if (isDuplicated) {
 		alert('<spring:message code="product"/>  <strong>'+ $(element).find('option:selected').text() +'</strong> <spring:message code="notif.duplicate"/> !');
 		$(element).closest('tr').remove();
+	}
+
+	if(productId) {
+		$.ajax({
+			url:"<c:url value='/page/salesorderbyproductjson.htm'/>",
+			data:{productId:productId},
+			method : 'GET',
+			dataType : 'json',
+			success : function(json) {
+				if(json)
+				{
+					if(json.status == 'OK'){
+						let amount = document.getElementsByName('items['+index+'].amount')[0];
+						if(amount)
+							amount.value = parseFloat(json.product.price).numberFormat('#,##0.00');
+					}
+				}
+			}
+		});
 	}
 }
 
