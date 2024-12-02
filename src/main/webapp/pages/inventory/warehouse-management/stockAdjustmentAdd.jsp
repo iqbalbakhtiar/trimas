@@ -263,6 +263,26 @@
 				}
 			});
 		}
+
+		if(prodId) {
+			$.ajax({
+				url:"<c:url value='/page/stockadjustmentbyproductjson.htm'/>",
+				data:{productId:prodId},
+				method : 'GET',
+				dataType : 'json',
+				success : function(json) {
+					if(json)
+					{
+						if(json.status == 'OK'){
+							let amount = document.getElementsByName('items['+index+'].price')[0];
+							if(amount)
+								amount.value = parseFloat(json.product.price).numberFormat('#,##0.00');
+						}
+					}
+				}
+			});
+		}
+
 	}
 	
 	function checkQuantity(index) 

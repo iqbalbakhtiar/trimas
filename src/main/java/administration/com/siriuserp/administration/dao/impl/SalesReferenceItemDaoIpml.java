@@ -17,7 +17,7 @@ import com.siriuserp.sdk.db.DaoHelper;
  * www.siriuserp.com
  */
 
-@Component("salesOrderItemDao")
+@Component("salesReferenceItemDao")
 public class SalesReferenceItemDaoIpml extends DaoHelper<SalesReferenceItem> implements SalesReferenceItemDao
 {
 	@Override
