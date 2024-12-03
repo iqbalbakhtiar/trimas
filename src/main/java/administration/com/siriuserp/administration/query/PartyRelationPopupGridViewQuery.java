@@ -5,15 +5,11 @@
  */
 package com.siriuserp.administration.query;
 
-import com.siriuserp.sdk.db.ExecutorType;
-import com.siriuserp.sdk.dm.PartyRelationshipType;
-import com.siriuserp.sdk.dm.PartyRoleType;
-import com.siriuserp.sdk.filter.CustomerFilterCriteria;
-import com.siriuserp.sdk.utility.ObjectPrinter;
 import org.hibernate.Query;
 
 import com.siriuserp.administration.criteria.PartyFilterCriteria;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
+import com.siriuserp.sdk.db.ExecutorType;
 import com.siriuserp.sdk.utility.SiriusValidator;
 
 /**

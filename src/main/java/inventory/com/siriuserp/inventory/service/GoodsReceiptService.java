@@ -1,8 +1,27 @@
 package com.siriuserp.inventory.service;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+
 import com.siriuserp.inventory.adapter.WarehouseItemAdapter;
 import com.siriuserp.inventory.criteria.GoodsReceiptFilterCriteria;
-import com.siriuserp.inventory.dm.*;
+import com.siriuserp.inventory.dm.GoodsIssue;
+import com.siriuserp.inventory.dm.GoodsIssueItem;
+import com.siriuserp.inventory.dm.GoodsReceipt;
+import com.siriuserp.inventory.dm.GoodsReceiptItem;
+import com.siriuserp.inventory.dm.InventoryConfiguration;
+import com.siriuserp.inventory.dm.InventoryItem;
+import com.siriuserp.inventory.dm.ProductCategoryType;
+import com.siriuserp.inventory.dm.ProductInOutTransaction;
+import com.siriuserp.inventory.dm.WarehouseTransactionItem;
+import com.siriuserp.inventory.dm.WarehouseTransactionSource;
+import com.siriuserp.inventory.dm.WarehouseTransactionType;
 import com.siriuserp.inventory.form.TransactionForm;
 import com.siriuserp.inventory.sibling.AddDWInventoryItemInSiblingRole;
 import com.siriuserp.inventory.util.InventoryitemTagUtil;
@@ -14,20 +33,26 @@ import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.GridViewQuery;
-import com.siriuserp.sdk.dm.*;
+import com.siriuserp.sdk.dm.Currency;
+import com.siriuserp.sdk.dm.Facility;
+import com.siriuserp.sdk.dm.Item;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.Reference;
+import com.siriuserp.sdk.dm.TableType;
+import com.siriuserp.sdk.dm.Tax;
+import com.siriuserp.sdk.dm.UrlCache;
+import com.siriuserp.sdk.dm.User;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
-import com.siriuserp.sdk.utility.*;
-import javolution.util.FastMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
+import com.siriuserp.sdk.utility.DateHelper;
+import com.siriuserp.sdk.utility.FormHelper;
+import com.siriuserp.sdk.utility.GeneratorHelper;
+import com.siriuserp.sdk.utility.QueryFactory;
+import com.siriuserp.sdk.utility.SiriusValidator;
+import com.siriuserp.sdk.utility.UserHelper;
 
-import java.math.BigDecimal;
-import java.util.Map;
+import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
@@ -53,7 +78,8 @@ public class GoodsReceiptService extends Service {
         return map;
     }
 
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+    @SuppressWarnings("unchecked")
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public Map<String, Object> preadd1(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
     {
         WarehouseItemAdapter adapter = new WarehouseItemAdapter();

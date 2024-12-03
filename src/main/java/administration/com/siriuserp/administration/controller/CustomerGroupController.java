@@ -1,7 +1,5 @@
 package com.siriuserp.administration.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -15,12 +13,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.siriuserp.administration.query.CustomerGroupGridViewQuery;
 import com.siriuserp.administration.service.CustomerGroupService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.Party;
-import com.siriuserp.sdk.filter.CustomerFilterCriteria;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.view.ViewHelper;
 

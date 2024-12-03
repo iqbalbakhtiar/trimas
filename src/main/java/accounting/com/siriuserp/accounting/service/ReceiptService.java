@@ -1,8 +1,19 @@
 package com.siriuserp.accounting.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.siriuserp.accounting.adapter.ReceiptAdapter;
-import com.siriuserp.accounting.criteria.ReceiptFilterCriteria;
-import com.siriuserp.accounting.dm.*;
+import com.siriuserp.accounting.dm.Billing;
+import com.siriuserp.accounting.dm.BillingItem;
+import com.siriuserp.accounting.dm.FinancialStatus;
+import com.siriuserp.accounting.dm.Receipt;
+import com.siriuserp.accounting.dm.ReceiptApplication;
 import com.siriuserp.accounting.form.AccountingForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
@@ -16,18 +27,17 @@ import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.Item;
 import com.siriuserp.sdk.dm.PaymentMethodType;
 import com.siriuserp.sdk.dm.TableType;
-import com.siriuserp.sdk.exceptions.DataEditException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
-import com.siriuserp.sdk.utility.*;
-import javolution.util.FastMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import com.siriuserp.sdk.utility.DateHelper;
+import com.siriuserp.sdk.utility.EnglishNumber;
+import com.siriuserp.sdk.utility.FormHelper;
+import com.siriuserp.sdk.utility.GeneratorHelper;
+import com.siriuserp.sdk.utility.ObjectPrinter;
+import com.siriuserp.sdk.utility.QueryFactory;
+import com.siriuserp.sdk.utility.SiriusValidator;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
@@ -86,8 +96,10 @@ public class ReceiptService extends Service {
 			{
 				ReceiptApplication application = new ReceiptApplication();
 				application.setBilling(genericDao.load(Billing.class, item.getReference()));
-				application.setPaidAmount(item.getPrice());
+				application.setPaidAmount(item.getPrice().add(item.getWriteOff()));
 				application.setReceipt(receipt);
+				application.setWriteOff(item.getWriteOff());
+				application.setWriteOffType(item.getWriteOffType());
 
                 /* unpaid = unpaid - paidAmount */
 				BigDecimal unpaid = application.getBilling().getUnpaid().subtract(application.getPaidAmount());
@@ -117,7 +129,6 @@ public class ReceiptService extends Service {
 						genericDao.update(billingItem);
 					}
 				}
-
 
 				genericDao.update(application.getBilling());
 
@@ -152,8 +163,6 @@ public class ReceiptService extends Service {
 		map.put("said", EnglishNumber.convertIdComma(adapter.getReceipt().getReceiptInformation().getAmount().setScale(5, RoundingMode.UP)));
 		map.put("adapter", adapter);
 		map.put("redirectUri", redirectUri);
-
-		System.out.println("Payment Method Type: " + form.getReceiptInformation().getPaymentMethodType().getCapitalizedName());
 
 		return map;
 	}

@@ -1,13 +1,12 @@
 package com.siriuserp.accounting.query;
 
-import com.siriuserp.accounting.criteria.BillingFilterCriteria;
+import org.hibernate.Query;
+
 import com.siriuserp.accounting.criteria.ReceiptFilterCriteria;
-import com.siriuserp.accounting.dm.FinancialStatus;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
 import com.siriuserp.sdk.dm.PaymentMethodType;
 import com.siriuserp.sdk.utility.SiriusValidator;
-import org.hibernate.Query;
 
 public class ReceiptViewQuery extends AbstractGridViewQuery {
     @Override

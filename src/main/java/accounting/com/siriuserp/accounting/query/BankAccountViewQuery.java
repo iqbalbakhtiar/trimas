@@ -1,6 +1,5 @@
 package com.siriuserp.accounting.query;
 
-import com.siriuserp.sdk.utility.ObjectPrinter;
 import org.hibernate.Query;
 
 import com.siriuserp.accounting.criteria.BankAccountFilterCriteria;
