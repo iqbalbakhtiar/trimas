@@ -1,9 +1,11 @@
 package com.siriuserp.procurement.service;
 
+import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
 import com.siriuserp.procurement.adapter.PurchaseOrderAdapter;
 import com.siriuserp.procurement.dm.*;
 import com.siriuserp.procurement.form.PurchaseForm;
+import com.siriuserp.procurement.interceptor.PurchaseOrderApprovableInterceptor;
 import com.siriuserp.sales.dm.ApprovableType;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
@@ -17,6 +19,7 @@ import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.*;
+import com.siriuserp.tools.sibling.ApprovableSiblingRole;
 import javolution.util.FastMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -106,7 +109,7 @@ public class DirectPurchaseOrderService extends Service {
                 orderItem.setQuantity(item.getQuantity());
                 orderItem.setDiscount(item.getDiscount());
                 orderItem.setPurchaseOrder(purchaseOrder);
-                orderItem.setLocked(Boolean.FALSE);
+                orderItem.setLocked(true);
 
                 // Set Warehouse Reference Item
                 orderItem.setDate(purchaseOrder.getDate());
@@ -125,8 +128,10 @@ public class DirectPurchaseOrderService extends Service {
                 orderItem.setCreatedBy(getPerson());
                 orderItem.setCreatedDate(DateHelper.now());
                 orderItem.setParty(purchaseOrder.getSupplier());
-                // Set Transaction Item using helper
-                orderItem.setTransactionItem(ReferenceItemHelper.init(genericDao, item.getQuantity(), WarehouseTransactionType.IN, orderItem));
+                // Set Transaction Item using helper & set locked to true
+                WarehouseTransactionItem warehouseTransactionItem = ReferenceItemHelper.init(genericDao, item.getQuantity(), WarehouseTransactionType.IN, orderItem);
+                warehouseTransactionItem.setLocked(true);
+                orderItem.setTransactionItem(warehouseTransactionItem);
 
                 genericDao.add(orderItem);
             }
@@ -155,6 +160,14 @@ public class DirectPurchaseOrderService extends Service {
 		return map;
 	}
 
+    /**
+     * Fungsi ini bisa sebagai update data PO atau bisa sebagai approve PO
+     * Setelah fungsi ini selesai akan execute kelas {@link ApprovableSiblingRole}
+     * Kemudian eksekusi {@link PurchaseOrderApprovableInterceptor}
+     *
+     * @param purchaseOrder dari halaman preedit
+     * @return id PO
+     */
     @AutomaticSibling(roles = "ApprovableSiblingRole")
 	@AuditTrails(className = PurchaseOrder.class, actionType = AuditTrailsActionType.UPDATE)
 	public FastMap<String, Object> edit(PurchaseOrder purchaseOrder) throws Exception {

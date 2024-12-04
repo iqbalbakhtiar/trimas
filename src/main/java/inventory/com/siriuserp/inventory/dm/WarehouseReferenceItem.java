@@ -205,13 +205,8 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 	{
 		return null;
 	}
-	
-	public Long getReferenceId()
-	{
-		return null;
-	}
-	
-	public Long getConversionId()
+
+    public Long getConversionId()
 	{
 		return null;
 	}

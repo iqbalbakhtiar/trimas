@@ -42,7 +42,7 @@ public class ReceiptableGridViewQuery extends AbstractGridViewQuery {
             builder.append(" ORDER BY trx.referenceItem.date DESC, trx.id DESC, trx.referenceItem.referenceCode DESC");
 
             Query query = getSession().createQuery(builder.toString());
-            query.setParameter("locked", Boolean.FALSE);
+            query.setParameter("locked", false);
             query.setParameter("type", WarehouseTransactionType.IN);
 
             if (SiriusValidator.validateParam(criteria.getReferenceType()))

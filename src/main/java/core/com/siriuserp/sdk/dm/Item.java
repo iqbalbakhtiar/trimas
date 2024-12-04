@@ -79,6 +79,7 @@ public class Item extends SiriusItem
 	private SalesReferenceItem salesReferenceItem;
 	private BillingReferenceItem billingReferenceItem;
 	private WarehouseTransactionItem warehouseTransactionItem;
+	private InvoiceVerificationReceipt invoiceVerificationReceipt;
 
 	private Long reference;
 
