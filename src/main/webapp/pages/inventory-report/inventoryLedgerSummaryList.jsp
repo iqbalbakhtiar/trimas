@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<%@ include file="/common/tld-common.jsp"%>
+<%@ include file="/common/tld-spring.jsp"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://"+ request.getServerName() + ":" + 		request.getServerPort()+ path + "/";
+%>
+<base href="<%=basePath%>">
+<html>
+<head>
+	<title>${title}</title>
+	<link rel="icon" type="image/png" href="<c:url value='/assets/images/title-logo.png'/>">
+</head>
+<body>
+<div class="area" dojoType="Container" id="quick_link_container">
+	<%@ include file="/common/sirius-header.jsp"%>
+</div>
+<div id="se-r00">
+	<div id="se-r01">&nbsp;</div>
+	<div id="se-r02">&nbsp;</div>
+</div>
+<div id="se-containers">
+	<div class="area" dojoType="Container" id="quick_link_container">
+		<%@ include file="/common/sirius-menu.jsp"%>
+        <div id="se-navigator">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td width="60%">${breadcrumb}</td>
+                    <td width="40%" align="right">
+                        <%@ include file="/common/welcome.jsp"%>
+                    </td>
+                </tr>
+            </table>
+        </div>
+	</div>	
+	<div id="r11">
+		<div id="r12">
+			<div id="r13">
+				<div id="r14">
+					<div id="se-contents">
+                        <div class="area" dojoType="Container" id="quick_link_container">
+                            <h1 class="page-title">${pageTitle}</h1>
+                            <div class="toolbar">
+                                <a class="item-button-back" href="<c:url value='/page/inventoryledgersummarypre.htm'/>"><span>Back</span></a>
+                                <a class="item-button-print" href="javascript:window.print();"><span>Print</span></a>
+                                <a class="item-button-export-xls" href="<c:url value='/page/inventoryledgersummaryexcell.xls?organization=${criteria.organization}&facility=${criteria.facility}'/>"><span>Export</span></a>
+                                <a class="item-button-rprev" href="javascript:prev();"><span>Prev</span></a>
+                                <a class="item-button-rnext" href="javascript:next();"><span>Next</span></a>
+                            </div>
+                        </div>
+
+                        <div class="main-box">
+                            <div id="main_container">
+                                <%@include file="inventoryLedgerPrint.jsp" %>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+  	<%@ include file="/common/sirius-footer.jsp"%>
+</div>
+</body>
+</html>
+<script type="text/javascript">	
+	function printPage(){
+   		print();
+	}
+
+	function prev()
+	{
+		window.location = "<c:url value='/page/inventoryledgersummaryview.htm?organization=${organization.id}&facility=${criteria.facility}&container=${criteria.container}&product=${criteria.product}&dateFrom='/><fmt:formatDate value='${criteria.prev}' pattern='dd-MM-yyyy'/>";
+	}
+	
+	function next()
+	{
+		window.location = "<c:url value='/page/inventoryledgersummaryview.htm?organization=${organization.id}&facility=${criteria.facility}&container=${criteria.container}&product=${criteria.product}&dateFrom='/><fmt:formatDate value='${criteria.next}' pattern='dd-MM-yyyy'/>";
+	}
+</script>
