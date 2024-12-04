@@ -1,27 +1,9 @@
 package com.siriuserp.inventory.service;
 
-import java.math.BigDecimal;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
-
+import com.siriuserp.accountpayable.service.InvoiceVerificationService;
 import com.siriuserp.inventory.adapter.WarehouseItemAdapter;
 import com.siriuserp.inventory.criteria.GoodsReceiptFilterCriteria;
-import com.siriuserp.inventory.dm.GoodsIssue;
-import com.siriuserp.inventory.dm.GoodsIssueItem;
-import com.siriuserp.inventory.dm.GoodsReceipt;
-import com.siriuserp.inventory.dm.GoodsReceiptItem;
-import com.siriuserp.inventory.dm.InventoryConfiguration;
-import com.siriuserp.inventory.dm.InventoryItem;
-import com.siriuserp.inventory.dm.ProductCategoryType;
-import com.siriuserp.inventory.dm.ProductInOutTransaction;
-import com.siriuserp.inventory.dm.WarehouseTransactionItem;
-import com.siriuserp.inventory.dm.WarehouseTransactionSource;
-import com.siriuserp.inventory.dm.WarehouseTransactionType;
+import com.siriuserp.inventory.dm.*;
 import com.siriuserp.inventory.form.TransactionForm;
 import com.siriuserp.inventory.sibling.AddDWInventoryItemInSiblingRole;
 import com.siriuserp.inventory.util.InventoryitemTagUtil;
@@ -30,29 +12,25 @@ import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.AutomaticSibling;
 import com.siriuserp.sdk.base.Service;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
+import com.siriuserp.sdk.dao.CreditTermDao;
 import com.siriuserp.sdk.dao.GenericDao;
+import com.siriuserp.sdk.dao.PartyRelationshipDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.GridViewQuery;
-import com.siriuserp.sdk.dm.Currency;
-import com.siriuserp.sdk.dm.Facility;
-import com.siriuserp.sdk.dm.Item;
-import com.siriuserp.sdk.dm.Party;
-import com.siriuserp.sdk.dm.Reference;
-import com.siriuserp.sdk.dm.TableType;
-import com.siriuserp.sdk.dm.Tax;
-import com.siriuserp.sdk.dm.UrlCache;
-import com.siriuserp.sdk.dm.User;
+import com.siriuserp.sdk.dm.*;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
-import com.siriuserp.sdk.utility.DateHelper;
-import com.siriuserp.sdk.utility.FormHelper;
-import com.siriuserp.sdk.utility.GeneratorHelper;
-import com.siriuserp.sdk.utility.QueryFactory;
-import com.siriuserp.sdk.utility.SiriusValidator;
-import com.siriuserp.sdk.utility.UserHelper;
-
+import com.siriuserp.sdk.utility.*;
 import javolution.util.FastMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+
+import java.math.BigDecimal;
+import java.util.Map;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
@@ -64,10 +42,19 @@ public class GoodsReceiptService extends Service {
     private CodeSequenceDao codeSequenceDao;
 
 	@Autowired
+	private PartyRelationshipDao partyRelationshipDao;
+
+	@Autowired
+	private CreditTermDao creditTermDao;
+
+	@Autowired
 	private InventoryitemTagUtil inventoryitemUtil;
 
 	@Autowired
 	private StockControlService stockControllService;
+
+	@Autowired
+	private InvoiceVerificationService invoiceVerificationService;
 
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws Exception {
@@ -78,8 +65,7 @@ public class GoodsReceiptService extends Service {
         return map;
     }
 
-    @SuppressWarnings("unchecked")
-	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public Map<String, Object> preadd1(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
     {
         WarehouseItemAdapter adapter = new WarehouseItemAdapter();
@@ -230,8 +216,89 @@ public class GoodsReceiptService extends Service {
 			init(goodsReceipt, goodsReceiptItem);
 
 		genericDao.add(goodsReceipt);
+
+		// Auto Create Invoice Verification
+		createInvoice(goodsReceipt);
 	}
-	
+
+	/**
+	 * Membuat objek InvoiceVerification berdasarkan GoodsReceipt.
+	 *
+	 * Properti yang diset pada InvoiceVerification:
+	 * - date          : Diambil dari tanggal GoodsReceipt.
+	 * - organization  : Diambil dari organisasi GoodsReceipt.
+	 * - supplier      : Diambil dari Party di WarehouseReferenceItem.
+	 * - tax           : Diambil dari WarehouseReferenceItem.
+	 * - money.currency: Diambil dari WarehouseReferenceItem.
+	 * - money.amount  : Total jumlah yang diterima dikalikan harga dari PO (termasuk pajak).
+	 * - unpaid        : Sama dengan money.amount.
+	 * - dueDate       : tanggal GoodsReceipt + Term (Supplier).
+	 * Sisanya dibiarkan null atau default value.
+	 *
+	 * @param goodsReceipt {@link GoodsReceipt} yang menjadi sumber / refernsi data invoice
+	 */
+	@AuditTrails(className = Payable.class, actionType = AuditTrailsActionType.CREATE)
+	private void createInvoice(GoodsReceipt goodsReceipt) throws Exception {
+		TransactionForm form = new TransactionForm();
+		InvoiceVerification invoiceVerification = new InvoiceVerification();
+		invoiceVerification.setForm(form);
+
+		// Set Payable
+		invoiceVerification.setDate(goodsReceipt.getDate());
+		invoiceVerification.setOrganization(goodsReceipt.getOrganization());
+		invoiceVerification.setMoney(new Money());
+
+		// Temp var for unpaid
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		// Looping through GR Item
+		for (GoodsReceiptItem goodsReceiptItem : goodsReceipt.getItems()) {
+			WarehouseReferenceItem wrReferenceItem = goodsReceiptItem.getWarehouseTransactionItem().getReferenceItem();
+
+			InvoiceVerificationReceipt receipt = new InvoiceVerificationReceipt();
+			receipt.setGoodsReceiptItem(goodsReceiptItem);
+			receipt.setInvoiceVerification(invoiceVerification);
+			receipt.setCreatedBy(getPerson());
+			receipt.setCreatedDate(DateHelper.now());
+
+			// Set Invoice Supplier, Tax & Currency
+			if (invoiceVerification.getSupplier() == null) {
+				invoiceVerification.setSupplier(wrReferenceItem.getParty());
+			}
+			if (invoiceVerification.getTax() == null){
+				invoiceVerification.setTax(wrReferenceItem.getTax());
+			}
+			if (invoiceVerification.getMoney().getCurrency() == null) {
+				invoiceVerification.getMoney().setCurrency(wrReferenceItem.getMoney().getCurrency());
+			}
+
+			totalAmount = totalAmount.add(
+					goodsReceiptItem.getReceipted().multiply(
+							wrReferenceItem.getMoney().getAmount()));
+
+			Item item = new Item();
+			item.setInvoiceVerificationReceipt(receipt);
+			form.getItems().add(item);
+			invoiceVerification.getReceipts().add(receipt);
+		}
+
+		// Set amount & unpaid after add tax
+		BigDecimal taxAmount = totalAmount.multiply(invoiceVerification.getTax().getTaxRate()).divide(BigDecimal.valueOf(100));
+		totalAmount = totalAmount.add(taxAmount);
+		invoiceVerification.setUnpaid(totalAmount);
+		invoiceVerification.getMoney().setAmount(totalAmount);
+
+		// Set dueDae dari Credit Term (Supplier) yang harus didapatkan dari party relationship
+		PartyRelationship relationship = partyRelationshipDao.load(invoiceVerification.getSupplier().getId(), invoiceVerification.getOrganization().getId(), PartyRelationshipType.SUPPLIER_RELATIONSHIP);
+		CreditTerm creditTerm = creditTermDao.loadByRelationship(relationship.getId(), true, invoiceVerification.getDate());
+		if (creditTerm == null)
+			throw new ServiceException("Supplier doesn't have active Credit Term, please set it first on supplier page.");
+		invoiceVerification.setDueDate(DateHelper.plusDays(invoiceVerification.getDate(), creditTerm.getTerm()));
+
+		form.setInvoiceVerification(invoiceVerification);
+		form.setGoodsReceipt(goodsReceipt);
+		invoiceVerificationService.add(form.getInvoiceVerification());
+	}
+
 	public void init(GoodsReceipt goodsReceipt, GoodsReceiptItem goodsReceiptItem) throws Exception
 	{
 		WarehouseTransactionItem transactionItem = (WarehouseTransactionItem) genericDao.load(WarehouseTransactionItem.class, goodsReceiptItem.getWarehouseTransactionItem().getId());

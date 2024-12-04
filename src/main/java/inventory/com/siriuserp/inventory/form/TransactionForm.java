@@ -4,6 +4,7 @@ import com.siriuserp.inventory.dm.GoodsIssue;
 import com.siriuserp.inventory.dm.GoodsReceipt;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.sdk.dm.Form;
+import com.siriuserp.sdk.dm.InvoiceVerification;
 import com.siriuserp.sdk.dm.StatusType;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class TransactionForm extends Form {
     private GoodsIssue goodsIssue;
     private GoodsReceipt goodsReceipt;
     private PurchaseOrder purchaseOrder;
+    private InvoiceVerification invoiceVerification;
 
     private StatusType statusType;
 }

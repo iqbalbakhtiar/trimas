@@ -7,6 +7,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="src/main/java/payable"/>
 	<classpathentry kind="src" path="src/main/java/core"/>
 	<classpathentry kind="src" path="src/main/java/tools"/>
 	<classpathentry kind="src" path="src/main/java/general-dashboard"/>
