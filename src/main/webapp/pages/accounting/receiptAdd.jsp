@@ -77,6 +77,10 @@
                                             <td width="20%">:&nbsp;&nbsp;<input id="applied" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
                                         </tr>
                                         <tr>
+                                            <td width="80%" align="right"><spring:message code="payment.writeoff"/></td>
+                                            <td width="20%">:&nbsp;&nbsp;<input id="writeOff" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
+                                        </tr>
+                                        <tr>
                                             <td width="80%" align="right"><spring:message code="receipt.total.remaining"/></td>
                                             <td width="20%">:&nbsp;&nbsp;<input id="unapplied" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
                                         </tr>
@@ -178,7 +182,9 @@
                                 <th width="10%"><spring:message code="billing"/></th>
                                 <th width="5%"><spring:message code="billing.date"/></th>
                                 <th width="10%"><spring:message code="billing.total"/></th>
-                                <th width="80%"><spring:message code="receipt.paid"/></th>
+                                <th width="16%"><spring:message code="payment.writeoff.type"/></th>
+                                <th width="16%"><spring:message code="payment.writeoff"/></th>
+                                <th width="60%"><spring:message code="receipt.paid"/></th>
                             </tr>
                         </thead>
                         <tbody id="lineItemBody">
@@ -189,9 +195,10 @@
 <%--                                <td>&nbsp;</td>--%>
                                 <td colspan="2"><div style="text-align: right;font-weight: bold;"><spring:message code="sirius.total"/></div></td>
                                 <td><input size="20" id='totalBilling' class="number-disabled" readonly value="0.00"/></td>
+                                <td colspan="2">&nbsp;</td>
                                 <td><input size='20' id='totalPaid' class="number-disabled" readonly value="0.00"/></td>
                             </tr>
-                            <tr class="end-table"><td colspan="5">&nbsp;</td></tr>
+                            <tr class="end-table"><td colspan="7">&nbsp;</td></tr>
                         </tfoot>
                     </table>
                 </div>
@@ -377,17 +384,20 @@
             var billing = 0.00;
             var unapplied = document.getElementById('unapplied');
             var applied = document.getElementById('applied');
+            var writeOff = document.getElementById('writeOff');
 
             document.getElementById('totalAmount').value = parseFloat(amount.value.toNumber()-$('#bankCharges').val().toNumber()).numberFormat('#,##0.00');
 
             unapplied.value = parseFloat(amount.value.toNumber()-$('#bankCharges').val().toNumber()).numberFormat('#,##0.00');
             applied.value = 0.0.numberFormat('#,##0.00');
+            writeOff.value = 0.0.numberFormat('#,##0.00');
 
             $('.paid').each(function () {
                 idx = $(this).attr('index');
 
                 $unpaid = parseFloat($('#unpaid\\['+idx+'\\]').val().toNumber());
                 $paid = parseFloat($('#price\\['+idx+'\\]').val().toNumber());
+                $writeOff = parseFloat($('#writeOff\\['+idx+'\\]').val().toNumber());
 
                 if($paid > $unpaid) {
                     $paid = $unpaid;
@@ -395,7 +405,9 @@
                 }
 
                 billing = billing + $unpaid;
-                unapplied.value = parseFloat(unapplied.value.toNumber()-$paid).numberFormat('#,##0.00');
+
+                unapplied.value = parseFloat(unapplied.value.toNumber()-$paid-$writeOff).numberFormat('#,##0.00');
+                writeOff.value = parseFloat(writeOff.value.toNumber()+$writeOff).numberFormat('#,##0.00');
                 applied.value = parseFloat(applied.value.toNumber()+$paid).numberFormat('#,##0.00');
             });
 
@@ -422,7 +434,22 @@
         $date = List.get('<input size="8" class="input-disabled" disabled/>', 'date['+index+']');
         $unpaid = List.get('<input size="20" class="number-disabled" disabled/>', 'unpaid['+index+']', '0.00');
         $paid = List.get('<input size="20" class="input-number paid"/>', 'price['+index+']', '0.00');
+
+        $writeoffType = List.get('<select/>', 'writeOffType['+index+']');
+        $option = List.get('<option>ADJUSTMENT</option>', '', 'ADJUSTMENT');
+        $option.appendTo($writeoffType);
+        $option = List.get('<option>BANKCHARGE</option>', '', 'BANKCHARGE');
+        $option.appendTo($writeoffType);
+        $option = List.get('<option>UNDERTABLE</option>', '', 'UNDERTABLE');
+        $option.appendTo($writeoffType);
+
+        $writeOff = List.get('<input size="10" class="input-number negative"/>', 'writeOff['+index+']', '0.00');
+
         $paid.change(function() {
+            updateDisplay();
+        });
+
+        $writeOff.change(function() {
             updateDisplay();
         });
 
@@ -431,6 +458,8 @@
         $tr.append(List.col([$invoice]));
         $tr.append(List.col([$date]));
         $tr.append(List.col([$unpaid]));
+        $tr.append(List.col([$writeoffType]));
+        $tr.append(List.col([$writeOff]));
         $tr.append(List.col([$paid]));
 
         $tbody.append($tr);

@@ -35,6 +35,7 @@ import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.CurrencyDao;
 import com.siriuserp.sdk.dao.GenericDao;
+import com.siriuserp.sdk.dao.ProductInOutTransactionDao;
 import com.siriuserp.sdk.db.GridViewQuery;
 import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.ExchangeType;
@@ -68,6 +69,9 @@ public class StockAdjustmentService
 	
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
+	
+	@Autowired
+	private ProductInOutTransactionDao productInOutTransactionDaoImpl;
 	
 	@Autowired
 	private InventoryBalanceUtil balanceUtil;
@@ -121,6 +125,12 @@ public class StockAdjustmentService
 	public StockAdjustment load(Long id)
 	{
 		return genericDao.load(StockAdjustment.class, id);
+	}
+	
+	@Transactional(propagation = Propagation.NOT_SUPPORTED)
+	public ProductInOutTransaction loadInOut(Long productId)
+	{
+		return productInOutTransactionDaoImpl.loadByProduct(productId);
 	}
 	
 	@AuditTrails(className = StockAdjustment.class, actionType = AuditTrailsActionType.CREATE)

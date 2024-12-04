@@ -1,12 +1,11 @@
 package com.siriuserp.accounting.query;
 
+import org.hibernate.Query;
+
 import com.siriuserp.accounting.criteria.BillingFilterCriteria;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
-import com.siriuserp.sdk.db.GridViewQuery;
-import com.siriuserp.sdk.utility.ObjectPrinter;
 import com.siriuserp.sdk.utility.SiriusValidator;
-import org.hibernate.Query;
 
 public class Billing4PaymentPopupViewQuery extends AbstractGridViewQuery {
     @Override

@@ -2,6 +2,8 @@ package com.siriuserp.sales.dm;
 
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.sdk.dm.*;
+
+import javolution.util.FastMap;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -136,4 +139,12 @@ public abstract class SalesReferenceItem extends Model implements JSONSupport {
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private DeliveryOrderItem deliveryOrderItem;
+	
+	@Override
+	public Map<String, Object> val()
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("price", getMoney().getAmount());
+		return map;
+	}
 }

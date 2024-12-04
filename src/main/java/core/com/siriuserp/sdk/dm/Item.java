@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.siriuserp.accounting.dm.BillingReferenceItem;
+import com.siriuserp.accounting.dm.WriteOffType;
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.sales.dm.SalesReferenceItem;
 import com.siriuserp.sales.dm.SalesType;
@@ -60,12 +61,14 @@ public class Item extends SiriusItem
 	private BigDecimal palletWeight = BigDecimal.ZERO;
 	private BigDecimal roll = BigDecimal.ZERO;
 	private BigDecimal onHand = BigDecimal.ZERO;
+	private BigDecimal writeOff = BigDecimal.ZERO;
 
 	private Long referenceId;
 
 	private ExchangeType exchange;
 	private AddressType postalType;
 	private SalesType salesType = SalesType.STANDARD;
+	private WriteOffType writeOffType;
 	private UnitOfMeasure uom;
 
 	private Facility facility;

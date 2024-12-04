@@ -1,12 +1,12 @@
 package com.siriuserp.procurement.query;
 
+import org.hibernate.Query;
+
 import com.siriuserp.procurement.criteria.DirectPurchaseOrderFilterCriteria;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
 import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
-import com.siriuserp.sdk.utility.ObjectPrinter;
 import com.siriuserp.sdk.utility.SiriusValidator;
-import org.hibernate.Query;
 
 public class DirectPurchaseOrderGridViewQuery extends AbstractGridViewQuery {
     @Override

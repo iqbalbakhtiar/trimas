@@ -186,9 +186,10 @@
                         <tr>
                             <th>&nbsp;</th>
                             <th width="10%"><spring:message code="billing"/></th>
-                            <th width="20%"><spring:message code="billing.date"/></th>
-                            <th width="70%"><spring:message code="receipt.paid"/></th>
-                            <th>&nbsp;</th>
+                            <th width="10%"><spring:message code="billing.date"/></th>
+                            <th width="20%"><spring:message code="payment.writeoff.type"/></th>
+                            <th width="16%"><spring:message code="payment.writeoff"/></th>
+                            <th width="60%"><spring:message code="receipt.paid"/></th>
                         </tr>
                         </thead>
                         <tbody id="lineItemBody">
@@ -197,13 +198,21 @@
                                 <td>&nbsp;</td>
                                 <td><a href="<c:url value='/page/${app.billing.billingType.url}?id=${app.billing.id}'/>"><c:out value='${app.billing.code}'/></a></td>
                                 <td><fmt:formatDate value='${app.billing.date}' pattern='dd-MM-yyyy'/></td>
+                                <td>
+                                    <select id="customer" class="combobox" disabled="true">
+                                        <c:if test='${not empty app.writeOffType}'>
+                                            <option value='${app.writeOffType}' label='${app.writeOffType}'/>
+                                        </c:if>
+                                    </select>
+                                </td>
+                                <td><fmt:formatNumber value='${app.writeOff}' pattern=',##0.00'/></td>
                                 <td><fmt:formatNumber value='${app.paidAmount}' pattern=',##0.00'/></td>
                                 <td>&nbsp;</td>
                             </tr>
                         </c:forEach>
                         </tbody>
                         <tfoot>
-                        <tr class="end-table"><td colspan="5">&nbsp;</td></tr>
+                        <tr class="end-table"><td colspan="7">&nbsp;</td></tr>
                         </tfoot>
                     </table>
                 </div>

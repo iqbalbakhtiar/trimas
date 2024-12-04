@@ -121,6 +121,24 @@ public class StockAdjustmentController extends ControllerBase
 		return response;
 	}
 	
+	@RequestMapping("/stockadjustmentbyproductjson.htm")
+	public ModelAndView viewJson(@RequestParam("productId") Long productId) throws ServiceException
+	{
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			response.store("product", service.loadInOut(productId));
+		} catch (Exception e)
+		{
+			response.statusError();
+			response.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+	
 //	@RequestMapping("/stockadjustmentdelete.htm")
 //	public ModelAndView delete(@RequestParam("id") Long id) throws Exception
 //	{

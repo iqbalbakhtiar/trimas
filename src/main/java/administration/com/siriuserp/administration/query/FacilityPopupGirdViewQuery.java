@@ -5,18 +5,12 @@
  */
 package com.siriuserp.administration.query;
 
-import com.siriuserp.sales.criteria.SalesOrderFilterCriteria;
-import com.siriuserp.sdk.db.ExecutorType;
-import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
 import org.hibernate.Query;
 
 import com.siriuserp.administration.criteria.FacilityFilterCriteria;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
-import com.siriuserp.sdk.dm.Facility;
-import com.siriuserp.sdk.dm.FacilityImplementation;
+import com.siriuserp.sdk.db.ExecutorType;
 import com.siriuserp.sdk.utility.SiriusValidator;
-
-import javolution.util.FastList;
 
 /**
  * @author Agung Dodi Perdana

@@ -1,14 +1,13 @@
 package com.siriuserp.sales.query;
 
-import com.siriuserp.sales.criteria.DeliveryOrderFilterCriteria;
+import org.hibernate.Query;
+
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
-import org.hibernate.Query;
 
 public class DeliveryOrderPreaddViewQuery extends AbstractGridViewQuery {
     @Override
     public Query getQuery(ExecutorType executorType) {
-        DeliveryOrderFilterCriteria criteria = (DeliveryOrderFilterCriteria) getFilterCriteria();
 
         StringBuilder builder = new StringBuilder();
 

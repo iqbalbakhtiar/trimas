@@ -1,10 +1,16 @@
 package com.siriuserp.sdk.utility;
 
-import com.siriuserp.sdk.dm.*;
 import org.springframework.beans.BeanUtils;
 
+import com.siriuserp.sdk.dm.Approvable;
+import com.siriuserp.sdk.dm.ApprovableBridge;
+import com.siriuserp.sdk.dm.ApprovableInterceptorName;
+import com.siriuserp.sdk.dm.ApprovalDecision;
+import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
+
 public class ApprovableBridgeHelper {
-    public static <T extends Approvable> T create(Class<T> tClass, ApprovableBridge bridge) throws Exception {
+    @SuppressWarnings("unchecked")
+	public static <T extends Approvable> T create(Class<T> tClass, ApprovableBridge bridge) throws Exception {
         Approvable approvable = (Approvable) Class.forName(tClass.getCanonicalName()).getDeclaredConstructor().newInstance();
 
         BeanUtils.copyProperties(bridge, approvable);

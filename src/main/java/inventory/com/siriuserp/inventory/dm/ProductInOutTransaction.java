@@ -5,6 +5,7 @@ package com.siriuserp.inventory.dm;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +26,7 @@ import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.Model;
 import com.siriuserp.sdk.dm.Party;
 
+import javolution.util.FastMap;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -109,5 +111,13 @@ public class ProductInOutTransaction extends Model implements ProductTransaction
 	@Override
 	public String getAuditCode() {
 		return this.id + "";
+	}
+	
+	@Override
+	public Map<String, Object> val()
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("price", getPrice());
+		return map;
 	}
 }
