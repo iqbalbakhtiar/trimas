@@ -4,6 +4,9 @@
 	<a class="item-button-list" href="<c:url value='/page/deliveryorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
 	<a class="item-button-print"  href="<c:url value='/page/deliveryorderprint.htm?id=${deliveryOrder_form.deliveryOrder.id}'/>"><span><spring:message code="sirius.print"/></span></a>
+	<c:if test="${deliveryOrder_form.status == 'SENT'}">
+		<a class="item-button-print"  href="<c:url value='/page/deliveryorderinvoiceprint.htm?id=${deliveryOrder_form.deliveryOrder.id}'/>"><span><spring:message code="sirius.print.invoice"/></span></a>
+	</c:if>
 	<c:if test="${deliveryOrder_form.status != 'SENT' && deliveryOrder_form.status != 'DELIVERED'}">
 		<a class="item-button-sent">
 			<span><spring:message code="deliveryorder.sent"/></span>

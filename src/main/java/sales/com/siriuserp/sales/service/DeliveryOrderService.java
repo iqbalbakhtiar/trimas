@@ -1,6 +1,17 @@
 package com.siriuserp.sales.service;
 
-import com.siriuserp.sales.dm.*;
+import java.math.BigDecimal;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.siriuserp.sales.dm.DeliveryOrder;
+import com.siriuserp.sales.dm.DeliveryOrderItem;
+import com.siriuserp.sales.dm.SOStatus;
+import com.siriuserp.sales.dm.SalesOrder;
+import com.siriuserp.sales.dm.SalesReferenceItem;
 import com.siriuserp.sales.form.DeliveryOrderForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
@@ -9,21 +20,19 @@ import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.dm.Item;
+import com.siriuserp.sdk.dm.Profile;
 import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.exceptions.DataEditException;
+import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.DateHelper;
 import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
-import javolution.util.FastMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import com.siriuserp.tools.service.ProfileService;
 
-import java.math.BigDecimal;
+import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
@@ -34,6 +43,9 @@ public class DeliveryOrderService extends Service {
 
     @Autowired
     private CodeSequenceDao codeSequenceDao;
+    
+    @Autowired
+    private ProfileService profileService;
 
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws Exception {
@@ -45,9 +57,11 @@ public class DeliveryOrderService extends Service {
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public FastMap<String, Object> preadd2(Long id) {
+	public FastMap<String, Object> preadd2(Long id) throws ServiceException {
 		SalesOrder salesOrder = genericDao.load(SalesOrder.class, id);
 		DeliveryOrderForm form = new DeliveryOrderForm();
+		
+		Profile profile = profileService.loadProfile();
 
 		for (SalesReferenceItem salesReference: salesOrder.getItems()) {
 			Item item = new Item();
@@ -60,7 +74,8 @@ public class DeliveryOrderService extends Service {
 
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("deliveryOrder_form", form);
-
+		map.put("facility", profile.getFacility());
+		
 		return map;
 	}
 

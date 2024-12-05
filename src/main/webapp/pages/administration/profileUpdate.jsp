@@ -94,6 +94,18 @@
 											<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupcompanystructurerolebasedview.htm?target=org'/>');" title="Company Structure" />
 										</td>
 									</tr>
+									<tr>
+										<td align="right"><spring:message code="facility"/></td>
+										<td width="1%">:</td>
+		  				  				<td>
+											<form:select id="facility" path="facility" cssClass="combobox-ext">
+												<c:if test="${not empty profile.facility}">
+													<form:option value='${profile.facility.id}' label='${profile.facility.code} - ${profile.facility.name}'/>
+												</c:if>
+											</form:select>
+											<a class="item-popup" onclick="javascript:openfacility();" title="<spring:message code="facility"/>" />
+										</td>
+									</tr>
 		                            <tr>
 										<td align="right"><spring:message code="container"/></td>
 										<td width="1%">:</td>
@@ -149,4 +161,17 @@
 		
 		openpopup("<c:url value='/page/popupcontainerorganizationview.htm?target=container&organization='/>"+org);
 	}
+
+	function openfacility()
+	{
+		var org = document.getElementById('org');
+		if(org.value == '')
+		{
+			alert('Please select company first!');
+			return;
+		}
+
+		openpopup("<c:url value='/page/popupfacilityview.htm?target=facility&organization='/>"+org.value);
+	}
+
 </script>

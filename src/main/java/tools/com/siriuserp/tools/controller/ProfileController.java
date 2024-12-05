@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.Container;
+import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Locale;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.Profile;
@@ -49,6 +50,7 @@ public class ProfileController extends ControllerBase
 		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
 		binder.registerCustomEditor(Locale.class, modelEditor.forClass(Locale.class));
 		binder.registerCustomEditor(Container.class, modelEditor.forClass(Container.class));
+		binder.registerCustomEditor(Facility.class, modelEditor.forClass(Facility.class));
 	}
 
 	@RequestMapping("/userprofilepreedit.htm")

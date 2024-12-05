@@ -140,6 +140,17 @@ public abstract class SalesReferenceItem extends Model implements JSONSupport {
 	@Fetch(FetchMode.SELECT)
 	private DeliveryOrderItem deliveryOrderItem;
 	
+    public BigDecimal getDiscountedPricePerItem() {
+        return money.getAmount()
+                .subtract(
+                        money.getAmount().multiply(discount).divide(new BigDecimal(100))
+                );
+    }
+    
+    public BigDecimal getTotalAmountPerItemDiscounted() {
+        return getDiscountedPricePerItem().multiply(quantity);
+    }
+	
 	@Override
 	public Map<String, Object> val()
 	{

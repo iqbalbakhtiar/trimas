@@ -1,17 +1,19 @@
 package com.siriuserp.sales.form;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 import com.siriuserp.sales.dm.DeliveryOrder;
+import com.siriuserp.sales.dm.DeliveryOrderItem;
 import com.siriuserp.sales.dm.DeliveryOrderRealization;
 import com.siriuserp.sales.dm.SOStatus;
 import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sdk.dm.Form;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.PostalAddress;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.math.BigDecimal;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -39,4 +41,14 @@ public class DeliveryOrderForm extends Form {
     private DeliveryOrderRealization deliveryOrderRealization;
 
     private PostalAddress shippingAddress;
+    
+    public BigDecimal getTotalLineItemAmountForPrint() {
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (DeliveryOrderItem item : deliveryOrder.getItems()) {
+            total = total.add(item.getSalesReferenceItem().getTotalAmountPerItemDiscounted());
+        }
+
+        return total;
+    }
 }

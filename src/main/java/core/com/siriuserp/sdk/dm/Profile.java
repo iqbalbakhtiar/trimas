@@ -67,6 +67,12 @@ public class Profile extends Model
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private Container container;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_facility")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Facility facility;
 
 	@OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
 	@LazyToOne(LazyToOneOption.PROXY)

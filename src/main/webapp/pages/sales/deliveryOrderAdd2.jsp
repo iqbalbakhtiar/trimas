@@ -69,8 +69,10 @@
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="facility" path="facility" cssClass="combobox">
+							<c:if test='${not empty facility}'>
+								<form:option value='${facility.id}' label='${facility.name}'/>
+							</c:if>
 						</form:select>
-						<a class="item-popup" onclick="openpopup('<c:url value='/page/popupfacilityview.htm?target=facility'/>');" title="Facility"></a>
 					</td>
 				</tr>
 				<tr>
@@ -218,9 +220,13 @@ function validateForm() {
 
 		// Validasi bahwa doQuantity tidak lebih besar dari soQuantity
 		if (quantity > soQuantity) {
-			alert('<strong>' + productName + '</strong> - <spring:message code="deliveryorder.doquantity"/> <spring:message code="notif.greater"/> <spring:message code="deliveryorder.soquantity"/>');
-			isValid = false;
-			return false;
+			if (confirm('<spring:message code="deliveryorder.doquantity"/> <spring:message code="product"/> <spring:message code="notif.greater"/> <spring:message code="deliveryorder.soquantity"/>')) {
+			  	return true;
+			  	isValid = true;
+			} else {
+			 	isValid = false;
+				return false;
+			}
 		}
 
 		// Cek Container
