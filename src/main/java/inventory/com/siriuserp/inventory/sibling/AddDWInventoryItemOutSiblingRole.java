@@ -18,7 +18,6 @@ public class AddDWInventoryItemOutSiblingRole extends AbstractSiblingRole {
 
     @Override
     public void execute() throws Exception {
-        System.out.println("AddDWInventoryItemOutSiblingRole executed!!");
         GoodsIssue goodsIssue = (GoodsIssue) getSiblingable();
 
         for (GoodsIssueItem item : goodsIssue.getItems())

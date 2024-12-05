@@ -25,7 +25,6 @@ public class DelInventorySiblingRole extends AbstractSiblingRole {
 
     @Override
     public void execute() throws Exception {
-		System.out.println("DelInventorySiblingRole is Executed!!");
         Object object = (Object) getSiblingable();
 
 		Issueable warehouse = (Issueable) object;
@@ -63,8 +62,10 @@ public class DelInventorySiblingRole extends AbstractSiblingRole {
 					item.setWarehouseTransactionItem(transactionItem);
 					item.setGrid(transItem.getSourceGrid());
 
-					Container container = genericDao.load(Container.class, transItem.getSourceContainer().getId());
-					item.setContainer(container);
+					if(transItem.getSourceContainer()!=null) {
+						Container container = genericDao.load(Container.class, transItem.getSourceContainer().getId());
+						item.setContainer(container);
+					}
 
 					form.getItems().add(item);
 				}
