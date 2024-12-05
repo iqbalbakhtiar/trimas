@@ -13,7 +13,7 @@ import com.siriuserp.inventory.query.InventoryLedgerDetailQuery;
 import com.siriuserp.inventory.query.InventoryLedgerSummaryReportQuery;
 import com.siriuserp.sdk.base.Service;
 import com.siriuserp.sdk.dao.GenericDao;
-import com.siriuserp.sdk.dm.Month;
+import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.utility.DateHelper;
@@ -32,8 +32,6 @@ public class InventoryLedgerReportService extends Service {
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("criteria", new InventoryLedgerFilterCriteria());
-		map.put("years", DateHelper.toYear(DateHelper.today()));
-			map.put("months", Month.values());
 
 		return map;
 	}
@@ -92,6 +90,9 @@ public class InventoryLedgerReportService extends Service {
 		
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()))
 			map.put("organization", genericDao.load(Party.class, criteria.getOrganization()));
+		
+		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getFacility()))
+			map.put("facility", genericDao.load(Facility.class, criteria.getFacility()));
 
 		map.put("criteria", criteria);
 		map.put("period", DateHelper.toMonthEnum(criteria.getDateFrom()) + " " + DateHelper.toYear(criteria.getDateFrom()));

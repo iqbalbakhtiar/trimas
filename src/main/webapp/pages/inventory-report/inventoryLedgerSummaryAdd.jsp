@@ -41,15 +41,15 @@
 						<h1 class="page-title">${pageTitle}</h1>
 						
 					  	<div class="toolbar">
-							<a class="item-button-cancel" href="javascript:resetform();"><span>Reset</span></a>
-							<a class="item-button-generate-report" href="javascript:generate();"><span>Generate</span></a>
+							<a class="item-button-cancel" href="javascript:resetform();"><span><spring:message code="sirius.reset"/>&nbsp;</span></a>
+							<a class="item-button-generate-report" href="javascript:generate();"><span><spring:message code="sirius.generate"/></span></a>
 					  	</div>
 					
                     	<div class="main-box">
 							<sesform:form name="reportForm" id="reportForm" method="post" modelAttribute="criteria">
 								<table width="100%" style="border:none">
 								<tr>
-                                    <td><div align="right">Organization :</div></td>
+                                    <td><div align="right"><spring:message code="organization"/>&nbsp;:</div></td>
                                     <td>
                                         <select id="org" name="organization" class="combobox-ext">
                                         	<c:if test='${not empty organization}'>
@@ -60,7 +60,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td nowrap="nowrap" align="right">Facility :</td>
+                                    <td nowrap="nowrap" align="right"><spring:message code="facility"/>&nbsp;:</td>
                                     <td>
                                        	<select id="facility" name="facility" class="combobox-ext">
                                         </select>
@@ -68,7 +68,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td nowrap="nowrap" align="right">Product :</td>
+                                    <td nowrap="nowrap" align="right"><spring:message code="product"/>&nbsp;:</td>
                                     <td>
                                         <select id="product" name="product" class="combobox">
                                         </select>
@@ -76,19 +76,12 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td align="right">Month:</td>
+                                	<td nowrap="nowrap" align="right"><spring:message code="sirius.datefrom"/>&nbsp;:</td>
                                     <td>
-                                    	<select id="month" name="month">
-                                    		<c:forEach items="${months}" var="month">
-                                    			<option value="${month}">${month}</option>
-                                    		</c:forEach>
-                                        </select>
-                                        <select id="year" name="year">
-                                        	<c:forEach var="year" begin="${years-10}" end="${years}">
-                                            	<option value="${(years*2)-year-10}">${(years*2)-year-10}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </td>
+								        <input id="dateFrom" name="dateFrom" class="datepicker" value="<fmt:formatDate value='${filterCriteria.dateFrom}' pattern='dd-MM-yyyy'/>"/>
+								        &nbsp;<spring:message code="sirius.dateto"/> &nbsp;:&nbsp;
+								        <input id="dateTo" name="dateTo" class="datepicker" value="<fmt:formatDate value='${filterCriteria.dateTo}' pattern='dd-MM-yyyy'/>"/>
+								    </td>
                                 </tr>
 				  				</table>
 							</sesform:form>

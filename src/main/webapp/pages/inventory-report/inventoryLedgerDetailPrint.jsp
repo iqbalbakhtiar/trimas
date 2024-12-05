@@ -7,15 +7,20 @@
                <td colspan="3">&nbsp;</td>
            </tr>
            <tr>
-               <td width="109">Company </td>
+               <td width="109"><spring:message code="sirius.organization"/> </td>
                <td width="10">&nbsp;:</td>
                 <td width="1110"><c:out value='${organization.fullName}'/></td>
            </tr>
            <tr>
-               <td>Period </td>
-               <td>&nbsp;:</td>
-               <td><c:out value='${period}'/></td>
+               <td width="109"><spring:message code="sirius.facility"/> </td>
+               <td width="10">&nbsp;:</td>
+                <td width="1110"><c:out value='${facility.name}'/></td>
            </tr>
+          <tr>
+              <td><spring:message code="sirius.datefrom"/></td>
+              <td>&nbsp;:</td>
+              <td><fmt:formatDate value='${criteria.dateFrom}' pattern='dd-MM-yyyy'/>&nbsp;<spring:message code="sirius.to"/>&nbsp;<fmt:formatDate value='${criteria.dateTo}' pattern='dd-MM-yyyy'/></td>
+          </tr>
            <tr>
                 <td colspan="3">&nbsp;</td>
            </tr>
@@ -25,10 +30,10 @@
   	      <table border="0" cellspacing="0" width="100%">
   	      <thead>
   	      <tr>
-  	          <th width="10%" align="left">Product</th>
+  	          <th width="10%" align="left"><spring:message code="product"/></th>
   	        	<th width="62%" align="left" >&nbsp;:&nbsp;
   	     	    <c:out value='${report.code}'/> - <c:out value='${report.product}'/></th>
-  	        	<th width="7%" align="left">Container</th>
+  	        	<th width="7%" align="left"><spring:message code="container"/></th>
   	        	<th width="1%">&nbsp;:</th>
   	        	<th width="20%" align="left"><c:out value='${report.container} - ${report.facility}'/></th>
   	      </tr>
@@ -42,18 +47,18 @@
       <thead>
       <tr>
           	<th width="11%" align="left" style="border-left:solid 1px #000000;border-bottom:solid 1px #000000;border-right:solid 1px #000000;">Date</th>
-	  	  	<th width="12%" align="left" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" >Description</th>
-  			<th width="15%" align="left" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;">Ref No</th>
- 	  		<th width="40%" align="left" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;">Note</th>
-  	  		<th width="8%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"  align="center">In</th>
-	  	  	<th width="8%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"  align="center">Out</th>
-     	  	<th width="8%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"  align="center">Quantity</th>
+	  	  	<th width="12%" align="left" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" ><spring:message code="sirius.description"/></th>
+  			<th width="15%" align="left" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"><spring:message code="goodsreceipt.refdoc"/></th>
+ 	  		<th width="40%" align="left" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"><spring:message code="sirius.note"/></th>
+  	  		<th width="8%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"  align="center"><spring:message code="sirius.in"/></th>
+	  	  	<th width="8%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"  align="center"><spring:message code="sirius.out"/></th>
+     	  	<th width="8%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"  align="center"><spring:message code="sirius.qty"/></th>
       </tr>                   
       </thead>
       <tbody>
       <tr>
       		<td style="border-left:solid 1px #000000;border-bottom:solid 1px #000000;border-right:solid 1px #000000;"><fmt:formatDate value='${criteria.dateFrom}' pattern='dd-MM-yyyy'/></td>
-          	<td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" colspan='5'>Opening Balance</td>
+          	<td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" colspan='5'><spring:message code="accreport.opening"/></td>
           	<td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${report.opening}' pattern=',##0.00'/></td>
       </tr>
       <c:forEach items='${report.transactions}' var='trx'>
@@ -69,7 +74,7 @@
       </c:forEach>
         <tr>
       	<td style="border-left:solid 1px #000000;border-bottom:solid 1px #000000;border-right:solid 1px #000000;"><fmt:formatDate value='${criteria.dateTo}' pattern='dd-MM-yyyy'/></td>
-          <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" colspan='3'>Closing Balance</td>
+          <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" colspan='3'><spring:message code="accreport.closing"/></td>
           <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${report.in}' pattern=',##0.00'/></td>
           <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${report.out}' pattern=',##0.00'/></td>
           <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${report.sum}' pattern=',##0.00'/></td>
@@ -80,7 +85,7 @@
       </tbody>
       <tfoot>
       <tr>
-          <td align="right" colspan='4'>Qty Reserved : </td>
+          <td align="right" colspan='4'><spring:message code="sirius.qty"/>&nbsp;<spring:message code="product.reserved"/> : </td>
           <td align="right"><fmt:formatNumber value='${report.reserved}' pattern=',##0.00'/></td>
           <td align="right">Total : </td>
           <td align="right"><fmt:formatNumber value='${report.sum - report.reserved}' pattern=',##0.00'/></td>

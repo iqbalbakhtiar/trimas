@@ -41,17 +41,17 @@
                         <div class="area" dojoType="Container" id="quick_link_container">
                             <h1 class="page-title">${pageTitle}</h1>
                             <div class="toolbar">
-                                <a class="item-button-back" href="<c:url value='/page/inventoryledgersummarypre.htm'/>"><span>Back</span></a>
-                                <a class="item-button-print" href="javascript:window.print();"><span>Print</span></a>
-                                <a class="item-button-export-xls" href="<c:url value='/page/inventoryledgersummaryexcell.xls?organization=${criteria.organization}&facility=${criteria.facility}'/>"><span>Export</span></a>
-                                <a class="item-button-rprev" href="javascript:prev();"><span>Prev</span></a>
-                                <a class="item-button-rnext" href="javascript:next();"><span>Next</span></a>
+                                <a class="item-button-back" href="<c:url value='/page/inventoryledgersummarypre.htm'/>"><span><spring:message code="sirius.back"/></span></a>
+                                <a class="item-button-print" href="javascript:window.print();"><span><spring:message code="sirius.print"/></span></a>
+                                <a class="item-button-export-xls" href="<c:url value='/page/inventoryledgersummaryexcell.xls?organization=${criteria.organization}&facility=${criteria.facility}'/>"><span><spring:message code="sirius.export"/></span></a>
+                                <a class="item-button-rprev" href="javascript:prev();"><span><spring:message code="sirius.prev"/></span></a>
+                                <a class="item-button-rnext" href="javascript:next();"><span><spring:message code="sirius.next"/></span></a>
                             </div>
                         </div>
 
                         <div class="main-box">
                             <div id="main_container">
-                                <%@include file="inventoryLedgerPrint.jsp" %>
+                                <%@include file="inventoryLedgerSummaryPrint.jsp" %>
                             </div>
                         </div>
                     </div>

@@ -49,56 +49,39 @@
 							<sesform:form name="reportForm" id="reportForm" method="post" modelAttribute="criteria">
 								<table width="100%" style="border:none">
 								<tr>
-                                    <td><div align="right">Organization :</div></td>
+                                    <td><div align="right"><spring:message code="organization"/>&nbsp;:</div></td>
                                     <td>
                                         <select id="org" name="organization" class="combobox-ext">
-										<c:if test='${not empty organization}'>
-											<option value='${organization.id}'>${organization.firstName} ${organization.middleName} ${organization.lastName}</option>
-										</c:if>
+                                        	<c:if test='${not empty organization}'>
+                                            	<option value="${organization.id}"><c:out value='${organization.fullName}'/></option>
+                                            </c:if>
                                         </select>
-                                        <a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupcompanystructurerolebasedview.htm?target=org'/>');"  title="Company Structure" />
+                                        <a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupcompanystructurerolebasedview.htm?target=org'/>');" title="Company Structure" />
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td nowrap="nowrap" align="right">Facility :</td>
+                                    <td nowrap="nowrap" align="right"><spring:message code="facility"/>&nbsp;:</td>
                                     <td>
-                                        <select id="facility" name="facility" class="combobox-ext">
+                                       	<select id="facility" name="facility" class="combobox-ext">
                                         </select>
-                                        <img src="assets/icons/list_extensions.gif" onclick="javascript:openfacility();" style="CURSOR:pointer;" title=Facility />
+                                        <a class="item-popup" onclick="openfacility('facility');" style="CURSOR:pointer;" title="Warehouse" />
                                     </td>
                                 </tr>
-                                  <tr>
-                                    <td nowrap="nowrap" align="right">Product :</td>
+                                <tr>
+                                    <td nowrap="nowrap" align="right"><spring:message code="product"/>&nbsp;:</td>
                                     <td>
                                         <select id="product" name="product" class="combobox">
                                         </select>
-                                        <img src="assets/icons/list_extensions.gif" onclick="javascript:openpopup('<c:url value='/page/popupproductview.htm?target=product'/>');" style="CURSOR:pointer;" title="Product" />
+                                        <a class="item-popup"" onclick="javascript:openProduct();" style="CURSOR:pointer;" title="Product"/>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td align="right">Month:</td>
+                                 <tr>
+                                	<td nowrap="nowrap" align="right"><spring:message code="sirius.datefrom"/>&nbsp;:</td>
                                     <td>
-                                    	<select id="month" name="month">
-                                        	<option value="JANUARY" selected>JANUARY</option>
-                                            <option value="FEBRUARY">FEBRUARY</option>
-                                            <option value="MARCH">MARCH</option>
-                                            <option value="APRIL">APRIL</option>
-                                            <option value="MAY">MAY</option>
-                                            <option value="JUNE">JUNE</option>
-                                            <option value="JULY">JULY</option>
-                                            <option value="AUGUST">AUGUST</option>
-                                            <option value="SEPTEMBER">SEPTEMBER</option>
-                                            <option value="OCTOBER">OCTOBER</option>
-                                            <option value="NOVEMBER">NOVEMBER</option>
-                                            <option value="DECEMBER">DECEMBER</option>
-                                        </select>
-                                        &nbsp;
-                                        <select id="year" name="year">
-                                            <c:forEach var="year" begin="${years-10}" end="${years}">
-                                            	<option value="${(years*2)-year-10}">${(years*2)-year-10}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </td>
+								        <input id="dateFrom" name="dateFrom" class="datepicker" value="<fmt:formatDate value='${filterCriteria.dateFrom}' pattern='dd-MM-yyyy'/>"/>
+								        &nbsp;<spring:message code="sirius.dateto"/> &nbsp;:&nbsp;
+								        <input id="dateTo" name="dateTo" class="datepicker" value="<fmt:formatDate value='${filterCriteria.dateTo}' pattern='dd-MM-yyyy'/>"/>
+								    </td>
                                 </tr>
 				  				</table>
 							</sesform:form>
@@ -160,4 +143,12 @@
 		
 		document.reportForm.reset();
 	}	
+
+	function openProduct()
+	{
+		var category = $( "#productCategory option:selected" ).text()
+		
+		openpopup("<c:url value='/page/popupproductview.htm?target=product&category='/>"+category);
+	}
+
 </script>

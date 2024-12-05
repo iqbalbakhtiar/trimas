@@ -62,11 +62,11 @@
                         <div class="area" dojoType="Container" id="quick_link_container">
                             <h1 class="page-title">${pageTitle }</h1>
                             <div class="toolbar">
-                                <a class="item-button-back" href="<c:url value='/page/inventoryledgerdetailpre.htm'/>"><span>Back</span></a>
-                                <a class="item-button-print" href="javascript:window.print();"><span>Print</span></a>
-                                <a class="item-button-export-xls" href="<c:url value='/page/inventoryledgerdetailexcell.xls'/>"><span>Export</span></a>
-                                <a class="item-button-rprev" href="<c:url value='/page/inventoryledgerdetailview.htm?organization=${organization.id}&facility=${criteria.facility}&product=${criteria.product}&dateFrom='/><fmt:formatDate value='${criteria.prev}' pattern='dd-MM-yyyy'/>"><span>Prev</span></a>
-                                <a class="item-button-rnext" href="<c:url value='/page/inventoryledgerdetailview.htm?organization=${organization.id}&facility=${criteria.facility}&product=${criteria.product}&dateFrom='/><fmt:formatDate value='${criteria.next}' pattern='dd-MM-yyyy'/>"><span>Next</span></a>
+                                <a class="item-button-back" href="<c:url value='/page/inventoryledgerdetailpre.htm'/>"><span><spring:message code="sirius.back"/></span></a>
+                                <a class="item-button-print" href="javascript:window.print();"><span><spring:message code="sirius.print"/></span></a>
+                                <a class="item-button-export-xls" href="<c:url value='/page/inventoryledgerdetailexcell.xls'/>"><span><spring:message code="sirius.export"/></span></a>
+                                <a class="item-button-rprev" href="<c:url value='/page/inventoryledgerdetailview.htm?organization=${organization.id}&facility=${criteria.facility}&product=${criteria.product}&dateFrom='/><fmt:formatDate value='${criteria.prev}' pattern='dd-MM-yyyy'/>"><span><spring:message code="sirius.prev"/></span></a>
+                                <a class="item-button-rnext" href="<c:url value='/page/inventoryledgerdetailview.htm?organization=${organization.id}&facility=${criteria.facility}&product=${criteria.product}&dateFrom='/><fmt:formatDate value='${criteria.next}' pattern='dd-MM-yyyy'/>"><span><spring:message code="sirius.next"/></span></a>
                             </div>
                         </div>
 
