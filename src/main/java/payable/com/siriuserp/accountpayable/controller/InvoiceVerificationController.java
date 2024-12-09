@@ -67,4 +67,14 @@ public class InvoiceVerificationController extends ControllerBase {
 
 		return response;
 	}
+
+    @RequestMapping("/popupinvoiceverificationview.htm")
+    public ModelAndView popup(HttpServletRequest request, @RequestParam(value = "target", required = false) String target) throws Exception
+    {
+        ModelAndView view = new ModelAndView("/payable-popup/invoicePopup");
+        view.addAllObjects(service.view(criteriaFactory.createPopup(request, InvoiceVerificationFilterCriteria.class), InvoiceVerificationGridViewQuery.class));
+        view.addObject("target", target);
+
+        return view;
+    }
 }

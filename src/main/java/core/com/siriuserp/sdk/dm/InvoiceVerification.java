@@ -42,4 +42,10 @@ public class InvoiceVerification extends Payable {
         }
         return null;
     }
+
+    @Override
+    public String getUri()
+    {
+        return "invoiceverificationpreedit.htm";
+    }
 }

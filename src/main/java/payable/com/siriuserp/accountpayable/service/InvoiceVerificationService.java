@@ -57,7 +57,7 @@ public class InvoiceVerificationService {
         TransactionForm form = (TransactionForm) invoiceVerification.getForm();
 
         // Generate Code and set verificated to true
-        invoiceVerification.setCode(GeneratorHelper.instance().generate(TableType.INVOICE_VERIFICATION, codeSequenceDao));
+        invoiceVerification.setCode(GeneratorHelper.instance().generate(TableType.INVOICE_VERIFICATION, codeSequenceDao, invoiceVerification.getOrganization()));
         invoiceVerification.setVerificated(true);
 
         genericDao.add(invoiceVerification);

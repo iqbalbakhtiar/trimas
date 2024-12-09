@@ -1,9 +1,9 @@
 package com.siriuserp.accountpayable.query;
 
+import com.siriuserp.accounting.dm.FinancialStatus;
 import com.siriuserp.accountpayable.criteria.InvoiceVerificationFilterCriteria;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
-import com.siriuserp.sdk.db.GridViewQuery;
 import com.siriuserp.sdk.utility.SiriusValidator;
 import org.hibernate.Query;
 
@@ -57,11 +57,17 @@ public class InvoiceVerificationGridViewQuery extends AbstractGridViewQuery {
         if (SiriusValidator.validateParam(criteria.getReferenceCode()))
             builder.append(" AND receipt.goodsReceiptItem.warehouseTransactionItem.referenceItem.referenceCode like '%" + criteria.getReferenceCode() + "%'");
 
+        // Filter From Popup
+        if (SiriusValidator.validateParam(criteria.getSupplier()))
+            builder.append(" AND ver.supplier.id = :supplier");
+
+        if (SiriusValidator.validateParam(criteria.getFinancialStatus()))
+            builder.append(" AND ver.status = :financialStatus");
+
         if (type.compareTo(ExecutorType.HQL) == 0)
             builder.append(" ORDER BY ver.id DESC");
 
         Query query = getSession().createQuery(builder.toString());
-//        query.setParameterList("orgs", getAccessibleOrganizations());
         query.setCacheable(true);
 
         if (criteria.getDateFrom() != null)
@@ -75,6 +81,12 @@ public class InvoiceVerificationGridViewQuery extends AbstractGridViewQuery {
 
         if (criteria.getGoodsType() != null)
             query.setParameter("goodsType", criteria.getGoodsType());
+
+        if (criteria.getSupplier() != null)
+            query.setParameter("supplier", criteria.getSupplier());
+
+        if (criteria.getFinancialStatus() != null)
+            query.setParameter("financialStatus", FinancialStatus.valueOf(criteria.getFinancialStatus()));
 
         return query;
     }

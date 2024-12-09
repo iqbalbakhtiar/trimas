@@ -50,6 +50,7 @@ public class Item extends SiriusItem
 	private BigDecimal shrinkage = BigDecimal.ZERO;
 	private BigDecimal issued = BigDecimal.ZERO;
 	private BigDecimal buffer = BigDecimal.ZERO;
+	private BigDecimal paidAmount = BigDecimal.ZERO;
 
 	private BigDecimal returnedPrice = BigDecimal.ZERO;
 
@@ -83,6 +84,7 @@ public class Item extends SiriusItem
 	private BillingReferenceItem billingReferenceItem;
 	private WarehouseTransactionItem warehouseTransactionItem;
 	private InvoiceVerificationReceipt invoiceVerificationReceipt;
+	private InvoiceVerification invoiceVerification;
 
 	private Long reference;
 
