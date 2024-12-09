@@ -68,8 +68,7 @@ public class Payment extends Model implements Siblingable, CashBankTransactionRe
     @Fetch(FetchMode.SELECT)
     private Currency currency;
 
-    // Payment Information
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_payment_information")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)

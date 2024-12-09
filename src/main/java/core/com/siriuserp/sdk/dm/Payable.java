@@ -117,4 +117,6 @@ public abstract class Payable extends Model implements JSONSupport {
 //    @Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 //    @OrderBy("id ASC")
 //    protected Set<DebitMemoManual> debitMemoManuals = new FastSet<DebitMemoManual>();
+
+    public abstract String getUri();
 }

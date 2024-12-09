@@ -19,6 +19,10 @@ public class InvoiceVerificationFilterCriteria extends AbstractFilterCriteria {
     private String documentNo;
     private String currencyName;
     private String referenceCode;
+    private String financialStatus;
+
+    private Long organization;
+    private Long supplier;
 
     private Date dateFrom;
     private Date dateTo;

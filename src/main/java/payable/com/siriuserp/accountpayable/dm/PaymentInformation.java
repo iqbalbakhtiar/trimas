@@ -35,7 +35,7 @@ public class PaymentInformation extends Model {
     @Column(name="other_charges")
     private BigDecimal otherCharges = BigDecimal.ZERO;
 
-    @Column(name="reference_number")
+    @Column(name="reference")
     private String reference;
 
     @Column(name="note",length=255)
