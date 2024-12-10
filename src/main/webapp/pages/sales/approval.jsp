@@ -41,7 +41,6 @@
     }
 
     function checkStatus_${apprIdx}() {
-        console.log("checkStatus started!")
         let decision = document.getElementById("decision_${apprIdx}").value;
         if (decision == "APPROVE_AND_FINISH" || decision == "REJECTED" || decision == "")
             on_${apprIdx}();

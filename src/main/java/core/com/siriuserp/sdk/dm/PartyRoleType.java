@@ -5,7 +5,9 @@
  */
 package com.siriuserp.sdk.dm;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -76,4 +78,16 @@ public class PartyRoleType extends Model implements JSONSupport
 
 		return map;
 	}
+
+	public String getNormalizedName() {
+		if (name == null || name.isEmpty()) {
+			return name;
+		}
+
+		// Ubah setiap kata menjadi kapital di awal
+		return Arrays.stream(name.toLowerCase().split(" "))
+				.map(word -> word.substring(0, 1).toUpperCase() + word.substring(1))
+				.collect(Collectors.joining(" "));
+	}
+
 }

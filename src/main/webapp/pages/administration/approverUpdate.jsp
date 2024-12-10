@@ -9,7 +9,7 @@
 <sesform:form id="addForm" name="addForm" method="post" modelAttribute="approver_edit" enctype="multipart/form-data">
 	<table style="border:none" width="100%">
 		<tr>
-			<td width="34%" align="right"><span>Approver ID</td>
+			<td width="34%" align="right"><spring:message code="approver.id"/></td>
 			<td width="1%" align="center">:</td>
 			<td width="64%"><form:input id='code' path="code" disabled='true' class='input-disabled'/></td>
 		</tr>
@@ -25,24 +25,35 @@
 			</td>
 		</tr>
 		<tr>
+			<td align="right"><spring:message code="approver.type"/></td>
+			<td width="1%" align="center">:</td>
+			<td>
+				<select name="partayRoleTypeFrom" id="partyRoleTypeFrom" disabled class="input-disabled">
+					<c:if test='${not empty relationship.partyRoleTypeFrom}'>
+						<option value="${relationship.partyRoleTypeFrom.id}">${relationship.partyRoleTypeFrom.name}</option>
+					</c:if>
+				</select>
+			</td>
+		</tr>
+		<tr>
 			<td align="right"><spring:message code="party.salutation"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="salutation" size="10" class="input-disabled" disabled='true'/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>Approver Name</td>
+			<td align="right"><spring:message code="approver.name"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="fullName" cssClass="inputbox input-disabled" disabled='true'/></td>
 			<td><form:errors path="fullName"/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>NPWP</td>
+			<td align="right"><spring:message code="party.npwp"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="taxCode" cssClass="inputbox input-disabled" disabled='true'/></td>
 			<td><form:errors path="taxCode"/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>SIUP</td>
+			<td align="right"><spring:message code="party.siup"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="permitCode" cssClass="inputbox input-disabled" disabled='true'/></td>
 			<td><form:errors path="permitCode"/></td>

@@ -27,6 +27,9 @@ import com.siriuserp.sdk.utility.QueryFactory;
 
 import javolution.util.FastMap;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 @Transactional(rollbackFor = Exception.class)
 public class ApproverService extends Service {
@@ -49,44 +52,65 @@ public class ApproverService extends Service {
 	@InjectParty(keyName = "approver_add")
 	public FastMap<String, Object> preadd()
 	{
+		// Filter data hanya untuk SALES_APPROVER dan PURCHASE_APPROVER
+		List<PartyRoleType> filteredPartyRoleTypes = genericDao.loadAll(PartyRoleType.class).stream()
+				.filter(partyRoleType ->
+						PartyRoleType.SALES_APPROVER.equals(partyRoleType.getId()) ||
+						PartyRoleType.PURCHASE_APPROVER.equals(partyRoleType.getId())
+				)
+				.collect(Collectors.toList());
+
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("approver_add", new PartyForm());
+		map.put("approver_types", filteredPartyRoleTypes);
 
 		return map;
 	}
 	
 	@AuditTrails(className = Party.class, actionType = AuditTrailsActionType.CREATE)
 	public FastMap<String, Object> add(PartyForm partyForm) throws Exception {
-		Party approver = FormHelper.create(Party.class, partyForm);
-		
-		approver.setCode(GeneratorHelper.instance().generate(TableType.PERSON_APPROVER, codeSequenceDao));
-		approver.setBase(false); // false, Karena bukan Group
-		approver.setActive(approver.isActive());
-		approver.setCreatedBy(getPerson());
-		approver.setCreatedDate(DateHelper.now());
-		
-		genericDao.add(approver);
-		
-		//Add Party Relationship
 		PartyRelationship relationship = new PartyRelationship();
-		//Party
-		relationship.setPartyFrom(approver);
-		relationship.setPartyTo(approver.getOrganization()); // Company (Party) 
-		//Relation Type
-		relationship.setRelationshipType(genericDao.load(PartyRelationshipType.class, PartyRelationshipType.EMPLOYMENT_RELATIONSHIP));
-		//Party Role
-		relationship.setPartyRoleTypeFrom(genericDao.load(PartyRoleType.class, partyForm.getPartyRoleTypeFrom()));
-		relationship.setPartyRoleTypeTo(genericDao.load(PartyRoleType.class, PartyRoleType.COMPANY));
-		relationship.setCreatedBy(getPerson());
-		relationship.setCreatedDate(DateHelper.now());
-		relationship.setActive(approver.isActive());
-		genericDao.add(relationship);
-		
+
+		if (partyForm.getParty() != null) {
+			relationship.setPartyFrom(partyForm.getParty());
+			relationship.setPartyTo(partyForm.getOrganization());
+			relationship.setPartyRoleTypeFrom(genericDao.load(PartyRoleType.class, partyForm.getPartyRoleTypeFrom()));
+			relationship.setPartyRoleTypeTo(genericDao.load(PartyRoleType.class, PartyRoleType.COMPANY));
+			relationship.setRelationshipType(genericDao.load(PartyRelationshipType.class, PartyRelationshipType.EMPLOYMENT_RELATIONSHIP));
+			relationship.setFromDate(DateHelper.now());
+
+			genericDao.add(relationship);
+		} else {
+			Party approver = FormHelper.create(Party.class, partyForm);
+
+			approver.setCode(GeneratorHelper.instance().generate(TableType.PERSON_APPROVER, codeSequenceDao));
+			approver.setBase(false); // false, Karena bukan Group
+			approver.setActive(approver.isActive());
+			approver.setCreatedBy(getPerson());
+			approver.setCreatedDate(DateHelper.now());
+
+			genericDao.add(approver);
+
+			//Add Party Relationship
+			//Party
+			relationship.setPartyFrom(approver);
+			relationship.setPartyTo(approver.getOrganization()); // Company (Party)
+			//Relation Type
+			relationship.setRelationshipType(genericDao.load(PartyRelationshipType.class, PartyRelationshipType.EMPLOYMENT_RELATIONSHIP));
+			//Party Role
+			relationship.setPartyRoleTypeFrom(genericDao.load(PartyRoleType.class, partyForm.getPartyRoleTypeFrom()));
+			relationship.setPartyRoleTypeTo(genericDao.load(PartyRoleType.class, PartyRoleType.COMPANY));
+			relationship.setCreatedBy(getPerson());
+			relationship.setCreatedDate(DateHelper.now());
+			relationship.setActive(approver.isActive());
+			genericDao.add(relationship);
+		}
+
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("id", relationship.getId());
-		
-		return map;
-	}
+
+        return map;
+    }
 	
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> preedit(Long id) throws Exception {

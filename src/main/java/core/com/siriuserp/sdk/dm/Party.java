@@ -182,6 +182,9 @@ public class Party extends Model implements JSONSupport
 		map.put("birthDate", getBirthDate());
 		map.put("partyAddresses", getPostalAddresses());
 		map.put("contactMechanises", getContactMechanisms());
+		map.put("note", getNote());
+		map.put("active", isActive());
+		map.put("permitCode", getPermitCode());
 
 		return map;
 	}

@@ -9,7 +9,7 @@
 <sesform:form id="addForm" name="addForm" method="post" modelAttribute="approver_add" enctype="multipart/form-data">
 	<table style="border:none" width="100%">
 		<tr>
-			<td width="34%" align="right">Approver ID</td>
+			<td width="34%" align="right"><spring:message code="approver.id"/></td>
 			<td width="1%" align="center">:</td>
 			<td width="64%"><input class="inputbox input-disabled" value="Auto Number" disabled/></td>
 			<td width="1%"><form:errors path="code"/></td>
@@ -27,13 +27,30 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right">Approver Type :</td>
+			<td align="right"><spring:message code="approver.type"/></td>
 			<td width="1%" align="center">:</td>
 			<td>
-				<form:select path="partyRoleTypeFrom">
-					<option value="8">Sales Approver</option>
-					<option value="9">Purchase Approver</option>
+				<form:select id="partyRoleTypeFrom" path="partyRoleTypeFrom">
+					<c:forEach var="type" items="${approver_types}">
+						<form:option value="${type.id}">${type.normalizedName}</form:option>
+					</c:forEach>
 				</form:select>
+			</td>
+		</tr>
+		<tr>
+			<td align="right"><spring:message code="party.name.exist"/></td>
+			<td width="1%" align="center">:</td>
+			<td><input type="radio" name="existing" value="true" onclick="changeExisting(true);"><spring:message code="sirius.yes"/></input>
+				<input type="radio" name="existing" value="false" checked="checked" onclick="changeExisting(false);"><spring:message code="sirius.no"/></input>
+			</td>
+		</tr>
+		<tr style="display: none">
+			<td align="right"><spring:message code="party"/></td>
+			<td width="1%" align="center">:</td>
+			<td>
+				<form:select id="party" path="party" cssClass="combobox-ext" onchange="populateParty(this)">
+				</form:select>
+				<a class="item-popup" onclick="openPartyRelationship()" title="Party Relationship"></a>
 			</td>
 		</tr>
 		<tr>
@@ -42,19 +59,19 @@
 			<td><form:input path="salutation" size="10"/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>Approver Name</td>
+			<td align="right"><spring:message code="approver.name"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="fullName" cssClass="inputbox" /></td>
 			<td><form:errors path="fullName"/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>NPWP</td>
+			<td align="right"><spring:message code="party.npwp"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="taxCode" cssClass="inputbox" /></td>
 			<td><form:errors path="taxCode"/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>SIUP</td>
+			<td align="right"><spring:message code="party.siup"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="permitCode" cssClass="inputbox" /></td>
 			<td><form:errors path="permitCode"/></td>
@@ -68,7 +85,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right"><span>Keterangan Tambahan</td>
+			<td align="right"><spring:message code="sirius.note"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:textarea path="note" rows="6" cols="45"/></td>
 			<td>&nbsp;</td>
@@ -109,15 +126,15 @@ function validateForm() {
 		return false;
 	}
 
-	if (taxCode == null || taxCode.trim() === "") {
-		alert('NPWP <spring:message code="notif.empty"/> !');
-		return false;
-	}
+	<%--if (taxCode == null || taxCode.trim() === "") {--%>
+	<%--	alert('NPWP <spring:message code="notif.empty"/> !');--%>
+	<%--	return false;--%>
+	<%--}--%>
 	
-	if (permitCode == null || permitCode.trim() === "") {
-		alert('SIUP <spring:message code="notif.empty"/> !');
-		return false;
-	}
+	<%--if (permitCode == null || permitCode.trim() === "") {--%>
+	<%--	alert('SIUP <spring:message code="notif.empty"/> !');--%>
+	<%--	return false;--%>
+	<%--}--%>
 
 	if (active == null || active === undefined) {
 		alert('<spring:message code="notif.select1"/> <spring:message code="sirius.status"/> <spring:message code="notif.select2"/>');
@@ -156,5 +173,85 @@ function save() {
 	};
 	
 	xhr.send(new FormData($('#addForm')[0]));
+}
+
+function changeExisting(status) {
+	// Dapatkan elemen baris untuk party
+	var partyRow = $('tr:has(#party)');
+
+	if (status === true) {
+		// Tampilkan baris party
+		partyRow.show();
+
+		// Nonaktifkan semua input field
+		$('input[name="salutation"]').prop('disabled', true).addClass('input-disabled').val('');
+		$('input[name="fullName"]').prop('disabled', true).addClass('input-disabled').val('');
+		$('input[name="taxCode"]').prop('disabled', true).addClass('input-disabled').val('');
+		$('input[name="permitCode"]').prop('disabled', true).addClass('input-disabled').val('');
+		$('input[name="active"]').prop('disabled', true).prop('checked', false);
+		$('textarea[name="note"]').prop('disabled', true).addClass('input-disabled').val('');
+	} else {
+		// Sembunyikan baris party dan kosongkan opsi dropdown
+		partyRow.hide();
+		$('#party').empty();
+
+		// Aktifkan semua input field dan kosongkan nilainya
+		$('input[name="salutation"]').prop('disabled', false).removeClass('input-disabled').val('');
+		$('input[name="fullName"]').prop('disabled', false).removeClass('input-disabled').val('');
+		$('input[name="taxCode"]').prop('disabled', false).removeClass('input-disabled').val('');
+		$('input[name="permitCode"]').prop('disabled', false).removeClass('input-disabled').val('');
+		$('input[name="active"]').prop('disabled', false).prop('checked', false);
+		$('textarea[name="note"]').prop('disabled', false).removeClass('input-disabled').val('');
+	}
+}
+
+function openPartyRelationship() {
+	if (!$('#org').val()) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
+		return;
+	}
+
+	if (!$('#partyRoleTypeFrom').val()) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="approver.type"/> <spring:message code="notif.select2"/> !!!');
+		return;
+	}
+
+	const orgId = $('#org').val();
+	const approverTypeText = $('#partyRoleTypeFrom option:selected').text().toUpperCase().replace(/\s+/g, '');
+
+	const baseUrl = '<c:url value="/page/employeepopupview.htm"/>';
+	const params = {
+		target: 'party', // Id Dropdown (Select) element
+		organization: orgId, // Org (PartyTo)
+		source: approverTypeText,
+	};
+
+	openpopup(buildUrl(baseUrl, params));
+}
+
+function populateParty(element){
+	if (element.value) {
+		Party.load(element.value);
+
+		// Pastikan Party.data memiliki nilai yang valid
+		if (Party.data) {
+			// Isi field sesuai data yang diterima
+			$('input[name="salutation"]').val(Party.data.salutation || "");
+			$('input[name="fullName"]').val(Party.data.partyName || "");
+			$('input[name="taxCode"]').val(Party.data.taxCode || "");
+			$('input[name="permitCode"]').val(Party.data.permitCode || "");
+
+			// Cek status aktif, misalkan data memiliki properti active
+			if (Party.data.active !== undefined) {
+				$('input[name="active"][value="true"]').prop('checked', Party.data.active);
+				$('input[name="active"][value="false"]').prop('checked', !Party.data.active);
+			}
+
+			// Isi keterangan tambahan jika tersedia
+			$('textarea[name="note"]').val(Party.data.note || "");
+		} else {
+			alert("Data Party tidak ditemukan.");
+		}
+	}
 }
 </script>

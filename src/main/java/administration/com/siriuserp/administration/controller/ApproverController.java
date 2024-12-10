@@ -2,6 +2,7 @@ package com.siriuserp.administration.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.siriuserp.sdk.dm.PartyRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -39,6 +40,7 @@ public class ApproverController extends ControllerBase {
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
 		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
+		binder.registerCustomEditor(PartyRoleType.class, modelEditor.forClass(PartyRoleType.class));
 	}
 	
 	@RequestMapping("/approverview.htm")

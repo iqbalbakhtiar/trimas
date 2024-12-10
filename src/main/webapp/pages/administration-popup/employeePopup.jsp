@@ -55,10 +55,10 @@
 						<c:forEach items="${employees}" var="com">
 						<tr>
 					  		<td class="tools">
-					  			<a class="item-button-add-row" href="javascript:setclient('${com.id}')" title="Edit"><span><spring:message code="sirius.edit"/></span></a>
+					  			<a class="item-button-add-row" href="javascript:setclient('${com.partyFrom.id}', '${com.partyFrom.code}', '${com.partyFrom.fullName}')" title="Edit"><span><spring:message code="sirius.edit"/></span></a>
 					  		</td>
-							<td>${com.fromRole.party.code}</td> 
-							<td>${com.fromRole.party.fullName}</td>
+							<td>${com.partyFrom.code}</td>
+							<td>${com.partyFrom.fullName}</td>
 				  		</tr>
 						</c:forEach>
 					  	<tr class="end-table"><td colspan="3">&nbsp;</td></tr>
@@ -78,41 +78,23 @@
 </body>
 </html>
 <script type="text/javascript">
-	function setclient(id)
+	function setclient(id, code, fullName)
 	{
-		Party.relation(id);
-		var relation = Party.data;
-
-		if(!jQuery.isEmptyObject(relation))
+		let _client = self.opener.document.getElementById('${param.target}');
+		if(_client)
 		{
-			var party = relation.partyFrom;
-			let _client = self.opener.document.getElementById('${param.target}');
-			if(_client)
-			{
-				_client.remove(_client.selectedIndex);
-				
-				let _opt = document.createElement('option');
-				_opt.value = party.id;
-				_opt.text = party.name;
-				
-				_client.appendChild(_opt);
+			_client.remove(_client.selectedIndex);
 
-				const event = new Event('change');
-				_client.dispatchEvent(event);
-			}
-			
-			if(self.opener.setPartyInfo)
-				self.opener.setPartyInfo(
-					party.partyId, 
-					party.partyCode, 
-					party.salutation, 
-					party.partyName, 
-					party.nik, 
-					party.taxCode, 
-					party.birthDate, 
-					party.note);
-		
-			window.close();
+			let _opt = document.createElement('option');
+			_opt.value = id;
+			_opt.text = code + ' - ' + fullName;
+
+			_client.appendChild(_opt);
+
+			const event = new Event('change');
+			_client.dispatchEvent(event);
 		}
+
+		window.close();
 	}
 </script>

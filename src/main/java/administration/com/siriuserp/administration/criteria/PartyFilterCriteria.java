@@ -38,6 +38,7 @@ public class PartyFilterCriteria extends AbstractFilterCriteria
 	private Long toParty;
 	private Long relationshipType;
 	private Long except;
+	private Long responsibility;
 
 	private Boolean base;
 }
