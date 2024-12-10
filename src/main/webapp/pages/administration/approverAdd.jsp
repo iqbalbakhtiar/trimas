@@ -30,7 +30,7 @@
 			<td align="right"><spring:message code="approver.type"/></td>
 			<td width="1%" align="center">:</td>
 			<td>
-				<form:select id="partyRoleTypeFrom" path="partyRoleTypeFrom">
+				<form:select id="partyRoleTypeFrom" path="partyRoleTypeFrom" onchange="approverTypeChange()">
 					<c:forEach var="type" items="${approver_types}">
 						<form:option value="${type.id}">${type.normalizedName}</form:option>
 					</c:forEach>
@@ -104,11 +104,20 @@ $(function(){
 });
 
 function validateForm() {
+	const isExistingChecked = $('input[name="existing"][value="true"]').is(':checked');
+
+	if (isExistingChecked) {
+		var party = $('#party').val();
+
+		if (party == null || party === "") {
+			alert('<spring:message code="party"/> <spring:message code="notif.empty"/> !');
+			return false;
+		}
+	}
+
 	var organization = $('#org').val();
 	var salutation = $('input[name="salutation"]').val();
 	var fullName = $('input[name="fullName"]').val();
-	var taxCode = $('input[name="taxCode"]').val();
-	var permitCode = $('input[name="permitCode"]').val();
 	var active = $('input[name="active"]:checked').val();
 
 	if (organization == null || organization === "") {
@@ -125,16 +134,6 @@ function validateForm() {
 		alert('<spring:message code="customer.name"/> <spring:message code="notif.empty"/> !');
 		return false;
 	}
-
-	<%--if (taxCode == null || taxCode.trim() === "") {--%>
-	<%--	alert('NPWP <spring:message code="notif.empty"/> !');--%>
-	<%--	return false;--%>
-	<%--}--%>
-	
-	<%--if (permitCode == null || permitCode.trim() === "") {--%>
-	<%--	alert('SIUP <spring:message code="notif.empty"/> !');--%>
-	<%--	return false;--%>
-	<%--}--%>
 
 	if (active == null || active === undefined) {
 		alert('<spring:message code="notif.select1"/> <spring:message code="sirius.status"/> <spring:message code="notif.select2"/>');
@@ -202,6 +201,22 @@ function changeExisting(status) {
 		$('input[name="permitCode"]').prop('disabled', false).removeClass('input-disabled').val('');
 		$('input[name="active"]').prop('disabled', false).prop('checked', false);
 		$('textarea[name="note"]').prop('disabled', false).removeClass('input-disabled').val('');
+	}
+}
+
+function approverTypeChange() {
+	// Periksa apakah radio button "existing" yang bernilai "true" / "yes" dipilih
+	const isExistingChecked = $('input[name="existing"][value="true"]').is(':checked');
+
+	if (isExistingChecked) {
+		// Kosongkan semua elemen yang diminta
+		$('#party').empty(); // Kosongkan dropdown party
+		$('input[name="salutation"]').val('');
+		$('input[name="fullName"]').val('');
+		$('input[name="taxCode"]').val('');
+		$('input[name="permitCode"]').val('');
+		$('input[name="active"]').prop('checked', false); // Uncheck radio buttons
+		$('textarea[name="note"]').val('');
 	}
 }
 

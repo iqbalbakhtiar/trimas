@@ -8,11 +8,7 @@ import java.util.Date;
 import java.util.Set;
 
 import com.siriuserp.administration.dm.Geographic;
-import com.siriuserp.sdk.dm.ContactMechanism;
-import com.siriuserp.sdk.dm.Form;
-import com.siriuserp.sdk.dm.PostalAddress;
-import com.siriuserp.sdk.dm.PostalAddressType;
-import com.siriuserp.sdk.dm.User;
+import com.siriuserp.sdk.dm.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -77,4 +73,6 @@ public class PartyForm extends Form
 	private Set<PostalAddressType> addressTypes;
 	private Set<PostalAddress> postalAddresses;
 	private Set<ContactMechanism> contactMechanisms;
+
+	private PartyRelationship partyRelationship;
 }

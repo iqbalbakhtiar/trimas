@@ -75,7 +75,7 @@
 							<td nowrap="nowrap">${approver.partyTo.fullName}</td>
 							<td nowrap="nowrap">${approver.partyRoleTypeFrom.name}</td>
 							<td nowrap="nowrap"><spring:message code="sirius.${approver.active ? 'active' : 'inactive'}"/></td>
-							<td nowrap="nowrap">${approver.partyFrom.note}</td>
+							<td nowrap="nowrap">${approver.note}</td>
 						</tr>
 						</c:forEach>
 						<tr class="end-table"><td colspan="7">&nbsp;</td></tr>

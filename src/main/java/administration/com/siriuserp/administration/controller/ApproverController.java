@@ -2,6 +2,7 @@ package com.siriuserp.administration.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.siriuserp.sdk.dm.PartyRelationship;
 import com.siriuserp.sdk.dm.PartyRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -88,7 +89,7 @@ public class ApproverController extends ControllerBase {
 		JSONResponse response = new JSONResponse();
 
 		try {
-	        Party approver = partyForm.getApprover();
+	        PartyRelationship approver = partyForm.getPartyRelationship();
 	        FormHelper.update(approver, partyForm);
 			
 			FastMap<String, Object> map = service.edit(approver, relationshipId);

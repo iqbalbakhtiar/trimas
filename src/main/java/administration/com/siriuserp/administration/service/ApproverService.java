@@ -117,27 +117,20 @@ public class ApproverService extends Service {
 		PartyRelationship partyRelationship = genericDao.load(PartyRelationship.class, id);
 	    Party approver = genericDao.load(Party.class, partyRelationship.getPartyFrom().getId());
 	    
-	    PartyForm partyForm = FormHelper.bind(PartyForm.class, approver);
+	    PartyForm partyForm = FormHelper.bind(PartyForm.class, partyRelationship);
 	    
 	    partyForm.setApprover(approver);
 		
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("approver_edit", partyForm);
-		map.put("relationship", partyRelationship);
+		map.put("partyFrom", approver);
 		
 		return map;
 	}
 	
 	@AuditTrails(className = Party.class, actionType = AuditTrailsActionType.UPDATE)
-	public FastMap<String, Object> edit(Party approver, Long relationshipId) throws Exception {
+	public FastMap<String, Object> edit(PartyRelationship approver, Long relationshipId) throws Exception {
 		genericDao.update(approver);
-		
-		//Update Party Relationship
-		PartyRelationship partyRelationship = genericDao.load(PartyRelationship.class, relationshipId);
-		partyRelationship.setActive(approver.isActive());
-		partyRelationship.setUpdatedBy(getPerson());
-		partyRelationship.setCreatedDate(DateHelper.now());
-		genericDao.update(partyRelationship);
 		
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("relationshipId", relationshipId);
