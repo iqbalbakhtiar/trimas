@@ -86,8 +86,6 @@ public class ReceiptService extends Service {
 		AccountingForm form = (AccountingForm) receipt.getForm();
 		BigDecimal total = BigDecimal.ZERO;
 
-		ObjectPrinter.printJson(form);
-
 		for (Item item : form.getItems()) // Item bisa direpresentasikan 1 billing juga atau 1 billing yang mau dibayar
 		{
 			// getReference = Id Billing
@@ -141,6 +139,9 @@ public class ReceiptService extends Service {
 			receipt.getReceiptInformation().setAmount(total);
 
 			receipt.setCode(GeneratorHelper.instance().generate(TableType.RECEIPT, codeSequenceDao));
+
+			// Set Real Date from Date, for AR Ledger Report
+			receipt.setRealDate(receipt.getDate());
 
 			genericDao.add(receipt);
 		}

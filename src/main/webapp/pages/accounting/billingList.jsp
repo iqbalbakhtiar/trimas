@@ -58,11 +58,12 @@
                         <table class="table-list" cellspacing="0" cellpadding="0" width="100%">
                         <tr>
                             <th width="1%"><div style="width:45px;"></div></th>
-                          	<th width="8%"><spring:message code="sirius.code"/></th>
-                          	<th width="8%"><spring:message code="sirius.date"/></th>
-                          	<th width="8%"><spring:message code="customer"/></th>
-                          	<th width="8%"><spring:message code="sirius.status"/></th>
-                          	<th width="8%"><spring:message code="sirius.note"/></th>
+                          	<th width="10%"><spring:message code="sirius.code"/></th>
+                          	<th width="10%"><spring:message code="sirius.date"/></th>
+                          	<th width="15%"><spring:message code="customer"/></th>
+                          	<th width="10%"><spring:message code="sirius.status"/></th>
+                          	<th width="10%"><spring:message code="sirius.amount"/></th>
+                          	<th><spring:message code="sirius.note"/></th>
                         </tr>
                         <c:forEach items="${billings}" var="billing">
                         <tr>
@@ -73,7 +74,8 @@
                             <td nowrap="nowrap"><fmt:formatDate value='${billing.date}' pattern='dd-MM-yyyy'/></td>
 							<td nowrap="nowrap"><c:out value="${billing.customer.fullName}" /></td>
 							<td nowrap="nowrap"><c:out value="${billing.financialStatus}" /></td>
-							<td nowrap="nowrap"><c:out value="${billing.note}" /></td>
+							<td nowrap="nowrap"><fmt:formatNumber value='${billing.money.amount}' pattern=',##0.00'/></td>
+							<td nowrap="nowrap" class="break-over"><c:out value="${billing.note}" /></td>
                         </tr>
                         </c:forEach>
                         <tr class="end-table"><td colspan="8">&nbsp;</td></tr>

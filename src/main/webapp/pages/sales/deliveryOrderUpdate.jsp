@@ -156,8 +156,8 @@
 									   name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/>
 							</td>
 							<td>
-								<input id="uom[${idx.index}]" size="30" value="${item.container.name}" class="input-disabled"
-									   name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/>
+								<input id="container[${idx.index}]" size="30" value="${item.container.name}" class="input-disabled"
+									   name="items[${idx.index}].container" index="${idx.index}" next="container" disabled/>
 							</td>
 							<td>
 								<input id="note[${idx.index}]" type="text" size="60" value="${item.note}" name="deliveryOrder.items[${idx.index}].note"

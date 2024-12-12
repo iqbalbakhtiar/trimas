@@ -32,7 +32,7 @@
             <tr>
                 <td nowrap="nowrap" align="right"><spring:message code="goodsreceipt.receive.date"/> :</td>
                 <td>
-                    <input id="date" name="date" size="10" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>" class="input-disabled" disabled/>
+                    <input id="date" name="date" size="10" value="<fmt:formatDate value='${goodsReceipt_edit.date}' pattern='dd-MM-yyyy'/>" class="input-disabled" disabled/>
                 </td>
             </tr>
             <tr>

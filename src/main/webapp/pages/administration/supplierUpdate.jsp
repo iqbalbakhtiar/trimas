@@ -188,7 +188,7 @@
 
 		<div id="creditTerm" dojoType="ContentPane" label='<spring:message code="creditterm"/>' class="tab-pages" refreshOnShow="true" ${lastPanel == 'term' ? 'selected="true"' : ''}>
 			<div class="toolbar-clean">
-				<a class="item-button-new" href="<c:url value='/page/credittermpreadd.htm?party=${supplier_edit.id}&relationshipId=${relationship.id}&uri=customerpreedit.htm'/>"><span><spring:message code="creditterm.new"/></span></a>
+				<a class="item-button-new" href="<c:url value='/page/credittermpreadd.htm?party=${supplier_edit.id}&relationshipId=${relationship.id}&uri=supplierpreedit.htm'/>"><span><spring:message code="creditterm.new"/></span></a>
 				<div class="item-navigator">&nbsp;</div>
 			</div>
 			<table class="table-list" cellspacing="0" cellpadding="0" width="100%">
@@ -204,7 +204,7 @@
 					<tr>
 						<td class="tools">
 							<a class="item-button-edit" href="<c:url value='/page/credittermpreedit.htm?id=${term.id}&relationshipId=${relationship.id}&uri=supplierpreedit.htm'/>" title="Edit"><span><spring:message code="sirius.edit"/></span></a>
-								<%-- 					<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/credittermdelete.htm?id=${term.id}&party=${term.partyRelationship.partyFrom.id}&relationshipId=${relationship.id}&uri=customerpreedit.htm'/>');" title="Del"><span><spring:message code="sirius.delete"/></span></a> --%>
+								<%-- 					<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/credittermdelete.htm?id=${term.id}&party=${term.partyRelationship.partyFrom.id}&relationshipId=${relationship.id}&uri=supplierpreedit.htm'/>');" title="Del"><span><spring:message code="sirius.delete"/></span></a> --%>
 						</td>
 						<td nowrap="nowrap"><fmt:formatDate value='${term.validFrom}' pattern='dd-MM-yyyy'/></td>
 						<td nowrap="nowrap"><fmt:formatDate value='${term.validTo}' pattern='dd-MM-yyyy'/></td>

@@ -130,7 +130,7 @@
 									   name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/>
 							</td>
 							<td>
-								<select id="container[${idx.index}]" name="items.[${idx.index}].container" index="${idx.index}"
+								<select id="container[${idx.index}]" name="items[${idx.index}].container" index="${idx.index}"
 										onchange="updateOnHand(this, ${idx.index});" next="container" class="combobox">
 								</select>
 								<a class="item-popup" onclick="openContainer(this, ${idx.index});" title="Container"></a>
