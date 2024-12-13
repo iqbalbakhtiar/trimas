@@ -100,7 +100,7 @@ public class ReceiptService extends Service {
 				application.setWriteOffType(item.getWriteOffType());
 
                 /* unpaid = unpaid - paidAmount */
-				BigDecimal unpaid = application.getBilling().getUnpaid().subtract(application.getPaidAmount());
+				BigDecimal unpaid = application.getBilling().getUnpaid().subtract(application.getPaidAmount().subtract(application.getWriteOff()));
 				total = total.add(application.getPaidAmount());
 
 				// Kalau Bukan Clearing
