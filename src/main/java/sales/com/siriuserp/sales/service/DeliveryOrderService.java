@@ -80,7 +80,7 @@ public class DeliveryOrderService extends Service {
 	}
 
 	@AuditTrails(className = DeliveryOrder.class, actionType = AuditTrailsActionType.CREATE)
-	public FastMap<String, Object> add(DeliveryOrder deliveryOrder) throws Exception {
+	public void add(DeliveryOrder deliveryOrder) throws Exception {
 		DeliveryOrderForm form = (DeliveryOrderForm) deliveryOrder.getForm();
 
 		// Set DO value
@@ -115,11 +115,6 @@ public class DeliveryOrderService extends Service {
 		}
 
 		genericDao.add(deliveryOrder);
-
-		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("id", deliveryOrder.getId());
-
-		return map;
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)

@@ -25,4 +25,18 @@ public class Tag
 	@Enumerated(EnumType.STRING)
 	@Column(name = "inventory_type")
 	private InventoryType inventoryType = InventoryType.STOCK;
+	
+	public static final synchronized Tag stock() {
+		Tag tag = new Tag();
+		tag.setInventoryType(InventoryType.STOCK);
+
+        return tag;
+	}
+	
+	public static final synchronized Tag shrink() {
+		Tag tag = new Tag();
+		tag.setInventoryType(InventoryType.SHRINK);
+
+        return tag;
+	}
 }

@@ -1,21 +1,37 @@
 package com.siriuserp.sales.dm;
 
-import com.siriuserp.sdk.dm.Container;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
+import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+
+import com.siriuserp.inventory.dm.Reservable;
 import com.siriuserp.inventory.dm.WarehouseReferenceItem;
 import com.siriuserp.inventory.dm.WarehouseTransaction;
 import com.siriuserp.inventory.dm.WarehouseTransactionSource;
+import com.siriuserp.sdk.dm.Container;
+import com.siriuserp.sdk.dm.Grid;
 import com.siriuserp.sdk.dm.Money;
+import com.siriuserp.sdk.dm.Tag;
 
-import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.math.BigDecimal;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -23,7 +39,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "delivery_order_realization_item")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class DeliveryOrderRealizationItem extends WarehouseReferenceItem implements Comparable<DeliveryOrderRealizationItem>
+public class DeliveryOrderRealizationItem extends WarehouseReferenceItem implements Reservable, Comparable<DeliveryOrderRealizationItem>
 {
     private static final long serialVersionUID = 3807540226776848698L;
 
@@ -39,12 +55,27 @@ public class DeliveryOrderRealizationItem extends WarehouseReferenceItem impleme
     @Fetch(FetchMode.SELECT)
     private DeliveryOrderRealization deliveryOrderRealization;
 
-    @OneToOne(fetch= FetchType.LAZY)
+    @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="fk_delivery_order_item")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private DeliveryOrderItem deliveryOrderItem;
 
+    @OneToOne(mappedBy="realizationItem",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	private DeliveryOrderRealizationReserveBridge reserveBridge;
+    
+    @Override
+	public Long getReferenceId() {
+		return getDeliveryOrderRealization().getId();
+	}
+    
+    @Override
+	public Tag getOriginTag() {
+		return Tag.stock();
+	}
+    
     @Override
 	public Money getMoney() {
 		Money money = new Money();
@@ -80,4 +111,25 @@ public class DeliveryOrderRealizationItem extends WarehouseReferenceItem impleme
     public Container getSourceContainer() {
         return this.getDeliveryOrderItem().getContainer();
     }
+
+	@Override
+	public Grid getGrid() {
+		return this.getSourceGrid();
+	}
+	
+	@Override
+	public Container getContainer() {
+		return this.getSourceContainer();
+	}
+	
+	@Override
+	public BigDecimal getQuantity() {
+		 if (getShrinkage().compareTo(BigDecimal.ZERO) > 0)
+			 return getShrinkage();
+		 
+		 if (getAccepted().compareTo(BigDecimal.ZERO) > 0)
+			 return getAccepted();
+		 
+		 return BigDecimal.ZERO;
+	}
 }

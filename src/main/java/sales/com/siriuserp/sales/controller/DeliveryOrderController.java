@@ -1,9 +1,25 @@
 package com.siriuserp.sales.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.siriuserp.sales.criteria.DeliveryOrderFilterCriteria;
 import com.siriuserp.sales.dm.DeliveryOrder;
 import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sales.dm.SalesOrderItem;
+import com.siriuserp.sales.dm.SalesReferenceItem;
 import com.siriuserp.sales.form.DeliveryOrderForm;
 import com.siriuserp.sales.query.DeliveryOrderGridViewQuery;
 import com.siriuserp.sales.query.DeliveryOrderPreaddViewQuery;
@@ -15,20 +31,8 @@ import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.PostalAddress;
-import com.siriuserp.sales.dm.SalesReferenceItem;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.utility.FormHelper;
-import javolution.util.FastMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @SessionAttributes(value = { "deliveryOrder_form" }, types = DeliveryOrderForm.class)
@@ -79,10 +83,10 @@ public class DeliveryOrderController extends ControllerBase {
 		JSONResponse response = new JSONResponse();
 
 		try {
-			FastMap<String, Object> map = doService.add(FormHelper.create(DeliveryOrder.class, deliveryOrderForm));
+			doService.add(FormHelper.create(DeliveryOrder.class, deliveryOrderForm));
 			status.setComplete();
 
-			response.store("data", map);
+			response.store("id", deliveryOrderForm.getDeliveryOrder().getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.statusError();

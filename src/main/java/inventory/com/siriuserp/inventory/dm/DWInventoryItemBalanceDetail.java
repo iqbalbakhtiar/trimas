@@ -96,6 +96,9 @@ public class DWInventoryItemBalanceDetail extends Model implements DataWarehouse
 	@Column(name = "lot_info")
 	private String lotInfo;
 	
+	@Column(name = "tag")
+	private String tag;
+	
 	@Column(name = "product_id")
 	private Long productId;
 

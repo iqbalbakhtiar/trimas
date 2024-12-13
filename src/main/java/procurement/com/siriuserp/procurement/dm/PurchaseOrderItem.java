@@ -1,20 +1,29 @@
 package com.siriuserp.procurement.dm;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.Type;
+
 import com.siriuserp.inventory.dm.WarehouseReferenceItem;
 import com.siriuserp.inventory.dm.WarehouseTransaction;
 import com.siriuserp.inventory.dm.WarehouseTransactionSource;
 import com.siriuserp.sdk.dm.JSONSupport;
-import com.siriuserp.sdk.dm.Money;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.*;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -44,10 +53,10 @@ public class PurchaseOrderItem extends WarehouseReferenceItem implements JSONSup
     private PurchaseOrder purchaseOrder;
 
     @Override
-    public Money getMoney() {
-        return super.getMoney();
-    }
-
+	public Long getReferenceId() {
+		return getPurchaseOrder().getId();
+	}
+    
     @Override
     public WarehouseTransaction getWarehouseTransaction() {
         return getPurchaseOrder();

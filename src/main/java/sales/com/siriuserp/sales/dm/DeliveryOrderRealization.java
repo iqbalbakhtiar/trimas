@@ -1,24 +1,45 @@
 package com.siriuserp.sales.dm;
 
-import com.siriuserp.inventory.dm.GoodsIssue;
-import com.siriuserp.inventory.dm.Issueable;
-import com.siriuserp.sdk.dm.*;
-import javolution.util.FastSet;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Where;
+
+import com.siriuserp.inventory.dm.GoodsIssue;
+import com.siriuserp.inventory.dm.Issueable;
+import com.siriuserp.sdk.dm.Currency;
+import com.siriuserp.sdk.dm.Facility;
+import com.siriuserp.sdk.dm.JSONSupport;
+import com.siriuserp.sdk.dm.Model;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.PostalAddress;
+import com.siriuserp.sdk.dm.Tax;
+
+import javolution.util.FastSet;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -83,7 +104,16 @@ public class DeliveryOrderRealization extends Model implements JSONSupport, Issu
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@OrderBy("id")
-	private Set<DeliveryOrderRealizationItem> items = new FastSet<DeliveryOrderRealizationItem>();
+    @Where(clause="accepted > 0")
+	private Set<DeliveryOrderRealizationItem> accepteds = new FastSet<DeliveryOrderRealizationItem>();
+    
+    @OneToMany(mappedBy = "deliveryOrderRealization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   	@LazyCollection(LazyCollectionOption.EXTRA)
+   	@Fetch(FetchMode.SELECT)
+   	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+   	@OrderBy("id")
+    @Where(clause="shrinkage > 0")
+   	private Set<DeliveryOrderRealizationItem> shrinks = new FastSet<DeliveryOrderRealizationItem>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_currency")
@@ -97,6 +127,15 @@ public class DeliveryOrderRealization extends Model implements JSONSupport, Issu
     @Fetch(FetchMode.SELECT)
     private Tax tax;
 
+    public Set<DeliveryOrderRealizationItem> getItems()
+	{
+		Set<DeliveryOrderRealizationItem> items = new FastSet<DeliveryOrderRealizationItem>();
+		items.addAll(getAccepteds());
+		items.addAll(getShrinks());
+		
+		return items;
+	}
+    
     @Override
     public String getAuditCode() {
         return id + "," + code;
@@ -105,7 +144,7 @@ public class DeliveryOrderRealization extends Model implements JSONSupport, Issu
     @Override
     public Set<DeliveryOrderRealizationItem> getIssueables()
     {
-        return this.items;
+        return getItems();
     }
 
     @Override
@@ -135,11 +174,20 @@ public class DeliveryOrderRealization extends Model implements JSONSupport, Issu
 
     @Override
     public Party getParty() {
-        return null;
+        return getCustomer();
     }
 
     @Override
     public String getRef() {
         return "";
+    }
+    
+    public PostalAddress getShippingAddress() {
+    	return getItems().stream().filter(item 
+    		-> item.getDeliveryOrderItem().getSalesReferenceItem().getShippingAddress() != null).findFirst().get().getDeliveryOrderItem().getSalesReferenceItem().getShippingAddress();
+    }
+    
+    public DeliveryOrder getDeliveryOrder() {
+    	return getItems().stream().filter(item -> item.getDeliveryOrderItem().getDeliveryOrder() != null).findFirst().get().getDeliveryOrderItem().getDeliveryOrder();    	
     }
 }

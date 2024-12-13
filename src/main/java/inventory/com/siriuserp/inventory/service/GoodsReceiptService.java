@@ -1,12 +1,32 @@
 package com.siriuserp.inventory.service;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+
 import com.siriuserp.accountpayable.service.InvoiceVerificationService;
 import com.siriuserp.inventory.adapter.WarehouseItemAdapter;
 import com.siriuserp.inventory.criteria.GoodsReceiptFilterCriteria;
-import com.siriuserp.inventory.dm.*;
+import com.siriuserp.inventory.dm.GoodsIssue;
+import com.siriuserp.inventory.dm.GoodsIssueItem;
+import com.siriuserp.inventory.dm.GoodsReceipt;
+import com.siriuserp.inventory.dm.GoodsReceiptItem;
+import com.siriuserp.inventory.dm.InventoryConfiguration;
+import com.siriuserp.inventory.dm.InventoryItem;
+import com.siriuserp.inventory.dm.ProductCategoryType;
+import com.siriuserp.inventory.dm.ProductInOutTransaction;
+import com.siriuserp.inventory.dm.WarehouseReferenceItem;
+import com.siriuserp.inventory.dm.WarehouseTransactionItem;
+import com.siriuserp.inventory.dm.WarehouseTransactionSource;
+import com.siriuserp.inventory.dm.WarehouseTransactionType;
 import com.siriuserp.inventory.form.TransactionForm;
 import com.siriuserp.inventory.sibling.AddDWInventoryItemInSiblingRole;
-import com.siriuserp.inventory.util.InventoryitemTagUtil;
+import com.siriuserp.inventory.util.InventoryItemTagUtil;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.AutomaticSibling;
@@ -17,21 +37,35 @@ import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.dao.PartyRelationshipDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.GridViewQuery;
-import com.siriuserp.sdk.dm.*;
+import com.siriuserp.sdk.dm.CreditTerm;
+import com.siriuserp.sdk.dm.Currency;
+import com.siriuserp.sdk.dm.Facility;
+import com.siriuserp.sdk.dm.InvoiceVerification;
+import com.siriuserp.sdk.dm.InvoiceVerificationReceipt;
+import com.siriuserp.sdk.dm.Item;
+import com.siriuserp.sdk.dm.Money;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.PartyRelationship;
+import com.siriuserp.sdk.dm.PartyRelationshipType;
+import com.siriuserp.sdk.dm.Payable;
+import com.siriuserp.sdk.dm.Reference;
+import com.siriuserp.sdk.dm.TableType;
+import com.siriuserp.sdk.dm.Tax;
+import com.siriuserp.sdk.dm.UrlCache;
+import com.siriuserp.sdk.dm.User;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
-import com.siriuserp.sdk.utility.*;
+import com.siriuserp.sdk.utility.DateHelper;
+import com.siriuserp.sdk.utility.FormHelper;
+import com.siriuserp.sdk.utility.GeneratorHelper;
+import com.siriuserp.sdk.utility.QueryFactory;
+import com.siriuserp.sdk.utility.SiriusValidator;
+import com.siriuserp.sdk.utility.UserHelper;
+
 import javolution.util.FastMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
-import java.math.BigDecimal;
-import java.util.Map;
-
+@SuppressWarnings("unchecked")
 @Component
 @Transactional(rollbackFor = Exception.class)
 public class GoodsReceiptService extends Service {
@@ -48,7 +82,7 @@ public class GoodsReceiptService extends Service {
 	private CreditTermDao creditTermDao;
 
 	@Autowired
-	private InventoryitemTagUtil inventoryitemUtil;
+	private InventoryItemTagUtil inventoryItemUtil;
 
 	@Autowired
 	private StockControlService stockControllService;
@@ -319,10 +353,10 @@ public class GoodsReceiptService extends Service {
 		{
 			goodsReceiptItem.getInOuts().clear();
 
-			inventoryitemUtil.in(InventoryItem.class, goodsReceiptItem);
+			inventoryItemUtil.in(InventoryItem.class, goodsReceiptItem);
 
 			if (!transactionItem.getInternalInventories().isEmpty())
-				inventoryitemUtil.trin(InventoryItem.class, transactionItem.getInternalInventories(), goodsReceiptItem);
+				inventoryItemUtil.trin(InventoryItem.class, transactionItem.getInternalInventories(), goodsReceiptItem);
 
 			if (transactionItem.getTransactionSource().isInternal() && (transactionItem.getReferenceItem().getDestinationContainer() == null || !goodsReceiptItem.getContainer().getName().contains("ADJUSTMENT")))
 				transactionItem.getReferenceItem().setDestinationContainer(goodsReceiptItem.getContainer());

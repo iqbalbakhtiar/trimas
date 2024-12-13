@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.siriuserp.sales.dm.DeliveryOrder;
-import com.siriuserp.sales.dm.DeliveryOrderItem;
 import com.siriuserp.sales.dm.DeliveryOrderRealization;
 import com.siriuserp.sales.dm.SOStatus;
 import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sdk.dm.Form;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.PostalAddress;
+import com.siriuserp.sdk.utility.DecimalHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -43,12 +43,6 @@ public class DeliveryOrderForm extends Form {
     private PostalAddress shippingAddress;
     
     public BigDecimal getTotalLineItemAmountForPrint() {
-        BigDecimal total = BigDecimal.ZERO;
-
-        for (DeliveryOrderItem item : deliveryOrder.getItems()) {
-            total = total.add(item.getSalesReferenceItem().getTotalAmountPerItemDiscounted());
-        }
-
-        return total;
+        return getItems().stream().map(item -> item.getSalesReferenceItem().getTotalAmountPerItemDiscounted()).collect(DecimalHelper.sum());
     }
 }

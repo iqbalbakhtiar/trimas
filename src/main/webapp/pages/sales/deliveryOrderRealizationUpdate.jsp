@@ -138,7 +138,8 @@
 						</tr>
 					</thead>
 					<tbody id="lineItem">
-					<c:forEach items="${dor_form.deliveryOrderRealization.items}" var="item" varStatus="idx">
+					<c:forEach items="${dorItems}" var="item" varStatus="idx">
+						<c:if test='${dorItems[idx.index-1].deliveryOrderItem.id != item.deliveryOrderItem.id}'>
 						<tr>
 							<td>&nbsp;</td>
 							<td><input id="product[${idx.index}]" size="40" value="${item.deliveryOrderItem.salesReferenceItem.product.name}" class="input-disabled productInput"
@@ -156,10 +157,7 @@
 								<input id="accepted[${idx.index}]" size="10" value="${item.accepted}" class="input-disabled input-decimal"
 									   name="items[${idx.index}].accepted" index="${idx.index}" next="accepted" disabled/>
 							</td>
-							<td>
-								<input id="shrinkage[${idx.index}]" size="10" value="${item.shrinkage}" class="input-disabled input-decimal"
-									   name="items[${idx.index}].shrinkage" index="${idx.index}" next="shrinkage" disabled/>
-							</td>
+							<td>&nbsp;</td>
 							<td>
 								<input id="uom[${idx.index}]" size="6" value="${item.deliveryOrderItem.salesReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled"
 									   name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/>
@@ -169,6 +167,21 @@
 									   index="${idx.index}" next="note" value="${item.note}"/>
 							</td>
 						</tr>
+						</c:if>
+						<c:if test='${dorItems[idx.index+1].deliveryOrderItem.id != item.deliveryOrderItem.id}'>
+						<tr>
+							<td colspan="5">&nbsp;</td>
+							<td>
+								<input id="shrinkage[${idx.index}]" size="10" value="${item.shrinkage}" class="input-disabled input-decimal"
+									   name="items[${idx.index}].shrinkage" index="${idx.index}" next="shrinkage" disabled/>
+							</td>
+							<td>
+								<input id="uom[${idx.index}]" size="6" value="${item.deliveryOrderItem.salesReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled"
+									   name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/>
+							</td>
+							<td>&nbsp;</td>
+						</tr>
+						</c:if>
 					</c:forEach>
 					</tbody>
 					<tfoot>

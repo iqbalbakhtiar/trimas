@@ -47,6 +47,6 @@ public interface Inventoriable
 	}
 	
 	default public OrderType getOrderType() {
-		return OrderType.ASC;
+		return OrderType.DESC;
 	}
 }

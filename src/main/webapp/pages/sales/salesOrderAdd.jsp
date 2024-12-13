@@ -407,7 +407,7 @@ function save() {
 					$dialog.dialog('close');
 					<%--window.location="<c:url value='/page/deliveryorderview.htm'/>";--%>
 					// Or Can use This
-					window.location="<c:url value='/page/salesorderpreedit.htm?id='/>"+json.data.id;
+					window.location="<c:url value='/page/salesorderpreedit.htm?id='/>"+json.id;
 				}
 				else
 				{

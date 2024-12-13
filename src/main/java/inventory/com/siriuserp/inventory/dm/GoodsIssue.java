@@ -1,24 +1,40 @@
 package com.siriuserp.inventory.dm;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.Type;
+
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Model;
 import com.siriuserp.sdk.dm.Party;
+
+import javolution.util.FastList;
 import javolution.util.FastSet;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
-
-import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -92,14 +108,14 @@ public class GoodsIssue extends Model implements Transaction {
         return String.join("<br/>", references);
     }
 
-    public Set<StockControl> getStockControlls()
-    {
-        FastSet<StockControl> controlls = new FastSet<StockControl>();
+    public List<StockControl> getStockControlls()
+	{
+		FastList<StockControl> controlls = new FastList<StockControl>();
 
-        for (GoodsIssueItem item : getItems())
-            controlls.addAll(item.getStockControls());
+		for (GoodsIssueItem item : getItems())
+			controlls.addAll(item.getStockControls());
 
-        return controlls;
-    }
+		return controlls;
+	}
 
 }

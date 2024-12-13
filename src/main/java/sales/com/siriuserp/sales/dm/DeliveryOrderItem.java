@@ -2,11 +2,15 @@ package com.siriuserp.sales.dm;
 
 import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Model;
+
+import javolution.util.FastSet;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
+
+import java.util.Set;
 
 import javax.persistence.*;
 import javax.persistence.CascadeType;
@@ -39,15 +43,16 @@ public class DeliveryOrderItem extends Model {
     private Container container;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_sales_reference", referencedColumnName = "id")
+    @JoinColumn(name = "fk_sales_reference")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private SalesReferenceItem salesReferenceItem;
 
-    @OneToOne(mappedBy = "deliveryOrderItem", fetch = FetchType.LAZY)
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private DeliveryOrderRealizationItem deliveryOrderRealizationItem;
+    @OneToMany(mappedBy = "deliveryOrderItem", fetch = FetchType.LAZY)
+   	@LazyCollection(LazyCollectionOption.EXTRA)
+   	@Fetch(FetchMode.SELECT)
+   	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+    private Set<DeliveryOrderRealizationItem> realizationItems = new FastSet<DeliveryOrderRealizationItem>();
 
     @Override
     public String getAuditCode() {

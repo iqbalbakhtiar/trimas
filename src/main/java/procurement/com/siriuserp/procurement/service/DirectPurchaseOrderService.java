@@ -73,7 +73,7 @@ public class DirectPurchaseOrderService extends Service {
 	}
 
     @AuditTrails(className = PurchaseOrder.class, actionType = AuditTrailsActionType.CREATE)
-    public FastMap<String, Object> add(PurchaseOrder purchaseOrder) throws Exception {
+    public void add(PurchaseOrder purchaseOrder) throws Exception {
         PurchaseForm form = (PurchaseForm) purchaseOrder.getForm();
 
         purchaseOrder.setMoney(new Money());
@@ -98,49 +98,39 @@ public class DirectPurchaseOrderService extends Service {
         approvableBridge.setUri("directpurchaseorderpreedit.htm");
         purchaseOrder.setApprovable(approvableBridge);
 
-        genericDao.add(purchaseOrder);
-
         for (Item item: form.getItems()) {
             if (item.getProduct() != null) {
                 PurchaseOrderItem orderItem = new PurchaseOrderItem();
 
                 // Set Puchase Order Item
+                orderItem.setPurchaseOrder(purchaseOrder);
                 orderItem.setDeliveryDate(purchaseOrder.getShippingDate());
                 orderItem.setQuantity(item.getQuantity());
                 orderItem.setDiscount(item.getDiscount());
-                orderItem.setPurchaseOrder(purchaseOrder);
                 orderItem.setLocked(true);
 
                 // Set Warehouse Reference Item
-                orderItem.setDate(purchaseOrder.getDate());
-                orderItem.setReferenceId(purchaseOrder.getId());
-                orderItem.setReferenceCode(purchaseOrder.getCode());
+                orderItem.setProduct(item.getProduct());
                 orderItem.setNote(item.getNote());
-                orderItem.setReferenceFrom(purchaseOrder.getSupplier().getFullName());
-                orderItem.setReferenceTo(purchaseOrder.getShipTo().getName());
-                orderItem.setMoney(new Money());
                 orderItem.getMoney().setAmount(item.getAmount());
                 orderItem.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
-                orderItem.setOrganization(purchaseOrder.getOrganization());
+                
+                // No container, need set manually
                 orderItem.setFacilityDestination(purchaseOrder.getShipTo());
-                orderItem.setProduct(item.getProduct());
-                orderItem.setTax(purchaseOrder.getTax());
+               
                 orderItem.setCreatedBy(getPerson());
                 orderItem.setCreatedDate(DateHelper.now());
-                orderItem.setParty(purchaseOrder.getSupplier());
+
                 // Set Transaction Item using helper & set locked to true
                 WarehouseTransactionItem warehouseTransactionItem = ReferenceItemHelper.init(genericDao, item.getQuantity(), WarehouseTransactionType.IN, orderItem);
                 warehouseTransactionItem.setLocked(true);
                 orderItem.setTransactionItem(warehouseTransactionItem);
 
-                genericDao.add(orderItem);
+                purchaseOrder.getItems().add(orderItem);
             }
         }
 
-        FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("id", purchaseOrder.getId());
-
-		return map;
+        genericDao.add(purchaseOrder);
     }
 
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)

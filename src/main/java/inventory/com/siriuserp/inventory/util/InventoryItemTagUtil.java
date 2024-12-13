@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
-import com.siriuserp.sdk.dm.ReserveControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,8 +18,11 @@ import com.siriuserp.inventory.dm.Inventoriable;
 import com.siriuserp.inventory.dm.Inventory;
 import com.siriuserp.inventory.dm.InventoryControl;
 import com.siriuserp.inventory.dm.InventoryItem;
+import com.siriuserp.inventory.dm.Reservable;
 import com.siriuserp.sdk.db.OrderType;
 import com.siriuserp.sdk.dm.Lot;
+import com.siriuserp.sdk.dm.ReserveBridge;
+import com.siriuserp.sdk.dm.ReserveControl;
 import com.siriuserp.sdk.dm.Tag;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.utility.SiriusValidator;
@@ -69,10 +71,10 @@ public class InventoryItemTagUtil
 		return dataWarehouseDao.loadInventories(inventory, product, grid, container, lot, tag, orderType);
 	}
 	
-//	private List<Inventory> revs(Class inventory, Long product, Long grid, Long container, Lot lot, Tag tag, OrderType orderType)
-//	{
-//		return dataWarehouseDao.loadReserves(inventory, product, grid, container, lot, tag, orderType);
-//	}
+	private List<Inventory> revs(Class inventory, Long product, Long grid, Long container, Lot lot, Tag tag, OrderType orderType)
+	{
+		return dataWarehouseDao.loadReserves(inventory, product, grid, container, lot, tag, orderType);
+	}
 
 	public void trin(Class inventory, Inventoriable inventoriable) throws Exception {
 		transfer(inventory, inventoriable, IN);
@@ -275,140 +277,138 @@ public class InventoryItemTagUtil
 		return controls;
 	}
 
-//	public void reserve(Class inventory, Reservable reservable) throws Exception {
-//		Assert.notNull(reservable, "Reservable invalid");
-//		Assert.notNull(reservable.getProduct(), "Product can't be empty");
-//		Assert.notNull(reservable.getOrganization(), "Organization can't be empty");
-//		Assert.notNull(reservable.getReserveBridge(), "Bridge can't be empty");
-//
-//		if (!reservable.isMinus())
-//		{
-//			List<Inventory> invents = revs(inventory, reservable.getProduct().getId(),  
-//				reservable.getGrid() !=null ? reservable.getGrid().getId() : null, reservable.getContainer() != null ? reservable.getContainer().getId() : null, 
-//					reservable.getReserveBridge().getOriginLot(), reservable.getOriginTag(), reservable.getOrderType());
-//			
-//			Assert.notEmpty(invents, "Reserved Controll can't be empty");
-//			
-//			BigDecimal buffer = reservable.getQuantity().abs();
-//			
-//			for (Inventory reserve : invents)
-//			{
-//				if (buffer.compareTo(BigDecimal.ZERO) <= 0)
-//					break;
-//	
-//				ReserveControl control = new ReserveControl();
-//				control.setReserveBridge(reservable.getReserveBridge());
-//	
-//				if(reserve.getLot() != null)
-//				{
-//					control.setCode(SiriusValidator.validateParam(reserve.getLot().getCode()) 
-//						? reserve.getLot().getCode().toUpperCase() : reserve.getLot().getCode());
-//					control.setSerial(SiriusValidator.validateParam(reserve.getLot().getSerial()) 
-//						? reserve.getLot().getSerial().toUpperCase() : reserve.getLot().getSerial());
-//						
-//					control.setInfo(reserve.getLot().getInfo());
-//				}
-//				
-//				if(reserve.getTag() != null)
-//				{
-//					control.setInventoryReference(reserve.getTag().getInventoryReference());
-//					control.setInventoryType(reserve.getTag().getInventoryType());
-//				}
-//				
-//				BigDecimal available = reserve.getOnHand().subtract(reserve.getReserved());
-//				
-//				if (available.compareTo(buffer) >= 0)
-//				{
-//					control.setBuffer(buffer);
-//					
-//					reserve.setOnHand(reserve.getOnHand().subtract(buffer));
-//	
-//					buffer = BigDecimal.ZERO;
-//				} 
-//				else
-//				{
-//					control.setBuffer(available);
-//					
-//					buffer = buffer.subtract(available);
-//	
-//					reserve.setOnHand(BigDecimal.ZERO);
-//				}
-//	
-//				control.setQuantity(control.getBuffer());
-//	
-//				dataWarehouseDao.update(reserve);
-//	
-//				reservable.getReserveBridge().getReserveControls().add(control);
-//			}
-//		}
-//		
-//		Assert.notNull(reservable.getReserveBridge().getGrid(), "Grid can't be empty");
-//		Assert.notNull(reservable.getReserveBridge().getContainer(), "Container can't be empty");
-//
-//		Inventory inventoryItem = load(inventory, reservable.getProduct().getId(), 
-//			reservable.getReserveBridge().getGrid().getId(), reservable.getReserveBridge().getContainer().getId(), reservable.getReserveBridge().getLot(), reservable.getReserveBridge().getTag());
-//		
-//		if(inventoryItem == null) {
-//			inventoryItem = create(inventory, reservable.getReserveBridge());
-//			
-//			dataWarehouseDao.add(inventoryItem);
-//		}
-//
-//		if (!reservable.isMinus())
-//			inventoryItem.setOnHand(inventoryItem.getOnHand().add(reservable.getQuantity()));
-//		
-//		inventoryItem.setReserved(inventoryItem.getReserved().add(reservable.getQuantity()));
-//
-//		dataWarehouseDao.update(inventoryItem);
-//	}
+	public void reserve(Class inventory, Reservable reservable) throws Exception {
+		Assert.notNull(reservable, "Reservable invalid");
+		Assert.notNull(reservable.getProduct(), "Product can't be empty");
+		Assert.notNull(reservable.getOrganization(), "Organization can't be empty");
+		Assert.notNull(reservable.getReserveBridge(), "Bridge can't be empty");
 
-//	public void unreserve(Class inventory, Reservable reservable) throws Exception {
-//		BigDecimal buffer = reservable.getQuantity();
-//		BigDecimal out = BigDecimal.ZERO;
-//		
-//		for(ReserveControl control : reservable.getReserveBridge().getReserveControls())
-//			if(SiriusValidator.gz(control.getBuffer()))
-//			{
-//				if (buffer.compareTo(BigDecimal.ZERO) <= 0)
-//					break;
-//	
-//				if (control.getBuffer().compareTo(buffer) >= 0)
-//				{
-//					out = buffer;
-//					control.setBuffer(control.getBuffer().subtract(buffer));
-//	
-//					buffer = BigDecimal.ZERO;
-//				} 
-//				else
-//				{
-//					out = control.getBuffer();
-//					buffer = buffer.subtract(control.getQuantity());
-//	
-//					control.setBuffer(BigDecimal.ZERO);
-//				}
-//				
-//				dataWarehouseDao.update(control);
-//				
-//				Inventory inventoryItem = load(inventory, control.getProduct().getId(), control.getReserveBridge().getGrid().getId(), control.getContainer().getId(), control.getLot(), control.getTag());
-//				inventoryItem.setOnHand(inventoryItem.getOnHand().add(out));
-//	
-//				dataWarehouseDao.update(inventoryItem);
-//			}
-//
-//		Inventory inventoryItem = load(inventory, reservable.getProduct().getId(), 
-//			reservable.getReserveBridge().getGrid().getId(), reservable.getReserveBridge().getContainer().getId(), reservable.getReserveBridge().getLot(), reservable.getReserveBridge().getTag());
-//		inventoryItem.setReserved(inventoryItem.getReserved().subtract(reservable.getQuantity()));
-//		
-//		if (!reservable.isMinus())
-//			inventoryItem.setOnHand(inventoryItem.getOnHand().subtract(reservable.getQuantity()));
-//
-//		dataWarehouseDao.update(inventoryItem);
-//	}
+		if (!reservable.isMinus())
+		{
+			List<Inventory> invents = revs(inventory, reservable.getProduct().getId(),  
+				reservable.getGrid() !=null ? reservable.getGrid().getId() : null, reservable.getContainer() != null ? reservable.getContainer().getId() : null, 
+					reservable.getReserveBridge().getOriginLot(), reservable.getOriginTag(), reservable.getOrderType());
+			
+			Assert.notEmpty(invents, "Reserved Controll can't be empty");
+			
+			BigDecimal buffer = reservable.getQuantity().abs();
+			
+			for (Inventory reserve : invents)
+			{
+				if (buffer.compareTo(BigDecimal.ZERO) <= 0)
+					break;
+	
+				ReserveControl control = new ReserveControl();
+				control.setReserveBridge(reservable.getReserveBridge());
+	
+				if(reserve.getLot() != null)
+				{
+					control.setCode(SiriusValidator.validateParam(reserve.getLot().getCode()) 
+						? reserve.getLot().getCode().toUpperCase() : reserve.getLot().getCode());
+					control.setSerial(SiriusValidator.validateParam(reserve.getLot().getSerial()) 
+						? reserve.getLot().getSerial().toUpperCase() : reserve.getLot().getSerial());
+						
+					control.setInfo(reserve.getLot().getInfo());
+				}
+				
+				
+				if(reserve.getTag() != null)
+					control.getTag().setInventoryType(reserve.getTag().getInventoryType());
 
-//	public void revin(Class inventory, Set<ReserveControl> controlls, Inventoriable inventoriable) throws Exception {
-//		reserved(inventory, controlls, inventoriable, IN);
-//	}
-//	
+				BigDecimal available = reserve.getOnHand().subtract(reserve.getReserved());
+				
+				if (available.compareTo(buffer) >= 0)
+				{
+					control.setBuffer(buffer);
+					
+					reserve.setOnHand(reserve.getOnHand().subtract(buffer));
+	
+					buffer = BigDecimal.ZERO;
+				} 
+				else
+				{
+					control.setBuffer(available);
+					
+					buffer = buffer.subtract(available);
+	
+					reserve.setOnHand(BigDecimal.ZERO);
+				}
+	
+				control.setQuantity(control.getBuffer());
+	
+				dataWarehouseDao.update(reserve);
+	
+				reservable.getReserveBridge().getReserveControls().add(control);
+			}
+		}
+		
+		Assert.notNull(reservable.getReserveBridge().getGrid(), "Grid can't be empty");
+		Assert.notNull(reservable.getReserveBridge().getContainer(), "Container can't be empty");
+
+		Inventory inventoryItem = load(inventory, reservable.getProduct().getId(), 
+			reservable.getReserveBridge().getGrid().getId(), reservable.getReserveBridge().getContainer().getId(), reservable.getReserveBridge().getLot(), reservable.getReserveBridge().getTag());
+		
+		if(inventoryItem == null) {
+			inventoryItem = create(inventory, reservable.getReserveBridge());
+			
+			dataWarehouseDao.add(inventoryItem);
+		}
+
+		if (!reservable.isMinus())
+			inventoryItem.setOnHand(inventoryItem.getOnHand().add(reservable.getQuantity()));
+		
+		inventoryItem.setReserved(inventoryItem.getReserved().add(reservable.getQuantity()));
+
+		dataWarehouseDao.update(inventoryItem);
+	}
+
+	public void unreserve(Class inventory, Reservable reservable) throws Exception {
+		BigDecimal buffer = reservable.getQuantity();
+		BigDecimal out = BigDecimal.ZERO;
+		
+		for(ReserveControl control : reservable.getReserveBridge().getReserveControls())
+			if(SiriusValidator.gz(control.getBuffer()))
+			{
+				if (buffer.compareTo(BigDecimal.ZERO) <= 0)
+					break;
+	
+				if (control.getBuffer().compareTo(buffer) >= 0)
+				{
+					out = buffer;
+					control.setBuffer(control.getBuffer().subtract(buffer));
+	
+					buffer = BigDecimal.ZERO;
+				} 
+				else
+				{
+					out = control.getBuffer();
+					buffer = buffer.subtract(control.getQuantity());
+	
+					control.setBuffer(BigDecimal.ZERO);
+				}
+				
+				dataWarehouseDao.update(control);
+				
+				Inventory inventoryItem = load(inventory, control.getProduct().getId(), control.getReserveBridge().getGrid().getId(), control.getContainer().getId(), control.getLot(), control.getTag());
+				inventoryItem.setOnHand(inventoryItem.getOnHand().add(out));
+	
+				dataWarehouseDao.update(inventoryItem);
+			}
+
+		Inventory inventoryItem = load(inventory, reservable.getProduct().getId(), 
+			reservable.getReserveBridge().getGrid().getId(), reservable.getReserveBridge().getContainer().getId(), reservable.getReserveBridge().getLot(), reservable.getReserveBridge().getTag());
+		inventoryItem.setReserved(inventoryItem.getReserved().subtract(reservable.getQuantity()));
+		
+		if (!reservable.isMinus())
+			inventoryItem.setOnHand(inventoryItem.getOnHand().subtract(reservable.getQuantity()));
+
+		dataWarehouseDao.update(inventoryItem);
+	}
+
+	public void revin(Class inventory, Set<ReserveControl> controlls, Inventoriable inventoriable) throws Exception {
+		reserved(inventory, controlls, inventoriable, IN);
+	}
+	
 	public void revout(Class inventory, Set<ReserveControl> controlls, Inventoriable inventoriable) throws Exception {
 		reserved(inventory, controlls, inventoriable, OUT);
 	}
@@ -461,7 +461,7 @@ public class InventoryItemTagUtil
 					}
 					else
 					{
-						buffer = buffer.subtract(control.getQuantity());
+						buffer = buffer.subtract(control.getQuantity()); 
 
 						control.setBuffer(BigDecimal.ZERO);
 					}
@@ -499,24 +499,9 @@ public class InventoryItemTagUtil
 		return inventoryItem;
 	}
 	
-//	public <T> T  init(Class<T> tClass) throws Exception {
-//		ReserveBridge bridge = (ReserveBridge)Class.forName(tClass.getCanonicalName()).getDeclaredConstructor().newInstance();
-//		
-//		return (T)bridge;
-//	}
-//	
-//	public void position(Class inventory, Positionable inventoriable) throws Exception {
-//		Inventory inventoryItem = (Inventory) load(inventory, inventoriable.getProduct().getId(), inventoriable.getGrid().getId(),
-//			inventoriable.getSourceContainer().getId(), inventoriable.getExtLot(), inventoriable.getTag());
-//
-//		if (inventoryItem == null)
-//			inventoryItem = (Inventory) load(inventory, inventoriable.getProduct().getId(), inventoriable.getGrid().getId(),
-//				inventoriable.getDestinationContainer().getId(), inventoriable.getExtLot(), inventoriable.getTag());
-//
-//		Assert.notNull(inventoryItem, "Product doesnot exist,Maybe u can do Stock Adjustment/Transfer Order/Goods Receipt first!");
-//		
-//		inventoryItem.setPosition(inventoriable.getPosition());
-//
-//		dataWarehouseDao.update(inventoryItem);
-//	}
+	public <T> T  init(Class<T> tClass) throws Exception {
+		ReserveBridge bridge = (ReserveBridge)Class.forName(tClass.getCanonicalName()).getDeclaredConstructor().newInstance();
+		
+		return (T)bridge;
+	}
 }

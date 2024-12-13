@@ -10,6 +10,7 @@ import org.hibernate.Query;
 
 import java.util.Date;
 
+@SuppressWarnings("unchecked")
 public class LedgerSummaryReportQuery extends AbstractStandardReportQuery {
     @Override
     public Object execute() {

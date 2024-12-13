@@ -35,15 +35,13 @@ import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.utility.FormHelper;
 
-import javolution.util.FastMap;
-
 @Controller
 @SessionAttributes(value = { "salesOrder_form" }, types = SalesForm.class)
 @DefaultRedirect(url = "salesorderview.htm")
 public class SalesOrderController extends ControllerBase {
 	
 	@Autowired
-	SalesOrderService service;
+	private SalesOrderService service;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
@@ -80,10 +78,10 @@ public class SalesOrderController extends ControllerBase {
 		JSONResponse response = new JSONResponse();
 
 		try {
-			FastMap<String, Object> map = service.add(FormHelper.create(SalesOrder.class, salesForm));
+			service.add(FormHelper.create(SalesOrder.class, salesForm));
 			status.setComplete();
 
-			response.store("data", map);
+			response.store("id", salesForm.getSalesOrder().getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.statusError();

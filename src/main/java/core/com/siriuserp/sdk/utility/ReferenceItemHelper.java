@@ -60,12 +60,8 @@ public class ReferenceItemHelper {
 		}
 
 		//source and destination must be filled for first before, because RefTo or RefFrom is default from source and destination
-
-		if(transaction instanceof Issueable)
-			item.setReferenceTo(item.getRefTo());
-
-		if(transaction instanceof Receiptable)
-			item.setReferenceFrom(item.getRefFrom());
+		item.setReferenceFrom(item.getRefFrom());
+		item.setReferenceTo(item.getRefTo());
 
 		if(SiriusValidator.validateParam(transaction.getNote()))
 			item.setNote(SiriusValidator.validateParam(item.getNote()) ? item.getNote() : "" +" ["+transaction.getNote()+"]");

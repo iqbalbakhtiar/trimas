@@ -1,5 +1,13 @@
 package com.siriuserp.accountpayable.service;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.siriuserp.accountpayable.adapter.InvoiceVerificationUIAdapter;
 import com.siriuserp.accountpayable.form.PaymentForm;
 import com.siriuserp.inventory.dm.GoodsReceipt;
@@ -8,7 +16,6 @@ import com.siriuserp.inventory.service.GoodsReceiptService;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
-import com.siriuserp.sdk.dao.CurrencyDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.GridViewQuery;
 import com.siriuserp.sdk.dm.InvoiceVerification;
@@ -18,13 +25,8 @@ import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
+
 import javolution.util.FastMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
@@ -32,9 +34,6 @@ public class InvoiceVerificationService {
 
     @Autowired
     private GenericDao genericDao;
-
-    @Autowired
-    private CurrencyDao currencyDao;
 
     @Autowired
     private CodeSequenceDao codeSequenceDao;

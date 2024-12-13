@@ -156,7 +156,7 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 
     @Override
     public Currency getCurrency() {
-        return this.money.getCurrency();
+        return this.getMoney().getCurrency();
     }
 
     @Override

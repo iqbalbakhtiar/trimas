@@ -292,9 +292,9 @@ function save() {
 				if(json.status == 'OK')
 				{
 					$dialog.dialog('close');
-					window.location="<c:url value='/page/deliveryorderrealizationview.htm'/>";
+					<%--window.location="<c:url value='/page/deliveryorderrealizationview.htm'/>";--%>
 					// Or Can use This
-					<%--window.location="<c:url value='/page/deliveryorderrealizationpreedit.htm?id='/>"+json.id;--%>
+					window.location="<c:url value='/page/deliveryorderrealizationpreedit.htm?id='/>"+json.id;
 				}
 				else
 				{

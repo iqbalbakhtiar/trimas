@@ -91,4 +91,6 @@ public interface DataWarehouseDetail
 	public void setLotCode(String lotCode);
 	
 	public void setLotInfo(String lotInfo);
+	
+	public void setTag(String tag);
 }

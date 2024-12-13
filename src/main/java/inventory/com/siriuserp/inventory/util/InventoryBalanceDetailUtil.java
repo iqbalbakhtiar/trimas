@@ -21,6 +21,7 @@ import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Grid;
 import com.siriuserp.sdk.dm.Lot;
 import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.Tag;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.utility.DateHelper;
 
@@ -71,6 +72,7 @@ public class InventoryBalanceDetailUtil
 		Grid grid = dataWarehouseDao.load(Grid.class, inventoriable.getGrid().getId());
 		Party organization = dataWarehouseDao.load(Party.class, inventoriable.getOrganization().getId());
 		Lot lot = inventoriable.getLot();
+		Tag tag = inventoriable.getTag();
 
 		if (grid == null)
 			throw new ServiceException("Grid empty !");
@@ -131,6 +133,9 @@ public class InventoryBalanceDetailUtil
 			balance.setLotInfo(lot.getInfo());
 		}
 		
+		if(tag != null)
+			balance.setTag(tag.getInventoryType().toString());
+			
 		balance.setNote(note);
 		
 		switch (type)

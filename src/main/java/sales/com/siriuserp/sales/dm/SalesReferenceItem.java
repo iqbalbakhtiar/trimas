@@ -25,10 +25,7 @@ import java.util.Map;
 public abstract class SalesReferenceItem extends Model implements JSONSupport {
 
 	private static final long serialVersionUID = 4479431094475781734L;
-	
-	@Column(name = "reference_id")
-	private Long referenceId;
-	
+
 	@Column(name = "reference_code")
 	private String referenceCode;
 	
@@ -133,8 +130,6 @@ public abstract class SalesReferenceItem extends Model implements JSONSupport {
     @Fetch(FetchMode.SELECT)
     private Tax extTax1;
 
-    /* One-to-One Relationship */
-
 	@OneToOne(mappedBy = "salesReferenceItem", fetch = FetchType.LAZY)
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
@@ -150,6 +145,11 @@ public abstract class SalesReferenceItem extends Model implements JSONSupport {
     public BigDecimal getTotalAmountPerItemDiscounted() {
         return getDiscountedPricePerItem().multiply(quantity);
     }
+    
+    public Long getReferenceId()
+	{
+		return null;
+	}
 	
 	@Override
 	public Map<String, Object> val()

@@ -114,6 +114,7 @@
                         <th width="14%"><spring:message code="goodsissueitem.name"/></th>
                         <th width="12%"><spring:message code="goodsissueitem.category"/></th>
                         <th width="5%"><spring:message code="goodsissueitem.ref.qty"/></th>
+                        <th width="5%"><spring:message code="sirius.type"/></th>
                         <th width="5%"><spring:message code="goodsissueitem.issue"/></th>
                         <th width="8%"><spring:message code="accreport.cogs"/></th>
                         <th width="8%"><spring:message code="goodsissueitem.uom"/></th>
@@ -123,6 +124,7 @@
                     </thead>
                     <tbody id="lineItem">
                     <c:forEach items='${goodsIssue_edit.stockControlls}' var='item' varStatus='status'>
+                        <c:if test='${goodsIssue_edit.stockControlls[status.index-1].stockable.warehouseTransactionItem.referenceItem.referenceId != item.stockable.warehouseTransactionItem.referenceItem.referenceId}'>
                         <tr>
                             <td>&nbsp;</td>
                             <td nowrap="nowrap"><c:out value='${item.stockable.product.code}'/></td>
@@ -131,6 +133,7 @@
                             <td nowrap="nowrap">
                                 <fmt:formatNumber value='${item.stockable.warehouseTransactionItem.quantity}' pattern='##0.####'/>
                             </td>
+                            <td nowrap="nowrap"><c:out value='${item.stockable.warehouseTransactionItem.tag.inventoryType}'/></td>
                             <td nowrap="nowrap"><fmt:formatNumber value='${item.quantity}' pattern='##0.##'/></td>
                             <td nowrap="nowrap"><fmt:formatNumber value='${item.price}' pattern=',##0'/></td>
                             <td nowrap="nowrap">
@@ -139,10 +142,19 @@
                             <td nowrap="nowrap"><c:out value='${item.stockable.warehouseTransactionItem.sourceGrid.name}'/></td>
                             <td nowrap="nowrap"><c:out value='${item.stockable.sourceContainer.name}'/></td>
                         </tr>
+                        </c:if>
+                        <c:if test='${goodsIssue_edit.stockControlls[status.index+1].stockable.warehouseTransactionItem.referenceItem.referenceId != item.stockable.warehouseTransactionItem.referenceItem.referenceId}'>
+                        <tr>
+                            <td colspan="5">&nbsp;</td>
+                            <td nowrap="nowrap"><c:out value='${item.stockable.warehouseTransactionItem.tag.inventoryType}'/></td>
+                            <td nowrap="nowrap"><fmt:formatNumber value='${item.quantity}' pattern='##0.##'/></td>
+                            <td colspan="4">&nbsp;</td>
+                        </tr>
+                        </c:if>
                     </c:forEach>
                     </tbody>
                     <tfoot>
-                    <tr class="end-table"><td colspan="10">&nbsp;</td></tr>
+                    <tr class="end-table"><td colspan="11">&nbsp;</td></tr>
                     </tfoot>
                 </table>
             </div>

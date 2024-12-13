@@ -29,6 +29,10 @@ public class SalesOrderItem extends SalesReferenceItem {
     @Fetch(FetchMode.SELECT)
     private SalesOrder salesOrder;
 
+	public Long getReferenceId() {
+		return getSalesOrder().getId();
+	}
+	
 	@Override
 	public String getAuditCode() {
 		return getId() + "," + getReferenceCode();

@@ -85,7 +85,7 @@ public class SalesOrderService extends Service {
 	}
 	
 	@AuditTrails(className = SalesOrder.class, actionType = AuditTrailsActionType.CREATE)
-	public FastMap<String, Object> add(SalesOrder salesOrder) throws Exception {
+	public void add(SalesOrder salesOrder) throws Exception {
 		SalesForm form = (SalesForm) salesOrder.getForm();
 
 		if (salesOrder.getShippingAddress() == null) {
@@ -100,7 +100,6 @@ public class SalesOrderService extends Service {
 		salesOrder.setCode(GeneratorHelper.instance().generate(TableType.SALES_ORDER, codeSequenceDao));
 		salesOrder.setMoney(moneySalesOrder);
 		salesOrder.setSalesType(SalesType.STANDARD);
-		salesOrder.setCreatedBy(getPerson());
 
 		// Credit Term harus didapatkan dari party relation ship
 		PartyRelationship relationship = partyRelationshipDao.load(salesOrder.getCustomer().getId(), salesOrder.getOrganization().getId(), PartyRelationshipType.CUSTOMER_RELATIONSHIP);
@@ -116,8 +115,6 @@ public class SalesOrderService extends Service {
 		approvableBridge.setUri("salesorderpreedit.htm");
 		salesOrder.setApprovable(approvableBridge);
 
-		genericDao.add(salesOrder);
-
 		// Add every Sales Order Item
 		for (Item item : form.getItems()) {
 			if (item.getProduct() != null) { // Untuk menghindari bug line item kosong
@@ -128,7 +125,6 @@ public class SalesOrderService extends Service {
 				money.setCurrency(genericDao.load(Currency.class, 1L));
 
 				salesOrderItem.setDate(salesOrder.getDate());
-				salesOrderItem.setReferenceId(salesOrder.getId());
 				salesOrderItem.setReferenceCode(salesOrder.getCode());
 				salesOrderItem.setProduct(item.getProduct());
 				salesOrderItem.setQuantity(item.getQuantity());
@@ -146,14 +142,11 @@ public class SalesOrderService extends Service {
 				salesOrderItem.setSalesOrder(salesOrder);
 				salesOrderItem.setTerm(salesOrder.getCreditTerm().getTerm());
 
-				genericDao.add(salesOrderItem);
+				salesOrder.getItems().add(salesOrderItem);
 			}
 		}
-
-		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("id", salesOrder.getId());
 		
-		return map;
+		genericDao.add(salesOrder);
 	}
 	
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)

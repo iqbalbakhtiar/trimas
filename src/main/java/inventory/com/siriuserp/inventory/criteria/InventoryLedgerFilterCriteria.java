@@ -32,7 +32,6 @@ public class InventoryLedgerFilterCriteria extends AbstractReportFilterCriteria
 	private Long supplierId;
 	private Long tax;
 	private Long colourId;
-	private Long fromProductId;
 
 	private String itemName;
 	private String customer;

@@ -37,9 +37,6 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 {
 	private static final long serialVersionUID = 4151290313001919093L;
 
-	@Column(name = "reference_id")
-	protected Long referenceId;
-	
 	@Column(name = "reference_code")
 	protected String referenceCode;
 
@@ -202,6 +199,11 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 	
 	@Override
 	public Long getMemoableId() 
+	{
+		return null;
+	}
+	
+	public Long getReferenceId()
 	{
 		return null;
 	}

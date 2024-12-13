@@ -1,28 +1,36 @@
 package com.siriuserp.procurement.controller;
 
-import com.siriuserp.procurement.criteria.DirectPurchaseOrderFilterCriteria;
-import com.siriuserp.procurement.dm.PurchaseOrder;
-import com.siriuserp.procurement.dm.PurchaseOrderItem;
-import com.siriuserp.procurement.query.DirectPurchaseOrderGridViewQuery;
-import com.siriuserp.inventory.dm.Product;
-import com.siriuserp.procurement.form.PurchaseForm;
-import com.siriuserp.procurement.service.DirectPurchaseOrderService;
-import com.siriuserp.sdk.annotation.DefaultRedirect;
-import com.siriuserp.sdk.base.ControllerBase;
-import com.siriuserp.sdk.dm.*;
-import com.siriuserp.sdk.springmvc.JSONResponse;
-import com.siriuserp.sdk.utility.FormHelper;
-import javolution.util.FastMap;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
+import com.siriuserp.inventory.dm.Product;
+import com.siriuserp.procurement.criteria.DirectPurchaseOrderFilterCriteria;
+import com.siriuserp.procurement.dm.PurchaseOrder;
+import com.siriuserp.procurement.dm.PurchaseOrderItem;
+import com.siriuserp.procurement.form.PurchaseForm;
+import com.siriuserp.procurement.query.DirectPurchaseOrderGridViewQuery;
+import com.siriuserp.procurement.service.DirectPurchaseOrderService;
+import com.siriuserp.sdk.annotation.DefaultRedirect;
+import com.siriuserp.sdk.base.ControllerBase;
+import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
+import com.siriuserp.sdk.dm.Facility;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.PostalAddress;
+import com.siriuserp.sdk.dm.Tax;
+import com.siriuserp.sdk.springmvc.JSONResponse;
+import com.siriuserp.sdk.utility.FormHelper;
 
 @Controller
 @SessionAttributes(value = { "dpo_form" }, types = PurchaseForm.class)
@@ -65,10 +73,10 @@ public class DirectPurchaseOrderController extends ControllerBase {
 		JSONResponse response = new JSONResponse();
 
 		try {
-			FastMap<String, Object> map = service.add(FormHelper.create(PurchaseOrder.class, form));
+			service.add(FormHelper.create(PurchaseOrder.class, form));
 			status.setComplete();
 
-			response.store("data", map);
+			response.store("id", form.getPurchaseOrder().getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.statusError();

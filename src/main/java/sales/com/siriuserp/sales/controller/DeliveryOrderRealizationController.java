@@ -1,5 +1,20 @@
 package com.siriuserp.sales.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.siriuserp.sales.criteria.DeliveryOrderRealizationFilterCriteria;
 import com.siriuserp.sales.dm.DeliveryOrder;
 import com.siriuserp.sales.dm.DeliveryOrderItem;
@@ -17,17 +32,6 @@ import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.PostalAddress;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.utility.FormHelper;
-import javolution.util.FastMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @SessionAttributes(value = { "dor_form" }, types = DeliveryOrderForm.class)
@@ -35,10 +39,10 @@ import javax.servlet.http.HttpServletRequest;
 public class DeliveryOrderRealizationController extends ControllerBase {
 
     @Autowired
-    DeliveryOrderRealizationService dorService;
+    private DeliveryOrderRealizationService dorService;
 
     @Autowired
-    DeliveryOrderService deliveryOrderService;
+    private  DeliveryOrderService deliveryOrderService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request)
@@ -81,10 +85,7 @@ public class DeliveryOrderRealizationController extends ControllerBase {
 			dorService.add(FormHelper.create(DeliveryOrderRealization.class, deliveryOrderForm));
 			status.setComplete();
 
-			FastMap<String, Object> map = new FastMap<String, Object>();
-			map.put("id", deliveryOrderForm.getDeliveryOrderRealization().getId());
-
-			response.store("data", map);
+			response.store("id", deliveryOrderForm.getDeliveryOrderRealization().getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.statusError();

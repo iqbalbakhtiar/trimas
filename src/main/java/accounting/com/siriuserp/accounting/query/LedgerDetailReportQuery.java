@@ -18,6 +18,7 @@ import java.util.Date;
 /**
  * This class provides query logic to generate ledger detail reports based on customer transactions.
  */
+@SuppressWarnings("unchecked")
 public class LedgerDetailReportQuery extends AbstractStandardReportQuery {
     /**
      * Executes the query and returns a detailed ledger report.
