@@ -240,6 +240,7 @@
 					</thead>
 					<tbody id="lineItem">
 					<c:forEach items="${billing_form.billing.items}" var="item" varStatus="idx">
+						<c:if test="${item.billingReferenceItem.quantity > 0}">
 						<tr>
 							<td></td>
 							<td>
@@ -285,6 +286,7 @@
 									   index="${idx.index}" next="totalAmount" disabled/>
 							</td>
 						</tr>
+						</c:if>
 					</c:forEach>
 					</tbody>
 					<tfoot>
