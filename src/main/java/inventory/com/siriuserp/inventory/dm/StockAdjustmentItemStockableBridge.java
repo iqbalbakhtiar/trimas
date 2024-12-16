@@ -3,6 +3,9 @@
  */
 package com.siriuserp.inventory.dm;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -17,6 +20,10 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
 import com.siriuserp.sdk.dm.Container;
+import com.siriuserp.sdk.dm.Grid;
+import com.siriuserp.sdk.dm.Lot;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.Tag;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +39,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "stock_adjustment_item_stockable_bridge")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class StockAdjustmentItemStockableBridge	extends Stockable
+public class StockAdjustmentItemStockableBridge	extends Stockable implements Inventoriable
 {
 	private static final long serialVersionUID = 9059472629400291128L;
 	
@@ -48,20 +55,70 @@ public class StockAdjustmentItemStockableBridge	extends Stockable
 	}
 
 	@Override
-	public Container getSourceContainer() {
-		return getStockAdjustmentItem().getContainer();
-	}
-
-	@Override
-	public ProductCategory getProductCategory() {
-		return getStockAdjustmentItem().getProduct().getProductCategory();
+	public Date getDate() {
+		return getStockAdjustmentItem().getStockAdjustment().getDate();
 	}
 
 	@Override
 	public Product getProduct() {
 		return getStockAdjustmentItem().getProduct();
 	}
+
+	@Override
+	public BigDecimal getQuantity() {
+		return getStockAdjustmentItem().getQuantity();
+	}
+
+	@Override
+	public Party getOrganization() {
+		return getStockAdjustmentItem().getStockAdjustment().getOrganization();
+	}
+
+	@Override
+	public Container getContainer() {
+		return getStockAdjustmentItem().getContainer();
+	}
+
+	@Override
+	public Grid getGrid() {
+		return getStockAdjustmentItem().getGrid();
+	}
 	
+	@Override
+	public ProductCategory getProductCategory() {
+		return getStockAdjustmentItem().getProduct().getProductCategory();
+	}
+	
+	@Override
+	public Container getSourceContainer() {
+		return getStockAdjustmentItem().getContainer();
+	}
+
+	@Override
+	public Grid getSourceGrid() {
+		return getStockAdjustmentItem().getGrid();
+	}
+
+	@Override
+	public Container getDestinationContainer() {
+		return getStockAdjustmentItem().getContainer();
+	}
+
+	@Override
+	public Grid getDestinationGrid() {
+		return getStockAdjustmentItem().getGrid();
+	}
+
+	@Override
+	public Lot getLot() {
+		return getStockAdjustmentItem().getLot();
+	}
+
+	@Override
+	public Tag getTag() {
+		return getStockAdjustmentItem().getTag();
+	}
+
 	@Override
 	public String getAuditCode() {
 		return this.id + "";

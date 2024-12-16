@@ -157,12 +157,7 @@ public class StockAdjustmentService
 				adjustmentItem.getMoney().setExchangeType(ExchangeType.SPOT);
 				adjustmentItem.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
 				adjustmentItem.getMoney().setAmount(item.getPrice());
-				
-				StockAdjustmentItemControllableBridge controllableBridge = new StockAdjustmentItemControllableBridge();
-				controllableBridge.setStockAdjustmentItem(adjustmentItem);
-				
-				adjustmentItem.setControllableBridge(controllableBridge);
-				
+
 				stockAdjustment.getItems().add(adjustmentItem);
 			}
 		
@@ -174,6 +169,11 @@ public class StockAdjustmentService
 			{
 				if (item.getTag() != null && item.getTag().getInventoryType() == null)
 					item.getTag().setInventoryType(InventoryType.STOCK);
+				
+				StockAdjustmentItemControllableBridge bridgeItem = new StockAdjustmentItemControllableBridge();
+				bridgeItem.setStockAdjustmentItem(item);
+				
+				item.setControllableBridge(bridgeItem);
 				
 				inventoryUtil.in(InventoryItem.class, item.getControllableBridge());
 				
@@ -191,28 +191,26 @@ public class StockAdjustmentService
 			{
 				if (item.getTag() != null && item.getTag().getInventoryType() == null)
 					item.getTag().setInventoryType(InventoryType.STOCK);
-				
-				inventoryUtil.out(InventoryItem.class, item.getControllableBridge());
-				
+
 				StockAdjustmentItemStockableBridge bridgeItem  = new StockAdjustmentItemStockableBridge();
 				bridgeItem.setStockAdjustmentItem(item);
 				
+				item.setStockableBridge(bridgeItem);
+				
+				inventoryUtil.out(InventoryItem.class, item.getStockableBridge());
+				
 				//ProductInOut get product
-				bridgeItem.getStockControls().addAll(stockControlService.get(ProductInOutTransaction.class, item.getControllableBridge(), bridgeItem, configuration.getTransactionType()));
+				bridgeItem.getStockControls().addAll(stockControlService.get(ProductInOutTransaction.class, item.getStockableBridge(), bridgeItem, configuration.getTransactionType()));
 				
 				if (bridgeItem.getStockControls().isEmpty())
 					throw new ServiceException("Stock control does not exist!");
 
-				balanceUtil.out(DWInventoryItemBalance.class, item.getControllableBridge(), DecimalHelper.positive(item.getQuantity()));
+				balanceUtil.out(DWInventoryItemBalance.class, item.getStockableBridge(), DecimalHelper.positive(item.getQuantity()));
 				
 				for (StockControl stock : bridgeItem.getStockControls())
-					balanceDetailUtil.out(DWInventoryItemBalanceDetail.class, item.getControllableBridge(), item, stockAdjustment, 
+					balanceDetailUtil.out(DWInventoryItemBalanceDetail.class, item.getStockableBridge(), item, stockAdjustment, 
 						stock.getQuantity(), stock.getPrice(), stockAdjustment.getReason());
-
-				item.setStockableBridge(bridgeItem);
 			}
-			
-			stockAdjustment.getItems().add(item);
 		}
 		
 		genericDao.merge(stockAdjustment);
