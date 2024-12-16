@@ -46,6 +46,9 @@ public class DeliveryOrderRealizationItem extends WarehouseReferenceItem impleme
     @Column(name = "accepted")
     private BigDecimal accepted = BigDecimal.ZERO;
 
+	@Column(name = "returned")
+	private BigDecimal returned = BigDecimal.ZERO;
+
     @Column(name = "shrinkage")
     private BigDecimal shrinkage = BigDecimal.ZERO;
 

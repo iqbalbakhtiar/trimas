@@ -131,6 +131,7 @@
 							<th width="5%" ><spring:message code="deliveryorder.soquantity"/></th>
 							<th width="5%" ><spring:message code="deliveryorder.doquantity"/></th>
 							<th width="5%" ><spring:message code="deliveryorder.accepted.qty"/></th>
+							<th width="5%" ><spring:message code="deliveryorder.returned.qty"/></th>
 							<th width="5%" ><spring:message code="deliveryorder.shrinkage.qty"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
 							<th width="60%" nowrap="nowrap"><spring:message code="deliveryorder.note"/></th>
@@ -152,12 +153,16 @@
 									   name="items[${idx.index}].doquantity" index="${idx.index}" next="doquantity" disabled/>
 							</td>
 							<td>
-								<input id="accepted[${idx.index}]" size="10" value="0.00" class="input-number"
+								<input id="accepted[${idx.index}]" size="10" value="${item.salesReferenceItem.delivered}" class="input-number" onchange="calculateQty(this)"
 									   name="items[${idx.index}].accepted" index="${idx.index}" next="accepted"/>
 							</td>
 							<td>
-								<input id="shrinkage[${idx.index}]" size="10" value="0.00" class="input-number"
-									   name="items[${idx.index}].shrinkage" index="${idx.index}" next="shrinkage"/>
+								<input id="returned[${idx.index}]" size="10" value="0.00" class="input-number" onchange="calculateQty(this)"
+									   name="items[${idx.index}].returned" index="${idx.index}" next="returned"/>
+							</td>
+							<td>
+								<input id="shrinkage[${idx.index}]" size="10" value="0.00" class="input-number input-disabled"
+									   name="items[${idx.index}].shrinkage" index="${idx.index}" next="shrinkage" readonly/>
 							</td>
 							<td>
 								<input id="uom[${idx.index}]" size="6" value="${item.salesReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled"
@@ -232,35 +237,19 @@ function validateForm() {
 	$('#lineItem tr').each(function (index) {
 		var $row = $(this);
 
-		// Ambil input product
-		var $productInput = $row.find('input[id^="product["]');
-		var productName = $productInput.val();
+		var productName = $row.find('input[id^="product["]').val();
 
-		// Ambil input accepted dan shrinkage
-		var $acceptedInput = $row.find('input[id^="accepted["]');
-		var $shrinkageInput = $row.find('input[id^="shrinkage["]');
-		var $doQuantityInput = $row.find('input[id^="doquantity["]');
+		// Ambil nilai dari input yang sesuai di baris yang sama
+		var doQty = parseFloat($row.find('input[id^="doquantity["]').val()) || 0;
+		var accepted = parseFloat($row.find('input[id^="accepted["]').val()) || 0;
+		var returned = parseFloat($row.find('input[id^="returned["]').val()) || 0;
 
-		// Ambil nilai dari input sebagai angka
-		var accepted = parseFloat($acceptedInput.val()) || 0;
-		var shrinkage = parseFloat($shrinkageInput.val()) || 0;
-		var doQuantity = parseFloat($doQuantityInput.val()) || 0;
+		// Hitung jumlah shrinkage
+		var shrinkQty = doQty - accepted - returned;
 
-		// Validasi accepted tidak boleh 0 dan tidak boleh lebih dari doquantity
-		if (accepted <= 0) {
-			alert('<strong>' + productName + '</strong> - <spring:message code="deliveryorder.accepted.qty"/> <spring:message code="notif.greater.zero"/>');
-			isValid = false;
-			return false;
-		}
-		if (accepted > doQuantity) {
-			alert('<strong>' + productName + '</strong> - <spring:message code="deliveryorder.accepted.qty"/> <spring:message code="notif.greater"/> <spring:message code="deliveryorder.doquantity"/>');
-			isValid = false;
-			return false;
-		}
-
-		// Validasi shrinkage tidak boleh lebih dari accepted dan tidak boleh null (boleh 0)
-		if (shrinkage > accepted) {
-			alert('<strong>' + productName + '</strong> - <spring:message code="deliveryorder.shrinkage.qty"/> <spring:message code="notif.greater"/> <spring:message code="deliveryorder.accepted.qty"/>');
+		// Validasi untuk memastikan tidak ada nilai negatif
+		if (shrinkQty < 0) {
+			alert('<strong>' + productName + '</strong> - <spring:message code="deliveryorder.shrinkage.qty"/> <spring:message code="notif.invalid"/>');
 			isValid = false;
 			return false;
 		}
@@ -305,4 +294,30 @@ function save() {
 		}
 	});
 }
+
+function calculateQty(element) {
+	// Temukan baris yang terkait dengan elemen yang berubah
+	var $row = $(element).closest('tr');
+
+	var productName = $row.find('input[id^="product["]').val();
+
+	// Ambil nilai dari input yang sesuai di baris yang sama
+	var doQty = parseFloat($row.find('input[id^="doquantity["]').val()) || 0;
+	var accepted = parseFloat($row.find('input[id^="accepted["]').val()) || 0;
+	var returned = parseFloat($row.find('input[id^="returned["]').val()) || 0;
+
+	// Hitung jumlah shrinkage
+	var shrinkQty = doQty - accepted - returned;
+
+	// Tampilkan hasil perhitungan pada input shrinkage
+	$row.find('input[id^="shrinkage["]').val(shrinkQty.toFixed(2));
+
+	// Validasi untuk memastikan tidak ada nilai negatif
+	if (shrinkQty < 0) {
+		alert('<strong>' + productName + '</strong> - <spring:message code="deliveryorder.shrinkage.qty"/> <spring:message code="notif.invalid"/>');
+		$row.find('input[id^="shrinkage["]').val('0.00');
+		$(element).val('0.00'); // Reset elemen yang memicu
+	}
+}
+
 </script>

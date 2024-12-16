@@ -123,8 +123,7 @@
                     </tr>
                     </thead>
                     <tbody id="lineItem">
-                    <c:forEach items='${goodsIssue_edit.stockControlls}' var='item' varStatus='status'>
-                        <c:if test='${goodsIssue_edit.stockControlls[status.index-1].stockable.warehouseTransactionItem.referenceItem.referenceId != item.stockable.warehouseTransactionItem.referenceItem.referenceId}'>
+                    <c:forEach items='${stockControlls}' var='item' varStatus='status'>
                         <tr>
                             <td>&nbsp;</td>
                             <td nowrap="nowrap"><c:out value='${item.stockable.product.code}'/></td>
@@ -142,15 +141,6 @@
                             <td nowrap="nowrap"><c:out value='${item.stockable.warehouseTransactionItem.sourceGrid.name}'/></td>
                             <td nowrap="nowrap"><c:out value='${item.stockable.sourceContainer.name}'/></td>
                         </tr>
-                        </c:if>
-                        <c:if test='${goodsIssue_edit.stockControlls[status.index+1].stockable.warehouseTransactionItem.referenceItem.referenceId != item.stockable.warehouseTransactionItem.referenceItem.referenceId}'>
-                        <tr>
-                            <td colspan="5">&nbsp;</td>
-                            <td nowrap="nowrap"><c:out value='${item.stockable.warehouseTransactionItem.tag.inventoryType}'/></td>
-                            <td nowrap="nowrap"><fmt:formatNumber value='${item.quantity}' pattern='##0.##'/></td>
-                            <td colspan="4">&nbsp;</td>
-                        </tr>
-                        </c:if>
                     </c:forEach>
                     </tbody>
                     <tfoot>

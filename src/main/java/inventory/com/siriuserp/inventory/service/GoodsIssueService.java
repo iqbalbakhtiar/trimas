@@ -25,8 +25,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
@@ -148,6 +150,13 @@ public class GoodsIssueService {
 		InventoryItemFilterCriteria criteria = (InventoryItemFilterCriteria) filterCriteria;
 		TransactionForm form = FormHelper.bind(TransactionForm.class, load(criteria.getId()));
 
+		// Sort By Product Code First And Then InventoryType (Stock > Shrink)
+		List<StockControl> sortedItems = form.getGoodsIssue().getStockControlls().stream()
+				.sorted(Comparator.comparing((StockControl item) -> item.getStockable().getProduct().getCode())
+						.thenComparing(item -> item.getStockable().getWarehouseTransactionItem().getTag().getInventoryType(),
+								Comparator.comparing(type -> type == InventoryType.STOCK ? 0 : 1)))
+				.collect(Collectors.toList());
+
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("goodsIssue_edit", form.getGoodsIssue());
 		map.put("ref", form.getGoodsIssue().getItems().iterator().next().getWarehouseTransactionItem().getReferenceItem());
@@ -157,6 +166,7 @@ public class GoodsIssueService {
 //		map.put("printable", (print != null && printableUtil.isPrintable("/page/goodsissuecompletionprint.htm", criteria.getId())));
 //		map.put("issues", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, GoodsIssueItemPrintViewQuery.class)));
 		map.put("transaction_form", form);
+		map.put("stockControlls", sortedItems);
 
 		return map;
 	}

@@ -1,6 +1,8 @@
 package com.siriuserp.sales.service;
 
 import java.math.BigDecimal;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,6 +117,7 @@ public class DeliveryOrderRealizationService extends Service {
             if (item.getAccepted().compareTo(BigDecimal.ZERO) > 0) {
             	DeliveryOrderRealizationItem dorItem = new DeliveryOrderRealizationItem();
             	dorItem.setAccepted(item.getAccepted());
+                dorItem.setReturned(item.getReturned());
             	dorItem.setDeliveryOrderRealization(dor);
                 dorItem.setDeliveryOrderItem(deliveryOrderItem);
                 dorItem.setProduct(salesReferenceItem.getProduct());
@@ -153,22 +156,44 @@ public class DeliveryOrderRealizationService extends Service {
         delivery.setStatus(SOStatus.DELIVERED);
         delivery.setUpdatedBy(getPerson());
         delivery.setUpdatedDate(DateHelper.now());
-        
+
         genericDao.update(delivery);
     }
 
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    public FastMap<String,Object> preedit(Long id) throws Exception {
+    public FastMap<String, Object> preedit(Long id) throws Exception {
         DeliveryOrderRealization deliveryOrderRealization = genericDao.load(DeliveryOrderRealization.class, id);
         DeliveryOrderForm form = FormHelper.bind(DeliveryOrderForm.class, deliveryOrderRealization);
         form.setDeliveryOrderRealization(deliveryOrderRealization);
-        
-        FastMap<String, Object> map = new FastMap<String, Object>();
+
+        // Gabungkan DOR item yang ada shrinkage
+        Map<Long, DeliveryOrderRealizationItem> aggregatedItems = deliveryOrderRealization.getItems().stream()
+                .collect(Collectors.toMap(
+                        item -> item.getDeliveryOrderItem().getId(),
+                        item -> {
+                            DeliveryOrderRealizationItem newItem = new DeliveryOrderRealizationItem();
+                            newItem.setDeliveryOrderItem(item.getDeliveryOrderItem());
+                            newItem.setAccepted(item.getAccepted());
+                            newItem.setReturned(item.getReturned());
+                            newItem.setShrinkage(item.getShrinkage());
+                            newItem.setNote(item.getNote());
+                            return newItem;
+                        },
+                        (existing, incoming) -> {
+                            existing.setAccepted(existing.getAccepted().add(incoming.getAccepted()));
+                            existing.setReturned(existing.getReturned().add(incoming.getReturned()));
+                            existing.setShrinkage(existing.getShrinkage().add(incoming.getShrinkage()));
+                            return existing;
+                        }
+                ));
+
+        FastMap<String, Object> map = new FastMap<>();
         map.put("dor_form", form);
-        map.put("dorItems", new FastList<DeliveryOrderRealizationItem>(deliveryOrderRealization.getItems()));
-        
+        map.put("dorItems", new FastList<>(aggregatedItems.values()));
+
         return map;
     }
+
 
     @AuditTrails(className = DeliveryOrderRealization.class, actionType = AuditTrailsActionType.UPDATE)
     public void edit(DeliveryOrderForm form) throws Exception {
