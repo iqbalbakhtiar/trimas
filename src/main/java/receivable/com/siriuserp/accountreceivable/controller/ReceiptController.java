@@ -1,7 +1,7 @@
 package com.siriuserp.accountreceivable.controller;
 
+import com.siriuserp.accounting.dm.BankAccount;
 import com.siriuserp.accountreceivable.criteria.ReceiptFilterCriteria;
-import com.siriuserp.accountreceivable.dm.BankAccount;
 import com.siriuserp.accountreceivable.dm.Receipt;
 import com.siriuserp.accountreceivable.form.AccountingForm;
 import com.siriuserp.accountreceivable.query.ReceiptViewQuery;

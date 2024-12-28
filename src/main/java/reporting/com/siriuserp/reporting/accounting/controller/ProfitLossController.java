@@ -1,0 +1,66 @@
+/**
+ * Dec 12, 2008 9:22:19 AM
+ * com.siriuserp.reporting.accounting.controller
+ * ProfitLossController.java
+ */
+package com.siriuserp.reporting.accounting.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.siriuserp.accounting.dm.AccountingPeriod;
+import com.siriuserp.reporting.accounting.criteria.ProfitLossFilterCriteria;
+import com.siriuserp.reporting.accounting.service.ProfitLossService;
+import com.siriuserp.sdk.annotation.DefaultRedirect;
+import com.siriuserp.sdk.base.ControllerBase;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.springmvc.XLSFile;
+
+/**
+ * @author Agung Dodi Perdana
+ * Sirius Indonesia, PT
+ * www.siriuserp.com
+ */
+
+@Controller
+@SessionAttributes(value = "filterCriteria", types = ProfitLossFilterCriteria.class)
+@DefaultRedirect(url = "profitlossreportpre.htm")
+public class ProfitLossController extends ControllerBase
+{
+	@Autowired
+	private ProfitLossService profitLossService;
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder, WebRequest request)
+	{
+		binder.registerCustomEditor(AccountingPeriod.class, modelEditor.forClass(AccountingPeriod.class));
+		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
+	}
+
+	@RequestMapping("/profitlossreportpre.htm")
+	public ModelAndView prepare()
+	{
+		return new ModelAndView("/report/accounting/profitLossReportAdd", profitLossService.pre());
+	}
+
+	@RequestMapping("/profitlossreportview.htm")
+	public ModelAndView view(@ModelAttribute("filterCriteria") ProfitLossFilterCriteria criteria, BindingResult result, SessionStatus status)
+	{
+		return new ModelAndView("/report/accounting/profitLossReportList", profitLossService.view(criteria));
+	}
+
+	@RequestMapping("/profitlossreportexcelview.xls")
+	public ModelAndView toexcel(@ModelAttribute("filterCriteria") ProfitLossFilterCriteria criteria, BindingResult result, SessionStatus status)
+	{
+		return new XLSFile("/report/accounting/profitLossReportPrint", profitLossService.view(criteria));
+	}
+}

@@ -15,8 +15,8 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.siriuserp.accounting.dm.BankAccount;
 import com.siriuserp.accountreceivable.criteria.BankAccountFilterCriteria;
-import com.siriuserp.accountreceivable.dm.BankAccount;
 import com.siriuserp.accountreceivable.form.AccountingForm;
 import com.siriuserp.accountreceivable.query.BankAccountViewQuery;
 import com.siriuserp.accountreceivable.service.BankAccountService;

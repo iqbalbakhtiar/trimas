@@ -1,5 +1,6 @@
 package com.siriuserp.accountreceivable.service;
 
+import com.siriuserp.accounting.dm.BankAccount;
 import com.siriuserp.accountreceivable.adapter.BillingAdapter;
 import com.siriuserp.accountreceivable.dm.*;
 import com.siriuserp.accountreceivable.form.AccountingForm;

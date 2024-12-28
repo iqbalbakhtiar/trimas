@@ -1,5 +1,6 @@
 package com.siriuserp.accountreceivable.dm;
 
+import com.siriuserp.accounting.dm.BankAccount;
 import com.siriuserp.sdk.dm.Model;
 import com.siriuserp.sdk.dm.PaymentMethodType;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.siriuserp.accountreceivable.form;
 
-import com.siriuserp.accountreceivable.dm.BankAccount;
+import com.siriuserp.accounting.dm.BankAccount;
 import com.siriuserp.accountreceivable.dm.Billing;
 import com.siriuserp.accountreceivable.dm.Receipt;
 import com.siriuserp.accountreceivable.dm.ReceiptInformation;

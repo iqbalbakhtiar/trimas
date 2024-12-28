@@ -1,9 +1,18 @@
-package com.siriuserp.accountreceivable.dm;
+package com.siriuserp.accounting.dm;
 
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -31,10 +40,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "bank_account")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class BankAccount extends Model implements JSONSupport {
-	
+public class BankAccount extends Model implements JSONSupport
+{
 	private static final long serialVersionUID = -2244765362354284887L;
-	
+
 	@Column(name = "code")
 	private String code;
 
@@ -43,26 +52,44 @@ public class BankAccount extends Model implements JSONSupport {
 
 	@Column(name = "account_name")
 	private String accountName;
-	
+
 	@Column(name = "account_no")
 	private String accountNo;
 
 	@Column(name = "bank_branch")
 	private String bankBranch;
-	
+
 	@Column(name = "note")
 	private String note;
-	
-	@Column(name="account_type")
-    @Enumerated(EnumType.STRING)
-    private AccountType accountType = AccountType.BANK;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="fk_party_holder")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private Party holder;
-	
+
+	@Column(name = "account_type")
+	@Enumerated(EnumType.STRING)
+	private AccountType accountType = AccountType.BANK;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_party_holder")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Party holder;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_chart_of_account")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private ChartOfAccount chartOfAccount;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_gl_account")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private GLAccount account;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_gl_account_bank_charges")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private GLAccount chargeAccount;
+
 	@OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
@@ -70,10 +97,11 @@ public class BankAccount extends Model implements JSONSupport {
 	private Set<PartyBankAccount> partys = new FastSet<PartyBankAccount>();
 
 	@Override
-	public String getAuditCode() {
+	public String getAuditCode()
+	{
 		return this.getId() + "," + this.getCode();
 	}
-	
+
 	@Override
 	public Map<String, Object> val()
 	{

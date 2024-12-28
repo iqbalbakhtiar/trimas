@@ -13,6 +13,7 @@ import org.apache.log4j.spi.RootLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.siriuserp.accounting.criteria.DefaultAccountingReportFilterCriteria;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.dm.DisplayConfiguration;
 import com.siriuserp.sdk.dm.FilterCriteriaType;
@@ -54,6 +55,11 @@ public class FilterCriteriaFactory
 	public final <T extends AbstractReportFilterCriteria> T createReport(HttpServletRequest request, Class<? extends AbstractReportFilterCriteria> filterCriteria) throws ServiceException
 	{
 		return (T) get(request, filterCriteria);
+	}
+
+	public final <T extends DefaultAccountingReportFilterCriteria> T createReportAccounting(HttpServletRequest request, Class<? extends DefaultAccountingReportFilterCriteria> filterCriteria) throws ServiceException
+	{
+		return (T) getAccounting(request, filterCriteria);
 	}
 
 	private GridViewFilterCriteria create(HttpServletRequest request, Class<? extends AbstractFilterCriteria> filterCriteria, FilterCriteriaType type) throws ServiceException
@@ -125,6 +131,25 @@ public class FilterCriteriaFactory
 				criteria.setOrganization(Long.valueOf(request.getParameter("organization")));
 				criteria.getOrganizations().add(Long.valueOf(request.getParameter("organization")));
 			}
+		} catch (Exception e)
+		{
+			logger.error(e);
+			throw new FilterCreationException(this.getClass().getSimpleName(), e);
+		}
+
+		return criteria;
+	}
+
+	private DefaultAccountingReportFilterCriteria getAccounting(HttpServletRequest request, Class<? extends DefaultAccountingReportFilterCriteria> filterCriteria) throws ServiceException
+	{
+		DefaultAccountingReportFilterCriteria criteria = null;
+
+		try
+		{
+			criteria = filterCriteria.getDeclaredConstructor().newInstance();
+
+			FilterCriteriaUtil.init(request, criteria);
+
 		} catch (Exception e)
 		{
 			logger.error(e);

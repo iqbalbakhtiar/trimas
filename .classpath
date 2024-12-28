@@ -18,6 +18,8 @@
 	<classpathentry kind="src" path="src/main/java/receivable"/>
 	<classpathentry kind="src" path="src/main/java/sales"/>
 	<classpathentry kind="src" path="src/main/java/procurement"/>
+	<classpathentry kind="src" path="src/main/java/accounting"/>
+	<classpathentry kind="src" path="src/main/java/reporting"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
