@@ -1,12 +1,12 @@
 package com.siriuserp.accountpayable.controller;
 
-import com.siriuserp.accounting.dm.BankAccount;
-import com.siriuserp.accounting.dm.WriteOffType;
 import com.siriuserp.accountpayable.criteria.PaymentFilterCriteria;
 import com.siriuserp.accountpayable.dm.Payment;
 import com.siriuserp.accountpayable.form.PayablesForm;
 import com.siriuserp.accountpayable.query.PaymentGridViewQuery;
 import com.siriuserp.accountpayable.service.PaymentService;
+import com.siriuserp.accountreceivable.dm.BankAccount;
+import com.siriuserp.accountreceivable.dm.WriteOffType;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.*;

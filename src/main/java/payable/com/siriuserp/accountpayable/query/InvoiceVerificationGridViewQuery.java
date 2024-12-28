@@ -1,7 +1,7 @@
 package com.siriuserp.accountpayable.query;
 
-import com.siriuserp.accounting.dm.FinancialStatus;
 import com.siriuserp.accountpayable.criteria.InvoiceVerificationFilterCriteria;
+import com.siriuserp.accountreceivable.dm.FinancialStatus;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
 import com.siriuserp.sdk.utility.SiriusValidator;

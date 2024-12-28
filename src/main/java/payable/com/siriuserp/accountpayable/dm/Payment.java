@@ -1,6 +1,6 @@
 package com.siriuserp.accountpayable.dm;
 
-import com.siriuserp.accounting.dm.BankAccount;
+import com.siriuserp.accountreceivable.dm.BankAccount;
 import com.siriuserp.sdk.dm.*;
 import javolution.util.FastSet;
 import lombok.Getter;

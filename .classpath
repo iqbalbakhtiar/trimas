@@ -15,7 +15,7 @@
 	<classpathentry kind="src" path="src/main/java/administration"/>
 	<classpathentry kind="src" path="src/main/java/config"/>
 	<classpathentry kind="src" path="src/main/java/inventory"/>
-	<classpathentry kind="src" path="src/main/java/accounting"/>
+	<classpathentry kind="src" path="src/main/java/receivable"/>
 	<classpathentry kind="src" path="src/main/java/sales"/>
 	<classpathentry kind="src" path="src/main/java/procurement"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">

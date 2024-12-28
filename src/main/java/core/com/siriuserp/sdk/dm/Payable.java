@@ -26,8 +26,8 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
-import com.siriuserp.accounting.dm.FinancialStatus;
 import com.siriuserp.accountpayable.dm.PaymentApplication;
+import com.siriuserp.accountreceivable.dm.FinancialStatus;
 
 import javolution.util.FastSet;
 import lombok.Getter;

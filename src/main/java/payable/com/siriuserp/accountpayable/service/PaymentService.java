@@ -1,12 +1,12 @@
 package com.siriuserp.accountpayable.service;
 
-import com.siriuserp.accounting.dm.FinancialStatus;
-import com.siriuserp.accounting.dm.WriteOffType;
 import com.siriuserp.accountpayable.adapter.PaymentUIAdapter;
 import com.siriuserp.accountpayable.dm.Payment;
 import com.siriuserp.accountpayable.dm.PaymentApplication;
 import com.siriuserp.accountpayable.dm.PaymentInformation;
 import com.siriuserp.accountpayable.form.PayablesForm;
+import com.siriuserp.accountreceivable.dm.FinancialStatus;
+import com.siriuserp.accountreceivable.dm.WriteOffType;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.InjectParty;

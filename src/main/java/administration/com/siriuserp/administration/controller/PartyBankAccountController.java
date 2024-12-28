@@ -13,7 +13,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.siriuserp.accounting.dm.BankAccount;
+import com.siriuserp.accountreceivable.dm.BankAccount;
 import com.siriuserp.administration.service.PartyBankAccountService;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.Party;

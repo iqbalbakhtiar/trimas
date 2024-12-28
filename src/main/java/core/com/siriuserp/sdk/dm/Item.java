@@ -6,13 +6,13 @@ package com.siriuserp.sdk.dm;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.siriuserp.accounting.dm.BillingReferenceItem;
-import com.siriuserp.accounting.dm.WriteOffType;
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.sales.dm.SalesReferenceItem;
 import com.siriuserp.sales.dm.SalesType;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.siriuserp.accountreceivable.dm.BillingReferenceItem;
+import com.siriuserp.accountreceivable.dm.WriteOffType;
 import com.siriuserp.administration.dm.Geographic;
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.dm.UnitOfMeasure;
