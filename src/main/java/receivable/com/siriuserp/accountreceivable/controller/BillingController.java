@@ -1,7 +1,24 @@
 package com.siriuserp.accountreceivable.controller;
 
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.siriuserp.accounting.form.AccountingForm;
 import com.siriuserp.accountreceivable.criteria.BillingFilterCriteria;
-import com.siriuserp.accountreceivable.form.AccountingForm;
 import com.siriuserp.accountreceivable.query.Billing4PaymentPopupViewQuery;
 import com.siriuserp.accountreceivable.service.BillingService;
 import com.siriuserp.sales.query.BillingViewQuery;
@@ -10,17 +27,6 @@ import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.springmvc.JSONResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 
 @Controller
 @SessionAttributes(value = "billing_form", types = AccountingForm.class)

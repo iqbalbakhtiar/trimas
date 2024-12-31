@@ -58,6 +58,10 @@
 								<td align="right"><spring:message code="bankaccount.bankname"/> :</td>
 								<td><form:input id="bankName" path="bankName" maxlength="50" size='50'/></td>
 							</tr>
+                            <tr>
+								<td align="right"><spring:message code="bankaccount.branch"/> :</td>
+								<td><form:input id="branch" path="bankBranch" maxlength="50" size='50'/></td>
+							</tr>
 							<tr>
 								<td align="right"><spring:message code="bankaccount.accountname"/> :</td>
 								<td><form:input id="accountName" path="accountName" maxlength="50" size='50'/></td>
@@ -76,6 +80,30 @@
                                 </td>
 							</tr>
                             <tr>
+                                <td align="right"><spring:message code="bankaccount.schema"/> :</td>
+                                <td>
+                                    <form:select id="coa" path='chartOfAccount' cssClass="combobox-ext" disabled='true'>
+                                    	<form:option value='${bankAccount_form.chartOfAccount.id}' label='${bankAccount_form.chartOfAccount.code} ${bankAccount_form.chartOfAccount.name}'/>
+                                    </form:select>
+                                </td>
+                            </tr>
+                            <tr>
+                            	<td align="right"><spring:message code="bankaccount.glaccount"/> :</td>
+                                <td>
+									<form:select id="account" path="account" cssClass="combobox-ext">
+									</form:select>
+                                    <a class="item-popup" onclick="javascript:popup();"  title="GL Account" />
+						  		</td>
+                            </tr>
+                            <tr>
+                            	<td align="right"><spring:message code="bankaccount.chargesaccount"/> :</td>
+                                <td>
+									<form:select id="chargeAccount" path="chargeAccount" cssClass="combobox-ext">
+									</form:select>
+                                    <a class="item-popup" onclick="javascript:popupcharges();"  title="GL Account" />
+						  		</td>
+                            </tr>
+                            <tr>
 								<td align="right"><spring:message code="bankaccount.holder"/> :</td>
                                 <td>
                                 	<form:select id="org" path="holder" cssClass="combobox-ext">
@@ -83,7 +111,7 @@
 										<form:option value='${bankAccount_form.organization.id}' label='${bankAccount_form.organization.fullName}' />
 									</c:if>
 									</form:select>
-									<a class="item-popup" onclick="openHolder()"  title='<spring:message code="organization.structure"/>' />
+									<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupcompanystructurerolebasedview.htm?target=org'/>');"  title='<spring:message code="organization.structure"/>' />
                                 </td>
 							</tr>
                             <tr>
@@ -105,82 +133,90 @@
 </body>
 </html>
 <script type="text/javascript">
-$(function()
-{
-	var $dialog = $('<div></div>').dialog({autoOpen: false,title: '<spring:message code="bankaccount"/>',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
-	$('.item-button-save').click(function(e)
+	$(function()
 	{
-		if(validateForm()) {
-			save();	
+		var $dialog = $('<div></div>').dialog({autoOpen: false,title: '<spring:message code="bankaccount"/>',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
+		$('.item-button-save').click(function(e)
+		{
+			if(!$('#code').val())
+			{
+				alert('<spring:message code="bankaccount.code"/> <spring:message code="notif.empty"/> !!!');
+				return;
+			}
+
+			if(!$('#bankName').val())
+			{
+				alert('<spring:message code="bankaccount.bankname"/> <spring:message code="notif.empty"/> !!!');
+				return;
+			}
+
+			if(!$('#branch').val())
+			{
+				alert('<spring:message code="bankaccount.branch"/> <spring:message code="notif.empty"/> !!!');
+				return;
+			}
+
+			if(!$('#accountName').val())
+			{
+				alert('<spring:message code="bankaccount.accountname"/> <spring:message code="notif.empty"/> !!!');
+				return;
+			}
+
+			if(!$('#accountNo').val())
+			{
+				alert('<spring:message code="bankaccount.accountno"/> <spring:message code="notif.empty"/> !!!');
+				return;
+			}
+
+			if(!$('#org').val())
+			{
+				alert('<spring:message code="notif.select1"/> <spring:message code="bankaccount.holder"/> <spring:message code="notif.select2"/> !!!');
+				return;
+			}
+
+			$.ajax({
+				url:"<c:url value='/page/bankaccountadd.htm'/>",
+				data:$('#addForm').serialize(),
+				type : 'POST',
+				dataType : 'json',
+				beforeSend : beforeSend($dialog, '<spring:message code="notif.saving"/>'),
+				success : function(json) {
+					if(json)
+					{
+						if(json.status == 'OK')
+						{
+							$dialog.dialog('close');
+							window.location="<c:url value='/page/bankaccountview.htm'/>";
+						}
+						else
+								afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
+					}
+				}
+			});
+		});
+	});
+	
+	function popup()
+	{
+		var coa = document.getElementById('coa');
+		if(coa.value == '')
+		{
+			alert('<spring:message code="notif.select1"/> <spring:message code="bankaccount.schema"/> <spring:message code="notif.select2"/> !!!');
+			return;
 		}
 		
-	});
-
-});
-
-function validateForm() {
-	if(!$('#code').val())
-	{
-		alert('<spring:message code="bankaccount.code"/> <spring:message code="notif.empty"/> !!!');
-		return false;
-	}
-
-	if(!$('#bankName').val())
-	{
-		alert('<spring:message code="bankaccount.bankname"/> <spring:message code="notif.empty"/> !!!');
-		return false;
-	}
-
-	if(!$('#accountName').val())
-	{
-		alert('<spring:message code="bankaccount.accountname"/> <spring:message code="notif.empty"/> !!!');
-		return false;
-	}
-
-	if(!$('#accountNo').val())
-	{
-		alert('<spring:message code="bankaccount.accountno"/> <spring:message code="notif.empty"/> !!!');
-		return false;
-	}
-
-	if(!$('#org').val())
-	{
-		alert('<spring:message code="notif.select1"/> <spring:message code="bankaccount.holder"/> <spring:message code="notif.select2"/> !!!');
-		return false;
+		openpopup("<c:url value='/page/popupglaccountview.htm?target=account&coa='/>"+coa.value);
 	}
 	
-	return true;
-}
-
-function save() {
-	$.ajax({
-		url:"<c:url value='/page/bankaccountadd.htm'/>",
-		data:$('#addForm').serialize(),
-		type : 'POST',
-		dataType : 'json',
-		beforeSend : beforeSend($dialog, '<spring:message code="notif.saving"/>'),
-		success : function(json) {
-			if(json)
-			{
-				if(json.status == 'OK')
-				{
-					$dialog.dialog('close');
-					window.location="<c:url value='/page/bankaccountview.htm'/>";
-				}
-				else
-						afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
-			}
+	function popupcharges()
+	{
+		var coa = document.getElementById('coa');
+		if(coa.value == '')
+		{
+			alert('<spring:message code="notif.select1"/> <spring:message code="bankaccount.schema"/> <spring:message code="notif.select2"/> !!!');
+			return;
 		}
-	});
-}
-
-function openHolder() {
-	const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
-	const params = {
-		target: 'partyGroup',
-		base: false
-	};
-
-	openpopup(buildUrl(baseUrl, params));
-}
+		
+		openpopup("<c:url value='/page/popupglaccountview.htm?target=chargeAccount&coa='/>"+coa.value);
+	}
 </script>

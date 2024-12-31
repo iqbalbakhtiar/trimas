@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.siriuserp.accounting.form.AccountingForm;
 import com.siriuserp.accountreceivable.adapter.ReceiptAdapter;
 import com.siriuserp.accountreceivable.dm.Billing;
 import com.siriuserp.accountreceivable.dm.BillingItem;
 import com.siriuserp.accountreceivable.dm.FinancialStatus;
 import com.siriuserp.accountreceivable.dm.Receipt;
 import com.siriuserp.accountreceivable.dm.ReceiptApplication;
-import com.siriuserp.accountreceivable.form.AccountingForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.InjectParty;

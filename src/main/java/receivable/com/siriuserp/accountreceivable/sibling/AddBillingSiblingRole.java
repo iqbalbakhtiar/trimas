@@ -5,11 +5,11 @@ import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.siriuserp.accounting.form.AccountingForm;
 import com.siriuserp.accountreceivable.dm.Billing;
 import com.siriuserp.accountreceivable.dm.BillingReferenceItem;
 import com.siriuserp.accountreceivable.dm.BillingReferenceType;
 import com.siriuserp.accountreceivable.dm.BillingType;
-import com.siriuserp.accountreceivable.form.AccountingForm;
 import com.siriuserp.accountreceivable.service.BillingService;
 import com.siriuserp.inventory.dm.Issueable;
 import com.siriuserp.sales.dm.DeliveryOrderRealization;

@@ -5,6 +5,9 @@
  */
 package com.siriuserp.accounting.form;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 import com.siriuserp.accounting.dm.BankAccount;
 import com.siriuserp.accounting.dm.ChartOfAccount;
 import com.siriuserp.accounting.dm.GLAccount;
@@ -16,9 +19,11 @@ import com.siriuserp.accountreceivable.dm.Receipt;
 import com.siriuserp.accountreceivable.dm.ReceiptInformation;
 import com.siriuserp.sdk.dm.AccountType;
 import com.siriuserp.sdk.dm.Form;
+import com.siriuserp.sdk.dm.Money;
 import com.siriuserp.sdk.dm.Month;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.PaymentMethodType;
+import com.siriuserp.sdk.dm.PostalAddress;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -40,10 +45,25 @@ public class AccountingForm extends Form
 	private String accountName;
 	private String bankBranch;
 	private String accountNo;
+	private String note;
+	private String invoiceTaxHeader;
+	private String invoiceTaxNo;
+
+	private BigDecimal unpaid;
+	private BigDecimal clearing;
+	private BigDecimal rounding;
 
 	private int year;
+	private int term;
+
+	private Date dueDate;
+	private Date paidDate;
 
 	private Party holder;
+	private Money money;
+	private PostalAddress shippingAddress;
+	private PostalAddress billingAddress;
+	private PostalAddress taxAddress;
 
 	//Accounting
 	private ChartOfAccount chartOfAccount;

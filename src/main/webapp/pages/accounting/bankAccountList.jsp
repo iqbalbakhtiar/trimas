@@ -59,13 +59,12 @@
                         <table class="table-list" cellspacing="0" cellpadding="0" width="100%">
                         <tr>
                             <th width="1%"><div style="width:45px;"></div></th>
-                          	<th width="8%"><spring:message code="bankaccount.code"/></th>
-                          	<th width="8%"><spring:message code="bankaccount.bankname"/></th>
-                          	<th width="8%"><spring:message code="bankaccount.accountname"/></th>
-                          	<th width="8%"><spring:message code="bankaccount.accountno"/></th>
-                          	<th width="8%"><spring:message code="bankaccount.holder"/></th>
-                          	<th width="8%"><spring:message code="bankaccount.type"/></th>
-                          	<th width="8%"><spring:message code="sirius.note"/></th>
+                          	<th width="10%"><spring:message code="bankaccount.code"/></th>
+                          	<th width="12%"><spring:message code="bankaccount.bankname"/></th>
+                          	<th width="10%"><spring:message code="bankaccount.branch"/></th>
+                          	<th width="12%"><spring:message code="bankaccount.accountname"/></th>
+                            <th width="12%"><spring:message code="bankaccount.accountno"/></th>
+                          	<th width="45%"><spring:message code="bankaccount.holder"/></th>
                         </tr>
                         <c:forEach items="${accounts}" var="account">
                         <tr>
@@ -76,15 +75,14 @@
                                 </c:if>
                             </td>
                             <td nowrap="nowrap"><c:out value="${account.code}" /></td> 
-                            <td nowrap="nowrap"><c:out value="${account.bankName}" /></td>
+                            <td nowrap="nowrap"><c:out value="${account.bankName}" /></td>  
+                            <td nowrap="nowrap"><c:out value="${account.bankBranch}" /></td>       
                             <td nowrap="nowrap"><c:out value="${account.accountName}" /></td>
-                            <td nowrap="nowrap"><c:out value="${account.accountNo}" /></td>      
+                            <td nowrap="nowrap"><c:out value="${account.accountNo}" /></td>
                             <td nowrap="nowrap"><c:out value="${account.holder.fullName}" /></td>
-                            <td nowrap="nowrap"><c:out value="${account.accountType}" /></td>
-							<td nowrap="nowrap"><c:out value="${account.note}" /></td>
                         </tr>
                         </c:forEach>
-                        <tr class="end-table"><td colspan="8">&nbsp;</td></tr>
+                        <tr class="end-table"><td colspan="7">&nbsp;</td></tr>
                         </table>
                         <table border="0" cellpadding="0" cellspacing="0" width="99%" align="center">
 						<tr><td width="70%" align="right" height="20"><%@ include file="/common/navigate.jsp"%></td></tr>
