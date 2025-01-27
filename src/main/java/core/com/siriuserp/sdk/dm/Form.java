@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.siriuserp.inventory.dm.Product;
+
 import javolution.util.FastList;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,6 +64,7 @@ public class Form implements SiriusForm
 	private Party updatedBy;
 
 	private PostalAddress postalAddress;
+	private Product product;
 
 	private Tax tax;
 	private Tax extTax1;
@@ -69,6 +72,7 @@ public class Form implements SiriusForm
 
 	private Currency currency;
 	private Exchange exchange;
+
 	private ExchangeType exchangeType;
 	private TableType tableType;
 	private ApprovalDecisionStatus approvalDecisionStatus;

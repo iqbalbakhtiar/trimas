@@ -21,44 +21,9 @@
 		</td>
 	</tr>
 	<tr>
-		<td align="right"><spring:message code="product.category"/> :</td>
-		<td>
-			<form:select id="productCategory" path="productCategory" cssClass="combobox-ext">
-			    <c:if test='${not empty product_form.productCategory}'>
-					<form:option value='${product_form.productCategory.id}' label='${product_form.productCategory.name}' />
-			    </c:if>
-			</form:select>
-			<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupproductcategoryview.htm?target=productCategory'/>');" title="Product Category" />
-		</td>
-	</tr>
-	<tr>
-		<td align="right"><spring:message code="product.origin"/> :</td>
-		<td nowrap="nowrap">
-			<form:input id='origin' path="origin" size="43"/>
-		</td>
-	</tr>
-	<tr>
-		<td align="right"><spring:message code="product.brand"/> :</td>
-		<td nowrap="nowrap">
-			<form:input id='brand' path="brand" size="43"/>
-		</td>
-	</tr>
-	<tr>
-		<td align="right"><spring:message code="product.grade"/> :</td>
-		<td nowrap="nowrap">
-			<form:input id='grade' path="grade" size="43"/>
-		</td>
-	</tr>
-	<tr>
-		<td align="right"><spring:message code="product.part"/> :</td>
-		<td nowrap="nowrap">
-			<form:input id='part' path="part" size="43"/>
-		</td>
-	</tr>
-	<tr>
 		<td align="right"><spring:message code="product.type"/> :</td>
 		<td>
-			<form:select path='type' id="type">
+			<form:select path='productType' id="type">
 			    <form:options items='${types}'/>
 			</form:select>
 		</td>
@@ -72,11 +37,27 @@
 		</td>
 	</tr>
 	<tr>
+		<td align="right"><spring:message code="product.category"/> :</td>
+		<td>
+			<form:select id="productCategory" path="productCategory" cssClass="combobox-ext">
+			    <c:if test='${not empty product_form.productCategory}'>
+					<form:option value='${product_form.productCategory.id}' label='${product_form.productCategory.name}' />
+			    </c:if>
+			</form:select>
+			<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupproductcategoryview.htm?target=productCategory'/>');" title="Product Category" />
+		</td>
+	</tr>
+	<tr>
 		<td align="right"><spring:message code="sirius.status"/> :</td>
 		<td>
-			<form:radiobutton path="status" value="true" label="Active"/>
-			<form:radiobutton path="status" value="false" label="Inactive"/>	
+			<form:radiobutton path="enabled" value="true"/><spring:message code="sirius.active"/>
+			<form:radiobutton path="enabled" value="false"/><spring:message code="sirius.inactive"/>	
 		</td>
+	</tr>
+	<tr>
+		<td align="right"><spring:message code="product.picture"/> :</td>
+		<td><input type="file" name="file"/></td>
+		<td>&nbsp;</td>
 	</tr>
 	<tr>
 		<td align="right"><spring:message code="sirius.note"/> :</td>
@@ -95,7 +76,8 @@ $(function(){
 	var $dialog = $('<div></div>').dialog({autoOpen: false, title: '${title}',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
 
 	$('.item-button-save').click(function(){
-		save();
+		if(validation())
+			save();
 	});
 
 	function save() {
@@ -133,4 +115,21 @@ $(function(){
 		xhr.send(new FormData($('#addForm')[0]));
 	}
 });
+
+function validation()
+{
+	if(!$('#name').val())
+	{
+		alert('<spring:message code="product.name"/> <spring:message code="notif.empty"/> !!!');
+		return false;
+	}
+	
+	if(!$('#productCategory').val())
+	{
+		alert('<spring:message code="notif.select1"/> <spring:message code="productcategory"/> <spring:message code="notif.select2"/> !!!');
+		return false;
+	}
+
+	return true;
+}
 </script>

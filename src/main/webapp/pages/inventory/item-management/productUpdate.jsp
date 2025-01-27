@@ -21,44 +21,20 @@
 		</td>
 	</tr>
 	<tr>
-		<td align="right"><spring:message code="product.category"/> :</td>
+		<td align="right"><spring:message code="product.type"/> :</td>
 		<td>
-			<form:select id="productCategory" path="productCategory" cssClass="combobox-ext input-disabled" disabled='true'>
-			    <c:if test='${not empty product_form.productCategory}'>
-					<form:option value='${product_form.productCategory.id}' label='${product_form.productCategory.name}'/>
-			    </c:if>
+			<form:select path='productType' id="type" cssClass="input-disabled" disabled='true'>
+			    <form:options value='${product_edit.productType}' label="${product_edit.productType}"/>
 			</form:select>
 		</td>
 	</tr>
 	<tr>
-		<td align="right"><spring:message code="product.origin"/> :</td>
-		<td nowrap="nowrap">
-			<form:input id='origin' path="origin" size="43" disabled='true' class='input-disabled'/>
-		</td>
-	</tr>
-	<tr>
-		<td align="right"><spring:message code="product.brand"/> :</td>
-		<td nowrap="nowrap">
-			<form:input id='brand' path="brand" size="43" disabled='true' class='input-disabled'/>
-		</td>
-	</tr>
-	<tr>
-		<td align="right"><spring:message code="product.grade"/> :</td>
-		<td nowrap="nowrap">
-			<form:input id='grade' path="grade" size="43" disabled='true' class='input-disabled'/>
-		</td>
-	</tr>
-	<tr>
-		<td align="right"><spring:message code="product.part"/> :</td>
-		<td nowrap="nowrap">
-			<form:input id='part' path="part" size="43" disabled='true' class='input-disabled'/>
-		</td>
-	</tr>
-	<tr>
-		<td align="right"><spring:message code="product.type"/> :</td>
+		<td align="right"><spring:message code="product.category"/> :</td>
 		<td>
-			<form:select path='type' id="type" cssClass="input-disabled" disabled='true'>
-			    <form:options value='${product_form.type}' label="${product_form.type}"/>
+			<form:select id="productCategory" path="productCategory" cssClass="combobox-ext input-disabled" disabled='true'>
+			    <c:if test='${not empty product_edit.productCategory}'>
+					<form:option value='${product_edit.productCategory.id}' label='${product_edit.productCategory.name}'/>
+			    </c:if>
 			</form:select>
 		</td>
 	</tr>
@@ -66,8 +42,8 @@
 		<td align="right"><spring:message code="uom"/> :</td>
 		<td>
 			<form:select id="unitOfMeasure" path="unitOfMeasure" cssClass="combobox input-disabled" disabled='true'>
-				<c:if test='${not empty product_form.unitOfMeasure}'>
-					<form:option value='${product_form.unitOfMeasure.id}' label='${product_form.unitOfMeasure.measureId}'/>
+				<c:if test='${not empty product_edit.unitOfMeasure}'>
+					<form:option value='${product_edit.unitOfMeasure.id}' label='${product_edit.unitOfMeasure.measureId}'/>
 			    </c:if>
 			</form:select>
 		</td>
@@ -75,8 +51,17 @@
 	<tr>
 		<td align="right"><spring:message code="sirius.status"/> :</td>
 		<td>
-			<form:radiobutton path="status" value="true" label="Active"/>
-			<form:radiobutton path="status" value="false" label="Inactive"/>	
+			<form:radiobutton path="enabled" value="true"/><spring:message code="sirius.active"/>
+			<form:radiobutton path="enabled" value="false"/><spring:message code="sirius.inactive"/>	
+		</td>
+	</tr>
+	<tr>
+		<td align="right"><spring:message code="product.picture"/> :</td>
+		<td>
+			<input name="file" type="file" src="${product_edit.picture}"/>
+			<c:if test='${product_edit.picture != null}'>
+			&nbsp;&nbsp;&nbsp;<a href="javascript:openpopup('<c:url value='/page/productshowimage.htm?id=${product_edit.id}'/>');"><spring:message code="sirius.show"/></a>
+			</c:if>
 		</td>
 	</tr>
 	<tr>
@@ -86,7 +71,7 @@
 	</table>
 </sesform:form>
 </div>
-<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${product_form.createdBy.fullName}'/> (<fmt:formatDate value='${product_form.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${product_form.updatedBy.fullName}'/> (<fmt:formatDate value='${product_form.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
+<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${product_edit.createdBy.fullName}'/> (<fmt:formatDate value='${product_edit.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${product_edit.updatedBy.fullName}'/> (<fmt:formatDate value='${product_edit.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
 <%@ include file="/common/sirius-general-bottom.jsp"%>
 
 <script type="text/javascript">

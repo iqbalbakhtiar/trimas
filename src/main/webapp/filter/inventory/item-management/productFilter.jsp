@@ -1,4 +1,4 @@
-<div dojoType="FloatingPane" id="filter" title="Filter" constrainToContainer="true" style="width: 45%; height: 400px; left: 350px; display:none;" toggle="explode" bg>
+<div dojoType="FloatingPane" id="filter" title="Filter" constrainToContainer="true" style="width: 35%; height: 280px; left: 350px; display:none;" toggle="explode" bg>
 	<form id="filterForm" name="filterForm" method="post">
 	<table width="100%" cellspacing="0" cellpadding="1" align="right">
 	<tr>
@@ -44,26 +44,6 @@
 				<option value="false" ${not empty filterCriteria.status and !filterCriteria.status ? "selected" : ""}><spring:message code="sirius.inactive"/></option>
 			</select>
         </td>
-	</tr>
-	<tr>
-		<td align="right"><spring:message code="product.origin"/>&nbsp;</td>
-		<td align="center">:</td>
-		<td ><input type="text" id="origin" name="origin" class="inputbox" value="${filterCriteria.origin}"/></td>
-	</tr>
-	<tr>
-		<td align="right"><spring:message code="product.brand"/>&nbsp;</td>
-		<td align="center">:</td>
-		<td ><input type="text" id="brand" name="brand" class="inputbox" value="${filterCriteria.brand}"/></td>
-	</tr>
-	<tr>
-		<td align="right"><spring:message code="product.grade"/>&nbsp;</td>
-		<td align="center">:</td>
-		<td ><input type="text" id="grade" name="grade" class="inputbox" value="${filterCriteria.grade}"/></td>
-	</tr>
-	<tr>
-		<td align="right"><spring:message code="product.part"/>&nbsp;</td>
-		<td align="center">:</td>
-		<td ><input type="text" id="part" name="part" class="inputbox" value="${filterCriteria.part}"/></td>
 	</tr>
 	<tr><td colspan="3">&nbsp;</td></tr>
 	<tr>

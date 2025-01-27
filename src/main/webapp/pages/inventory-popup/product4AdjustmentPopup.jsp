@@ -62,7 +62,7 @@
 						<c:forEach items="${products}" var="product">
 						<tr>
 					  		<td class="tools">
-					  			<a class="item-button-add-row" href="javascript:setclient('${product.id}','${product.code}','${product.name}','${com.qtyToBase}','${com.onHand}','${product.unitOfMeasure.measureId}','${com.buyingPrice}','${product.productCategory.name}')"  title="Edit"><span>Edit</span></a>
+					  			<a class="item-button-add-row" href="javascript:setclient('${product.id}','${product.code}','${fn:replace(product.name, '\"','*')}','${com.qtyToBase}','${com.onHand}','${product.unitOfMeasure.measureId}','${com.buyingPrice}','${product.productCategory.name}')"  title="Edit"><span>Edit</span></a>
 					  		</td>
 							<td nowrap="nowrap"><c:out value='${product.code}'/></td> 
 							<td nowrap="nowrap"><c:out value='${product.name}'/></td>
@@ -101,7 +101,7 @@
 				
 				var _opt = document.createElement('option');
 				_opt.value = id;
-				_opt.text = name;
+				_opt.text = name.replaceAll("*", "\"");;
 				
 				_client.appendChild(_opt);
 			}

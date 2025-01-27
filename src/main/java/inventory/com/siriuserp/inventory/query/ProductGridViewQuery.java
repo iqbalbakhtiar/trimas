@@ -13,110 +13,62 @@ import com.siriuserp.sdk.utility.SiriusValidator;
  * www.siriuserp.com
  */
 
-public class ProductGridViewQuery extends AbstractGridViewQuery {
+public class ProductGridViewQuery extends AbstractGridViewQuery
+{
+	@Override
+	public Query getQuery(ExecutorType type)
+	{
+		ProductFilterCriteria criteria = (ProductFilterCriteria) getFilterCriteria();
+		StringBuilder builder = new StringBuilder();
 
-    @Override
-    public Query getQuery(ExecutorType type) {
-        ProductFilterCriteria criteria = (ProductFilterCriteria) getFilterCriteria();
+		if (type.compareTo(ExecutorType.COUNT) == 0)
+			builder.append("SELECT COUNT (pro.id)  ");
 
-        StringBuilder builder = new StringBuilder();
-        
-        if (ExecutorType.COUNT.equals(type)) {
-            builder.append("SELECT COUNT(pro.id) ");
-        } else if (ExecutorType.HQL.equals(type)) {
-            builder.append("SELECT pro ");
-        }
+		builder.append("FROM Product pro WHERE pro.id IS NOT NULL ");
 
-        builder.append("FROM Product pro WHERE 1=1 ");
-        
-        if (SiriusValidator.validateParam(criteria.getCode())) {
-            builder.append("AND pro.code LIKE :code ");
-        }
+		if (SiriusValidator.validateParam(criteria.getCode()))
+			builder.append("AND pro.code LIKE :code ");
 
-        if (SiriusValidator.validateParam(criteria.getName())) {
-            builder.append("AND pro.name LIKE :name ");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getUnitOfMeasure())) {
+		if (SiriusValidator.validateParam(criteria.getName()))
+			builder.append("AND pro.name LIKE :name ");
+
+		if (SiriusValidator.validateParam(criteria.getUnitOfMeasure()))
 			builder.append("AND pro.unitOfMeasure.measureId LIKE :uom ");
-		}
 
-        if (SiriusValidator.validateParam(criteria.getType())) {
-            builder.append("AND pro.type = :type ");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getProductCategory())) {
+		if (SiriusValidator.validateParam(criteria.getType()))
+			builder.append("AND pro.type = :type ");
+
+		if (SiriusValidator.validateParam(criteria.getProductCategory()))
 			builder.append("AND pro.productCategory.name LIKE :productCategory ");
-		}
-        
-        if (SiriusValidator.validateParam(criteria.getStatus())) {
-			builder.append("AND pro.status =:status ");
-		}
-        
-        if (SiriusValidator.validateParam(criteria.getOrigin())) {
-            builder.append("AND pro.origin LIKE :origin ");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getBrand())) {
-            builder.append("AND pro.brand LIKE :brand ");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getGrade())) {
-            builder.append("AND pro.grade LIKE :grade ");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getPart())) {
-            builder.append("AND pro.part LIKE :part ");
-        }
 
-        if (ExecutorType.HQL.equals(type)) {
-            builder.append("ORDER BY pro.id DESC");
-        }
+		if (SiriusValidator.validateParam(criteria.getStatus()))
+			builder.append("AND pro.enabled =:status ");
 
-        Query query = getSession().createQuery(builder.toString());
-        query.setCacheable(true);
-        query.setReadOnly(true);
+		if (ExecutorType.HQL.equals(type))
+			builder.append("ORDER BY pro.id DESC");
 
-        if (SiriusValidator.validateParam(criteria.getCode())) {
-            query.setParameter("code", "%" + criteria.getCode() + "%");
-        }
+		Query query = getSession().createQuery(builder.toString());
+		query.setCacheable(true);
+		query.setReadOnly(true);
 
-        if (SiriusValidator.validateParam(criteria.getName())) {
-            query.setParameter("name", "%" + criteria.getName() + "%");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getUnitOfMeasure())) {
-            query.setParameter("uom", "%" + criteria.getUnitOfMeasure() + "%");
-        }
+		if (SiriusValidator.validateParam(criteria.getCode()))
+			query.setParameter("code", "%" + criteria.getCode() + "%");
 
-        if (SiriusValidator.validateParam(criteria.getType())) {
-            query.setParameter("type", ProductType.valueOf(criteria.getType()));
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getProductCategory())) {
-        	query.setParameter("productCategory", "%" + criteria.getProductCategory() + "%");
-		}
-        
-        if (SiriusValidator.validateParam(criteria.getStatus())) {
+		if (SiriusValidator.validateParam(criteria.getName()))
+			query.setParameter("name", "%" + criteria.getName() + "%");
+
+		if (SiriusValidator.validateParam(criteria.getUnitOfMeasure()))
+			query.setParameter("uom", "%" + criteria.getUnitOfMeasure() + "%");
+
+		if (SiriusValidator.validateParam(criteria.getType()))
+			query.setParameter("type", ProductType.valueOf(criteria.getType()));
+
+		if (SiriusValidator.validateParam(criteria.getProductCategory()))
+			query.setParameter("productCategory", "%" + criteria.getProductCategory() + "%");
+
+		if (SiriusValidator.validateParam(criteria.getStatus()))
 			query.setParameter("status", criteria.getStatus());
-		}
-        
-        if (SiriusValidator.validateParam(criteria.getOrigin())) {
-            query.setParameter("origin", "%" + criteria.getOrigin() + "%");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getBrand())) {
-            query.setParameter("brand", "%" + criteria.getBrand() + "%");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getGrade())) {
-            query.setParameter("grade", "%" + criteria.getGrade() + "%");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getPart())) {
-            query.setParameter("part", "%" + criteria.getPart() + "%");
-        }
 
-        return query;
-    }
+		return query;
+	}
 }

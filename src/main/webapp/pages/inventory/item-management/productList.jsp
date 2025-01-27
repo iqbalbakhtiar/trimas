@@ -22,46 +22,35 @@
 </div>
 <div style="overflow-x: auto;">
 	<table style="width:100%;" cellpadding="0" cellspacing="0" class="table-list">
-		<tr valign="top">
-			<th width="2%">&nbsp;</th>
-	  	  	<th width="3%"><spring:message code="product.code"/></th>
-		  	<th width="5%"><spring:message code="product.name"/></th>
-		  	<th width="2%"><spring:message code="sirius.uom"/></th>
-		  	<th width="2%"><spring:message code="sirius.type"/></th>
-		  	<th width="4%"><spring:message code="productcategory"/></th>
-		  	<th width="3%"><spring:message code="sirius.status"/></th>
-<%-- 		  	<th width="3%"><spring:message code="product.base"/></th> --%>
-		  	<th width="3%"><spring:message code="product.origin"/></th>
-		  	<th width="3%"><spring:message code="product.brand"/></th>
-		  	<th width="3%"><spring:message code="product.grade"/></th>
-		  	<th width="3%"><spring:message code="product.part"/></th>
-	  	  	<th width="5%"><spring:message code="sirius.note"/></th>
-		</tr>
-		<c:forEach items="${products}" var="product">
-		<tr valign="top">
-		 	<td class="tools">
-	        	<c:if test='${access.edit}'>
-	            	<a class="item-button-edit" href="<c:url value='/page/productpreedit.htm?id=${product.id}'/>" title="Edit"><span><spring:message code="sirius.edit"/></span></a>                               
-	            </c:if>
-				<c:if test='${access.delete && product.status}'>
-	            	<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/productdelete.htm?id=${product.id}'/>');" title="Delete"><span><spring:message code="sirius.delete"/></span></a>                             
-	            </c:if>			
-	        </td>
-		 	<td nowrap="nowrap">${product.code}</td>
-			<td nowrap="nowrap">${product.name}</td>
-		  	<td nowrap="nowrap">${product.unitOfMeasure.measureId}</td>
-		  	<td nowrap="nowrap">${product.type}</td>
-		  	<td nowrap="nowrap">${product.productCategory.name}</td>
-			<td nowrap="nowrap"><spring:message code="sirius.${product.status ? 'active' : 'inactive'}"/></td>
-<%-- 			<td nowrap="nowrap"><spring:message code="sirius.${product.base ? 'active' : 'inactive'}"/></td> --%>
-			<td nowrap="nowrap">${product.origin}</td>
-			<td nowrap="nowrap">${product.brand}</td>
-			<td nowrap="nowrap">${product.grade}</td>
-			<td nowrap="nowrap">${product.part}</td>
-			<td nowrap="nowrap">${product.note}</td>
-		</tr>
-		</c:forEach>
-		<tr class="end-table"><td colspan="18">&nbsp;</td></tr>
+	<tr>
+		<th width="1%"><div style="width: 45px">&nbsp;</div></th>
+  	  	<th width="10%" nowrap="nowrap"><spring:message code="product.code"/></th>
+	  	<th width="25%" nowrap="nowrap"><spring:message code="product.name"/></th>
+  	  	<th width="5%" nowrap="nowrap"><spring:message code="product.uom"/></th>
+  	  	<th width="10%" nowrap="nowrap"><spring:message code="productcategory"/></th>
+  	  	<th width="45%" nowrap="nowrap"><spring:message code="product.uom"/></th>
+	</tr>
+	<c:forEach items="${products}" var="product">
+	<tr>
+	 	<td class="tools">
+    	<c:if test='${access.edit}'>
+        	<a class="item-button-edit" href="<c:url value='/page/productpreedit.htm?id=${product.id}'/>" title="<spring:message code="sirius.edit"/>"><span><spring:message code="sirius.edit"/></span></a>
+        </c:if>
+		<c:if test='${access.delete and product.deleteable}'>
+        	<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/productdelete.htm?id=${product.id}'/>', '<spring:message code="notif.delete"/>');" title="<spring:message code="sirius.delete"/>"><span><spring:message code="sirius.delete"/></span></a>
+        </c:if>
+	 	</td>
+	 	<td nowrap="nowrap">${product.code}</td>
+		<td nowrap="nowrap">${product.name}</td>
+		<td nowrap="nowrap">${product.unitOfMeasure.name}</td>
+		<td nowrap="nowrap">${product.productCategory.name}</td>
+		<td nowrap="nowrap">
+			<c:if test="${product.enabled}"><div style="color: green;"><spring:message code="sirius.active"/></div></c:if>
+			<c:if test="${!product.enabled}"><div style="color: red;"><spring:message code="sirius.inactive"/></div></c:if>
+		</td>
+	</tr>
+	</c:forEach>
+	<tr class="end-table"><td colspan="6">&nbsp;</td></tr>
   	</table>
 </div>
 <table border="0" cellpadding="0" cellspacing="0" width="99%" align="center" height="20">
