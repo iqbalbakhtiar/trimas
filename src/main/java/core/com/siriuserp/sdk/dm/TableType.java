@@ -135,7 +135,6 @@ public enum TableType
     //M
     MODULE("MD", 2),
     MOVING("MOV"),
-    MACHINE("MCN"),
     MANUAL_BILLING("MIN"),
     MEMO_CONVERSION("MCV"),
     MASTER_ATTRIBUTE("MAT"),
