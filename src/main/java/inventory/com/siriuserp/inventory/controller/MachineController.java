@@ -36,7 +36,7 @@ import com.siriuserp.sdk.springmvc.view.ViewHelper;
  */
 
 @Controller
-@SessionAttributes(value = "machine", types = Container.class)
+@SessionAttributes(value = {"machine_add","machine_edit"}, types = Container.class)
 @DefaultRedirect(url = "machineview.htm")
 public class MachineController extends ControllerBase
 {

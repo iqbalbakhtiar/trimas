@@ -34,7 +34,7 @@
 	</table>
 </sesform:form>
 </div>
-<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${machine_edit.createdBy.fullName}'/> (<fmt:formatDate value='${product_form.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${product_form.updatedBy.fullName}'/> (<fmt:formatDate value='${product_form.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
+<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${machine_edit.createdBy.fullName}'/> (<fmt:formatDate value='${product_form.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${product_form.updatedBy.fullName}'/> (<fmt:formatDate value='${machine_edit.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
 <%@ include file="/common/sirius-general-bottom.jsp"%>
 
 <script type="text/javascript">
