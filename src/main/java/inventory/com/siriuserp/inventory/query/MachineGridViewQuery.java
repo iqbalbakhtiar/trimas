@@ -1,14 +1,14 @@
 package com.siriuserp.inventory.query;
 
 import org.hibernate.Query;
+
 import com.siriuserp.inventory.criteria.ProductFilterCriteria;
-import com.siriuserp.inventory.dm.ProductType;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
 import com.siriuserp.sdk.utility.SiriusValidator;
 
 /**
- * @author Agung Dodi Perdana
+ * @author Muhammad Rizal
  * Sirius Indonesia, PT
  * www.siriuserp.com
  */
@@ -22,55 +22,27 @@ public class MachineGridViewQuery extends AbstractGridViewQuery {
         StringBuilder builder = new StringBuilder();
         
         if (ExecutorType.COUNT.equals(type)) {
-            builder.append("SELECT COUNT(pro.id) ");
+            builder.append("SELECT COUNT(mac.id) ");
         } else if (ExecutorType.HQL.equals(type)) {
-            builder.append("SELECT pro ");
+            builder.append("SELECT mac ");
         }
 
-        builder.append("FROM Product pro WHERE 1=1 ");
+        builder.append("FROM Machine mac WHERE mac.id IS NOT NULL ");
         
         if (SiriusValidator.validateParam(criteria.getCode())) {
-            builder.append("AND pro.code LIKE :code ");
+            builder.append("AND mac.code LIKE :code ");
         }
 
         if (SiriusValidator.validateParam(criteria.getName())) {
-            builder.append("AND pro.name LIKE :name ");
+            builder.append("AND mac.name LIKE :name ");
         }
-        
-        if (SiriusValidator.validateParam(criteria.getUnitOfMeasure())) {
-			builder.append("AND pro.unitOfMeasure.measureId LIKE :uom ");
-		}
-
-        if (SiriusValidator.validateParam(criteria.getType())) {
-            builder.append("AND pro.type = :type ");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getProductCategory())) {
-			builder.append("AND pro.productCategory.name LIKE :productCategory ");
-		}
         
         if (SiriusValidator.validateParam(criteria.getStatus())) {
-			builder.append("AND pro.status =:status ");
+			builder.append("AND mac.status =:status ");
 		}
         
-        if (SiriusValidator.validateParam(criteria.getOrigin())) {
-            builder.append("AND pro.origin LIKE :origin ");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getBrand())) {
-            builder.append("AND pro.brand LIKE :brand ");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getGrade())) {
-            builder.append("AND pro.grade LIKE :grade ");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getPart())) {
-            builder.append("AND pro.part LIKE :part ");
-        }
-
         if (ExecutorType.HQL.equals(type)) {
-            builder.append("ORDER BY pro.id DESC");
+            builder.append("ORDER BY mac.id DESC");
         }
 
         Query query = getSession().createQuery(builder.toString());
@@ -84,38 +56,10 @@ public class MachineGridViewQuery extends AbstractGridViewQuery {
         if (SiriusValidator.validateParam(criteria.getName())) {
             query.setParameter("name", "%" + criteria.getName() + "%");
         }
-        
-        if (SiriusValidator.validateParam(criteria.getUnitOfMeasure())) {
-            query.setParameter("uom", "%" + criteria.getUnitOfMeasure() + "%");
-        }
-
-        if (SiriusValidator.validateParam(criteria.getType())) {
-            query.setParameter("type", ProductType.valueOf(criteria.getType()));
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getProductCategory())) {
-        	query.setParameter("productCategory", "%" + criteria.getProductCategory() + "%");
-		}
-        
+       
         if (SiriusValidator.validateParam(criteria.getStatus())) {
 			query.setParameter("status", criteria.getStatus());
 		}
-        
-        if (SiriusValidator.validateParam(criteria.getOrigin())) {
-            query.setParameter("origin", "%" + criteria.getOrigin() + "%");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getBrand())) {
-            query.setParameter("brand", "%" + criteria.getBrand() + "%");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getGrade())) {
-            query.setParameter("grade", "%" + criteria.getGrade() + "%");
-        }
-        
-        if (SiriusValidator.validateParam(criteria.getPart())) {
-            query.setParameter("part", "%" + criteria.getPart() + "%");
-        }
 
         return query;
     }
