@@ -1,4 +1,4 @@
-package com.siriuserp.inventory.service;
+package com.siriuserp.production.service;
 
 import java.util.Map;
 
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.siriuserp.inventory.dm.Machine;
+import com.siriuserp.production.dm.Machine;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.dao.CodeSequenceDao;

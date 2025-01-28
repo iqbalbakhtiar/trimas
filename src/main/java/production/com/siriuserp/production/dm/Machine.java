@@ -3,7 +3,7 @@
  * net.konsep.sirius.model
  * Container.java
  */
-package com.siriuserp.inventory.dm;
+package com.siriuserp.production.dm;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -3,7 +3,7 @@
  * net.konsep.sirius.presentation.administration
  * ContainerController.java
  */
-package com.siriuserp.inventory.controller;
+package com.siriuserp.production.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,9 +18,9 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.inventory.criteria.ProductFilterCriteria;
-import com.siriuserp.inventory.dm.Machine;
-import com.siriuserp.inventory.query.MachineGridViewQuery;
-import com.siriuserp.inventory.service.MachineService;
+import com.siriuserp.production.dm.Machine;
+import com.siriuserp.production.query.MachineGridViewQuery;
+import com.siriuserp.production.service.MachineService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.Container;
@@ -46,13 +46,13 @@ public class MachineController extends ControllerBase
 	@RequestMapping("/machineview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/inventory/warehouse-management/machineList", service.view(criteriaFactory.create(request, ProductFilterCriteria.class), MachineGridViewQuery.class));
+		return new ModelAndView("/production/machineList", service.view(criteriaFactory.create(request, ProductFilterCriteria.class), MachineGridViewQuery.class));
 	}
 
 	@RequestMapping("/machinepreadd.htm")
 	public ModelAndView preadd() throws ServiceException
 	{
-		return new ModelAndView("/inventory/warehouse-management/machineAdd", service.preadd());
+		return new ModelAndView("/production/machineAdd", service.preadd());
 	}
 
 	@RequestMapping("/machineadd.htm")
@@ -79,7 +79,7 @@ public class MachineController extends ControllerBase
 	@RequestMapping("machinepreedit.htm")
 	public ModelAndView preedit(@RequestParam("id") Long id) throws ServiceException
 	{
-		return new ModelAndView("/inventory/warehouse-management/machineUpdate", service.preedit(id));
+		return new ModelAndView("/production/machineUpdate", service.preedit(id));
 	}
 
 	@RequestMapping("/machineedit.htm")

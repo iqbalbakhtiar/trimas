@@ -1,4 +1,4 @@
-package com.siriuserp.inventory.query;
+package com.siriuserp.production.query;
 
 import org.hibernate.Query;
 
