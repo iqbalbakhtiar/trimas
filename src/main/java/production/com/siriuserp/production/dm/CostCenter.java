@@ -7,9 +7,9 @@ package com.siriuserp.production.dm;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Type;
 
 import com.siriuserp.sdk.dm.JSONSupport;
 import com.siriuserp.sdk.dm.Model;
@@ -37,9 +37,9 @@ public class CostCenter extends Model implements JSONSupport
 	@Column(name = "name")
 	private String name;
 
-	@Column(name = "status")
-	@Type(type = "yes_no")
-	private boolean status = Boolean.FALSE;
+	@Enumerated(EnumType.STRING)
+	@Column(name="type")
+	private CostCenterType type;
 
 	@Column(name = "note")
 	private String note;

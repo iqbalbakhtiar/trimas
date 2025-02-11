@@ -1,30 +1,31 @@
 <%@ include file="/common/sirius-general-top.jsp"%>
 
 <div class="toolbar">
-	<a class="item-button-list" href="<c:url value='/page/machineview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
+	<a class="item-button-list" href="<c:url value='/page/costcenterview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
 </div>
 
 <div class="main-box">
-<sesform:form id="editForm" name="editForm" method="post" modelAttribute="machine_edit" enctype="multipart/form-data">
+<sesform:form id="addForm" name="addForm" method="post" modelAttribute="costcenter_add" enctype="multipart/form-data">
 	<table width="100%" border="0" >
 	<tr>
-		<td width="24%" align="right"><spring:message code="machine.id"/> :</td>
+		<td width="24%" align="right"><spring:message code="costcenter.id"/> :</td>
   	  	<td width="56%">
-	  	  	<form:input id='code' path="code" disabled='true' class='input-disabled'/>
+	  	  	<input id="costCenterId" value="Auto Generated" disabled="true" class='input-disabled'/>
 	  	</td>
 	</tr>
 	<tr>
-		<td align="right"><spring:message code="machine.name"/> :</td>
+		<td align="right"><spring:message code="costcenter.name"/> :</td>
 		<td nowrap="nowrap">
-			<form:input id='name' path="name" size="43" class='input'/>
+			<form:input id='name' path="name" size="43"/>
 		</td>
 	</tr>
 	<tr>
-		<td align="right"><spring:message code="sirius.status"/> :</td>
+		<td align="right"><spring:message code="product.type"/> :</td>
 		<td>
-			<form:radiobutton path="status" value="true" label="Active"/>
-			<form:radiobutton path="status" value="false" label="Inactive"/>	
+			<form:select path='type' id="type">
+			    <form:options items='${types}'/>
+			</form:select>
 		</td>
 	</tr>
 	<tr>
@@ -34,7 +35,7 @@
 	</table>
 </sesform:form>
 </div>
-<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${machine_edit.createdBy.fullName}'/> (<fmt:formatDate value='${product_form.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${product_form.updatedBy.fullName}'/> (<fmt:formatDate value='${machine_edit.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
+				
 <%@ include file="/common/sirius-general-bottom.jsp"%>
 
 <script type="text/javascript">
@@ -49,7 +50,7 @@ $(function(){
 
 	function save() {
 		var xhr = new XMLHttpRequest();
-		xhr.open('POST', "<c:url value='/page/machineedit.htm'/>");
+		xhr.open('POST', "<c:url value='/page/costcenteradd.htm'/>");
 		xhr.responseType = 'json';
 		
 		if(xhr.readyState == 1)
@@ -69,7 +70,8 @@ $(function(){
 					{
 						$dialog.dialog('close');
 						
-						let url = "<c:url value='/page/machinepreedit.htm?id='/>"+json.id;
+						let url = "<c:url value='/page/costcenterpreedit.htm?id='/>"+json.id;;
+						
 						window.location=url;
 					}
 					else
@@ -78,7 +80,7 @@ $(function(){
 			}
 		};
 		
-		xhr.send(new FormData($('#editForm')[0]));
+		xhr.send(new FormData($('#addForm')[0]));
 	}
 });
 </script>

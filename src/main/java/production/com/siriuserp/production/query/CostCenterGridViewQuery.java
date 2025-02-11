@@ -13,36 +13,36 @@ import com.siriuserp.sdk.utility.SiriusValidator;
  * www.siriuserp.com
  */
 
-public class MachineGridViewQuery extends AbstractGridViewQuery {
+public class CostCenterGridViewQuery extends AbstractGridViewQuery {
 
     @Override
     public Query getQuery(ExecutorType type) {
-    	MasterDataFilterCriteria criteria = (MasterDataFilterCriteria) getFilterCriteria();
+        MasterDataFilterCriteria criteria = (MasterDataFilterCriteria) getFilterCriteria();
 
         StringBuilder builder = new StringBuilder();
         
         if (ExecutorType.COUNT.equals(type)) {
-            builder.append("SELECT COUNT(mac.id) ");
+            builder.append("SELECT COUNT(cc.id) ");
         } else if (ExecutorType.HQL.equals(type)) {
-            builder.append("SELECT mac ");
+            builder.append("SELECT cc ");
         }
 
-        builder.append("FROM Machine mac WHERE mac.id IS NOT NULL ");
+        builder.append("FROM CostCenter cc WHERE cc.id IS NOT NULL ");
         
         if (SiriusValidator.validateParam(criteria.getCode())) {
-            builder.append("AND mac.code LIKE :code ");
+            builder.append("AND cc.code LIKE :code ");
         }
 
         if (SiriusValidator.validateParam(criteria.getName())) {
-            builder.append("AND mac.name LIKE :name ");
+            builder.append("AND cc.name LIKE :name ");
         }
         
-        if (SiriusValidator.validateParam(criteria.getStatus())) {
-			builder.append("AND mac.status =:status ");
+        if (criteria.getType() != null) {
+			builder.append("AND cc.type =:type ");
 		}
         
         if (ExecutorType.HQL.equals(type)) {
-            builder.append("ORDER BY mac.id DESC");
+            builder.append("ORDER BY cc.id DESC");
         }
 
         Query query = getSession().createQuery(builder.toString());
@@ -57,8 +57,8 @@ public class MachineGridViewQuery extends AbstractGridViewQuery {
             query.setParameter("name", "%" + criteria.getName() + "%");
         }
        
-        if (SiriusValidator.validateParam(criteria.getStatus())) {
-			query.setParameter("status", criteria.getStatus());
+        if (criteria.getType()!=null) {
+			query.setParameter("type", criteria.getType());
 		}
 
         return query;

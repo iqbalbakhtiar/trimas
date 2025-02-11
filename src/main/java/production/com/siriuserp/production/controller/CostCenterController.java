@@ -10,17 +10,21 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.siriuserp.inventory.criteria.ProductFilterCriteria;
-import com.siriuserp.production.dm.Machine;
-import com.siriuserp.production.query.MachineGridViewQuery;
-import com.siriuserp.production.service.MachineService;
+import com.siriuserp.inventory.criteria.MasterDataFilterCriteria;
+import com.siriuserp.production.dm.CostCenter;
+import com.siriuserp.production.dm.CostCenterType;
+import com.siriuserp.production.query.CostCenterGridViewQuery;
+import com.siriuserp.production.service.CostCenterService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.exceptions.ServiceException;
@@ -35,36 +39,42 @@ import com.siriuserp.sdk.springmvc.view.ViewHelper;
  */
 
 @Controller
-@SessionAttributes(value = {"machine_add","machine_edit"}, types = Machine.class)
-@DefaultRedirect(url = "machineview.htm")
-public class MachineController extends ControllerBase
+@SessionAttributes(value = {"costcenter_add","costcenter_edit"}, types = CostCenter.class)
+@DefaultRedirect(url = "costcenterview.htm")
+public class CostCenterController extends ControllerBase
 {
 	@Autowired
-	private MachineService service;
+	private CostCenterService service;
+			
+	@InitBinder
+	public void initBinder(WebDataBinder binder, WebRequest request)
+	{
+		binder.registerCustomEditor(CostCenterType.class, enumEditor.forClass(CostCenterType.class));
+	}
 	
-	@RequestMapping("/machineview.htm")
+	@RequestMapping("/costcenterview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/production/machineList", service.view(criteriaFactory.create(request, ProductFilterCriteria.class), MachineGridViewQuery.class));
+		return new ModelAndView("/production/costCenterList", service.view(criteriaFactory.create(request, MasterDataFilterCriteria.class), CostCenterGridViewQuery.class));
 	}
 
-	@RequestMapping("/machinepreadd.htm")
+	@RequestMapping("/costcenterpreadd.htm")
 	public ModelAndView preadd() throws ServiceException
 	{
-		return new ModelAndView("/production/machineAdd", service.preadd());
+		return new ModelAndView("/production/costCenterAdd", service.preadd());
 	}
 
-	@RequestMapping("/machineadd.htm")
-	public ModelAndView add(@ModelAttribute("machine_add") Machine machine, BindingResult result, SessionStatus status) throws ServiceException
+	@RequestMapping("/costcenteradd.htm")
+	public ModelAndView add(@ModelAttribute("costcenter_add") CostCenter costCenter, BindingResult result, SessionStatus status) throws ServiceException
 	{
 		JSONResponse response = new JSONResponse();
 
 		try
 		{
-			service.add(machine);
+			service.add(costCenter);
 			status.setComplete();
 
-			response.store("id", machine.getId());
+			response.store("id", costCenter.getId());
 		} catch (Exception e)
 		{
 			response.setStatus(ResponseStatus.ERROR);
@@ -75,23 +85,23 @@ public class MachineController extends ControllerBase
 		return response;
 	}
 
-	@RequestMapping("machinepreedit.htm")
+	@RequestMapping("costcenterpreedit.htm")
 	public ModelAndView preedit(@RequestParam("id") Long id) throws ServiceException
 	{
-		return new ModelAndView("/production/machineUpdate", service.preedit(id));
+		return new ModelAndView("/production/costCenterUpdate", service.preedit(id));
 	}
 
-	@RequestMapping("/machineedit.htm")
-	public ModelAndView edit(@ModelAttribute("machine_edit") Machine machine, BindingResult result, SessionStatus status) throws ServiceException
+	@RequestMapping("/costcenteredit.htm")
+	public ModelAndView edit(@ModelAttribute("costcenter_edit") CostCenter costCenter, BindingResult result, SessionStatus status) throws ServiceException
 	{
 		JSONResponse response = new JSONResponse();
 
 		try
 		{
-			service.edit(machine);
+			service.edit(costCenter);
 			status.setComplete();
 
-			response.store("id", machine.getId());
+			response.store("id", costCenter.getId());
 		} catch (Exception e)
 		{
 			response.setStatus(ResponseStatus.ERROR);
@@ -103,10 +113,10 @@ public class MachineController extends ControllerBase
 
 	}
 
-	@RequestMapping("/machinedelete.htm")
+	@RequestMapping("/costcenterdelete.htm")
 	public ModelAndView delete(@RequestParam("id") Long id) throws ServiceException
 	{
 		service.delete(service.load(id));
-		return ViewHelper.redirectTo("machineview.htm");
+		return ViewHelper.redirectTo("costcenterview.htm");
 	}
 }

@@ -10,7 +10,7 @@
 <head>
 	<title>${title}</title>
 	<%@ include file="/common/sirius-header.jsp"%>
-	<%@ include file="/filter/production/machineFilter.jsp"%>
+	<%@ include file="/filter/production/costCenterFilter.jsp"%>
 </head>
 <body>
 
@@ -42,7 +42,7 @@
 																								
 								<div class="toolbar-clean">
 									<c:if test='${access.add}'>
-										<a class="item-button-new" href="<c:url value='/page/machinepreadd.htm' />"><span><spring:message code="machine.new"/></span></a>
+										<a class="item-button-new" href="<c:url value='/page/costcenterpreadd.htm' />"><span><spring:message code="costcenter.new"/></span></a>
 							   		</c:if>
 							   		<div dojoType="Toggler" targetId="filter">
 										<a class="item-button-search" href="javascript:return false;"><span><spring:message code="sirius.paging.filter"/></span></a>
@@ -59,24 +59,24 @@
 							<th width="3%">&nbsp;</th>
 					  	  	<th width="3%"><spring:message code="sirius.code"/></th>
 					  	  	<th width="10%"><spring:message code="sirius.name"/></th>
-					  	  	<th width="5%"><spring:message code="sirius.status"/></th>
+					  	  	<th width="5%"><spring:message code="sirius.type"/></th>
 					  	  	<th width="10%"><spring:message code="sirius.note"/></th>
 						</tr>
-						<c:forEach items="${machines}" var="data">
+						<c:forEach items="${costCenters}" var="data">
 						<tr>
 							 <td class="tools">
 							 	<c:if test='${access.edit}'>
-							        <a class="item-button-edit" href="<c:url value='/page/machinepreedit.htm?id=${data.id}'/>" title="<spring:message code='sirius.edit'/>">
+							        <a class="item-button-edit" href="<c:url value='/page/costcenterpreedit.htm?id=${data.id}'/>" title="<spring:message code='sirius.edit'/>">
 							            <span><spring:message code="sirius.edit"/></span>
 							        </a>
 								</c:if>
 								<c:if test='${access.delete}'>
-									<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/machinedelete.htm?id=${data.id}'/>');" title="<spring:message code='sirius.delete'/>"><span><spring:message code="sirius.delete"/></span></a>
+									<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/costcenterdelete.htm?id=${data.id}'/>');" title="<spring:message code='sirius.delete'/>"><span><spring:message code="sirius.delete"/></span></a>
 								</c:if>
 							</td>
 							<td nowrap="nowrap">${data.code}</td> 
 							<td nowrap="nowrap">${data.name}</td>
-							<td nowrap="nowrap"><spring:message code="sirius.${data.status ? 'active' : 'inactive'}"/></td>
+							<td nowrap="nowrap">${data.type}</td>
 							<td nowrap="nowrap">${data.note}</td>
 						</tr>
 						</c:forEach>

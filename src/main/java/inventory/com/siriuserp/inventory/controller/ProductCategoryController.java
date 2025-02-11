@@ -29,6 +29,7 @@ import com.siriuserp.sdk.springmvc.view.ViewHelper;
 @SessionAttributes(value = { "category_add", "category_edit" }, types = ProductCategory.class)
 @DefaultRedirect(url = "productcategoryview.htm")
 public class ProductCategoryController extends ControllerBase {
+	
 	@Autowired
 	private ProductCategoryService service;
 	
