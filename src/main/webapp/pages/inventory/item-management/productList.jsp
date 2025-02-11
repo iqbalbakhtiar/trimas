@@ -8,9 +8,6 @@
 					<c:if test='${access.add}'>
 						<a class="item-button-new" href="<c:url value='/page/productpreadd.htm' />"><span><spring:message code="product.new"/></span></a>
 					</c:if>
-					<c:if test='${access.add and pictures.edit}'>
-						<a class="item-button-add-gl-child" ><span>Picture Correction</span></a>
-					</c:if>
 		  			<div dojoType="Toggler" targetId="filter">
 						<a class="item-button-search" href="javascript:return;"><span><spring:message code="sirius.filter"/></span></a>
 					</div>
@@ -28,7 +25,7 @@
 	  	<th width="25%" nowrap="nowrap"><spring:message code="product.name"/></th>
   	  	<th width="5%" nowrap="nowrap"><spring:message code="product.uom"/></th>
   	  	<th width="10%" nowrap="nowrap"><spring:message code="productcategory"/></th>
-  	  	<th width="45%" nowrap="nowrap"><spring:message code="product.uom"/></th>
+  	  	<th width="45%" nowrap="nowrap"><spring:message code="sirius.status"/></th>
 	</tr>
 	<c:forEach items="${products}" var="product">
 	<tr>
