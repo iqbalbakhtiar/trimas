@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.siriuserp.inventory.criteria.ProductFilterCriteria;
+import com.siriuserp.inventory.criteria.MasterDataFilterCriteria;
 import com.siriuserp.production.dm.Machine;
 import com.siriuserp.production.query.MachineGridViewQuery;
 import com.siriuserp.production.service.MachineService;
@@ -45,7 +45,7 @@ public class MachineController extends ControllerBase
 	@RequestMapping("/machineview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/production/machineList", service.view(criteriaFactory.create(request, ProductFilterCriteria.class), MachineGridViewQuery.class));
+		return new ModelAndView("/production/machineList", service.view(criteriaFactory.create(request, MasterDataFilterCriteria.class), MachineGridViewQuery.class));
 	}
 
 	@RequestMapping("/machinepreadd.htm")

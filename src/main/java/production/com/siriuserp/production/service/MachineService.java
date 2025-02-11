@@ -85,8 +85,6 @@ public class MachineService
 	@AuditTrails(className = Machine.class, actionType = AuditTrailsActionType.UPDATE)
 	public void edit(Machine machine) throws ServiceException
 	{
-		
-		System.out.println(machine.getId());
 		genericDao.update(machine);
 	}
 
