@@ -12,11 +12,6 @@
 			<td width="60%"><input type="text" id="facility" name="facility" value="${filterCriteria.facility}" size="35" class="inputbox"/></td>
 		</tr>
 		<tr>
-			<td width="35%" align="right"><spring:message code="goodsreceipt.supplier"/>&nbsp;&nbsp;</td>
-			<td width="5%">:&nbsp;</td>
-			<td width="60%"><input type="text" id="supplier" name="supplier" value="${filterCriteria.supplier}" size="35" class="inputbox"/></td>
-		</tr>
-		<tr>
 			<td width="35%" align="right"><spring:message code="sirius.createdby"/>&nbsp;&nbsp;</td>
 			<td width="5%">:&nbsp;</td>
 			<td width="60%"><input type="text" id="createdBy" name="createdBy" value="${filterCriteria.createdBy}" size="35" class="inputbox"/></td>

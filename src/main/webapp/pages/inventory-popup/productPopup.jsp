@@ -91,13 +91,7 @@
 								<th width="3%"><spring:message code="product.code"/></th>
 								<th width="5%"><spring:message code="product.name"/></th>
 								<th width="2%"><spring:message code="sirius.uom"/></th>
-								<th width="2%"><spring:message code="sirius.type"/></th>
 								<th width="4%"><spring:message code="productcategory"/></th>
-								<th width="3%"><spring:message code="sirius.status"/></th>
-								<th width="3%"><spring:message code="product.origin"/></th>
-								<th width="3%"><spring:message code="product.brand"/></th>
-								<th width="3%"><spring:message code="product.grade"/></th>
-								<th width="3%"><spring:message code="product.part"/></th>
 							</tr>
 							<c:forEach items="${products}" var="product">
 								<tr>
@@ -107,13 +101,7 @@
 									<td nowrap="nowrap">${product.code}</td>
 									<td nowrap="nowrap">${product.name}</td>
 									<td nowrap="nowrap">${product.unitOfMeasure.measureId}</td>
-									<td nowrap="nowrap">${product.type}</td>
 									<td nowrap="nowrap">${product.productCategory.name}</td>
-									<td nowrap="nowrap"><spring:message code="sirius.${product.status ? 'active' : 'inactive'}"/></td>
-									<td nowrap="nowrap">${product.origin}</td>
-									<td nowrap="nowrap">${product.brand}</td>
-									<td nowrap="nowrap">${product.grade}</td>
-									<td nowrap="nowrap">${product.part}</td>
 								</tr>
 							</c:forEach>
 							<tr class="end-table"><td colspan="11">&nbsp;</td></tr>
