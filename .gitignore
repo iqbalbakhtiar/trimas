@@ -15,6 +15,6 @@ buildNumber.properties
 .project
 .tomcatplugin
 /.settings/
-/siriuserp-1.5-cocina.iml
 /.smarttomcat/
 /src/main/webapp/WEB-INF/properties/hotswap-agent.properties
+/siriuserp-1.5-sanstar.iml
