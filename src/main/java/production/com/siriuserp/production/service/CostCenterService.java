@@ -14,7 +14,6 @@ import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.GridViewQuery;
-import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
@@ -77,7 +76,7 @@ public class CostCenterService
 		return genericDao.load(CostCenter.class, id);
 	}
 
-	@AuditTrails(className = Container.class, actionType = AuditTrailsActionType.CREATE)
+	@AuditTrails(className = CostCenter.class, actionType = AuditTrailsActionType.CREATE)
 	public void add(CostCenter costCenter) throws ServiceException
 	{
 		costCenter.setCode(GeneratorHelper.instance().generate(TableType.COST_CENTER, codeSequenceDao));

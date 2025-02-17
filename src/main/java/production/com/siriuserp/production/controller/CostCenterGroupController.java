@@ -21,16 +21,19 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.inventory.criteria.MasterDataFilterCriteria;
+import com.siriuserp.inventory.dm.UnitOfMeasure;
 import com.siriuserp.production.dm.CostCenter;
-import com.siriuserp.production.dm.CostCenterType;
-import com.siriuserp.production.query.CostCenterGridViewQuery;
-import com.siriuserp.production.service.CostCenterService;
+import com.siriuserp.production.dm.CostCenterGroup;
+import com.siriuserp.production.form.CostCenterForm;
+import com.siriuserp.production.query.CostCenterGroupGridViewQuery;
+import com.siriuserp.production.service.CostCenterGroupService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.ResponseStatus;
 import com.siriuserp.sdk.springmvc.view.ViewHelper;
+import com.siriuserp.sdk.utility.FormHelper;
 
 /**
  * @author Muhammad Rizal
@@ -39,42 +42,44 @@ import com.siriuserp.sdk.springmvc.view.ViewHelper;
  */
 
 @Controller
-@SessionAttributes(value = {"costcenter_add","costcenter_edit"}, types = CostCenter.class)
-@DefaultRedirect(url = "costcenterview.htm")
-public class CostCenterController extends ControllerBase
+@SessionAttributes(value = {"costgroup_add","costgroup_edit"}, types = CostCenterGroup.class)
+@DefaultRedirect(url = "costcentergroupview.htm")
+public class CostCenterGroupController extends ControllerBase
 {
 	@Autowired
-	private CostCenterService service;
+	private CostCenterGroupService service;
 			
 	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
-		binder.registerCustomEditor(CostCenterType.class, enumEditor.forClass(CostCenterType.class));
+		binder.registerCustomEditor(UnitOfMeasure.class, modelEditor.forClass(UnitOfMeasure.class));
+		binder.registerCustomEditor(CostCenter.class, modelEditor.forClass(CostCenter.class));
+		binder.registerCustomEditor(CostCenterGroup.class, modelEditor.forClass(CostCenterGroup.class));
 	}
 	
-	@RequestMapping("/costcenterview.htm")
+	@RequestMapping("/costcentergroupview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/production/costCenterList", service.view(criteriaFactory.create(request, MasterDataFilterCriteria.class), CostCenterGridViewQuery.class));
+		return new ModelAndView("/production/costCenterGroupList", service.view(criteriaFactory.create(request, MasterDataFilterCriteria.class), CostCenterGroupGridViewQuery.class));
 	}
 
-	@RequestMapping("/costcenterpreadd.htm")
+	@RequestMapping("/costcentergrouppreadd.htm")
 	public ModelAndView preadd() throws ServiceException
 	{
-		return new ModelAndView("/production/costCenterAdd", service.preadd());
+		return new ModelAndView("/production/costCenterGroupAdd", service.preadd());
 	}
 
-	@RequestMapping("/costcenteradd.htm")
-	public ModelAndView add(@ModelAttribute("costcenter_add") CostCenter costCenter, BindingResult result, SessionStatus status) throws ServiceException
+	@RequestMapping("/costcentergroupadd.htm")
+	public ModelAndView add(@ModelAttribute("costgroup_add") CostCenterForm costForm, BindingResult result, SessionStatus status) throws ServiceException
 	{
 		JSONResponse response = new JSONResponse();
 
 		try
 		{
-			service.add(costCenter);
+			service.add(FormHelper.create(CostCenterGroup.class, costForm));
 			status.setComplete();
 
-			response.store("id", costCenter.getId());
+			response.store("id", costForm.getCostCenterGroup().getId());
 		} catch (Exception e)
 		{
 			response.setStatus(ResponseStatus.ERROR);
@@ -85,48 +90,37 @@ public class CostCenterController extends ControllerBase
 		return response;
 	}
 
-	@RequestMapping("costcenterpreedit.htm")
-	public ModelAndView preedit(@RequestParam("id") Long id) throws ServiceException
+	@RequestMapping("costcentergrouppreedit.htm")
+	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception 
 	{
-		return new ModelAndView("/production/costCenterUpdate", service.preedit(id));
+		return new ModelAndView("/production/costCenterGroupUpdate", service.preedit(id));
 	}
 
-	@RequestMapping("/costcenteredit.htm")
-	public ModelAndView edit(@ModelAttribute("costcenter_edit") CostCenter costCenter, BindingResult result, SessionStatus status) throws ServiceException
+	@RequestMapping("/costcentergroupedit.htm")
+	public ModelAndView edit(@ModelAttribute("costgroup_edit") CostCenterGroup costCenterGroup, BindingResult result, SessionStatus status) throws ServiceException
 	{
 		JSONResponse response = new JSONResponse();
 
 		try
 		{
-			service.edit(costCenter);
+			service.edit(costCenterGroup);
 			status.setComplete();
 
-			response.store("id", costCenter.getId());
+			response.store("id", costCenterGroup.getId());
 		} catch (Exception e)
 		{
-			response.setStatus(ResponseStatus.ERROR);
+			response.statusError();
 			response.setMessage(e.getMessage());
-			e.printStackTrace();
 		}
 		
 		return response;
 
 	}
 
-	@RequestMapping("/costcenterdelete.htm")
+	@RequestMapping("/costcentergroupdelete.htm")
 	public ModelAndView delete(@RequestParam("id") Long id) throws ServiceException
 	{
 		service.delete(service.load(id));
-		return ViewHelper.redirectTo("costcenterview.htm");
-	}
-	
-	@RequestMapping("/popupcostcenterview.htm")
-	public ModelAndView popup(HttpServletRequest request, @RequestParam(value = "target", required = false) String target) throws Exception
-	{
-		ModelAndView view = new ModelAndView("/production-popup/costCenterPopup");
-		view.addAllObjects(service.view(criteriaFactory.createPopup(request, MasterDataFilterCriteria.class), CostCenterGridViewQuery.class));
-		view.addObject("target", target);
-
-		return view;
+		return ViewHelper.redirectTo("costcentergroupview.htm");
 	}
 }

@@ -84,6 +84,7 @@ public class Form implements SiriusForm
 	private BigDecimal rate = BigDecimal.ONE;
 	private BigDecimal extTax1Rate = BigDecimal.ZERO;
 	private BigDecimal total = BigDecimal.ZERO;
+	private BigDecimal unitCost = BigDecimal.ZERO;
 
 	private boolean base = true;
 	private boolean enabled = true;
