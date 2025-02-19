@@ -84,7 +84,7 @@
                                                 <form:option value='MIDDLE'>MIDDLE</form:option>
                                                 <form:option value='TAX'>TAX</form:option>
 											</form:select>
-											<input id="trxrate" size="10" class="input-disabled" disabled/>
+											<input id="trxrate" size="10" class="input-disabled" disabled value="1.00"/>
              		   						<input id="default" type="hidden" value="${defaultCurrency.id}"/>
 										</td>
 									</tr>

@@ -81,7 +81,7 @@
 							<td nowrap="nowrap"><c:out value="${journal.name}"/></td>
    							<td nowrap="nowrap"><fmt:formatDate value="${journal.entryDate}" pattern="dd-MM-yyyy"/></td> 
 							<td nowrap="nowrap"><c:out value="${journal.entryType}"/></td>
-							<td nowrap="nowrap"><c:out value="${journal.organization.firstName} ${journal.organization.middleName} ${journal.organization.lastName}"/></td>
+							<td nowrap="nowrap"><c:out value="${journal.organization.fullName}"/></td>
 							<td nowrap="nowrap"><c:out value="${journal.accountingPeriod.code}"/></td>
 							<td><c:out value="${journal.currency.symbol}"/></td>
 							<td><fmt:formatNumber value="${journal.amount}" pattern=",##0.00"/></td>
