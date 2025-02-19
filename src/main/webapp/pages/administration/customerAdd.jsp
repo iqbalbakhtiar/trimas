@@ -52,12 +52,12 @@
 			<td><form:input path="taxCode" cssClass="inputbox" /></td>
 			<td><form:errors path="taxCode"/></td>
 		</tr>
-		<tr>
-			<td align="right">SIUP</td>
-			<td width="1%" align="center">:</td>
-			<td><form:input path="permitCode" cssClass="inputbox" /></td>
-			<td><form:errors path="permitCode"/></td>
-		</tr>
+<%--		<tr>--%>
+<%--			<td align="right">SIUP</td>--%>
+<%--			<td width="1%" align="center">:</td>--%>
+<%--			<td><form:input path="permitCode" cssClass="inputbox" /></td>--%>
+<%--			<td><form:errors path="permitCode"/></td>--%>
+<%--		</tr>--%>
 		<tr>
 			<td align="right"><spring:message code="sirius.status"/></td>
 			<td width="1%" align="center">:</td>
