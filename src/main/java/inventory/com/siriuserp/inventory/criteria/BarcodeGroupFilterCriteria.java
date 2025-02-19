@@ -23,8 +23,8 @@ public class BarcodeGroupFilterCriteria extends AbstractFilterCriteria {
     private String facility;
     private String code;
     private String createdBy;
-    private String type;
-
+    private String barcodeGroupType;
+    private String status;
 
     private Date dateFrom;
     private Date dateTo;

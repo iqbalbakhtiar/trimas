@@ -55,6 +55,11 @@ public class BarcodeGroup extends Model {
 	private BarcodeGroupType barcodeGroupType = BarcodeGroupType.PRODUCTION;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private BarcodeStatus status = BarcodeStatus.CREATED;
+
+    // Not used
+    @Column(name = "active")
     @Type(type = "yes_no")
     private boolean active = false;
 

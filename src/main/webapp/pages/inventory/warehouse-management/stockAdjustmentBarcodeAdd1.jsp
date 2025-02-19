@@ -5,9 +5,7 @@
         <tr>
             <td width="30%" height="30" align="left" valign="middle">
                 <div class="toolbar-clean">
-                    <c:if test='${access.add}'>
-                        <a class="item-button-new" href="<c:url value='/page/barcodegrouppreadd1.htm'/>"><span><spring:message code="barcode.new"/></span></a>
-                    </c:if>
+                    <a class="item-button-list" href="<c:url value='/page/stockadjustmentview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
                     <div dojoType="Toggler" targetId="filter">
                         <a class="item-button-search" href="javascript:return;"><span><spring:message code="sirius.paging.filter"/></span></a>
                     </div>
@@ -27,20 +25,20 @@
             <th width="15%"><spring:message code="sirius.facility"/></th>
             <th width="15%"><spring:message code="sirius.type"/></th>
             <th width="12%"><spring:message code="sirius.createdby"/></th>
+            <th width="6%"><spring:message code="sirius.qty"/></th>
         </tr>
+        <%--@elvariable id="barcode" type="com.siriuserp.sdk.dm.BarcodeGroup"--%>
         <c:forEach items="${barcodes}" var="barcode">
             <tr valign="top">
                 <td class="tools">
-                    <a class="item-button-edit" href="<c:url value='/page/barcodegrouppreedit.htm?id=${barcode.id}'/>"  title="<spring:message code='sirius.edit'/>"><span><spring:message code='sirius.edit'/></span></a>
-                    <c:if test='${access.delete}'>
-                        <a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/barcodegroupdelete.htm?id=${barcode.id}'/>');" title='<spring:message code="sirius.delete"/>'><span><spring:message code="sirius.delete"/></span></a>
-                    </c:if>
+                    <a class="item-button-new" href="<c:url value='/page/stockadjustmentbarcodepreadd2.htm?id=${barcode.id}'/>"  title="<spring:message code='sirius.edit'/>"><span><spring:message code='sirius.edit'/></span></a>
                 </td>
                 <td><c:out value="${barcode.code}"/></td>
                 <td><fmt:formatDate value="${barcode.date}" pattern="dd-MM-yyyy"/></td>
                 <td><c:out value="${barcode.facility.name}"/></td>
                 <td><c:out value="${barcode.barcodeGroupType.normalizedName}"/></td>
                 <td><c:out value="${barcode.createdBy.fullName}"/></td>
+                <td><c:out value="${barcode.barcodes.size()}"/></td>
             </tr>
         </c:forEach>
         <tr class="end-table"><td colspan="8">&nbsp;</td></tr>

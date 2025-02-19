@@ -231,4 +231,13 @@ public class BarcodeGroupService {
 
 		return map;
 	}
+
+	@AuditTrails(className = BarcodeGroup.class, actionType = AuditTrailsActionType.UPDATE)
+	public void updateStatus(Long id, BarcodeStatus available) throws ServiceException {
+		BarcodeGroup barcodeGroup = load(id);
+
+		barcodeGroup.setStatus(available);
+
+		genericDao.update(barcodeGroup);
+	}
 }

@@ -3,10 +3,9 @@ package com.siriuserp.inventory.query;
 import com.siriuserp.inventory.criteria.BarcodeGroupFilterCriteria;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
-import com.siriuserp.sdk.dm.BarcodeGroup;
 import com.siriuserp.sdk.dm.BarcodeGroupType;
+import com.siriuserp.sdk.dm.BarcodeStatus;
 import com.siriuserp.sdk.utility.SiriusValidator;
-import javolution.util.FastList;
 import org.hibernate.Query;
 
 /**
@@ -35,11 +34,14 @@ public class BarcodeGroupGridViewQuery extends AbstractGridViewQuery {
         if (SiriusValidator.validateParam(criteria.getFacility()))
             builder.append("AND barcode.facility.name LIKE :facility ");
 
-        if (SiriusValidator.validateParam(criteria.getType()))
-            builder.append("AND barcode.type = :type ");
+        if (SiriusValidator.validateParam(criteria.getBarcodeGroupType()))
+            builder.append("AND barcode.barcodeGroupType = :type ");
 
         if (SiriusValidator.validateParam(criteria.getCreatedBy()))
             builder.append("AND barcode.createdBy.fullName LIKE :createdBy ");
+
+        if (SiriusValidator.validateParam(criteria.getStatus()))
+            builder.append("AND barcode.status = :status ");
 
         if (criteria.getDateFrom() != null)
         {
@@ -68,14 +70,17 @@ public class BarcodeGroupGridViewQuery extends AbstractGridViewQuery {
         if (SiriusValidator.validateParam(criteria.getFacility()))
             query.setParameter("facility", "%"+criteria.getFacility()+"%");
 
-        if (SiriusValidator.validateParam(criteria.getType()))
-            query.setParameter("type", BarcodeGroupType.valueOf(criteria.getType()));
+        if (SiriusValidator.validateParam(criteria.getBarcodeGroupType()))
+            query.setParameter("type", BarcodeGroupType.valueOf(criteria.getBarcodeGroupType()));
 
         if (criteria.getDateFrom() != null)
             query.setParameter("start",criteria.getDateFrom());
 
         if (criteria.getDateTo() != null)
             query.setParameter("end",criteria.getDateTo());
+
+        if (SiriusValidator.validateParam(criteria.getStatus()))
+            query.setParameter("status", BarcodeStatus.valueOf(criteria.getStatus()));
 
         return query;
     }

@@ -4,8 +4,12 @@
 package com.siriuserp.inventory.service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import com.siriuserp.sdk.dm.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -37,12 +41,6 @@ import com.siriuserp.sdk.dao.CurrencyDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.dao.ProductInOutTransactionDao;
 import com.siriuserp.sdk.db.GridViewQuery;
-import com.siriuserp.sdk.dm.Currency;
-import com.siriuserp.sdk.dm.ExchangeType;
-import com.siriuserp.sdk.dm.Facility;
-import com.siriuserp.sdk.dm.Item;
-import com.siriuserp.sdk.dm.Party;
-import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
@@ -220,6 +218,31 @@ public class StockAdjustmentService
 	public void edit(StockAdjustment stockAdjustment) throws ServiceException
 	{
 		genericDao.update(stockAdjustment);
+	}
+
+	@Transactional(propagation = Propagation.NOT_SUPPORTED)
+	@InjectParty(keyName = "adjustment_add")
+	public Map<String, Object> barcodePreadd2(Long id) {
+		BarcodeGroup barcodeGroup = genericDao.load(BarcodeGroup.class, id);
+		FastMap<String, Object> map = new FastMap<>();
+
+		List<Item> items = new ArrayList<>();
+
+		for (Barcode barcode : barcodeGroup.getBarcodes()) {
+			Item item = new Item();
+			BeanUtils.copyProperties(barcode, item);
+
+			ProductInOutTransaction inOut = loadInOut(barcode.getProduct().getId());
+			if (inOut != null) {
+				item.setPrice(inOut.getPrice());
+			}
+			items.add(item);
+		}
+
+		map.put("items", items);
+		map.put("adjustment_add", new InventoryForm());
+		map.put("barcodeGroup", barcodeGroup);
+		return map;
 	}
 
 //	@AuditTrails(className = StockAdjustment.class, actionType = AuditTrailsActionType.DELETE)
