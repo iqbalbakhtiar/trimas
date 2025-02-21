@@ -33,12 +33,12 @@ import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.utility.FormHelper;
 
 @Controller
-@SessionAttributes(value = { "dpo_form" }, types = PurchaseForm.class)
+@SessionAttributes(value = "dpo_form", types = PurchaseForm.class)
 @DefaultRedirect(url = "directpurchaseorderview.htm")
 public class DirectPurchaseOrderController extends ControllerBase {
 
     @Autowired
-	DirectPurchaseOrderService service;
+	private DirectPurchaseOrderService service;
 
     @InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)

@@ -161,10 +161,6 @@ function prevent_multi_click() {
 }
 
 function initialize_widget(){
-	//fix menu
-	$("#menuzord").menuzord({
-		align: "right"
-	});
 
 	//bind session form
 	const $form = $('.session');
@@ -266,9 +262,9 @@ function initialize_widget(){
 			dateFormat: 'dd-mm-yy'
 		});
 	}
+	
 	//resize the content body
 	resizeContent();
-	
 }
 
 function generate_menu() {
@@ -319,6 +315,11 @@ function generate_menu() {
 					ObjulParent.append(Objli);
 			}
 		}
+	});
+	
+	//fix menu
+	$("#menuzord").menuzord({
+		align: "right"
 	});
 }
 

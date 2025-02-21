@@ -8,7 +8,7 @@
 <base href="<%=basePath%>">
 <html>
 <head>
-	<title>Sirius ERP .v-1.5 GA</title>
+	<title>Sirius ERP - Sanstar</title>
 	<%@include file="/common/resources.jsp" %>
 	<style type="text/css" media="screen">@import url("<c:url value='/assets/sirius.css'/>");</style>
 	<!-- meta tags here -->
