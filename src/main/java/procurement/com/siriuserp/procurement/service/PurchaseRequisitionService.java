@@ -122,4 +122,10 @@ public class PurchaseRequisitionService
 	{
 		return genericDao.load(PurchaseRequisition.class, id);
 	}
+
+	@Transactional(readOnly = false)
+	public PurchaseRequisitionItem loadItem(Long id)
+	{
+		return genericDao.load(PurchaseRequisitionItem.class, id);
+	}
 }

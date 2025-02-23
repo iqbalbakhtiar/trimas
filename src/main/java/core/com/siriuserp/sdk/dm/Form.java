@@ -50,6 +50,8 @@ public class Form implements SiriusForm
 	private Long syncId;
 	private Long referenceId;
 
+	private Integer term;
+
 	private Party organization;
 	private Facility facility;
 	private Party person;

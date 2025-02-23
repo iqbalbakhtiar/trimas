@@ -30,114 +30,119 @@ import java.util.List;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class DirectPurchaseOrderService extends Service {
+public class DirectPurchaseOrderService extends Service
+{
 
-    @Autowired
-    private GenericDao genericDao;
+	@Autowired
+	private GenericDao genericDao;
 
-    @Autowired
-    private CodeSequenceDao codeSequenceDao;
+	@Autowired
+	private CodeSequenceDao codeSequenceDao;
 
-    @Autowired
-    private PartyRelationshipDao partyRelationshipDao;
+	@Autowired
+	private PartyRelationshipDao partyRelationshipDao;
 
-    @Autowired
-    private CreditTermDao creditTermDao;
+	@Autowired
+	private CreditTermDao creditTermDao;
 
-    @Autowired
-    private CurrencyDao currencyDao;
+	@Autowired
+	private CurrencyDao currencyDao;
 
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws Exception {
-        FastMap<String, Object> map = new FastMap<String, Object>();
-        map.put("dpos", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
-        map.put("filterCriteria", filterCriteria);
-        map.put("approvableDecisionStat", ApprovalDecisionStatus.values());
-
-        return map;
-    }
-
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	@InjectParty(keyName = "dpo_form")
-	public FastMap<String, Object> preadd()
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws Exception
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
-
-        List<Facility> facilities = genericDao.loadAll(Facility.class);
-
-		map.put("dpo_form", new PurchaseForm());
-        map.put("taxes", genericDao.loadAll(Tax.class));
-        map.put("facilities", facilities);
+		map.put("dpos", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
+		map.put("filterCriteria", filterCriteria);
+		map.put("approvableDecisionStat", ApprovalDecisionStatus.values());
 
 		return map;
 	}
 
-    @AuditTrails(className = PurchaseOrder.class, actionType = AuditTrailsActionType.CREATE)
-    public void add(PurchaseOrder purchaseOrder) throws Exception {
-        PurchaseForm form = (PurchaseForm) purchaseOrder.getForm();
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	@InjectParty(keyName = "dpo_form")
+	public FastMap<String, Object> preadd()
+	{
+		List<Facility> facilities = genericDao.loadAll(Facility.class);
 
-        purchaseOrder.setMoney(new Money());
-        purchaseOrder.getMoney().setAmount(form.getAmount());
-        purchaseOrder.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("dpo_form", new PurchaseForm());
+		map.put("taxes", genericDao.loadAll(Tax.class));
+		map.put("facilities", facilities);
 
-        purchaseOrder.setCode(GeneratorHelper.instance().generate(TableType.DIRECT_PURCHASE_ORDER, codeSequenceDao));
-        purchaseOrder.setShippingDate(form.getDeliveryDate());
-        purchaseOrder.setPurchaseType(PurchaseType.DIRECT);
-        purchaseOrder.setStatus(POStatus.OPEN);
+		return map;
+	}
 
-        // Credit Term harus didapatkan dari party relationship
+	@AuditTrails(className = PurchaseOrder.class, actionType = AuditTrailsActionType.CREATE)
+	public void add(PurchaseOrder purchaseOrder) throws Exception
+	{
+		PurchaseForm form = (PurchaseForm) purchaseOrder.getForm();
+
+		purchaseOrder.setMoney(new Money());
+		purchaseOrder.getMoney().setAmount(form.getAmount());
+		purchaseOrder.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
+
+		purchaseOrder.setCode(GeneratorHelper.instance().generate(TableType.DIRECT_PURCHASE_ORDER, codeSequenceDao));
+		purchaseOrder.setShippingDate(form.getDeliveryDate());
+		purchaseOrder.setPurchaseType(PurchaseType.DIRECT);
+		purchaseOrder.setStatus(POStatus.OPEN);
+
+		// Credit Term harus didapatkan dari party relationship
 		PartyRelationship relationship = partyRelationshipDao.load(purchaseOrder.getSupplier().getId(), purchaseOrder.getOrganization().getId(), PartyRelationshipType.SUPPLIER_RELATIONSHIP);
 		CreditTerm creditTerm = creditTermDao.loadByRelationship(relationship.getId(), true, purchaseOrder.getDate());
 		if (creditTerm == null)
 			throw new ServiceException("Supplier doesn't have active Credit Term, please set it first on supplier page.");
-        purchaseOrder.setCreditTerm(creditTerm);
+		purchaseOrder.setCreditTerm(creditTerm);
 
-        //Add ApprovableBridge using Helper
-        PurchaseOrderApprovableBridge approvableBridge = ApprovableBridgeHelper.create(PurchaseOrderApprovableBridge.class, purchaseOrder);
-        approvableBridge.setApprovableType(ApprovableType.PURCHASE_ORDER);
-        approvableBridge.setUri("directpurchaseorderpreedit.htm");
-        purchaseOrder.setApprovable(approvableBridge);
+		//Add ApprovableBridge using Helper
+		PurchaseOrderApprovableBridge approvableBridge = ApprovableBridgeHelper.create(PurchaseOrderApprovableBridge.class, purchaseOrder);
+		approvableBridge.setApprovableType(ApprovableType.PURCHASE_ORDER);
+		approvableBridge.setUri("directpurchaseorderpreedit.htm");
+		purchaseOrder.setApprovable(approvableBridge);
 
-        for (Item item: form.getItems()) {
-            if (item.getProduct() != null) {
-                PurchaseOrderItem orderItem = new PurchaseOrderItem();
+		for (Item item : form.getItems())
+		{
+			if (item.getProduct() != null)
+			{
+				PurchaseOrderItem orderItem = new PurchaseOrderItem();
 
-                // Set Puchase Order Item
-                orderItem.setPurchaseOrder(purchaseOrder);
-                orderItem.setDeliveryDate(purchaseOrder.getShippingDate());
-                orderItem.setQuantity(item.getQuantity());
-                orderItem.setDiscount(item.getDiscount());
-                orderItem.setLocked(true);
+				// Set Puchase Order Item
+				orderItem.setPurchaseOrder(purchaseOrder);
+				orderItem.setDeliveryDate(purchaseOrder.getShippingDate());
+				orderItem.setQuantity(item.getQuantity());
+				orderItem.setDiscount(item.getDiscount());
+				orderItem.setLocked(true);
 
-                // Set Warehouse Reference Item
-                orderItem.setProduct(item.getProduct());
-                orderItem.setNote(item.getNote());
-                orderItem.getMoney().setAmount(item.getAmount());
-                orderItem.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
-                
-                // No container, need set manually
-                orderItem.setFacilityDestination(purchaseOrder.getShipTo());
-               
-                orderItem.setCreatedBy(getPerson());
-                orderItem.setCreatedDate(DateHelper.now());
+				// Set Warehouse Reference Item
+				orderItem.setProduct(item.getProduct());
+				orderItem.setNote(item.getNote());
+				orderItem.getMoney().setAmount(item.getAmount());
+				orderItem.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
 
-                // Set Transaction Item using helper & set locked to true
-                WarehouseTransactionItem warehouseTransactionItem = ReferenceItemHelper.init(genericDao, item.getQuantity(), WarehouseTransactionType.IN, orderItem);
-                warehouseTransactionItem.setLocked(true);
-                orderItem.setTransactionItem(warehouseTransactionItem);
+				// No container, need set manually
+				orderItem.setFacilityDestination(purchaseOrder.getShipTo());
 
-                purchaseOrder.getItems().add(orderItem);
-            }
-        }
+				orderItem.setCreatedBy(getPerson());
+				orderItem.setCreatedDate(DateHelper.now());
 
-        genericDao.add(purchaseOrder);
-    }
+				// Set Transaction Item using helper & set locked to true
+				WarehouseTransactionItem warehouseTransactionItem = ReferenceItemHelper.init(genericDao, item.getQuantity(), WarehouseTransactionType.IN, orderItem);
+				warehouseTransactionItem.setLocked(true);
+				orderItem.setTransactionItem(warehouseTransactionItem);
 
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public FastMap<String, Object> preedit(Long id) throws Exception {
+				purchaseOrder.getItems().add(orderItem);
+			}
+		}
+
+		genericDao.add(purchaseOrder);
+	}
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> preedit(Long id) throws Exception
+	{
 		PurchaseOrder purchaseOrder = genericDao.load(PurchaseOrder.class, id);
 		PurchaseForm purchaseForm = FormHelper.bind(PurchaseForm.class, purchaseOrder);
-        PurchaseOrderAdapter adapter = new PurchaseOrderAdapter(purchaseOrder);
+		PurchaseOrderAdapter adapter = new PurchaseOrderAdapter(purchaseOrder);
 
 		purchaseForm.setPurchaseOrder(purchaseOrder);
 
@@ -150,17 +155,18 @@ public class DirectPurchaseOrderService extends Service {
 		return map;
 	}
 
-    /**
-     * Fungsi ini bisa sebagai update data PO atau bisa sebagai approve PO
-     * Setelah fungsi ini selesai akan execute kelas {@link ApprovableSiblingRole}
-     * Kemudian eksekusi {@link PurchaseOrderApprovableInterceptor}
-     *
-     * @param purchaseOrder dari halaman preedit
-     * @return id PO
-     */
-    @AutomaticSibling(roles = "ApprovableSiblingRole")
+	/**
+	 * Fungsi ini bisa sebagai update data PO atau bisa sebagai approve PO
+	 * Setelah fungsi ini selesai akan execute kelas {@link ApprovableSiblingRole}
+	 * Kemudian eksekusi {@link PurchaseOrderApprovableInterceptor}
+	 *
+	 * @param purchaseOrder dari halaman preedit
+	 * @return id PO
+	 */
+	@AutomaticSibling(roles = "ApprovableSiblingRole")
 	@AuditTrails(className = PurchaseOrder.class, actionType = AuditTrailsActionType.UPDATE)
-	public FastMap<String, Object> edit(PurchaseOrder purchaseOrder) throws Exception {
+	public FastMap<String, Object> edit(PurchaseOrder purchaseOrder) throws Exception
+	{
 		purchaseOrder.setUpdatedBy(getPerson());
 		purchaseOrder.setUpdatedDate(DateHelper.now());
 

@@ -54,7 +54,6 @@ public class AccountingForm extends Form
 	private BigDecimal rounding;
 
 	private int year;
-	private int term;
 
 	private Date dueDate;
 	private Date paidDate;

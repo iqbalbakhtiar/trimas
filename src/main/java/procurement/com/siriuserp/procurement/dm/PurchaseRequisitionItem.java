@@ -12,12 +12,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.Type;
 
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.sdk.dm.Model;
@@ -48,6 +50,10 @@ public class PurchaseRequisitionItem extends Model
 	@Column(name = "note")
 	private String note;
 
+	@Column(name = "available")
+	@Type(type = "yes_no")
+	private boolean available = Boolean.TRUE;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_product")
 	@LazyToOne(LazyToOneOption.PROXY)
@@ -60,10 +66,10 @@ public class PurchaseRequisitionItem extends Model
 	@Fetch(FetchMode.SELECT)
 	private PurchaseRequisition purchaseRequisition;
 
-	/*@OneToOne(mappedBy = "requisitionItem", fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "requisitionItem", fetch = FetchType.LAZY)
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
-	private PurchaseOrderItem purchaseOrderItem;*/
+	private PurchaseOrderItem purchaseOrderItem;
 
 	@Override
 	public String getAuditCode()

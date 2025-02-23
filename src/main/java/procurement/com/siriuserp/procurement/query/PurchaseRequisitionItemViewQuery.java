@@ -1,6 +1,6 @@
 /**
- * File Name  : PurchaseRequisitionViewQuery.java
- * Created On : Feb 21, 2025
+ * File Name  : PurchaseRequisitionItemViewQuery.java
+ * Created On : Feb 23, 2025
  * Email	  : iqbal@siriuserp.com
  */
 package com.siriuserp.procurement.query;
@@ -18,7 +18,7 @@ import com.siriuserp.sdk.utility.SiriusValidator;
  * www.siriuserp.com
  */
 
-public class PurchaseRequisitionViewQuery extends AbstractGridViewQuery
+public class PurchaseRequisitionItemViewQuery extends AbstractGridViewQuery
 {
 	@Override
 	public Query getQuery(ExecutorType executorType)
@@ -27,29 +27,29 @@ public class PurchaseRequisitionViewQuery extends AbstractGridViewQuery
 		StringBuilder builder = new StringBuilder();
 
 		if (executorType.equals(ExecutorType.COUNT))
-			builder.append("SELECT COUNT(DISTINCT req) ");
+			builder.append("SELECT COUNT(DISTINCT item) ");
 		else
-			builder.append("SELECT DISTINCT(req) ");
+			builder.append("SELECT DISTINCT(item) ");
 
-		builder.append("FROM PurchaseRequisition req ");
-		builder.append("WHERE req.id IS NOT NULL ");
+		builder.append("FROM PurchaseRequisition item ");
+		builder.append("WHERE item.available = 'Y' ");
 
 		if (SiriusValidator.validateParam(criteria.getCode()))
-			builder.append("AND req.code LIKE :code");
+			builder.append("AND item.purchaseRequisition.code LIKE :code");
 
 		if (SiriusValidator.validateParam(criteria.getRequisitionerName()))
-			builder.append("AND req.requisitioner.fullName LIKE :requisitioner ");
+			builder.append("AND item.purchaseRequisition.requisitioner.fullName LIKE :requisitioner ");
 
 		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 		{
 			if (SiriusValidator.validateDate(criteria.getDateTo()))
-				builder.append("AND req.date BETWEEN :startDate AND :endDate ");
+				builder.append("AND item.purchaseRequisition.date BETWEEN :startDate AND :endDate ");
 			else
-				builder.append("AND req.date >= :startDate ");
+				builder.append("AND item.purchaseRequisition.date >= :startDate ");
 		} else if (SiriusValidator.validateDate(criteria.getDateTo()))
-			builder.append("AND req.date <= :endDate ");
+			builder.append("AND item.purchaseRequisition.date <= :endDate ");
 
-		builder.append("ORDER BY req.id DESC");
+		builder.append("ORDER BY item.product.name ASC");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);
