@@ -80,6 +80,7 @@ public class SalesOrderService extends Service {
 
 		map.put("salesOrder_form", new SalesForm());
 		map.put("taxes", genericDao.loadAll(Tax.class));
+		map.put("twoMonth", DateHelper.plusMonth(DateHelper.now(), 2));
 
 		return map;
 	}
@@ -101,7 +102,7 @@ public class SalesOrderService extends Service {
 		salesOrder.setMoney(moneySalesOrder);
 		salesOrder.setSalesType(SalesType.STANDARD);
 
-		// Credit Term harus didapatkan dari party relation ship
+		// Credit Term harus didapatkan dari party relationship
 		PartyRelationship relationship = partyRelationshipDao.load(salesOrder.getCustomer().getId(), salesOrder.getOrganization().getId(), PartyRelationshipType.CUSTOMER_RELATIONSHIP);
 		CreditTerm creditTerm = creditTermDao.loadByRelationship(relationship.getId(), true, salesOrder.getDate());
 		if (creditTerm == null)

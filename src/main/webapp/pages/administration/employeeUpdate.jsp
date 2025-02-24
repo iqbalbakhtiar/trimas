@@ -31,7 +31,7 @@
 	 							</tr>
  								<tr>
  									<td align="right"><spring:message code="employee.name"/> :</td>
-									<td><form:input id="name" path="firstName" cssClass="inputbox input-disabled" readonly="true"/></td>
+									<td><form:input id="name" path="fullName" cssClass="inputbox input-disabled" readonly="true"/></td>
 	 							</tr>
 	 							<tr>
 	 							  	<td align="right"><spring:message code="party.code.reg"/> :</td>

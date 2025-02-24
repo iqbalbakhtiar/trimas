@@ -77,8 +77,9 @@
 							<td nowrap="nowrap"><fmt:formatDate value='${sales.shippingDate}' pattern='dd-MM-yyyy'/></td>
  							<td nowrap="nowrap">${sales.customer.fullName}</td>
  							<td nowrap="nowrap">${sales.tax.taxName}</td>
- 							<td nowrap="nowrap">${sales.approvable.approvalDecision.approvalDecisionStatus.normalizedName}</td>
- 							<td nowrap="nowrap">${sales.approvable.approvalDecision.forwardTo.fullName}</td>
+ 							<td nowrap="nowrap">${sales.approvable.approvalDecision}</td>
+<%-- 							<td nowrap="nowrap">${sales.approvable.approvalDecision.approvalDecisionStatus.normalizedName}</td>--%>
+<%-- 							<td nowrap="nowrap">${sales.approvable.approvalDecision.forwardTo.fullName}</td>--%>
  							<td nowrap="nowrap">${sales.poCode}</td>
  							<td nowrap="nowrap"><fmt:formatNumber value='${sales.money.amount}' pattern=',##0.00'/></td>
 						</tr>

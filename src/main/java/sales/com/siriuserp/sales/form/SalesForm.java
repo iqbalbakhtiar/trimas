@@ -16,12 +16,14 @@ import lombok.Setter;
 public class SalesForm extends Form {
 
 	private static final long serialVersionUID = -1116229667455960263L;
-	
+
+	@Deprecated
 	private String poCode;
 
 	private BigDecimal amount = BigDecimal.ZERO;
 	
 	private Date date;
+	private Date expDate;
 	private Date shippingDate;
 	
 	private PostalAddress shippingAddress;

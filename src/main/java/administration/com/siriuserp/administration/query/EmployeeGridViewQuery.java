@@ -57,7 +57,7 @@ public class EmployeeGridViewQuery extends AbstractGridViewQuery
 		}
 
 		if (executorType.equals(ExecutorType.HQL))
-			builder.append("ORDER BY relationship.partyTo.firstName ASC, relationship.id DESC");
+			builder.append("ORDER BY relationship.partyTo.fullName ASC, relationship.id DESC");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);

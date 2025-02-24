@@ -1,18 +1,41 @@
 package com.siriuserp.sales.dm;
 
-import com.siriuserp.sdk.dm.*;
+import com.siriuserp.sdk.dm.ApprovableBridge;
+import com.siriuserp.sdk.dm.CreditTerm;
+import com.siriuserp.sdk.dm.Facility;
+import com.siriuserp.sdk.dm.JSONSupport;
+import com.siriuserp.sdk.dm.Model;
+import com.siriuserp.sdk.dm.Money;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.PostalAddress;
+import com.siriuserp.sdk.dm.Tax;
 import javolution.util.FastSet;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
@@ -21,7 +44,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "sales_order")
-@Inheritance(strategy = InheritanceType.JOINED)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class SalesOrder extends Model implements JSONSupport, ApprovableBridge {
 	
@@ -32,6 +54,9 @@ public class SalesOrder extends Model implements JSONSupport, ApprovableBridge {
 	
 	@Column(name = "date")
 	private Date date;
+
+	@Column(name = "exp_date")
+	private Date expDate;
 	
 	@Column(name = "po_code")
 	private String poCode;
