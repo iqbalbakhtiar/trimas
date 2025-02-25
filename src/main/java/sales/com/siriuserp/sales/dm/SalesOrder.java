@@ -30,6 +30,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -44,9 +46,9 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "sales_order")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class SalesOrder extends Model implements JSONSupport, ApprovableBridge {
-	
 	private static final long serialVersionUID = -5053662637061845245L;
 	
 	@Column(name = "code")

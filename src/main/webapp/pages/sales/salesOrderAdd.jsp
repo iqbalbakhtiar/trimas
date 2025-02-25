@@ -37,7 +37,7 @@
 				<tr>
 					<td align="right"><spring:message code="salesorder.expired.date"/></td>
 					<td width="1%" align="center">:</td>
-					<td><input id="date" name="date" class="datepicker" value="<fmt:formatDate value='${twoMonth}' pattern='dd-MM-yyyy'/>"/></td>
+					<td><input id="expDate" name="expDate" class="datepicker" value="<fmt:formatDate value='${twoMonth}' pattern='dd-MM-yyyy'/>"/></td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="customer"/></td>
@@ -95,14 +95,6 @@
 										<td width="80%" align="right"><spring:message code="salesorder.total"/></td>
 										<td width="20%">:&nbsp;&nbsp;<input id="totalSales" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
 									</tr>
-<%--									<tr>--%>
-<%--										<td width="80%" align="right"><spring:message code="salesorder.total.discount"/></td>--%>
-<%--										<td width="20%">:&nbsp;&nbsp;<input id="totalDiscount" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>--%>
-<%--									</tr>--%>
-<%--									<tr>--%>
-<%--										<td width="80%" align="right"><spring:message code="salesorder.amount.beforetax"/></td>--%>
-<%--										<td width="20%">:&nbsp;&nbsp;<input id="totalBeforeTax" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>--%>
-<%--									</tr>--%>
 									<tr>
 										<td width="80%" align="right"><spring:message code="salesorder.tax.amount"/></td>
 										<td width="20%">:&nbsp;&nbsp;<input id="totalTax" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
@@ -165,9 +157,6 @@
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
 							<th width="8%" nowrap="nowrap"><spring:message code="sirius.unitprice"/></th>
-<%--							<th width="5%" nowrap="nowrap"><spring:message code="salesorder.disc"/></th>--%>
-<%--							<th width="8%" nowrap="nowrap"><spring:message code="sirius.amount"/></th>--%>
-<%--							<th width="8%" nowrap="nowrap"><spring:message code="salesorder.total.disc"/></th>--%>
 							<th width="8%" nowrap="nowrap"><spring:message code="sirius.total"/> <spring:message code="sirius.amount"/></th>
 							<th width="8%" nowrap="nowrap"><spring:message code="salesorder.packing.note"/></th>
 						</tr>
@@ -296,19 +285,19 @@ function validateForm() {
         return false;
     }
 
+	// Validasi expired date
+	var date = $('#expDate').val();
+	if (date == null || date === "") {
+		alert('<spring:message code="salesorder.expired.date"/> <spring:message code="notif.empty"/> !');
+		return false;
+	}
+
     // Validasi customer
     var customer = $('#customer').val();
     if (customer == null || customer === "") {
         alert('<spring:message code="customer"/> <spring:message code="notif.empty"/> !');
         return false;
     }
-
-    // Validasi poCode
-    <%--var poCode = $('input[name="poCode"]').val();--%>
-    <%--if (poCode == null || poCode.trim() === "") {--%>
-    <%--    alert('<spring:message code="salesorder.customer.pocode"/> <spring:message code="notif.empty"/> !');--%>
-    <%--    return false;--%>
-    <%--}--%>
 
     // Validasi shippingDate
     var shippingDate = $('#shippingDate').val();
@@ -367,15 +356,6 @@ function validateForm() {
             isValid = false;
             return false;
         }
-
-        // Validasi discount (opsional jika perlu)
-        <%--var discStr = $row.find('input[id^="discount["]').val().replace(/,/g, '');--%>
-        <%--var disc = parseFloat(discStr);--%>
-        <%--if (isNaN(disc) || disc < 0 || disc > 100) {--%>
-        <%--    alert('<spring:message code="salesorder.disc"/> <spring:message code="notif.invalid"/> ! (<spring:message code="salesorder.lineitem"/> ' + (index + 1) + ')');--%>
-        <%--    isValid = false;--%>
-        <%--    return false;--%>
-        <%--}--%>
     });
 
     if (!isValid) {
@@ -437,20 +417,15 @@ function updateDisplay() {
 
 		var qty = getNumericValue($row.find('input[id^="quantity["]'));
 		var price = getNumericValue($row.find('input[id^="amount["]'));
-		// var disc = getNumericValue($row.find('input[id^="discount["]'));
 
 		var amount = qty * price;
-		// var totalDisc = amount * (disc / 100);
-		// var totalAmount = amount - totalDisc;
 		var totalAmount = amount;
 
 		totalSales += amount;
-		// totalDiscount += totalDisc;
 		totalBeforeTax += totalAmount;
 
 		// Mengatur nilai terformat menggunakan numberFormat
 		$row.find('input[id^="amountInput["]').val(amount.numberFormat('#,##0.00'));
-		// $row.find('input[id^="totalDisc["]').val(totalDisc.numberFormat('#,##0.00'));
 		$row.find('input[id^="totalAmount["]').val(totalAmount.numberFormat('#,##0.00'));
 	});
 
@@ -458,9 +433,7 @@ function updateDisplay() {
 	var totalTax = totalBeforeTax * (taxRate / 100);
 	var totalTransaction = totalBeforeTax + totalTax;
 
-	// Memperbarui field recapitulation dengan nilai yang diformat
 	$('#totalSales').val(totalSales.numberFormat('#,##0.00'));
-	// $('#totalDiscount').val(totalDiscount.numberFormat('#,##0.00'));
 	$('#totalBeforeTax').val(totalBeforeTax.numberFormat('#,##0.00'));
 	$('#totalTax').val(totalTax.numberFormat('#,##0.00'));
 	$('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
@@ -480,13 +453,7 @@ function addLine($index) {
 	$uom = List.get('<input type="text" class="input-disabled" disabled size="6" />','uom['+$index+']');
 	
 	$price = List.get('<input type="text" class="input-number" size="12" onchange="updateDisplay()"/>','amount['+$index+']', '0.00');
-	
-	// $disc = List.get('<input type="text" class="input-number" size="6" onchange="updateDisplay()"/>','discount['+$index+']', '0.00');
-	//
-	// $amount = List.get('<input type="text" class="input-number input-disabled" disabled size="12"/>','amountInput['+$index+']', '0.00');
-	//
-	// $totalDisc = List.get('<input type="text" class="input-number input-disabled" disabled size="12"/>','totalDisc['+$index+']', '0.00');
-	
+
 	$totalAmount = List.get('<input type="text" class="input-number input-disabled" disabled size="12"/>','totalAmount['+$index+']', '0.00');
 	
 	$packNote = List.get('<input type="text"/>','note['+$index+']');
@@ -496,9 +463,6 @@ function addLine($index) {
 	$tr.append(List.col([$qty]));
 	$tr.append(List.col([$uom]));
 	$tr.append(List.col([$price]));
-	// $tr.append(List.col([$disc]));
-	// $tr.append(List.col([$amount]));
-	// $tr.append(List.col([$totalDisc]));
 	$tr.append(List.col([$totalAmount]));
 	$tr.append(List.col([$packNote]));
 	
@@ -518,8 +482,6 @@ function openProduct(index) {
 }
 
 function checkDuplicate(element) {
-	// Memanggil String.duplicate untuk mengecek duplikasi pada kelas html 'productInput'
-
 	var productId = $(element).val();
 	var index = element.getAttribute('index');
 

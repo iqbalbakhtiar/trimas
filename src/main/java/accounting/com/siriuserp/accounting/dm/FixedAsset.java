@@ -18,9 +18,12 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.siriuserp.procurement.dm.PurchaseOrderApprovableBridge;
+import com.siriuserp.sdk.dm.Model;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
@@ -32,7 +35,6 @@ import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
 import com.siriuserp.inventory.dm.Product;
-import com.siriuserp.sdk.dm.Approvable;
 import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.ExchangeType;
 import com.siriuserp.sdk.dm.Party;
@@ -53,7 +55,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "fixed_asset")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class FixedAsset extends Approvable implements Postingable
+public class FixedAsset extends Model implements Postingable
 {
 	private static final long serialVersionUID = -4822692060473909440L;
 
@@ -140,7 +142,7 @@ public class FixedAsset extends Approvable implements Postingable
 	@Fetch(FetchMode.SELECT)
 	private FixedAssetGroup fixedAssetGroup;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_preasset")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
@@ -157,6 +159,12 @@ public class FixedAsset extends Approvable implements Postingable
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private DecliningInformation decliningInformation;
+
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "fk_purchase_order_approvable_bridge")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private PurchaseOrderApprovableBridge approvable;
 
 	@OneToMany(mappedBy = "fixedAsset", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)

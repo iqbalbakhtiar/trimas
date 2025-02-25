@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.siriuserp.inventory.dm.Product;
+import com.siriuserp.sales.dm.SOStatus;
 import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sdk.dm.Form;
 import com.siriuserp.sdk.dm.PostalAddress;
@@ -29,4 +30,6 @@ public class SalesForm extends Form {
 	private PostalAddress shippingAddress;
 	private SalesOrder salesOrder;
 	private Product product;
+
+	private SOStatus soStatus;
 }

@@ -5,7 +5,9 @@
 	<a class="item-button-list" href="<c:url value='/page/salesorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
 	<a class="item-button-print"  href="<c:url value='/page/salesorderprint.htm?id=${salesOrder_form.salesOrder.id}'/>"><span><spring:message code="sirius.print"/></span></a>
-	<a class="item-button-print"  href="<c:url value='/page/salesorderprint.htm?id=${salesOrder_form.salesOrder.id}'/>"><span><spring:message code="sirius.print"/></span></a>
+	<c:if test="${salesOrder_form.soStatus != 'CLOSE'}">
+		<a class="item-button-close"><span><spring:message code="sirius.close"/></span></a>
+	</c:if>
 </div>
 
 <div class="main-box">
@@ -32,9 +34,14 @@
 					</td>
 				</tr>
 				<tr>
-					<td align="right"><spring:message code="salesorder.date"/></td>
+					<td align="right"><spring:message code="sirius.date"/></td>
 					<td width="1%" align="center">:</td>
 					<td><input id="date" name="date" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${salesOrder_form.date}' pattern='dd-MM-yyyy'/>"/></td>
+				</tr>
+				<tr>
+					<td align="right"><spring:message code="salesorder.expired.date"/></td>
+					<td width="1%" align="center">:</td>
+					<td><input id="date" name="date" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${salesOrder_form.expDate}' pattern='dd-MM-yyyy'/>"/></td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="customer"/></td>
@@ -46,12 +53,6 @@
 							</c:if>
 						</form:select>
 					</td>
-				</tr>
-				<tr>
-					<td align="right"><spring:message code="salesorder.customer.pocode"/></td>
-					<td width="1%" align="center">:</td>
-					<td><form:input path="poCode" cssClass="inputbox input-disabled" disabled="true" /></td>
-					<td><form:errors path="poCode"/></td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="salesorder.shipping.date"/></td>
@@ -101,14 +102,6 @@
 									<tr>
 										<td width="80%" align="right"><spring:message code="salesorder.total"/></td>
 										<td width="20%">:&nbsp;&nbsp;<input id="totalSales" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
-									</tr>
-									<tr>
-										<td width="80%" align="right"><spring:message code="salesorder.total.discount"/></td>
-										<td width="20%">:&nbsp;&nbsp;<input id="totalDiscount" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
-									</tr>
-									<tr>
-										<td width="80%" align="right"><spring:message code="salesorder.amount.beforetax"/></td>
-										<td width="20%">:&nbsp;&nbsp;<input id="totalBeforeTax" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
 									</tr>
 									<tr>
 										<td width="80%" align="right"><spring:message code="salesorder.tax.amount"/></td>
@@ -172,9 +165,6 @@
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
 							<th width="8%" nowrap="nowrap"><spring:message code="sirius.unitprice"/></th>
-							<th width="5%" nowrap="nowrap"><spring:message code="salesorder.disc"/></th>
-							<th width="8%" nowrap="nowrap"><spring:message code="sirius.amount"/></th>
-							<th width="8%" nowrap="nowrap"><spring:message code="salesorder.total.disc"/></th>
 							<th width="8%" nowrap="nowrap"><spring:message code="sirius.total"/> <spring:message code="sirius.amount"/></th>
 							<th width="8%" nowrap="nowrap"><spring:message code="salesorder.packing.note"/></th>
 						</tr>
@@ -199,18 +189,6 @@
 								<input id="amount[${idx.index}]" size="12" value="<fmt:formatNumber value='${item.money.amount}' pattern=',##0.00'/>"
 									   class="input-disabled input-decimal" name="items[${idx.index}].amount"
 									   index="${idx.index}" next="amount" disabled/>
-							</td>
-							<td>
-								<input id="discount[${idx.index}]" size="6" value="${item.discount}" class="input-disabled input-decimal"
-									   name="items[${idx.index}].count" index="${idx.index}" next="discount" disabled/>
-							</td>
-							<td>
-								<input id="amountInput[${idx.index}]" size="12" type="text" class="input-disabled input-decimal" name="items[${idx.index}].amountInput"
-									   index="${idx.index}" next="amountInput" disabled/>
-							</td>
-							<td>
-								<input id="totalDisc[${idx.index}]" size="12" type="text" class="input-disabled input-decimal" name="items[${idx.index}].totalDisc"
-									   index="${idx.index}" next="totalDisc" disabled/>
 							</td>
 							<td>
 								<input id="totalAmount[${idx.index}]" size="12" type="text" class="input-disabled input-decimal" name="items[${idx.index}].totalAmount"
@@ -265,6 +243,10 @@ $(function(){
         });
         $('.checkall').prop("checked", false);
     });
+
+	$('.item-button-close').click(function(){
+		closeSo();
+	});
 });
 
 function validateForm() {
@@ -282,17 +264,17 @@ function validateForm() {
         return false;
     }
 
+	// Validasi exp date
+	var date = $('#expDate').val();
+	if (date == null || date === "") {
+		alert('<spring:message code="salesorder.date"/> <spring:message code="notif.empty"/> !');
+		return false;
+	}
+
     // Validasi customer
     var customer = $('#customer').val();
     if (customer == null || customer === "") {
         alert('<spring:message code="customer"/> <spring:message code="notif.empty"/> !');
-        return false;
-    }
-
-    // Validasi poCode
-    var poCode = $('input[name="poCode"]').val();
-    if (poCode == null || poCode.trim() === "") {
-        alert('<spring:message code="salesorder.customer.pocode"/> <spring:message code="notif.empty"/> !');
         return false;
     }
 
@@ -430,19 +412,15 @@ function updateDisplay() {
 
 		var qty = getNumericValue($row.find('input[id^="quantity["]'));
 		var price = getNumericValue($row.find('input[id^="amount["]'));
-		var disc = getNumericValue($row.find('input[id^="discount["]'));
 
 		var amount = qty * price;
-		var totalDisc = amount * (disc / 100);
-		var totalAmount = amount - totalDisc;
+		var totalAmount = amount;
 
 		totalSales += amount;
-		totalDiscount += totalDisc;
 		totalBeforeTax += totalAmount;
 
 		// Mengatur nilai terformat menggunakan numberFormat
 		$row.find('input[id^="amountInput["]').val(amount.numberFormat('#,##0.00'));
-		$row.find('input[id^="totalDisc["]').val(totalDisc.numberFormat('#,##0.00'));
 		$row.find('input[id^="totalAmount["]').val(totalAmount.numberFormat('#,##0.00'));
 	});
 
@@ -450,9 +428,7 @@ function updateDisplay() {
 	var totalTax = totalBeforeTax * (taxRate / 100);
 	var totalTransaction = totalBeforeTax + totalTax;
 
-	// Memperbarui field recapitulation dengan nilai yang diformat
 	$('#totalSales').val(totalSales.numberFormat('#,##0.00'));
-	$('#totalDiscount').val(totalDiscount.numberFormat('#,##0.00'));
 	$('#totalBeforeTax').val(totalBeforeTax.numberFormat('#,##0.00'));
 	$('#totalTax').val(totalTax.numberFormat('#,##0.00'));
 	$('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
@@ -460,43 +436,34 @@ function updateDisplay() {
 
 function addLine($index) {
 	$tbody = $('#lineItem');
-    $tr = $('<tr/>');
-    
+	$tr = $('<tr/>');
+
 	$cbox = List.get('<input type="checkbox" class="check"/>','check'+$index);
-	
+
 	$product = List.get('<select class="combobox productInput" onchange="checkDuplicate(this);updateDisplay();"/>','product['+$index+']');
 	$productImg = List.img('<spring:message code="product"/>', $index, 'openProduct("'+$index+'")');
-	
-	$qty = List.get('<input type="text" class="input-decimal" size="6" onchange="updateDisplay();"/>','quantity['+$index+']', '0.00');
-	
+
+	$qty = List.get('<input type="text" class="input-number" size="6" onchange="updateDisplay();"/>','quantity['+$index+']', '0.00');
+
 	$uom = List.get('<input type="text" class="input-disabled" disabled size="6" />','uom['+$index+']');
-	
-	$price = List.get('<input type="text" class="input-decimal" size="12" onchange="updateDisplay()"/>','amount['+$index+']', '0.00');
-	
-	$disc = List.get('<input type="text" class="input-decimal" size="6" onchange="updateDisplay()"/>','discount['+$index+']', '0.00');
-	
-	$amount = List.get('<input type="text" class="input-decimal input-disabled" disabled size="12"/>','amountInput['+$index+']', '0.00');
-	
-	$totalDisc = List.get('<input type="text" class="input-decimal input-disabled" disabled size="12"/>','totalDisc['+$index+']', '0.00');
-	
-	$totalAmount = List.get('<input type="text" class="input-decimal input-disabled" disabled size="12"/>','totalAmount['+$index+']', '0.00');
-	
+
+	$price = List.get('<input type="text" class="input-number" size="12" onchange="updateDisplay()"/>','amount['+$index+']', '0.00');
+
+	$totalAmount = List.get('<input type="text" class="input-number input-disabled" disabled size="12"/>','totalAmount['+$index+']', '0.00');
+
 	$packNote = List.get('<input type="text"/>','note['+$index+']');
-	
+
 	$tr.append(List.col([$cbox]));
 	$tr.append(List.col([$product, $productImg]));
 	$tr.append(List.col([$qty]));
 	$tr.append(List.col([$uom]));
 	$tr.append(List.col([$price]));
-	$tr.append(List.col([$disc]));
-	$tr.append(List.col([$amount]));
-	$tr.append(List.col([$totalDisc]));
 	$tr.append(List.col([$totalAmount]));
 	$tr.append(List.col([$packNote]));
-	
+
 	$tbody.append($tr);
-	
-	$(".input-decimal").bind(inputFormat);
+
+	$(".input-number").bind(inputFormat);
 }
 
 function openProduct(index) {
@@ -524,13 +491,35 @@ function openapprover() {
 	openpopup(buildUrl(baseUrl, params));
 }
 
-function checkDuplicate(element) {
-	// Memanggil String.duplicate untuk mengecek duplikasi pada kelas html 'productInput'
-	var isDuplicated = String.duplicate('productInput');
-
-	if (isDuplicated) {
-		alert('<spring:message code="product"/>  <strong>'+ $(element).find('option:selected').text() +'</strong> <spring:message code="notif.duplicate"/> !');
-		$(element).closest('tr').remove();
-	}
+function closeSo() {
+	$.ajax({
+		url:"<c:url value='/page/salesorderclose.htm?id=${salesOrder_form.salesOrder.id}'/>",
+		// data:$('#addForm').serialize(),
+		type : 'POST',
+		dataType : 'json',
+		beforeSend:function()
+		{
+			$dialog.empty();
+			$dialog.html('<spring:message code="notif.saving"/>');
+			$dialog.dialog('open');
+		},
+		success : function(json) {
+			if(json)
+			{
+				if(json.status === 'OK')
+				{
+					$dialog.dialog('close');
+					<%--window.location="<c:url value='/page/deliveryorderview.htm'/>";--%>
+					// Or Can use This
+					window.location="<c:url value='/page/salesorderpreedit.htm?id='/>"+json.id;
+				}
+				else
+				{
+					$dialog.empty();
+					$dialog.html('<spring:message code="notif.profailed"/> :<br/>'+json.message);
+				}
+			}
+		}
+	});
 }
 </script>

@@ -96,6 +96,24 @@ public class SalesOrderController extends ControllerBase {
 		return new ModelAndView("/sales/salesOrderUpdate", service.preedit(id));
 	}
 
+	@RequestMapping("/salesorderclose.htm")
+	public ModelAndView close(@RequestParam("id") Long id, SessionStatus status) throws Exception {
+		JSONResponse response = new JSONResponse();
+
+		try {
+			service.close(id);
+			status.setComplete();
+
+			response.store("id", id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.statusError();
+			response.setMessage(e.getLocalizedMessage());
+		}
+
+		return response;
+	}
+
 	@RequestMapping("/salesorderedit.htm")
 	public ModelAndView edit(@ModelAttribute("salesOrder_form") SalesForm salesForm, BindingResult result, SessionStatus status) throws Exception
 	{

@@ -57,14 +57,13 @@
 					  	<table class="table-list" cellspacing="0" cellpadding="0" width="100%">
 						<tr>
 							<th width="3%">&nbsp;</th>
-					  	  	<th width="10%"><spring:message code="sirius.id"/></th>
+					  	  	<th width="5%"><spring:message code="sirius.id"/></th>
 					  	  	<th width="10%"><spring:message code="salesorder.date"/></th>
 					  	  	<th width="10%"><spring:message code="salesorder.shipping.date"/></th>
 					  	  	<th width="10%"><spring:message code="customer"/></th>
-					  	  	<th width="10%"><spring:message code="sirius.tax"/></th>
+					  	  	<th width="5%"><spring:message code="sirius.tax"/></th>
 					  	  	<th width="10%"><spring:message code="salesorder.approvalstatus"/></th>
 							<th width="10%"><spring:message code="sirius.approver"/></th>
-							<th width="10%"><spring:message code="salesorder.customer.pocode"/></th>
 							<th width="10%"><spring:message code="salesorder.total.transaction"/></th>
 						</tr>
 						<c:forEach items="${salesOrders}" var="sales">
@@ -77,10 +76,8 @@
 							<td nowrap="nowrap"><fmt:formatDate value='${sales.shippingDate}' pattern='dd-MM-yyyy'/></td>
  							<td nowrap="nowrap">${sales.customer.fullName}</td>
  							<td nowrap="nowrap">${sales.tax.taxName}</td>
- 							<td nowrap="nowrap">${sales.approvable.approvalDecision}</td>
-<%-- 							<td nowrap="nowrap">${sales.approvable.approvalDecision.approvalDecisionStatus.normalizedName}</td>--%>
-<%-- 							<td nowrap="nowrap">${sales.approvable.approvalDecision.forwardTo.fullName}</td>--%>
- 							<td nowrap="nowrap">${sales.poCode}</td>
+ 							<td nowrap="nowrap">${sales.approvable.approvalDecision.approvalDecisionStatus.normalizedName}</td>
+ 							<td nowrap="nowrap">${sales.approvable.approvalDecision.forwardTo.fullName}</td>
  							<td nowrap="nowrap"><fmt:formatNumber value='${sales.money.amount}' pattern=',##0.00'/></td>
 						</tr>
 						</c:forEach>

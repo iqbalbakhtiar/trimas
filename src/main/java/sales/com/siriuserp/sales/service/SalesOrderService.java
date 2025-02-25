@@ -1,5 +1,6 @@
 package com.siriuserp.sales.service;
 
+import com.siriuserp.sales.dm.SOStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -187,4 +188,11 @@ public class SalesOrderService extends Service {
 		return salesReferenceItemDao.loadByProduct(productId);
 	}
 
+	@AuditTrails(className = SalesOrder.class, actionType = AuditTrailsActionType.UPDATE)
+	public void close(Long id) throws ServiceException {
+		SalesOrder salesOrder = genericDao.load(SalesOrder.class, id);
+		salesOrder.setSoStatus(SOStatus.CLOSE);
+
+		genericDao.update(salesOrder);
+	}
 }

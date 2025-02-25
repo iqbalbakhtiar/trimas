@@ -148,7 +148,7 @@ public class FixedAssetService
 		Hibernate.initialize(fixedAsset.getBankAccount());
 		Hibernate.initialize(fixedAsset.getOrganization());
 
-		map.put("approvalDecision", fixedAsset.getApprovalDecision());
+		map.put("approvalDecision", fixedAsset.getApprovable().getApprovalDecision());
 		map.put("fixedAsset_edit", fixedAsset);
 
 		return map;
@@ -170,16 +170,16 @@ public class FixedAssetService
 			fixedAsset.setUsefulLife(BigDecimal.ZERO);
 			if (fixedAsset.getDisposeAmount() == null)
 				fixedAsset.setDisposeAmount(BigDecimal.ZERO);
-			fixedAsset.setApprovableType(ApprovableType.FIXED_ASSET_DISPOSAL);
-			fixedAsset.setUri("fixedassetdisposepreedit.htm");
-			fixedAsset.setOrganization(fixedAsset.getFixedAssetGroup().getOrganization());
+			fixedAsset.getApprovable().setApprovableType(ApprovableType.FIXED_ASSET_DISPOSAL);
+			fixedAsset.getApprovable().setUri("fixedassetdisposepreedit.htm");
+			fixedAsset.getApprovable().setOrganization(fixedAsset.getFixedAssetGroup().getOrganization());
 
 			ApprovalDecision decision = new ApprovalDecision();
 			decision.setApprovalDecisionStatus(ApprovalDecisionStatus.REQUESTED);
 			decision.setCreatedDate(DateHelper.now());
-			decision.setForwardTo(fixedAsset.getApprover());
+			decision.setForwardTo(fixedAsset.getApprovable().getApprover());
 
-			fixedAsset.setApprovalDecision(decision);
+			fixedAsset.getApprovable().setApprovalDecision(decision);
 
 		}
 
