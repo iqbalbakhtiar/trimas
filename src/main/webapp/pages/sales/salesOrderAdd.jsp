@@ -32,7 +32,7 @@
 				<tr>
 					<td align="right"><spring:message code="sirius.date"/></td>
 					<td width="1%" align="center">:</td>
-					<td><input id="date" name="date" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>"/></td>
+					<td><input id="date" name="date" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>" onchange="updateExpDate()"/></td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="salesorder.expired.date"/></td>
@@ -551,4 +551,13 @@ function openApprover() {
 
 	openpopup(buildUrl(baseUrl, params));
 }
+
+function updateExpDate() {
+	var dateStr = $('#date').val();
+	if (dateStr) {
+		var newDate = DateHelper.plusDays(dateStr, 60);
+		$('#expDate').val(newDate);
+	}
+}
+
 </script>

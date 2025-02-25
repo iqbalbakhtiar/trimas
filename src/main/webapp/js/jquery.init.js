@@ -533,3 +533,102 @@ function buildUrl(baseUrl, params) {
 		.join('&');
 	return `${baseUrl}?${queryString}`;
 }
+
+/**
+ * Objek helper untuk manipulasi tanggal dengan format dd-MM-yyyy.
+ */
+const DateHelper = {
+	/**
+	 * Mengubah string tanggal dengan format dd-MM-yyyy menjadi objek Date.
+	 * @param {string} dateStr - Tanggal dalam format dd-MM-yyyy.
+	 * @returns {Date} Objek Date yang sesuai.
+	 *
+	 * @example
+	 * const dateObj = DateHelper.parseDate("10-02-2025");
+	 */
+	parseDate: function(dateStr) {
+		let parts = dateStr.split('-');
+		let day = parseInt(parts[0], 10);
+		let month = parseInt(parts[1], 10) - 1; // Bulan 0-indexed
+		let year = parseInt(parts[2], 10);
+		return new Date(year, month, day);
+	},
+
+	/**
+	 * Memformat objek Date menjadi string dengan format dd-MM-yyyy.
+	 * @param {Date} date - Objek Date yang akan diformat.
+	 * @returns {string} Tanggal dalam format dd-MM-yyyy.
+	 *
+	 * @example
+	 * const formatted = DateHelper.formatDate(new Date(2025, 1, 10));
+	 * console.log(formatted); // Output: "10-02-2025"
+	 */
+	formatDate: function(date) {
+		let day = date.getDate();
+		let month = date.getMonth() + 1;
+		let year = date.getFullYear();
+		day = (day < 10 ? '0' : '') + day;
+		month = (month < 10 ? '0' : '') + month;
+		return day + '-' + month + '-' + year;
+	},
+
+	/**
+	 * Menambahkan sejumlah hari ke tanggal yang diberikan.
+	 * @param {string} dateStr - Tanggal awal dalam format dd-MM-yyyy.
+	 * @param {number} days - Jumlah hari yang akan ditambahkan.
+	 * @returns {string} Tanggal baru dalam format dd-MM-yyyy setelah penambahan hari.
+	 *
+	 * @example
+	 * const newDate = DateHelper.plusDays("10-02-2025", 60);
+	 * console.log(newDate); // Output: tanggal 60 hari setelah 10-02-2025
+	 */
+	plusDays: function(dateStr, days) {
+		let date = this.parseDate(dateStr);
+		date.setDate(date.getDate() + days);
+		return this.formatDate(date);
+	},
+
+	/**
+	 * Mengurangkan sejumlah hari dari tanggal yang diberikan.
+	 * @param {string} dateStr - Tanggal awal dalam format dd-MM-yyyy.
+	 * @param {number} days - Jumlah hari yang akan dikurangkan.
+	 * @returns {string} Tanggal baru dalam format dd-MM-yyyy setelah pengurangan hari.
+	 *
+	 * @example
+	 * const newDate = DateHelper.minusDays("10-02-2025", 15);
+	 * console.log(newDate); // Output: tanggal 15 hari sebelum 10-02-2025
+	 */
+	minusDays: function(dateStr, days) {
+		return this.plusDays(dateStr, -days);
+	},
+
+	/**
+	 * Menambahkan sejumlah bulan ke tanggal yang diberikan.
+	 * @param {string} dateStr - Tanggal awal dalam format dd-MM-yyyy.
+	 * @param {number} months - Jumlah bulan yang akan ditambahkan.
+	 * @returns {string} Tanggal baru dalam format dd-MM-yyyy setelah penambahan bulan.
+	 *
+	 * @example
+	 * const newDate = DateHelper.plusMonths("10-02-2025", 2);
+	 * console.log(newDate); // Output: tanggal 2 bulan setelah 10-02-2025
+	 */
+	plusMonths: function(dateStr, months) {
+		let date = this.parseDate(dateStr);
+		date.setMonth(date.getMonth() + months);
+		return this.formatDate(date);
+	},
+
+	/**
+	 * Mengurangkan sejumlah bulan dari tanggal yang diberikan.
+	 * @param {string} dateStr - Tanggal awal dalam format dd-MM-yyyy.
+	 * @param {number} months - Jumlah bulan yang akan dikurangkan.
+	 * @returns {string} Tanggal baru dalam format dd-MM-yyyy setelah pengurangan bulan.
+	 *
+	 * @example
+	 * const newDate = DateHelper.minusMonths("10-02-2025", 1);
+	 * console.log(newDate); // Output: tanggal 1 bulan sebelum 10-02-2025
+	 */
+	minusMonths: function(dateStr, months) {
+		return this.plusMonths(dateStr, -months);
+	}
+};

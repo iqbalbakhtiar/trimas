@@ -81,7 +81,7 @@ public class SalesOrderService extends Service {
 
 		map.put("salesOrder_form", new SalesForm());
 		map.put("taxes", genericDao.loadAll(Tax.class));
-		map.put("twoMonth", DateHelper.plusMonth(DateHelper.now(), 2));
+		map.put("twoMonth", DateHelper.plusDays(DateHelper.now(), 60));
 
 		return map;
 	}
