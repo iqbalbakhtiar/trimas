@@ -3,7 +3,11 @@ package com.siriuserp.inventory.form;
 import com.siriuserp.inventory.dm.GoodsIssue;
 import com.siriuserp.inventory.dm.GoodsReceipt;
 import com.siriuserp.procurement.dm.PurchaseOrder;
-import com.siriuserp.sdk.dm.*;
+import com.siriuserp.sdk.dm.BarcodeGroup;
+import com.siriuserp.sdk.dm.BarcodeGroupType;
+import com.siriuserp.sdk.dm.Form;
+import com.siriuserp.sdk.dm.InvoiceVerification;
+import com.siriuserp.sdk.dm.StatusType;
 import lombok.Getter;
 import lombok.Setter;
 

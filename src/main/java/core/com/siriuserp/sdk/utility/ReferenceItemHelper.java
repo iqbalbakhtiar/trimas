@@ -1,6 +1,11 @@
 package com.siriuserp.sdk.utility;
 
-import com.siriuserp.inventory.dm.*;
+import com.siriuserp.inventory.dm.Issueable;
+import com.siriuserp.inventory.dm.Receiptable;
+import com.siriuserp.inventory.dm.WarehouseReferenceItem;
+import com.siriuserp.inventory.dm.WarehouseTransaction;
+import com.siriuserp.inventory.dm.WarehouseTransactionItem;
+import com.siriuserp.inventory.dm.WarehouseTransactionType;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Currency;
