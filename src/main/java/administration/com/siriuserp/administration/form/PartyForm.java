@@ -8,8 +8,13 @@ import java.util.Date;
 import java.util.Set;
 
 import com.siriuserp.administration.dm.Geographic;
-import com.siriuserp.sdk.dm.*;
 
+import com.siriuserp.sdk.dm.ContactMechanism;
+import com.siriuserp.sdk.dm.Form;
+import com.siriuserp.sdk.dm.PartyRelationship;
+import com.siriuserp.sdk.dm.PostalAddress;
+import com.siriuserp.sdk.dm.PostalAddressType;
+import com.siriuserp.sdk.dm.User;
 import lombok.Getter;
 import lombok.Setter;
 

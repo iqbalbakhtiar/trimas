@@ -1,6 +1,11 @@
 package com.siriuserp.inventory.sibling;
 
-import com.siriuserp.inventory.dm.*;
+import com.siriuserp.inventory.dm.DWInventoryItemBalance;
+import com.siriuserp.inventory.dm.DWInventoryItemBalanceDetail;
+import com.siriuserp.inventory.dm.GoodsReceipt;
+import com.siriuserp.inventory.dm.GoodsReceiptItem;
+import com.siriuserp.inventory.dm.ProductInOutTransaction;
+import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.inventory.service.GoodsReceiptService;
 import com.siriuserp.inventory.util.InventoryBalanceDetailUtil;
 import com.siriuserp.inventory.util.InventoryBalanceUtil;

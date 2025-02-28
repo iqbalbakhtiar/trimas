@@ -1,8 +1,20 @@
 package com.siriuserp.inventory.adapter;
 
-import com.siriuserp.inventory.dm.*;
+import com.siriuserp.inventory.dm.GoodsIssue;
+import com.siriuserp.inventory.dm.GoodsIssueItem;
+import com.siriuserp.inventory.dm.GoodsReceipt;
+import com.siriuserp.inventory.dm.GoodsReceiptItem;
+import com.siriuserp.inventory.dm.Product;
+import com.siriuserp.inventory.dm.WarehouseTransactionItem;
+import com.siriuserp.inventory.dm.WarehouseTransactionSource;
 import com.siriuserp.sdk.adapter.AbstractUIAdapter;
-import com.siriuserp.sdk.dm.*;
+import com.siriuserp.sdk.dm.Currency;
+import com.siriuserp.sdk.dm.Facility;
+import com.siriuserp.sdk.dm.Grid;
+import com.siriuserp.sdk.dm.Lot;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.Reference;
+import com.siriuserp.sdk.dm.Tax;
 import javolution.util.FastList;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

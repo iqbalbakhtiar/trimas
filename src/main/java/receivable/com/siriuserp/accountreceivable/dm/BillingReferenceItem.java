@@ -1,15 +1,29 @@
 package com.siriuserp.accountreceivable.dm;
 
 import com.siriuserp.inventory.dm.Product;
-import com.siriuserp.sdk.dm.*;
+import com.siriuserp.sdk.dm.Facility;
+import com.siriuserp.sdk.dm.Model;
+import com.siriuserp.sdk.dm.Money;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.Tax;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -73,7 +87,7 @@ public class BillingReferenceItem extends Model {
     @Column(name = "reference_type")
     private BillingReferenceType referenceType;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="fk_party_organization")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)

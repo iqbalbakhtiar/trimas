@@ -3,17 +3,42 @@
  */
 package com.siriuserp.inventory.dm;
 
-import com.siriuserp.sdk.dm.*;
+import com.siriuserp.sdk.dm.Container;
+import com.siriuserp.sdk.dm.CreditTerm;
+import com.siriuserp.sdk.dm.Facility;
+import com.siriuserp.sdk.dm.Grid;
+import com.siriuserp.sdk.dm.Lot;
+import com.siriuserp.sdk.dm.MemoReferenceItem;
+import com.siriuserp.sdk.dm.Model;
+import com.siriuserp.sdk.dm.Money;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.ReserveBridge;
+import com.siriuserp.sdk.dm.Tag;
+import com.siriuserp.sdk.dm.Tax;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.Type;
 import org.springframework.security.userdetails.ldap.Person;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -52,7 +77,7 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 	@Column(name = "reference_from")
 	protected String referenceFrom;
 	
-	@Embedded 
+	@Embedded
 	protected Tag tag = new Tag();
 			
 	@Embedded
