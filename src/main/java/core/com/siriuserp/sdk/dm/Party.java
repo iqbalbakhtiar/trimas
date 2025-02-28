@@ -116,6 +116,11 @@ public class Party extends Model implements JSONSupport
 	@OneToOne(mappedBy = "party", fetch = FetchType.LAZY)
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
+	private CoreTax coreTax;
+	
+	@OneToOne(mappedBy = "party", fetch = FetchType.LAZY)
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
 	private PaymentMethod paymentMethod;
 	
 	@OneToMany(mappedBy = "partyGroup", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

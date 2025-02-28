@@ -19,7 +19,11 @@ import com.siriuserp.administration.query.CustomerGridViewQuery;
 import com.siriuserp.administration.service.CustomerService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
+import com.siriuserp.sdk.dm.BuyerCountry;
+import com.siriuserp.sdk.dm.CoreTax;
+import com.siriuserp.sdk.dm.CoreTaxAdditionalInfo;
 import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.TrxCode;
 import com.siriuserp.sdk.filter.CustomerFilterCriteria;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.view.ViewHelper;
@@ -38,6 +42,11 @@ public class CustomerController extends ControllerBase {
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
 		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
+		binder.registerCustomEditor(CoreTax.class, modelEditor.forClass(CoreTax.class));
+		binder.registerCustomEditor(BuyerCountry.class, modelEditor.forClass(BuyerCountry.class));
+		binder.registerCustomEditor(CoreTaxAdditionalInfo.class, modelEditor.forClass(CoreTaxAdditionalInfo.class));
+		binder.registerCustomEditor(TrxCode.class, enumEditor.forClass(TrxCode.class));
+		
 	}
 	
 	@RequestMapping("/customerview.htm")

@@ -8,74 +8,74 @@
 <div class="main-box">
 <sesform:form id="addForm" name="addForm" method="post" modelAttribute="customer_edit" enctype="multipart/form-data">
 	<table style="border:none" width="100%">
-		<tr>
-			<td width="34%" align="right"><span>Customer ID</td>
-			<td width="1%" align="center">:</td>
-			<td width="64%"><form:input id='code' path="code" disabled='true' class='input-disabled'/></td>
-		</tr>
-		<tr>
-			<td align="right"><spring:message code="organization"/></td>
-			<td width="1%" align="center">:</td>
-			<td>
-				<form:select id="org" path="organization" cssClass="combobox-ext input-disabled" disabled='true'>
-		    		<c:if test='${not empty relationship.partyTo.id}'>
-						<form:option value='${relationship.partyTo.id}' label='${relationship.partyTo.fullName}'/>
-		    		</c:if>
-				</form:select>
-			</td>
-		</tr>
-		<tr>
-			<td align="right"><spring:message code="party.salutation"/></td>
-			<td width="1%" align="center">:</td>
-			<td><form:input path="salutation" size="10" class="input-disabled" disabled='true'/></td>
-		</tr>
-		<tr>
-			<td align="right"><spring:message code="customer.group"/></td>
-			<td width="1%" align="center">:</td>
-			<td>
-				<form:select id="partyGroup" path="partyGroup" cssClass="combobox-ext input-disabled" disabled='true'>
-					<c:if test='${not empty customer_edit.partyGroup.id}'>
-						<form:option value='${customer_edit.partyGroup.id}' label='${customer_edit.partyGroup.fullName}'/>
-		    		</c:if>
-				</form:select>
-			</td>
-		</tr>
-		<tr>
-			<td align="right"><spring:message code="customer.name"/></td>
-			<td width="1%" align="center">:</td>
-			<td><form:input path="fullName" cssClass="inputbox input-disabled" disabled='true'/></td>
-			<td><form:errors path="fullName"/></td>
-		</tr>
-		<tr>
-			<td align="right">NPWP</td>
-			<td width="1%" align="center">:</td>
-			<td><form:input path="taxCode" cssClass="inputbox input-disabled" disabled='true'/></td>
-			<td><form:errors path="taxCode"/></td>
-		</tr>
-<%--		<tr>--%>
-<%--			<td align="right">SIUP</td>--%>
-<%--			<td width="1%" align="center">:</td>--%>
-<%--			<td><form:input path="permitCode" cssClass="inputbox input-disabled" disabled='true'/></td>--%>
-<%--			<td><form:errors path="permitCode"/></td>--%>
-<%--		</tr>--%>
-		<tr>
-			<td align="right"><spring:message code="sirius.status"/></td>
-			<td width="1%" align="center">:</td>
-			<td>
-				<form:radiobutton path="active" value="true" label="Active"/>
-				<form:radiobutton path="active" value="false" label="Inactive"/>	
-			</td>
-		</tr>	
-		<tr>
-			<td align="right"><spring:message code="sirius.note"/></td>
-			<td width="1%" align="center">:</td>
-			<td><form:textarea path="note" rows="6" cols="45"/></td>
-			<td>&nbsp;</td>
-		</tr>
+		<body onload="display();">
+			<tr>
+				<td width="34%" align="right"><span>Customer ID</td>
+				<td width="1%" align="center">:</td>
+				<td width="64%"><form:input id='code' path="code" disabled='true' class='input-disabled'/></td>
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="organization"/></td>
+				<td width="1%" align="center">:</td>
+				<td>
+					<form:select id="org" path="organization" cssClass="combobox-ext input-disabled" disabled='true'>
+			    		<c:if test='${not empty relationship.partyTo.id}'>
+							<form:option value='${relationship.partyTo.id}' label='${relationship.partyTo.fullName}'/>
+			    		</c:if>
+					</form:select>
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="party.salutation"/></td>
+				<td width="1%" align="center">:</td>
+				<td><form:input path="salutation" size="10" class="input-disabled" disabled='true'/></td>
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="customer.group"/></td>
+				<td width="1%" align="center">:</td>
+				<td>
+					<form:select id="partyGroup" path="partyGroup" cssClass="combobox-ext input-disabled" disabled='true'>
+						<c:if test='${not empty customer_edit.partyGroup.id}'>
+							<form:option value='${customer_edit.partyGroup.id}' label='${customer_edit.partyGroup.fullName}'/>
+			    		</c:if>
+					</form:select>
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="customer.name"/></td>
+				<td width="1%" align="center">:</td>
+				<td><form:input path="fullName" cssClass="inputbox input-disabled" disabled='true'/></td>
+				<td><form:errors path="fullName"/></td>
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="party.npwp"/></td>
+				<td width="1%" align="center">:</td>
+				<td><form:input path="taxCode" cssClass="inputbox input-disabled" disabled='true'/></td>
+				<td><form:errors path="taxCode"/></td>
+			</tr>
+	<%--		<tr>--%>
+	<%--			<td align="right">SIUP</td>--%>
+	<%--			<td width="1%" align="center">:</td>--%>
+	<%--			<td><form:input path="permitCode" cssClass="inputbox input-disabled" disabled='true'/></td>--%>
+	<%--			<td><form:errors path="permitCode"/></td>--%>
+	<%--		</tr>--%>
+			<tr>
+				<td align="right"><spring:message code="sirius.status"/></td>
+				<td width="1%" align="center">:</td>
+				<td>
+					<form:radiobutton path="active" value="true" label="Active"/>
+					<form:radiobutton path="active" value="false" label="Inactive"/>	
+				</td>
+			</tr>	
+			<tr>
+				<td align="right"><spring:message code="sirius.note"/></td>
+				<td width="1%" align="center">:</td>
+				<td><form:textarea path="note" rows="6" cols="45"/></td>
+				<td>&nbsp;</td>
+			</tr>
+		</body>
 	</table>
-	
 	<br/>
-	
 	<div id="mainTab" dojoType="TabContainer" style="width:100% ; height: 250px;">
 		<div id="address" dojoType="ContentPane" label='<spring:message code="customer.address.information"/>' class="tab-pages" ${lastPanel == 'address' ? 'selected="true"' : ''}>
 			<div class="toolbar-clean">
@@ -313,7 +313,84 @@
 			<tr class="end-table"><td colspan="6">&nbsp;</td></tr>
 			</table>
 		</div>
-		
+		<div id="coreTax" class="tab-pages" dojoType="ContentPane" label="Core Tax Info">
+	    <table width="100%">
+			<tr>
+				<tr>
+					<td align="right"><spring:message code="sirius.type"/> :</td>
+					<td>
+						<form:radiobutton path="coreTax.type" value='true'/><spring:message code="sirius.tin"/>
+						<form:radiobutton path="coreTax.type" value='false'/><spring:message code="sirius.nationalid"/>	
+					</td>
+				</tr>
+				<tr>
+					<td align="right"><spring:message code="party.npwp"/> : </td>
+					<td><form:input path="coreTax.npwp" cssClass="inputbox input-disabled" value="${customer_edit.coreTax.npwp}" disabled="true"/></td>
+				</tr>
+				<tr>
+					<td align="right"><spring:message code="party.nik"/> : </td>
+					<td><form:input path="coreTax.nik" cssClass="inputbox" value="${customer_edit.coreTax.nik}"/></td>
+				</tr>
+				<tr>
+					<td align="right"><spring:message code="party.nitku"/> : ${customer_edit.coreTax.nitku} </td>
+					<td>
+						
+						<form:input path="coreTax.nitku" cssClass="inputbox" value="${customer_edit.coreTax.nitku}"/>
+					</td>
+				</tr>
+				<td width="24%" align="right"><spring:message code="customer.buyer.country"/> : </td>
+				<td width="76%">
+					<form:select id="buyerCountry" path="coreTax.buyerCountry" cssClass="combobox input">
+						<c:if test="${empty customer_edit.coreTax}">
++							<form:option value="1" label="IDN - Indonesia"/>
++						</c:if>
+						<c:if test="${not empty customer_edit.coreTax}">
+							<form:option value="${customer_edit.coreTax.buyerCountry.id}" label="${customer_edit.coreTax.buyerCountry.fullName}"/>
+						</c:if>
+	                </form:select>&nbsp;
+	                <img src="assets/icons/list_extensions.gif" onclick="javascript:openpopup('<c:url value='/page/popupbuyercountryview.htm?target=buyerCountry'/>');" style="CURSOR: pointer;" title="Buyer Country Code" />
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="customer.trx.code"/> :</td>
+				<td>
+					<select id="trxCode" name="coreTax.trxCode" onchange="changeTrx();" class="input">
+						<c:forEach items="${trxCodes}" var="trx">
+							<c:if test="${empty customer_edit.coreTax}">
+								<option value="${trx}" label="${trx.shortCode}" ${trx == 'TRX_04' ? 'selected' : ''}/>
+							</c:if>
+							<c:if test="${not empty customer_edit.coreTax}">
+								<option value="${trx}" label="${trx.shortCode}" ${customer_edit.coreTax.trxCode == trx ? 'selected' : ''}/>
+							</c:if>
+						</c:forEach>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="customer.additional.info"/> : </td>
+				<td>
+					<form:select id="addInfo"  path="coreTax.additionalInfo" cssClass="combobox input-disabled">
+						<c:if test="${not empty customer_edit.coreTax}">
+							<form:option value="${customer_edit.coreTax.additionalInfo.id}" label="${customer_edit.coreTax.additionalInfo.code}"/>
+						</c:if>
+	                 </form:select>&nbsp;
+					 <img id="addPopup" src="assets/icons/list_extensions.gif" onclick="openadd();" style="CURSOR: pointer;" title="Additional Info" />
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="customer.additional.desc"/> : </td>
+				<td><input id="addInfoDesc" class="input-disabled" size="50" value="${customer_edit.coreTax.additionalInfo.description}" disabled/></td>
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="customer.facility.stamp"/> : </td>
+				<td><input id="facilityStamp" class="input-disabled" size="30" value="${customer_edit.coreTax.additionalInfo.facilityStampCode}" disabled/></td>
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="customer.facility.desc"/> : </td>
+				<td><input id="facilityStampDesc" class="input-disabled" size="50" value="${customer_edit.coreTax.additionalInfo.facilityStampDescription}" disabled/></td>
+			</tr>
+		</table>
+	  </div>
 	</div>
 </sesform:form>
 </div>
@@ -333,6 +410,30 @@ $(function(){
     $('input[name="paymentMethod.paymentCollectingType"]').change(function() {
         togglePaymentSchedule();
     });
+    
+    $('input[name="coreTax.type"]').change(function() {
+
+    	 var type = ($('input[name="coreTax.type"]:checked').val().toLowerCase() === 'true');
+    	 
+    	 if(type){
+    		 $('input[name="coreTax.nik"]').prop('disabled', true);
+    		 $('input[name="coreTax.nik"]').val(null);
+    		 $('input[name="coreTax.nik"]').attr("class","inputbox input-disabled");
+    		 $('input[name="coreTax.npwp"]').removeAttr("class","inputbox input-disabled");
+    		 $('input[name="coreTax.npwp"]').attr("class","inputbox");
+    		 $('input[name="coreTax.npwp"]').prop('disabled', false);
+    	 }
+    	 
+    	 if(!type){
+    		 $('input[name="coreTax.npwp"]').prop('disabled', true);
+    		 $('input[name="coreTax.npwp"]').val(null);
+    		 $('input[name="coreTax.npwp"]').attr("class","inputbox input-disabled");
+    		 $('input[name="coreTax.nik"]').removeAttr("class","inputbox input-disabled");
+    		 $('input[name="coreTax.nik"]').attr("class","inputbox");
+    		 $('input[name="coreTax.nik"]').prop('disabled', false);
+    	 }
+    });
+    
 });
 
 function validateForm() {
@@ -342,6 +443,10 @@ function validateForm() {
 	var taxCode = $('input[name="taxCode"]').val();
 	var permitCode = $('input[name="permitCode"]').val();
 	var active = $('input[name="active"]:checked').val();
+	var nik = $('input[name="coreTax.nik"]').val().length;
+	var npwp = $('input[name="coreTax.npwp"]').val().length;
+	var nitku = $('input[name="coreTax.nitku"]').val().length;
+	var coreType = ($('input[name="coreTax.type"]:checked').val().toLowerCase() === 'true');
 
 	if (organization == null || organization === "") {
 		alert('<spring:message code="sirius.organization"/> <spring:message code="notif.empty"/> !');
@@ -363,6 +468,21 @@ function validateForm() {
 		return false;
 	}
 	
+	if(!coreType && nik != 16 ){
+		alert('<spring:message code="party.nik"/> <spring:message code="notif.nik"/>');
+		return false;
+	}
+	
+	if(coreType && npwp != 16){
+		alert('<spring:message code="party.npwp"/> <spring:message code="notif.nik"/>');
+		return false;
+	}
+	
+	if(nitku != 6){
+		alert('<spring:message code="party.nitku"/> <spring:message code="notif.nitku"/>');
+		return false;
+	}
+	
 	return true;
 }
 
@@ -375,6 +495,37 @@ function saveAndRedirect(element) {
             window.location.href = href;
         });
     }
+}
+
+function openadd() 
+{
+	var trxCode = document.getElementById('trxCode');
+
+	openpopup("<c:url value='/page/popupcoretaxaddinfoview.htm?target=addInfo&trxCode='/>" + trxCode.value);
+}
+
+function changeTrx()
+{
+	$("#addInfo").empty();
+	$("#addInfoDesc").val('');
+	$("#facilityStamp").val('');
+	$("#facilityStampDesc").val('');
+	
+	display();
+}
+
+function display()
+{
+	if ($("#trxCode").val() == 'TRX_07' || $("#trxCode").val() == 'TRX_08')
+	{
+		$("#addInfo").removeClass('input-disabled');
+		$("#addPopup").show();
+	}
+	else
+	{
+		$("#addInfo").addClass('input-disabled');
+		$("#addPopup").hide();
+	}
 }
 
 function save(callback) {

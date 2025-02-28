@@ -1,6 +1,6 @@
 package com.siriuserp.administration.service;
 
-import com.siriuserp.sdk.exceptions.ServiceException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -13,6 +13,7 @@ import com.siriuserp.sdk.base.Service;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
+import com.siriuserp.sdk.dm.CoreTax;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.PartyRelationship;
 import com.siriuserp.sdk.dm.PartyRelationshipType;
@@ -21,6 +22,8 @@ import com.siriuserp.sdk.dm.PaymentCollectingType;
 import com.siriuserp.sdk.dm.PaymentMethod;
 import com.siriuserp.sdk.dm.PaymentMethodType;
 import com.siriuserp.sdk.dm.TableType;
+import com.siriuserp.sdk.dm.TrxCode;
+import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.DateHelper;
@@ -106,6 +109,7 @@ public class CustomerService extends Service {
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("customer_edit", customer);
 		map.put("relationship", partyRelationship);
+	    map.put("trxCodes", TrxCode.values());
 		
 		return map;
 	}
@@ -129,6 +133,28 @@ public class CustomerService extends Service {
 		
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("relationshipId", relationshipId);
+		
+		//Core Tax Info add
+		if(customer.getCoreTax() != null) {
+			
+			if(customer.getCoreTax().getId() == null) {
+				
+				CoreTax coreTax = new CoreTax();
+			 
+				BeanUtils.copyProperties(customer.getCoreTax(),coreTax);
+				coreTax.setParty(customer);
+				genericDao.add(coreTax);
+				
+			} else {
+				
+				CoreTax coreTax = genericDao.load(CoreTax.class, customer.getCoreTax().getId());
+				BeanUtils.copyProperties(customer.getCoreTax(),coreTax);
+				genericDao.update(coreTax);
+				
+			}
+			 
+		}
+			
 		
 		return map;
 	}
