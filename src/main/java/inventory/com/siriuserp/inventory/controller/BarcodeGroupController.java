@@ -1,35 +1,53 @@
+/**
+ * File Name  : BarcodeGroupController.java
+ * Created On : Feb 28, 2025
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.inventory.controller;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.inventory.criteria.BarcodeGroupFilterCriteria;
 import com.siriuserp.inventory.dm.Product;
-import com.siriuserp.inventory.form.TransactionForm;
+import com.siriuserp.inventory.form.InventoryForm;
 import com.siriuserp.inventory.query.BarcodeGroupGridViewQuery;
 import com.siriuserp.inventory.service.BarcodeGroupService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.BarcodeGroup;
+import com.siriuserp.sdk.dm.BarcodeGroupType;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.view.ViewHelper;
 import com.siriuserp.sdk.utility.FormHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
+/**
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
+ */
 
 @Controller
-@SessionAttributes(value = {"barcode_add", "barcode_edit"}, types = {TransactionForm.class, BarcodeGroup.class})
+@SessionAttributes(value = "barcode_form", types = InventoryForm.class)
 @DefaultRedirect(url = "barcodegroupview.htm")
-public class BarcodeGroupController extends ControllerBase {
-    @Autowired
+public class BarcodeGroupController extends ControllerBase
+{
+	@Autowired
 	private BarcodeGroupService service;
 
 	@InitBinder
@@ -48,25 +66,25 @@ public class BarcodeGroupController extends ControllerBase {
 	}
 
 	@RequestMapping("/barcodegrouppreadd1.htm")
-	public ModelAndView preadd1() throws ServiceException
+	public ModelAndView preadd1(@RequestParam(value = "referenceId", required = false) Long referenceId, @RequestParam(value = "barcodeType", required = false) BarcodeGroupType barcodeType) throws ServiceException
 	{
-		return new ModelAndView("/inventory/item-management/barcodeGroupAdd1", service.preadd1());
+		return new ModelAndView("/inventory/item-management/barcodeGroupAdd1", service.preadd1(referenceId, barcodeType));
 	}
 
 	@RequestMapping("/barcodegrouppreadd2.htm")
-	public ModelAndView preadd2(@ModelAttribute("barcode_add") TransactionForm form) throws ServiceException
+	public ModelAndView preadd2(@ModelAttribute("barcode_form") InventoryForm form) throws ServiceException
 	{
 		return new ModelAndView("/inventory/item-management/barcodeGroupAdd2", service.preadd2(form));
 	}
 
 	@RequestMapping("/barcodegrouppreadd3.htm")
-	public ModelAndView preadd3(@ModelAttribute("barcode_add") TransactionForm form) throws ServiceException
+	public ModelAndView preadd3(@ModelAttribute("barcode_form") InventoryForm form) throws ServiceException
 	{
 		return new ModelAndView("/inventory/item-management/barcodeGroupAdd3", service.preadd3(form));
 	}
 
 	@RequestMapping("/barcodegroupadd.htm")
-	public ModelAndView add(@ModelAttribute("barcode_add") TransactionForm form, SessionStatus status) throws ServiceException
+	public ModelAndView add(@ModelAttribute("barcode_form") InventoryForm form, SessionStatus status) throws ServiceException
 	{
 		JSONResponse response = new JSONResponse();
 
@@ -76,8 +94,7 @@ public class BarcodeGroupController extends ControllerBase {
 
 			status.setComplete();
 			response.store("id", form.getBarcodeGroup().getId());
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 			response.statusError();
@@ -88,13 +105,13 @@ public class BarcodeGroupController extends ControllerBase {
 	}
 
 	@RequestMapping("/barcodegrouppreedit.htm")
-	public ModelAndView preedit(@RequestParam("id")Long id) throws Exception
+	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
 	{
 		return new ModelAndView("/inventory/item-management/barcodeGroupUpdate", service.preedit(id));
 	}
 
 	@RequestMapping("/barcodegroupedit.htm")
-	public ModelAndView edit(@ModelAttribute("barcode_add") TransactionForm form, BindingResult result, SessionStatus status) throws ServiceException
+	public ModelAndView edit(@ModelAttribute("barcode_form") InventoryForm form, BindingResult result, SessionStatus status) throws ServiceException
 	{
 		JSONResponse response = new JSONResponse();
 
@@ -104,8 +121,7 @@ public class BarcodeGroupController extends ControllerBase {
 			status.setComplete();
 
 			response.store("id", form.getBarcodeGroup().getId());
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			response.statusError();
 			response.setMessage(e.getMessage());
@@ -143,7 +159,7 @@ public class BarcodeGroupController extends ControllerBase {
 		Long groupId = service.loadBarcode(id).getBarcodeGroup().getId();
 		service.deleteBarcode(service.loadBarcode(id));
 
-		return ViewHelper.redirectTo("barcodegrouppreedit.htm?id="+groupId);
+		return ViewHelper.redirectTo("barcodegrouppreedit.htm?id=" + groupId);
 	}
 
 	@RequestMapping("/barcodegrouppackinglistprint.htm")

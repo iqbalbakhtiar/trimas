@@ -1,12 +1,16 @@
 /**
- * 
+ * May 1, 2009 10:45:46 AM
+ * com.siriuserp.inventory.dm
+ * WarehouseTransactionSource.java
  */
 package com.siriuserp.inventory.dm;
 
 import org.apache.commons.lang.WordUtils;
 
 /**
- * @author ferdinand
+ * @author Agung Dodi Perdana
+ * Sirius Indonesia, PT
+ * www.siriuserp.com
  */
 
 public enum WarehouseTransactionSource 
@@ -14,16 +18,9 @@ public enum WarehouseTransactionSource
 	STOCK_ADJUSTMENT,
 	TRANSFER_ORDER,
 	ITEM_CONVERSION,
-	PURCHASE_ORDER,
+	STANDARD_PURCHASE_ORDER,
 	DIRECT_PURCHASE_ORDER,
-	DELIVERY_ORDER_REALIZATION,
-
-	TRANSFER_ORDER_REFILL,
-	TRANSFER_ORDER_REQUEST,
-	TRANSFER_ORDER_LOADING,
-	MOVING_CONTAINER_ISSUE_COMPLETION,
-	MOVING_CONTAINER_RECEIPT_COMPLETION,
-	PURCHASE_ORDER_CONFIRMATION;
+	DELIVERY_ORDER_REALIZATION;
 	
 	public String getNormalizedName()
     {
@@ -50,40 +47,11 @@ public enum WarehouseTransactionSource
     	return this.toString().replace("_", "").toLowerCase();
     }
 
-	public boolean isComplete()
-	{
-		switch(this)
-		{
-			case TRANSFER_ORDER_REFILL:
-			case TRANSFER_ORDER_REQUEST:
-			case TRANSFER_ORDER_LOADING:
-			case MOVING_CONTAINER_ISSUE_COMPLETION:
-			case MOVING_CONTAINER_RECEIPT_COMPLETION:
-				return true;
-			default:
-				return false;
-		}
-	}
-
 	public boolean isInternal()
 	{
 		switch(this)
 		{
 			case TRANSFER_ORDER:
-//			case TRANSFER_ORDER_AREA:
-//			case TRANSFER_ORDER_MANUAL:
-//			case TRANSFER_ORDER_CONVERSION:
-//			case TRANSFER_ORDER_BYPASS:
-			case TRANSFER_ORDER_REQUEST:
-			case TRANSFER_ORDER_LOADING:
-//			case TRANSFER_ORDER_EXTERNAL:
-//			case PACK_TO_CONTAINER:
-//			case MOVING_CONTAINER_ISSUE:
-			case MOVING_CONTAINER_ISSUE_COMPLETION:
-//			case MOVING_CONTAINER_ISSUE_SEQUENCE:
-//			case MOVING_CONTAINER_RECEIPT:
-			case MOVING_CONTAINER_RECEIPT_COMPLETION:
-//			case MOVING_CONTAINER_DUMP_ITEM:
 				return true;
 			default:
 				return false;
@@ -95,18 +63,6 @@ public enum WarehouseTransactionSource
 		switch(this)
 		{
 			case DELIVERY_ORDER_REALIZATION:
-//			case DELIVERY_ORDER_GROUP_REALIZATION:
-//			case SHIFT_MANAGEMENT:
-//			case TRANSFER_ORDER_MANUAL:
-//			case TRANSFER_ORDER_CONVERSION:
-//			case TRANSFER_ORDER_BYPASS:
-			case TRANSFER_ORDER_REQUEST:
-			case TRANSFER_ORDER_LOADING:
-//			case TRANSFER_ORDER_EXTERNAL:
-//			case MOVING_CONTAINER_ISSUE:
-//			case MOVING_CONTAINER_ISSUE_SEQUENCE:
-//			case PURCHASE_RETURN:
-//			case PURCHASE_RETURN_MANUAL:
 				return true;
 			default:
 				return false;
@@ -118,8 +74,6 @@ public enum WarehouseTransactionSource
 		switch(this)
 		{
 			case DIRECT_PURCHASE_ORDER:
-			case PURCHASE_ORDER:
-			case PURCHASE_ORDER_CONFIRMATION:
 				return true;
 			default:
 				return false;

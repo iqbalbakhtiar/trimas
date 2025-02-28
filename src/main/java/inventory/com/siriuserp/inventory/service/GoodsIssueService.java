@@ -1,8 +1,28 @@
 package com.siriuserp.inventory.service;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+
 import com.siriuserp.inventory.criteria.InventoryItemFilterCriteria;
-import com.siriuserp.inventory.dm.*;
-import com.siriuserp.inventory.form.TransactionForm;
+import com.siriuserp.inventory.dm.GoodsIssue;
+import com.siriuserp.inventory.dm.GoodsIssueItem;
+import com.siriuserp.inventory.dm.InventoryConfiguration;
+import com.siriuserp.inventory.dm.InventoryControl;
+import com.siriuserp.inventory.dm.InventoryItem;
+import com.siriuserp.inventory.dm.InventoryType;
+import com.siriuserp.inventory.dm.ProductInOutTransaction;
+import com.siriuserp.inventory.dm.StockControl;
+import com.siriuserp.inventory.dm.WarehouseTransactionItem;
+import com.siriuserp.inventory.dm.WarehouseTransactionType;
+import com.siriuserp.inventory.form.InventoryForm;
 import com.siriuserp.inventory.util.InventoryItemTagUtil;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
@@ -17,27 +37,24 @@ import com.siriuserp.sdk.dm.User;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
-import com.siriuserp.sdk.utility.*;
-import javolution.util.FastMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
+import com.siriuserp.sdk.utility.DateHelper;
+import com.siriuserp.sdk.utility.FormHelper;
+import com.siriuserp.sdk.utility.GeneratorHelper;
+import com.siriuserp.sdk.utility.QueryFactory;
+import com.siriuserp.sdk.utility.SiriusValidator;
+import com.siriuserp.sdk.utility.UserHelper;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class GoodsIssueService {
-    @Autowired
-    private CodeSequenceDao codeSequenceDao;
+public class GoodsIssueService
+{
+	@Autowired
+	private CodeSequenceDao codeSequenceDao;
 
-    @Autowired
-    private GenericDao genericDao;
+	@Autowired
+	private GenericDao genericDao;
 
 	@Autowired
 	private StockControlService stockControllService;
@@ -45,23 +62,24 @@ public class GoodsIssueService {
 	@Autowired
 	private InventoryItemTagUtil inventoryitemUtil;
 
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("filterCriteria", filterCriteria);
-//		map.put("sources", SourceOut.values());
-//		map.put("completes", Arrays.asList(SourceCompletion.values()).stream().filter(source -> !source.getType().equals("IN")).collect(Collectors.toList()));
-//		map.put("sequences", SourceSequence.values());
+		//		map.put("sources", SourceOut.values());
+		//		map.put("completes", Arrays.asList(SourceCompletion.values()).stream().filter(source -> !source.getType().equals("IN")).collect(Collectors.toList()));
+		//		map.put("sequences", SourceSequence.values());
 		map.put("issues", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
 
 		return map;
 	}
 
-//  @AutomaticUpdateMemoable(className = WarehouseReferenceItem.class, memoName = PurchaseMemoable.class, signFactor = 1)
-//	@AutomaticPosting(roleClasses ={ GoodsIssuePostingRole.class })
+	//  @AutomaticUpdateMemoable(className = WarehouseReferenceItem.class, memoName = PurchaseMemoable.class, signFactor = 1)
+	//	@AutomaticPosting(roleClasses ={ GoodsIssuePostingRole.class })
 	@AuditTrails(className = GoodsIssue.class, actionType = AuditTrailsActionType.CREATE)
-	@AutomaticSibling(roles ={ "AddDWInventoryItemOutSiblingRole" })
+	@AutomaticSibling(roles =
+	{ "AddDWInventoryItemOutSiblingRole" })
 	public void add(GoodsIssue goodsIssue) throws Exception
 	{
 		Assert.notEmpty(goodsIssue.getForm().getItems(), "Empty item transaction, please recheck !");
@@ -148,14 +166,11 @@ public class GoodsIssueService {
 		UrlCache viewCogs = user.getUrls().get("/page/inventoryviewcogs.htm");
 
 		InventoryItemFilterCriteria criteria = (InventoryItemFilterCriteria) filterCriteria;
-		TransactionForm form = FormHelper.bind(TransactionForm.class, load(criteria.getId()));
+		InventoryForm form = FormHelper.bind(InventoryForm.class, load(criteria.getId()));
 
 		// Sort By Product Code First And Then InventoryType (Stock > Shrink)
-		List<StockControl> sortedItems = form.getGoodsIssue().getStockControlls().stream()
-				.sorted(Comparator.comparing((StockControl item) -> item.getStockable().getProduct().getCode())
-						.thenComparing(item -> item.getStockable().getWarehouseTransactionItem().getTag().getInventoryType(),
-								Comparator.comparing(type -> type == InventoryType.STOCK ? 0 : 1)))
-				.collect(Collectors.toList());
+		List<StockControl> sortedItems = form.getGoodsIssue().getStockControlls().stream().sorted(Comparator.comparing((StockControl item) -> item.getStockable().getProduct().getCode())
+				.thenComparing(item -> item.getStockable().getWarehouseTransactionItem().getTag().getInventoryType(), Comparator.comparing(type -> type == InventoryType.STOCK ? 0 : 1))).collect(Collectors.toList());
 
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("goodsIssue_edit", form.getGoodsIssue());
@@ -163,8 +178,8 @@ public class GoodsIssueService {
 		map.put("printCogs", printCogs != null ? printCogs.getAccessType() : null);
 		map.put("printAll", print != null && print.getAccessType().isPrint());
 		map.put("viewCogs", viewCogs != null ? viewCogs.getAccessType() : null);
-//		map.put("printable", (print != null && printableUtil.isPrintable("/page/goodsissuecompletionprint.htm", criteria.getId())));
-//		map.put("issues", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, GoodsIssueItemPrintViewQuery.class)));
+		//		map.put("printable", (print != null && printableUtil.isPrintable("/page/goodsissuecompletionprint.htm", criteria.getId())));
+		//		map.put("issues", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, GoodsIssueItemPrintViewQuery.class)));
 		map.put("transaction_form", form);
 		map.put("stockControlls", sortedItems);
 

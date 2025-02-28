@@ -21,24 +21,24 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "purchase_order_approvable_bridge")
-public class PurchaseOrderApprovableBridge extends Approvable {
-    private static final long serialVersionUID = -4271647961828286034L;
+public class PurchaseOrderApprovableBridge extends Approvable
+{
+	private static final long serialVersionUID = -4271647961828286034L;
 
-    @OneToOne(mappedBy = "approvable", fetch = FetchType.LAZY)
-//	@JoinColumn(name="fk_sales_order")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private PurchaseOrder purchaseOrder;
+	@OneToOne(mappedBy = "approvable", fetch = FetchType.LAZY)
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private PurchaseOrder purchaseOrder;
 
-    @Override
-	public Long getNormalizedID() {
-
+	@Override
+	public Long getNormalizedID()
+	{
 		return getPurchaseOrder().getId();
 	}
 
 	@Override
-	public String getReviewID() {
-
+	public String getReviewID()
+	{
 		return String.valueOf(getPurchaseOrder().getId());
 	}
 }

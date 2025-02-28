@@ -91,6 +91,7 @@ public class Form implements SiriusForm
 
 	private boolean base = true;
 	private boolean enabled = true;
+	private boolean serial = false;
 
 	private MultipartFile file;
 

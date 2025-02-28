@@ -17,8 +17,8 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
+import com.siriuserp.accountpayable.dm.PaymentMethodType;
 import com.siriuserp.sdk.dm.Model;
-import com.siriuserp.sdk.dm.PaymentMethodType;
 
 import lombok.Getter;
 import lombok.Setter;

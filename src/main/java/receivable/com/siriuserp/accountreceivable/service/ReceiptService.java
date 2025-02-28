@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.siriuserp.accounting.form.AccountingForm;
+import com.siriuserp.accountpayable.dm.PaymentMethodType;
 import com.siriuserp.accountreceivable.adapter.ReceiptAdapter;
 import com.siriuserp.accountreceivable.dm.Billing;
 import com.siriuserp.accountreceivable.dm.BillingItem;
@@ -25,7 +26,6 @@ import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.GridViewQuery;
 import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.Item;
-import com.siriuserp.sdk.dm.PaymentMethodType;
 import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;

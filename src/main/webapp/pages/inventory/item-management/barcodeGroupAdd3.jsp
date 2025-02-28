@@ -6,7 +6,7 @@
 </div>
 
 <div class="main-box">
-    <sesform:form id="addForm" name="addForm" method="post" modelAttribute="barcode_add">
+    <sesform:form id="addForm" name="addForm" method="post" modelAttribute="barcode_form">
         <table style="border:none" width="100%">
             <tr>
                 <td width="59%">
@@ -21,8 +21,8 @@
                             <td align="right"><spring:message code="organization"/> :</td>
                             <td>
                                 <form:select id="org" path="organization" cssClass="combobox-ext input-disabled">
-                                    <c:if test='${not empty barcode_add.organization}'>
-                                        <form:option value='${barcode_add.organization.id}' label='${barcode_add.organization.fullName}' />
+                                    <c:if test='${not empty barcode_form.organization}'>
+                                        <form:option value='${barcode_form.organization.id}' label='${barcode_form.organization.fullName}' />
                                     </c:if>
                                 </form:select>
                             </td>
@@ -30,15 +30,15 @@
                         <tr>
                             <td nowrap="nowrap" align="right"><spring:message code="sirius.date"/> :</td>
                             <td>
-                                <input id="date" name="date" value="<fmt:formatDate value='${barcode_add.date}' pattern='dd-MM-yyyy'/>" class="input-disabled" size="10" readonly/>
+                                <input id="date" name="date" value="<fmt:formatDate value='${barcode_form.date}' pattern='dd-MM-yyyy'/>" class="input-disabled" size="10" readonly/>
                             </td>
                         </tr>
                         <tr>
                             <td align="right"><spring:message code="sirius.facility"/> :</td>
                             <td>
                                 <form:select id="facility" path="facility" cssClass="combobox-ext input-disabled">
-                                    <c:if test='${not empty barcode_add.facility}'>
-                                        <form:option value='${barcode_add.facility.id}' label='${barcode_add.facility.name}' />
+                                    <c:if test='${not empty barcode_form.facility}'>
+                                        <form:option value='${barcode_form.facility.id}' label='${barcode_form.facility.name}' />
                                     </c:if>
                                 </form:select>
                             </td>
@@ -47,7 +47,7 @@
                             <td align="right"><spring:message code="sirius.type"/> :</td>
                             <td>
                                 <select id="barcodeGroupType" name="barcodeGroupType" class="combobox input-disabled">
-                                    <option value="${barcode_add.barcodeGroupType}" label="${barcode_add.barcodeGroupType.normalizedName}"></option>
+                                    <option value="${barcode_form.barcodeGroupType}" label="${barcode_form.barcodeGroupType.normalizedName}"></option>
                                 </select>
                             </td>
                         </tr>

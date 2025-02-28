@@ -6,14 +6,14 @@
 </div>
 
 <div class="main-box">
-    <form id="addForm" name="addForm" method="post" modelAttribute="barcode_add">
+    <form id="addForm" name="addForm" method="post" modelAttribute="barcode_form">
         <table style="border:none" width="100%">
             <tr>
                 <td align="right"><spring:message code="goodsreceipt.organization"/> :</td>
                 <td>
-                    <form:select id="org" path="barcode_add.organization" cssClass="combobox-ext">
-                        <c:if test='${not empty barcode_add.organization}'>
-                            <form:option value='${barcode_add.organization.id}' label='${barcode_add.organization.fullName}' />
+                    <form:select id="org" path="barcode_form.organization" cssClass="combobox-ext">
+                        <c:if test='${not empty barcode_form.organization}'>
+                            <form:option value='${barcode_form.organization.id}' label='${barcode_form.organization.fullName}' />
                         </c:if>
                     </form:select>
                     <a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupcompanystructurerolebasedview.htm?target=org'/>');"  title="Company Structure"></a>
@@ -28,9 +28,9 @@
             <tr>
                 <td align="right"><spring:message code="sirius.facility"/> :</td>
                 <td>
-                    <form:select id="facility" path="barcode_add.facility" cssClass="combobox-ext">
-                        <c:if test='${not empty barcode_add.facility}'>
-                            <form:option value='${barcode_add.facility.id}' label='${barcode_add.facility.name}' />
+                    <form:select id="facility" path="barcode_form.facility" cssClass="combobox-ext">
+                        <c:if test='${not empty barcode_form.facility}'>
+                            <form:option value='${barcode_form.facility.id}' label='${barcode_form.facility.name}' />
                         </c:if>
                     </form:select>
                     <a class="item-popup" onclick="openfacility();"  title="Facility"></a>
@@ -39,11 +39,18 @@
             <tr>
                 <td align="right"><spring:message code="sirius.type"/> :</td>
                 <td>
-                    <select id="barcodeGroupType" name="barcodeGroupType" class="combobox">
-                        <c:forEach var="type" items="${types}">
-                            <option value="${type}" label="${type.normalizedName}"></option>
-                        </c:forEach>
-                    </select>
+                	<c:if test="${empty barcode_form.barcodeGroupType}">
+	                    <select id="barcodeGroupType" name="barcodeGroupType" class="combobox">
+	                        <c:forEach var="type" items="${types}">
+	                            <option value="${type}" label="${type.normalizedName}"></option>
+	                        </c:forEach>
+	                    </select>
+                    </c:if>
+                    <c:if test="${not empty barcode_form.barcodeGroupType}">
+	                    <select id="barcodeGroupType" name="barcodeGroupType" class="combobox">
+	                    	<option value="${barcode_form.barcodeGroupType}" label="${barcode_form.barcodeGroupType.normalizedName}"></option>
+	                    </select>
+                    </c:if>
                 </td>
             </tr>
         </table>

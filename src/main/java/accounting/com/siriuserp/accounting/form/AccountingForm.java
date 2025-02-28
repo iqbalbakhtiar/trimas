@@ -13,6 +13,7 @@ import com.siriuserp.accounting.dm.ChartOfAccount;
 import com.siriuserp.accounting.dm.GLAccount;
 import com.siriuserp.accountpayable.dm.Payment;
 import com.siriuserp.accountpayable.dm.PaymentInformation;
+import com.siriuserp.accountpayable.dm.PaymentMethodType;
 import com.siriuserp.accountreceivable.dm.Billing;
 import com.siriuserp.accountreceivable.dm.CreditMemoReferenceType;
 import com.siriuserp.accountreceivable.dm.Receipt;
@@ -22,7 +23,6 @@ import com.siriuserp.sdk.dm.Form;
 import com.siriuserp.sdk.dm.Money;
 import com.siriuserp.sdk.dm.Month;
 import com.siriuserp.sdk.dm.Party;
-import com.siriuserp.sdk.dm.PaymentMethodType;
 import com.siriuserp.sdk.dm.PostalAddress;
 
 import lombok.Getter;

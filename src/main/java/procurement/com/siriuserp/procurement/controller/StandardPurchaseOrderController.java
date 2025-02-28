@@ -88,7 +88,7 @@ public class StandardPurchaseOrderController extends ControllerBase
 			service.add(FormHelper.create(PurchaseOrder.class, form));
 			status.setComplete();
 
-			response.store("id", form.getPurchaseRequisition().getId());
+			response.store("id", form.getPurchaseOrder().getId());
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -115,7 +115,7 @@ public class StandardPurchaseOrderController extends ControllerBase
 			service.edit(FormHelper.update(form.getPurchaseOrder(), form));
 			status.setComplete();
 
-			response.store("id", form.getPurchaseRequisition().getId());
+			response.store("id", form.getPurchaseOrder().getId());
 		} catch (Exception e)
 		{
 			e.printStackTrace();

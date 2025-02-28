@@ -1,6 +1,12 @@
+/**
+ * File Name  : InvoiceVerificationController.java
+ * Created On : Feb 26, 2025
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.accountpayable.controller;
 
 import com.siriuserp.accountpayable.criteria.InvoiceVerificationFilterCriteria;
+import com.siriuserp.accountpayable.dm.PaymentMethodType;
 import com.siriuserp.accountpayable.form.PaymentForm;
 import com.siriuserp.accountpayable.query.InvoiceVerificationGridViewQuery;
 import com.siriuserp.accountpayable.service.InvoiceVerificationService;
@@ -21,36 +27,47 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
+ */
+
 @Controller
-@SessionAttributes(value = { "verification_add", "verification_edit"}, types = {PaymentForm.class, InvoiceVerification.class})
+@SessionAttributes(value = "verification_form", types = PaymentForm.class)
 @DefaultRedirect(url = "invoiceverificationview.htm")
-public class InvoiceVerificationController extends ControllerBase {
-    @Autowired
-    private InvoiceVerificationService service;
+public class InvoiceVerificationController extends ControllerBase
+{
+	@Autowired
+	private InvoiceVerificationService service;
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder, WebRequest request){
-        binder.registerCustomEditor(Tax.class, modelEditor.forClass(Tax.class));
-        binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
-        binder.registerCustomEditor(Currency.class, modelEditor.forClass(Currency.class));
-        binder.registerCustomEditor(Exchange.class, modelEditor.forClass(Exchange.class));
-        binder.registerCustomEditor(GoodsReceiptItem.class, modelEditor.forClass(GoodsReceiptItem.class));
-        binder.registerCustomEditor(PaymentMethodType.class, enumEditor.forClass(PaymentMethodType.class));
-        binder.registerCustomEditor(ExchangeType.class, enumEditor.forClass(ExchangeType.class));
-    }
+	@InitBinder
+	public void initBinder(WebDataBinder binder, WebRequest request)
+	{
+		binder.registerCustomEditor(Tax.class, modelEditor.forClass(Tax.class));
+		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
+		binder.registerCustomEditor(Currency.class, modelEditor.forClass(Currency.class));
+		binder.registerCustomEditor(Exchange.class, modelEditor.forClass(Exchange.class));
+		binder.registerCustomEditor(GoodsReceiptItem.class, modelEditor.forClass(GoodsReceiptItem.class));
+		binder.registerCustomEditor(PaymentMethodType.class, enumEditor.forClass(PaymentMethodType.class));
+		binder.registerCustomEditor(ExchangeType.class, enumEditor.forClass(ExchangeType.class));
+	}
 
-    @RequestMapping("/invoiceverificationview.htm")
-    public ModelAndView view(HttpServletRequest request) throws Exception {
-        return new ModelAndView("/payable/invoiceVerificationList", service.view(criteriaFactory.create(request, InvoiceVerificationFilterCriteria.class), InvoiceVerificationGridViewQuery.class));
-    }
-    
-    @RequestMapping("/invoiceverificationpreedit.htm")
-	public ModelAndView preedit(@RequestParam("id")Long id) throws Exception {
+	@RequestMapping("/invoiceverificationview.htm")
+	public ModelAndView view(HttpServletRequest request) throws Exception
+	{
+		return new ModelAndView("/payable/invoiceVerificationList", service.view(criteriaFactory.create(request, InvoiceVerificationFilterCriteria.class), InvoiceVerificationGridViewQuery.class));
+	}
+
+	@RequestMapping("/invoiceverificationpreedit.htm")
+	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
+	{
 		return new ModelAndView("/payable/invoiceVerificationUpdate", service.preedit(id));
 	}
-    
-    @RequestMapping("/invoiceverificationedit.htm")
-	public ModelAndView edit(@ModelAttribute("verification_edit") PaymentForm form, SessionStatus status) throws Exception {
+
+	@RequestMapping("/invoiceverificationedit.htm")
+	public ModelAndView edit(@ModelAttribute("verification_form") PaymentForm form, SessionStatus status) throws Exception
+	{
 		JSONResponse response = new JSONResponse();
 
 		try
@@ -68,13 +85,13 @@ public class InvoiceVerificationController extends ControllerBase {
 		return response;
 	}
 
-    @RequestMapping("/popupinvoiceverificationview.htm")
-    public ModelAndView popup(HttpServletRequest request, @RequestParam(value = "target", required = false) String target) throws Exception
-    {
-        ModelAndView view = new ModelAndView("/payable-popup/invoicePopup");
-        view.addAllObjects(service.view(criteriaFactory.createPopup(request, InvoiceVerificationFilterCriteria.class), InvoiceVerificationGridViewQuery.class));
-        view.addObject("target", target);
+	@RequestMapping("/popupinvoiceverificationview.htm")
+	public ModelAndView popup(HttpServletRequest request, @RequestParam(value = "target", required = false) String target) throws Exception
+	{
+		ModelAndView view = new ModelAndView("/payable-popup/invoicePopup");
+		view.addAllObjects(service.view(criteriaFactory.createPopup(request, InvoiceVerificationFilterCriteria.class), InvoiceVerificationGridViewQuery.class));
+		view.addObject("target", target);
 
-        return view;
-    }
+		return view;
+	}
 }

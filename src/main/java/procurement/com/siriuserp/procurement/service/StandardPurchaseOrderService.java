@@ -10,8 +10,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.siriuserp.accountpayable.dm.InvoiceVerification;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationItem;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationItemReference;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceHelper;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceType;
+import com.siriuserp.accountpayable.service.InvoiceVerificationService;
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
+import com.siriuserp.inventory.dm.WarehouseTransactionSource;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
+import com.siriuserp.inventory.form.InventoryForm;
+import com.siriuserp.procurement.adapter.PurchaseOrderAdapter;
 import com.siriuserp.procurement.dm.POStatus;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.procurement.dm.PurchaseOrderApprovableBridge;
@@ -22,11 +31,13 @@ import com.siriuserp.procurement.form.PurchaseForm;
 import com.siriuserp.sales.dm.ApprovableType;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
+import com.siriuserp.sdk.annotation.AutomaticSibling;
 import com.siriuserp.sdk.annotation.InjectParty;
+import com.siriuserp.sdk.base.Service;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.CurrencyDao;
-import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
+import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Item;
 import com.siriuserp.sdk.dm.Money;
@@ -51,22 +62,22 @@ import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class StandardPurchaseOrderService
+public class StandardPurchaseOrderService extends Service
 {
-	@Autowired
-	private GenericDao genericDao;
-
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
 
 	@Autowired
 	private CurrencyDao currencyDao;
 
+	@Autowired
+	private InvoiceVerificationService invoiceVerificationService;
+
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws Exception
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("requisitions", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
+		map.put("purchaseOrders", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
 		map.put("filterCriteria", filterCriteria);
 
 		return map;
@@ -95,6 +106,7 @@ public class StandardPurchaseOrderService
 		purchaseOrder.setShippingDate(form.getDeliveryDate());
 		purchaseOrder.setPurchaseType(PurchaseType.STANDARD);
 		purchaseOrder.setStatus(POStatus.OPEN);
+		purchaseOrder.setInvoiceBeforeReceipt(true);
 
 		//Add ApprovableBridge using Helper when needed approval
 		if (purchaseOrder.getApprover() != null)
@@ -105,9 +117,10 @@ public class StandardPurchaseOrderService
 			purchaseOrder.setApprovable(approvableBridge);
 		}
 
+		boolean barcode = false;
 		for (Item item : form.getItems())
 		{
-			if (item.getProduct() != null)
+			if (item.getReference() != null)
 			{
 				PurchaseRequisitionItem requisitionItem = genericDao.load(PurchaseRequisitionItem.class, item.getReference());
 				requisitionItem.setAvailable(false);
@@ -115,22 +128,40 @@ public class StandardPurchaseOrderService
 
 				PurchaseOrderItem purchaseItem = new PurchaseOrderItem();
 				purchaseItem.setRequisitionItem(requisitionItem);
-				purchaseItem.setProduct(item.getProduct());
+				purchaseItem.setProduct(requisitionItem.getProduct());
 				purchaseItem.setQuantity(item.getQuantity());
 				purchaseItem.getMoney().setAmount(item.getAmount());
 				purchaseItem.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
 				purchaseItem.setNote(item.getNote());
+				purchaseItem.setFacilityDestination(purchaseOrder.getShipTo());
+				purchaseItem.setPurchaseOrder(purchaseOrder);
+				purchaseItem.setTransactionSource(WarehouseTransactionSource.STANDARD_PURCHASE_ORDER);
 
-				// Set Transaction Item using helper & set locked to true
-				WarehouseTransactionItem warehouseTransactionItem = ReferenceItemHelper.init(genericDao, item.getQuantity(), WarehouseTransactionType.IN, purchaseItem);
-				warehouseTransactionItem.setLocked(true);
-				purchaseItem.setTransactionItem(warehouseTransactionItem);
+				if (!purchaseItem.getProduct().isSerial())
+				{
+					WarehouseTransactionItem warehouseTransactionItem = ReferenceItemHelper.init(genericDao, item.getQuantity(), WarehouseTransactionType.IN, purchaseItem);
+					if (purchaseOrder.getApprover() != null)
+						warehouseTransactionItem.setLocked(true);
+					else
+						warehouseTransactionItem.setLocked(false);
+
+					purchaseItem.setTransactionItem(warehouseTransactionItem);
+				}
 
 				purchaseOrder.getItems().add(purchaseItem);
+
+				if (purchaseItem.getProduct().isSerial())
+					barcode = true;
 			}
+
+			if (barcode)
+				purchaseOrder.setStatus(POStatus.BARCODE);
 		}
 
 		genericDao.add(purchaseOrder);
+
+		if (purchaseOrder.getApprovable() == null && purchaseOrder.isInvoiceBeforeReceipt())
+			createInvoice(purchaseOrder);
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
@@ -141,10 +172,14 @@ public class StandardPurchaseOrderService
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("purchase_form", purchaseForm);
 		map.put("purchase_edit", purchaseForm.getPurchaseOrder());
+		map.put("adapter", new PurchaseOrderAdapter(purchaseForm.getPurchaseOrder()));
+		map.put("approvalDecisionStatuses", ApprovalDecisionStatus.values());
+		map.put("approvalDecision", purchaseForm.getPurchaseOrder().getApprovable() != null ? purchaseForm.getPurchaseOrder().getApprovable().getApprovalDecision() : null);
 
 		return map;
 	}
 
+	@AutomaticSibling(roles = "ApprovableSiblingRole")
 	@AuditTrails(className = PurchaseOrder.class, actionType = AuditTrailsActionType.UPDATE)
 	public void edit(PurchaseOrder purchaseOrder) throws Exception
 	{
@@ -154,6 +189,13 @@ public class StandardPurchaseOrderService
 	@AuditTrails(className = PurchaseOrder.class, actionType = AuditTrailsActionType.DELETE)
 	public void delete(PurchaseOrder purchaseOrder) throws ServiceException
 	{
+		for (PurchaseOrderItem item : purchaseOrder.getItems())
+		{
+			PurchaseRequisitionItem requisitionItem = genericDao.load(PurchaseRequisitionItem.class, item.getRequisitionItem().getId());
+			requisitionItem.setAvailable(true);
+			genericDao.update(requisitionItem);
+		}
+
 		genericDao.delete(purchaseOrder);
 	}
 
@@ -161,5 +203,50 @@ public class StandardPurchaseOrderService
 	public PurchaseOrder load(Long id)
 	{
 		return genericDao.load(PurchaseOrder.class, id);
+	}
+
+	@AuditTrails(className = InvoiceVerification.class, actionType = AuditTrailsActionType.CREATE)
+	public void createInvoice(PurchaseOrder purchaseOrder) throws Exception
+	{
+		InventoryForm form = new InventoryForm();
+		InvoiceVerification invoiceVerification = new InvoiceVerification();
+		invoiceVerification.setForm(form);
+		invoiceVerification.setDate(purchaseOrder.getDate());
+		invoiceVerification.setOrganization(purchaseOrder.getOrganization());
+		invoiceVerification.setMoney(new Money());
+		invoiceVerification.setSupplier(purchaseOrder.getSupplier());
+		invoiceVerification.setTax(purchaseOrder.getTax());
+		invoiceVerification.getMoney().setCurrency(purchaseOrder.getMoney().getCurrency());
+
+		for (PurchaseOrderItem purchaseItem : purchaseOrder.getItems())
+		{
+			InvoiceVerificationItemReference invoiceReference = new InvoiceVerificationItemReference();
+			invoiceReference.setCode(purchaseOrder.getCode());
+			invoiceReference.setDate(purchaseOrder.getDate());
+			invoiceReference.setOrganization(purchaseOrder.getOrganization());
+			invoiceReference.setFacility(purchaseOrder.getFacility());
+			invoiceReference.setSupplier(purchaseOrder.getSupplier());
+			invoiceReference.setPurchaseOrderItem(purchaseItem);
+			invoiceReference.setVerificated(true);
+			invoiceReference.setReferenceType(InvoiceVerificationReferenceType.PURCHASE_ORDER);
+			genericDao.add(invoiceReference);
+
+			InvoiceVerificationItem invoiceItem = InvoiceVerificationReferenceHelper.initItem(invoiceReference);
+			invoiceItem.setInvoiceVerification(invoiceVerification);
+
+			Item item = new Item();
+			item.setInvoiceVerificationItem(invoiceItem);
+			form.getItems().add(item);
+
+			invoiceVerification.getItems().add(invoiceItem);
+		}
+
+		invoiceVerification.setUnpaid(purchaseOrder.getMoney().getAmount());
+		invoiceVerification.getMoney().setAmount(invoiceVerification.getUnpaid());
+
+		form.setInvoiceVerification(invoiceVerification);
+		form.setPurchaseOrder(purchaseOrder);
+
+		invoiceVerificationService.add(form.getInvoiceVerification());
 	}
 }

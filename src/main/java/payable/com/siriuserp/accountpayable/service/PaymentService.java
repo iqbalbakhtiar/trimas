@@ -4,6 +4,7 @@ import com.siriuserp.accountpayable.adapter.PaymentUIAdapter;
 import com.siriuserp.accountpayable.dm.Payment;
 import com.siriuserp.accountpayable.dm.PaymentApplication;
 import com.siriuserp.accountpayable.dm.PaymentInformation;
+import com.siriuserp.accountpayable.dm.PaymentMethodType;
 import com.siriuserp.accountpayable.form.PayablesForm;
 import com.siriuserp.accountreceivable.dm.FinancialStatus;
 import com.siriuserp.accountreceivable.dm.WriteOffType;

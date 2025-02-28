@@ -2,7 +2,7 @@ package com.siriuserp.accountpayable.dm;
 
 import com.siriuserp.accountreceivable.dm.WriteOffType;
 import com.siriuserp.sdk.dm.Model;
-import com.siriuserp.sdk.dm.Payable;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

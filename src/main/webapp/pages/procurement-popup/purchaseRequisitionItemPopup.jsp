@@ -33,19 +33,17 @@
 								  	  	<td width="65%" height="28" align="left"><input type="text" id="code" name="code" value="${filterCriteria.code}" size="35" class="inputbox"/></td>
 									</tr>
 									<tr>
-										<td width="15%" align="right">Resi No</td>
-									  	<td width="5%" align="center">:</td>
-								  	  	<td width="65%" height="28" align="left"><input type="text" id="documentNo" name="documentNo" value="${filterCriteria.documentNo}" size="35" class="inputbox"/></td>
-									</tr>
-									<tr>
-										<td width="15%" align="right">Payable CB</td>
-									  	<td width="5%" align="center">:</td>
-								  	  	<td width="65%" height="28" align="left"><input type="text" id="payableCBDocument" name="payableCBDocument" value="${filterCriteria.payableCBDocument}" size="35" class="inputbox"/></td>
+										<td align="right"><spring:message code="purchaserequisition.requisitioner"/></td>
+										<td>:&nbsp;</td>
+										<td><input type="text" id="requisitionerName" name="requisitionerName" value="${filterCriteria.requisitionerName}" size="35" class="inputbox"/></td>
 									</tr>
 									<tr>
 										<td>&nbsp;</td>
 										<td>&nbsp;</td>
-										<td><%@ include file="/common/button.jsp"%></td>
+										<td>
+											<%@ include file="/common/button.jsp"%>
+											<input type="button" class="btn" style="WIDTH:60px; HEIGHT:25px" value='<spring:message code="sirius.ok"/>' onclick="addRequisitions();"/></td>
+										</td>
 									</tr>
 									</table>
 								</form>
@@ -54,30 +52,30 @@
 						</table>
 
 						<table border="0" cellpadding="0" cellspacing="0" width="99%" align="center">
-							<tr>
-								<td width="34%" height="30" align="left" valign="middle"></td>
-								<td width="66%" align="right" height="20"><%@ include file="/common/navigate.jsp"%></td>
-							</tr>
+						<tr>
+							<td width="34%" height="30" align="left" valign="middle"><strong>Total Ticked : <span id="totalTicked">0</span></strong></td>
+							<td width="66%" align="right"><%@ include file="/common/navigate.jsp"%></td>
+						</tr>
 						</table>
 
 						<table class="table-list" cellspacing="0" cellpadding="0" width="80%">
 					  	<tr>
 					  		<th width="1%"><input type="checkbox" name="checkMaster" class="checkall"/></th>
 				            <th width="12%" nowrap="nowrap"><spring:message code="product"/></th>
-				            <th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
 				            <th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
+				            <th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
 			                <th width="8%"><spring:message code="sirius.code"/></th>
 			                <th width="8%"><spring:message code="sirius.date"/></th>
                        	  	<th width="20%"><spring:message code="sirius.note"/></th>
 				  		</tr>
 						<c:forEach items="${requisitions}" var="item">
 						<tr>
-					  		<td><input id="${item.id}" type="checkbox" name="checkRequisitions" onclick="tickRequisition('${item.id}');" class="requisitions"/></td>
+					  		<td><input id="${item.id}" type="checkbox" name="checkRequisitions" onclick="tickRequisition('${item.id}');" class="requisitionItems"/></td>
 			                <td><c:out value="${item.product.name}"/></td>
 							<td><fmt:formatNumber value='${item.quantity}' pattern=',##0'/></td>
 			                <td><c:out value="${item.product.unitOfMeasure.measureId}"/></td>
-							<td><c:out value='${item.code}'/></td>
-                            <td><fmt:formatDate value='${item.date}' pattern='dd-MM-yyyy'/></td>
+							<td><c:out value='${item.purchaseRequisition.code}'/></td>
+                            <td><fmt:formatDate value='${item.purchaseRequisition.date}' pattern='dd-MM-yyyy'/></td>
 			                <td><c:out value="${item.note}"/></td>
 					  	</tr>
 						</c:forEach>
@@ -97,20 +95,21 @@
 </div>
 </body>
 </html>
+<script type="text/javascript" src="<c:url value='/js/requisition.js'/>"></script>
 <script type="text/javascript">
 	$(function(){
-		checkSelected();
+		//checkSelected();
 		
 		$('.checkall').click(function () {
-	        $('.requisitions').prop("checked", this.checked);
+	        $('.requisitionItems').prop("checked", this.checked);
 	        
-	        $('.requisitions').each(function() {
+	        $('.requisitionItems').each(function() {
 	        	tickRequisition($(this).attr('id'));
 	        });
 	    });
 	});
 	
-	function checkSelected()
+	/* function checkSelected()
 	{
 		var selectedRequisitions = self.opener.selectedRequisitions;
 		for (var i = selectedRequisitions.length - 1; i >= 0; i--) 
@@ -122,22 +121,26 @@
 		}
 		
 		$('#totalTicked').text(selectedRequisitions.length);
-	}
+	} */
 	
 	function tickRequisition(id)
 	{
 		var checkRequisition = document.getElementById(id);
 		var selectedRequisitions = self.opener.selectedRequisitions;
-	
+		
 		if(checkRequisition.checked)
 		{
+			//Check already add to table
 			if(checkSelectedStatus(id))
 			{
-				alert("Invoice has been selected !!!");
+				alert("Item has been selected !!!");
 				checkRequisition.checked = false;
 			}
-			else
-				selectedRequisitions.push(id);
+			else {
+				//Push only if data isn't in array
+				if(!selectedRequisitions.includes(id))
+					selectedRequisitions.push(id);
+			}
 		}
 		else
 		{
@@ -151,7 +154,7 @@
 	
 	function checkSelectedStatus(id)
 	{
-		var requisitionItemIds = self.opener.document.getElementsByClassName('payables');
+		var requisitionItemIds = self.opener.document.getElementsByClassName('requisitions');
 	
 		for (var i = requisitionItemIds.length - 1; i >= 0; i--) {
 			if(requisitionItemIds[i].value == id)
@@ -161,13 +164,13 @@
 		return false;
 	}
 	
-	function addInvoices()
+	function addRequisitions()
 	{
 		var selectedRequisitions = self.opener.selectedRequisitions;
 		for (var i = selectedRequisitions.length - 1; i >= 0; i--) 
 		{
 			var index = self.opener.index;
-			self.opener.addLineItem();
+			self.opener.addLine();
 	
 			setclient(index, selectedRequisitions[i]);
 		}
@@ -177,32 +180,28 @@
 
 	function setclient(index, id)
 	{
-		Payable.load(id).then(payable => {
+		RequisitionItem.load(id).then(requisition => {
 			let _client = self.opener.document.getElementById('reference['+index+']');
 			if(_client)
 			{
 				_client.remove(_client.selectedIndex);
 
 				let _opt = document.createElement('option');
-				_opt.value = payable.payableId;
-				_opt.text = payable.payableCode;
+				_opt.value = requisition.id;
+				_opt.text = requisition.product.name;
 
 				_client.appendChild(_opt);
 
 				_client.dispatchEvent(new Event('change'));
 			}
 
-			let _unpaid = self.opener.document.getElementById('unpaid['+index+']');
-			if(_unpaid)
-				_unpaid.value = payable.payableUnpaid.numberFormat('#,#');
+			let _uom = self.opener.document.getElementById('uom['+index+']');
+			if(_uom)
+				_uom.value = requisition.product.unitOfMeasure.measureId;
 
-			let _rate = self.opener.document.getElementById('rate['+index+']');
-			if(_rate)
-				_rate.value = payable.payableRate.numberFormat('#,#');
-			
-			let _paids = self.opener.document.getElementById('paids['+index+']');
-			if(_paids)
-				_paids.value = payable.payblePaid.numberFormat('#,#');
+			let _quantity = self.opener.document.getElementById('quantity['+index+']');
+			if(_quantity)
+				_quantity.value = requisition.quantity.numberFormat('#,#');
 
 			window.close();
 		});

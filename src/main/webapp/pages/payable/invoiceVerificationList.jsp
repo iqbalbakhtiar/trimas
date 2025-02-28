@@ -61,10 +61,10 @@
                                 <th width="8%"><spring:message code="sirius.code"/></th>
                                 <th width="5%"><spring:message code="sirius.date"/></th>
                                 <th width="12%"><spring:message code="supplier"/></th>
-                                <th width="10%"><spring:message code="sirius.reference"/></th>
+                                <%-- <th width="10%"><spring:message code="sirius.reference"/></th> --%>
                                 <th width="5%"><spring:message code="sirius.tax"/></th>
                                 <th width="8%"><spring:message code="sirius.unpaid"/></th>
-                                <th width="10%">PO Ref</th>
+                                <!-- <th width="10%">PO Ref</th> -->
                                 <th width="13%"><spring:message code="sirius.note"/></th>
                             </tr>
                             <c:forEach items="${verifications}" var="verif">
@@ -75,15 +75,14 @@
                                     <td nowrap="nowrap"><c:out value="${verif.code}" /></td>
                                     <td nowrap="nowrap"><fmt:formatDate value='${verif.date}' pattern='dd-MM-yyyy'/></td>
                                     <td><c:out value='${verif.supplier.fullName}'/></td>
-                                    <td><a href="<c:url value='/page/goodsreceiptpreedit.htm?id=${verif.goodsReceipt.id}'/>"><c:out value='${verif.goodsReceipt.code}'/></a></td>
+                                    <%-- <td><a href="<c:url value='/page/goodsreceiptpreedit.htm?id=${verif.goodsReceipt.id}'/>"><c:out value='${verif.goodsReceipt.code}'/></a></td> --%>
                                     <td><c:out value='${verif.tax.taxName}'/></td>
-                                    <%-- "unpaid" attribute for regex postman--%>
                                     <td unpaid="${verif.id}"><fmt:formatNumber value='${verif.unpaid}' pattern=',##0.00'/></td>
-                                    <td align="center">
+                                    <%-- <td align="center">
                                         <c:forEach items="${verif.goodsReceipt.reference}" var="message" varStatus="status">
                                             ${message}<br/>
                                         </c:forEach>
-                                    </td>
+                                    </td> --%>
                                     <td class="break-over">${verif.note}</td>
                                 </tr>
                             </c:forEach>

@@ -33,7 +33,7 @@
               <td><input id="date" name="date" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>"/></td>
             </tr>
             <tr>
-              <td align="right"><spring:message code="dpo.delivery.date"/></td>
+              <td align="right"><spring:message code="sirius.date.delivery"/></td>
               <td width="1%" align="center">:</td>
               <td><input id="deliveryDate" name="deliveryDate" class="datepicker" /></td>
             </tr>
@@ -56,7 +56,7 @@
               </td>
             </tr>
             <tr>
-              <td align="right"><spring:message code="salesorder.tax.type"/></td>
+              <td align="right"><spring:message code="purchaseorder.tax"/></td>
               <td width="1%" align="center">:</td>
               <td>
                 <form:select id="tax" path="tax" onchange="updateDisplay();">
@@ -64,9 +64,7 @@
                     <option value="${tax.id}" data-taxrate="${tax.taxRate}">${tax.taxName}</option>
                   </c:forEach>
                 </form:select>
-                <spring:message code="salesorder.tax.rate"/>
-                <input size="7" id="taxRate" class="input-number input-disabled" disabled />
-                &nbsp;%
+                <input size="7" id="taxRate" class="input-number input-disabled" disabled />&nbsp;%
               </td>
             </tr>
             <tr>
@@ -130,17 +128,17 @@
       <div id="productLineItem" dojoType="ContentPane" label="<spring:message code='purchaseorder.line'/>" class="tab-pages" refreshOnShow="true" selected="true">
         <div class="toolbar-clean">
           <div class="toolbar-clean">
-            <a class="item-button-new"><span><spring:message code="sirius.row.new"/></span></a>
+            <a class="item-button-new" href="javascript:popupRequisitions();"><span><spring:message code="sirius.row.new"/></span></a>
             <a class="item-button-delete"><span><spring:message code="sirius.row.delete"/></span></a>
             <div class="item-navigator">&nbsp;</div>
           </div>
           <table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">
             <thead>
             <tr>
-              <th width="1%" nowrap="nowrap"><input class="checkall" type="checkbox"/></th>
+              <th width="1%" nowrap="nowrap"><input class="checkall" type="checkbox" index=""/></th>
               <th width="8%" nowrap="nowrap"><spring:message code="product"/></th>
-              <th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
               <th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
+              <th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
               <th width="8%" nowrap="nowrap"><spring:message code="purchaseorder.amount"/></th>
               <th width="8%" nowrap="nowrap"><spring:message code="purchaseorder.total"/></th>
               <th width="50%" nowrap="nowrap"><spring:message code="sirius.note"/></th>
@@ -160,18 +158,11 @@
 <%@ include file="/common/sirius-general-bottom.jsp"%>
 <script type="text/javascript">
   $(function(){
-    var $index = 0; // For Line Item Index
-
     updateDisplay();
 
     $('.item-button-save').click(function(){
       if(validation())
         save();
-    });
-
-    $('.item-button-new').click(function() {
-      addLine($index);
-      $index++;
     });
 
     $('.checkall').click(function () {
@@ -295,11 +286,19 @@
       alert('<spring:message code="salesorder.date"/> <spring:message code="notif.empty"/> !');
       return false;
     }
-
-    var requisitioner = $('#requisitioner').val();
-    if (requisitioner == null || requisitioner === "") {
-      alert('<spring:message code="sirius.requisitioner"/> <spring:message code="notif.empty"/> !');
+    
+    var supplier = $('#supplier').val();
+    if (supplier == null || supplier === "") {
+      alert('<spring:message code="supplier"/> <spring:message code="notif.empty"/> !');
       return false;
+    }
+
+    if($('#totalTransaction').val().toNumber() > new Number(1000000)) {
+	    var approver = $('#approver').val();
+	    if (approver == null || approver === "") {
+	      alert('<spring:message code="sirius.approver"/> <spring:message code="notif.empty"/> !');
+	      return false;
+	    }
     }
 
     if ($('#lineItem tr').length === 0) {
@@ -311,7 +310,7 @@
     $('#lineItem tr').each(function(index){
       var $row = $(this);
 
-      var product = $row.find('select[id^="product["]').val();
+      var product = $row.find('select[id^="reference["]').val();
       if (product == null || product === "") {
         alert('<spring:message code="product"/> <spring:message code="notif.empty"/> ! (<spring:message code="salesorder.lineitem"/> ' + (index + 1) + ')');
         isValid = false;
@@ -359,7 +358,7 @@
           if(json.status === 'OK')
           {
             $dialog.dialog('close');
-            window.location="<c:url value='/page/standardpurchasepreedit.htm?id='/>"+json.id;
+            window.location="<c:url value='/page/standardpurchaseorderpreedit.htm?id='/>"+json.id;
           }
           else
           {
@@ -381,25 +380,24 @@
       	}
 		
 		selectedRequisitions = [];
-		openpopup("<c:url value='/page/popuppurchaserequisitionview.htm?organization='/>"+org.value+"&index="+index);
+		openpopup("<c:url value='/page/popuppurchaserequisitionitemview.htm?organization='/>"+org.value+"&index="+index);
 	}
 
-  function addLine($index) {
+  function addLine() {
     $tbody = $('#lineItem');
     $tr = $('<tr/>');
 
-    $cbox = List.get('<input type="checkbox" class="check"/>','check'+$index);
+    $cbox = List.get('<input type="checkbox" class="check"/>','check'+index);
     //value is not product id, but requisition item id
-    $product = List.get('<select class="combobox productInput requisitions" onchange="updateDisplay();"/>','product['+$index+']');
-    $productImg = List.img('<spring:message code="product"/>', $index, 'openProduct("'+$index+'")');
-    $qty = List.get('<input type="text" class="input-number" size="6" onchange="updateDisplay();"/>','quantity['+$index+']', '0.00');
-    $uom = List.get('<input type="text" class="input-disabled" disabled size="6" />','uom['+$index+']');
-    $price = List.get('<input type="text" class="input-number" size="12" onchange="updateDisplay()"/>','amount['+$index+']', '0.00');
-    $totalAmount = List.get('<input type="text" class="input-number input-disabled" disabled size="12"/>','totalAmount['+$index+']', '0.00');
-    $packNote = List.get('<input type="text" size="40"/>','note['+$index+']');
+    $reference = List.get('<select class="combobox-ext requisitions" onchange="updateDisplay();"/>','reference['+index+']');
+    $qty = List.get('<input type="text" class="input-number" size="6" onchange="updateDisplay();"/>','quantity['+index+']', '0.00');
+    $uom = List.get('<input type="text" class="input-disabled" disabled size="6" />','uom['+index+']');
+    $price = List.get('<input type="text" class="input-number" size="12" onchange="updateDisplay()"/>','amount['+index+']', '0.00');
+    $totalAmount = List.get('<input type="text" class="input-number input-disabled" disabled size="12"/>','totalAmount['+index+']', '0.00');
+    $packNote = List.get('<input type="text" size="40"/>','note['+index+']');
 
     $tr.append(List.col([$cbox]));
-    $tr.append(List.col([$product, $productImg]));
+    $tr.append(List.col([$reference]));
     $tr.append(List.col([$qty]));
     $tr.append(List.col([$uom]));
     $tr.append(List.col([$price]));
@@ -407,6 +405,7 @@
     $tr.append(List.col([$packNote]));
 
     $tbody.append($tr);
+	index++;
     $(".input-number").bind(inputFormat);
   }
 

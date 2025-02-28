@@ -6,6 +6,7 @@
 package com.siriuserp.procurement.dm;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,6 +25,7 @@ import org.hibernate.annotations.Type;
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.sdk.dm.Model;
 
+import javolution.util.FastMap;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -70,6 +72,17 @@ public class PurchaseRequisitionItem extends Model
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private PurchaseOrderItem purchaseOrderItem;
+
+	@Override
+	public Map<String, Object> val()
+	{
+		Map<String, Object> map = new FastMap<String, Object>();
+		map.put("id", getId());
+		map.put("product", getProduct());
+		map.put("quantity",getQuantity());
+
+		return map;
+	}
 
 	@Override
 	public String getAuditCode()

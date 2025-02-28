@@ -13,10 +13,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.siriuserp.accountpayable.dm.PaymentMethod;
+import com.siriuserp.accountpayable.dm.PaymentSchedule;
 import com.siriuserp.administration.service.PaymentScheduleService;
 import com.siriuserp.sdk.base.ControllerBase;
-import com.siriuserp.sdk.dm.PaymentMethod;
-import com.siriuserp.sdk.dm.PaymentSchedule;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.view.ViewHelper;
 

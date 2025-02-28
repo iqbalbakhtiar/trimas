@@ -31,7 +31,7 @@ public class PurchaseRequisitionItemViewQuery extends AbstractGridViewQuery
 		else
 			builder.append("SELECT DISTINCT(item) ");
 
-		builder.append("FROM PurchaseRequisition item ");
+		builder.append("FROM PurchaseRequisitionItem item ");
 		builder.append("WHERE item.available = 'Y' ");
 
 		if (SiriusValidator.validateParam(criteria.getCode()))

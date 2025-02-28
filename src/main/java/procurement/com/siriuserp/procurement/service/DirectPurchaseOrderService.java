@@ -1,9 +1,20 @@
 package com.siriuserp.procurement.service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
 import com.siriuserp.procurement.adapter.PurchaseOrderAdapter;
-import com.siriuserp.procurement.dm.*;
+import com.siriuserp.procurement.dm.POStatus;
+import com.siriuserp.procurement.dm.PurchaseOrder;
+import com.siriuserp.procurement.dm.PurchaseOrderApprovableBridge;
+import com.siriuserp.procurement.dm.PurchaseOrderItem;
+import com.siriuserp.procurement.dm.PurchaseType;
 import com.siriuserp.procurement.form.PurchaseForm;
 import com.siriuserp.procurement.interceptor.PurchaseOrderApprovableInterceptor;
 import com.siriuserp.sales.dm.ApprovableType;
@@ -12,30 +23,37 @@ import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.AutomaticSibling;
 import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.base.Service;
-import com.siriuserp.sdk.dao.*;
+import com.siriuserp.sdk.dao.CodeSequenceDao;
+import com.siriuserp.sdk.dao.CreditTermDao;
+import com.siriuserp.sdk.dao.CurrencyDao;
+import com.siriuserp.sdk.dao.PartyRelationshipDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
-import com.siriuserp.sdk.dm.*;
+import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
+import com.siriuserp.sdk.dm.CreditTerm;
+import com.siriuserp.sdk.dm.Facility;
+import com.siriuserp.sdk.dm.Item;
+import com.siriuserp.sdk.dm.Money;
+import com.siriuserp.sdk.dm.PartyRelationship;
+import com.siriuserp.sdk.dm.PartyRelationshipType;
+import com.siriuserp.sdk.dm.TableType;
+import com.siriuserp.sdk.dm.Tax;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
-import com.siriuserp.sdk.utility.*;
+import com.siriuserp.sdk.utility.ApprovableBridgeHelper;
+import com.siriuserp.sdk.utility.DateHelper;
+import com.siriuserp.sdk.utility.FormHelper;
+import com.siriuserp.sdk.utility.GeneratorHelper;
+import com.siriuserp.sdk.utility.QueryFactory;
+import com.siriuserp.sdk.utility.ReferenceItemHelper;
 import com.siriuserp.tools.sibling.ApprovableSiblingRole;
-import javolution.util.FastMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
 public class DirectPurchaseOrderService extends Service
 {
-
-	@Autowired
-	private GenericDao genericDao;
-
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
 

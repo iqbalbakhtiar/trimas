@@ -1,15 +1,32 @@
 package com.siriuserp.inventory.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.siriuserp.inventory.criteria.BarcodeGroupFilterCriteria;
 import com.siriuserp.inventory.dm.Product;
-import com.siriuserp.inventory.form.TransactionForm;
+import com.siriuserp.inventory.form.InventoryForm;
+import com.siriuserp.procurement.dm.PurchaseOrder;
+import com.siriuserp.procurement.dm.PurchaseOrderItem;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.GridViewQuery;
-import com.siriuserp.sdk.dm.*;
+import com.siriuserp.sdk.dm.Barcode;
+import com.siriuserp.sdk.dm.BarcodeGroup;
+import com.siriuserp.sdk.dm.BarcodeGroupType;
+import com.siriuserp.sdk.dm.BarcodeStatus;
+import com.siriuserp.sdk.dm.Item;
+import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
@@ -17,18 +34,9 @@ import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
 import com.siriuserp.sdk.utility.SiriusValidator;
+
 import javolution.util.FastList;
 import javolution.util.FastMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Ferdinand
@@ -39,14 +47,15 @@ import java.util.Map;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class BarcodeGroupService {
-    @Autowired
-    private GenericDao genericDao;
+public class BarcodeGroupService
+{
+	@Autowired
+	private GenericDao genericDao;
 
-    @Autowired
-    private CodeSequenceDao codeSequenceDao;
+	@Autowired
+	private CodeSequenceDao codeSequenceDao;
 
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws ServiceException
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
@@ -58,30 +67,52 @@ public class BarcodeGroupService {
 		return map;
 	}
 
-	@InjectParty(keyName = "barcode_add")
+	@InjectParty(keyName = "barcode_form")
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> preadd1() throws ServiceException
+	public Map<String, Object> preadd1(Long referenceId, BarcodeGroupType barcodeType) throws ServiceException
 	{
-		Map<String, Object> map = new FastMap<String, Object>();
+		InventoryForm form = new InventoryForm();
+		form.setReferenceId(referenceId);
+		form.setBarcodeGroupType(barcodeType);
 
-		map.put("barcode_add", new TransactionForm());
+		Map<String, Object> map = new FastMap<String, Object>();
+		map.put("barcode_form", form);
 		map.put("types", BarcodeGroupType.values());
-		map.put("now", new Date());
 
 		return map;
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> preadd2(TransactionForm form) throws ServiceException
+	public Map<String, Object> preadd2(InventoryForm form) throws ServiceException
 	{
+		List<Item> items = new FastList<Item>();
+
+		if (form.getBarcodeGroupType().equals(BarcodeGroupType.PURCHASE_ORDER))
+		{
+			PurchaseOrder purchaseOrder = genericDao.load(PurchaseOrder.class, form.getReferenceId());
+
+			for (PurchaseOrderItem purchaseItem : purchaseOrder.getItems())
+			{
+				if (purchaseItem.getProduct().isSerial() && purchaseItem.getItemParent() == null)
+				{
+					Item item = new Item();
+					item.setProduct(purchaseItem.getProduct());
+					item.setRoll(purchaseItem.getQuantity());
+
+					items.add(item);
+				}
+			}
+		}
+
 		Map<String, Object> map = new FastMap<String, Object>();
-		map.put("barcode_add", form);
+		map.put("barcode_form", form);
+		map.put("items", items);
 
 		return map;
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> preadd3(TransactionForm form) throws ServiceException
+	public Map<String, Object> preadd3(InventoryForm form) throws ServiceException
 	{
 		Map<String, Object> map = new FastMap<String, Object>();
 		FastList<Barcode> barcodes = new FastList<Barcode>();
@@ -97,7 +128,7 @@ public class BarcodeGroupService {
 			}
 		}
 
-		map.put("barcode_add", form);
+		map.put("barcode_form", form);
 		map.put("barcodes", barcodes);
 
 		return map;
@@ -119,7 +150,7 @@ public class BarcodeGroupService {
 
 				barcodeGroup.getBarcodes().add(barcode);
 			}
-		
+
 		genericDao.add(barcodeGroup);
 	}
 
@@ -128,10 +159,10 @@ public class BarcodeGroupService {
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		BarcodeGroup barcode = genericDao.load(BarcodeGroup.class, id);
-		TransactionForm form = FormHelper.bind(TransactionForm.class, barcode);
+		InventoryForm form = FormHelper.bind(InventoryForm.class, barcode);
 
 		map.put("barcode_edit", barcode);
-		map.put("barcode_add", form);
+		map.put("barcode_form", form);
 
 		return map;
 	}
@@ -233,7 +264,8 @@ public class BarcodeGroupService {
 	}
 
 	@AuditTrails(className = BarcodeGroup.class, actionType = AuditTrailsActionType.UPDATE)
-	public void updateStatus(Long id, BarcodeStatus available) throws ServiceException {
+	public void updateStatus(Long id, BarcodeStatus available) throws ServiceException
+	{
 		BarcodeGroup barcodeGroup = load(id);
 
 		barcodeGroup.setStatus(available);

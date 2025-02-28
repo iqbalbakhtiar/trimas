@@ -31,10 +31,12 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
+import com.siriuserp.accountpayable.dm.InvoiceVerification;
 import com.siriuserp.inventory.dm.GoodsReceipt;
 import com.siriuserp.inventory.dm.Receiptable;
 import com.siriuserp.sales.dm.ApprovableType;
 import com.siriuserp.sdk.dm.ApprovableBridge;
+import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
 import com.siriuserp.sdk.dm.CreditTerm;
 import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.Facility;
@@ -77,6 +79,10 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 	@Column(name = "purchase_type")
 	@Enumerated(EnumType.STRING)
 	protected PurchaseType purchaseType = PurchaseType.DIRECT;
+
+	@Column(name = "invoice_before_receipt")
+	@Type(type = "yes_no")
+	private boolean invoiceBeforeReceipt = Boolean.FALSE;
 
 	@Column(name = "term")
 	private Integer term;
@@ -149,12 +155,6 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 	private Set<PurchaseOrderItem> items = new FastSet<PurchaseOrderItem>();
 
 	@Override
-	public String getAuditCode()
-	{
-		return id + "," + code;
-	}
-
-	@Override
 	public ApprovableType getApprovableType()
 	{
 		return ApprovableType.PURCHASE_ORDER;
@@ -193,6 +193,19 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 		return receipts;
 	}
 
+	public Set<InvoiceVerification> getInvoiceVerifications()
+	{
+		Set<InvoiceVerification> invoiceVerifications = new HashSet<InvoiceVerification>();
+
+		for (PurchaseOrderItem item : getItems())
+		{
+			if (item.getInvoiceReference() != null && item.getInvoiceReference().getInvoiceVerificationItem() != null)
+				invoiceVerifications.add(item.getInvoiceReference().getInvoiceVerificationItem().getInvoiceVerification());
+		}
+
+		return invoiceVerifications;
+	}
+
 	@Override
 	public Currency getCurrency()
 	{
@@ -209,5 +222,32 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 	public String getRef()
 	{
 		return "";
+	}
+
+	public boolean isBarcodeable()
+	{
+		if (getStatus().equals(POStatus.BARCODE))
+		{
+			if (getApprovable() == null)
+				return true;
+			else if (getApprovable().getApprovalDecision().getApprovalDecisionStatus().equals(ApprovalDecisionStatus.APPROVE_AND_FINISH))
+				return true;
+		}
+
+		return false;
+	}
+
+	public boolean isDeleteable()
+	{
+		if (getReceipts().isEmpty() && getInvoiceVerifications().isEmpty())
+			return true;
+
+		return false;
+	}
+
+	@Override
+	public String getAuditCode()
+	{
+		return id + "," + code;
 	}
 }

@@ -59,24 +59,24 @@
                 <th width="8%"><spring:message code="sirius.date"/></th>
                 <th width="10%"><spring:message code="organization"/></th>
                 <th width="10%"><spring:message code="supplier"/></th>
-                <th width="10%"><spring:message code="salesorder.approvalstatus"/></th>
                 <th width="10%"><spring:message code="sirius.approver"/></th>
+                <th width="10%"><spring:message code="salesorder.approvalstatus"/></th>
                 <th width="50%"><spring:message code="sirius.note"/></th>
               </tr>
               <c:forEach items="${purchaseOrders}" var="purchaseOrder">
                 <tr>
                   <td class="tools">
                     <a class="item-button-edit" href="<c:url value='/page/standardpurchaseorderpreedit.htm?id=${purchaseOrder.id}'/>" title="<spring:message code='sirius.edit'/>"><span><spring:message code="sirius.edit"/></span></a>
-                    <c:if test='${access.delete}'>
-                    	<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/purchaserequisitiondelete.htm?id=${purchaseOrder.id}'/>');" title="<spring:message code='sirius.delete'/>"><span><spring:message code='sirius.delete'/></span></a>
+                    <c:if test='${access.delete and purchaseOrder.deleteable}'>
+                    	<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/standardpurchaseorderdelete.htm?id=${purchaseOrder.id}'/>');" title="<spring:message code='sirius.delete'/>"><span><spring:message code='sirius.delete'/></span></a>
                    	</c:if>
                   </td>
                   <td nowrap="nowrap">${purchaseOrder.code}</td>
                   <td nowrap="nowrap"><fmt:formatDate value='${purchaseOrder.date}' pattern='dd-MM-yyyy'/></td>
                   <td nowrap="nowrap">${purchaseOrder.organization.fullName}</td>
                   <td nowrap="nowrap">${purchaseOrder.supplier.fullName}</td>
-                  <td nowrap="nowrap">${dpo.approvable.approvalDecision.approvalDecisionStatus.normalizedName}</td>
-                  <td nowrap="nowrap">${dpo.approvable.approvalDecision.forwardTo.fullName}</td>
+                  <td nowrap="nowrap">${purchaseOrder.approvable.approvalDecision.forwardTo.fullName}</td>
+                  <td nowrap="nowrap">${purchaseOrder.approvable.approvalDecision.approvalDecisionStatus.normalizedName}</td>
                   <td nowrap="nowrap">${purchaseOrder.note}</td>
                 </tr>
               </c:forEach>
