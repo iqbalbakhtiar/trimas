@@ -58,7 +58,7 @@ public class OnhandQuantityUIAdapter extends AbstractUIAdapter implements JSONSu
 		this.onTransfer = onTransfer;
 		this.reserved = reserved;
 	}
-	
+
 	public OnhandQuantityUIAdapter(Container container, Lot lot, Product product, BigDecimal onHand, BigDecimal onTransfer, BigDecimal reserved, Party organization)
 	{
 		this.container = container;
@@ -69,7 +69,7 @@ public class OnhandQuantityUIAdapter extends AbstractUIAdapter implements JSONSu
 		this.reserved = reserved;
 		this.organization = organization;
 	}
-	
+
 	public BigDecimal getAvailableSale()
 	{
 		return getOnHand().subtract(getReserved());

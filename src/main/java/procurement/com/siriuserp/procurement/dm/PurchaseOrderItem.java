@@ -29,7 +29,6 @@ import com.siriuserp.accountpayable.dm.InvoiceVerificationItemReference;
 import com.siriuserp.inventory.dm.WarehouseReferenceItem;
 import com.siriuserp.inventory.dm.WarehouseTransaction;
 import com.siriuserp.inventory.dm.WarehouseTransactionSource;
-import com.siriuserp.sdk.dm.Barcode;
 import com.siriuserp.sdk.dm.JSONSupport;
 
 import javolution.util.FastSet;
@@ -63,14 +62,12 @@ public class PurchaseOrderItem extends WarehouseReferenceItem implements JSONSup
 	private boolean locked = Boolean.FALSE;
 
 	@Enumerated(EnumType.STRING)
+	@Column(name = "purchase_item_type")
+	private PurchaseOrderItemType purchaseItemType = PurchaseOrderItemType.BASE;
+
+	@Enumerated(EnumType.STRING)
 	@Column(name = "warehouse_transaction_source")
 	private WarehouseTransactionSource transactionSource = WarehouseTransactionSource.DIRECT_PURCHASE_ORDER;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fk_barcode")
-	@LazyToOne(LazyToOneOption.PROXY)
-	@Fetch(FetchMode.SELECT)
-	private Barcode barcode;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_purchase_order")

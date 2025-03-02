@@ -37,6 +37,7 @@ public class Item extends SiriusItem
 	private static final long serialVersionUID = 3584646505653801611L;
 
 	private BigDecimal quantity = BigDecimal.ZERO;
+	private BigDecimal quantityReal = BigDecimal.ZERO;
 	private BigDecimal assigned = BigDecimal.ZERO;
 	private BigDecimal price = BigDecimal.ZERO;
 	private BigDecimal rate = BigDecimal.ZERO;

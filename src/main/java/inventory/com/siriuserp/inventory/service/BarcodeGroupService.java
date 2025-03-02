@@ -15,6 +15,7 @@ import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.form.InventoryForm;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.procurement.dm.PurchaseOrderItem;
+import com.siriuserp.procurement.service.StandardPurchaseOrderService;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.InjectParty;
@@ -27,7 +28,6 @@ import com.siriuserp.sdk.dm.BarcodeGroupType;
 import com.siriuserp.sdk.dm.BarcodeStatus;
 import com.siriuserp.sdk.dm.Item;
 import com.siriuserp.sdk.dm.TableType;
-import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.FormHelper;
@@ -55,8 +55,11 @@ public class BarcodeGroupService
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
 
+	@Autowired
+	private StandardPurchaseOrderService purchaseOrderService;
+
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws ServiceException
+	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		BarcodeGroupFilterCriteria criteria = (BarcodeGroupFilterCriteria) filterCriteria;
@@ -69,11 +72,18 @@ public class BarcodeGroupService
 
 	@InjectParty(keyName = "barcode_form")
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> preadd1(Long referenceId, BarcodeGroupType barcodeType) throws ServiceException
+	public Map<String, Object> preadd1(Long referenceId, BarcodeGroupType barcodeType) throws Exception
 	{
 		InventoryForm form = new InventoryForm();
 		form.setReferenceId(referenceId);
 		form.setBarcodeGroupType(barcodeType);
+
+		if (form.getBarcodeGroupType().equals(BarcodeGroupType.PURCHASE_ORDER))
+		{
+			PurchaseOrder purchaseOrder = genericDao.load(PurchaseOrder.class, form.getReferenceId());
+			form.setFacility(purchaseOrder.getShipTo());
+			form.setPurchaseOrder(purchaseOrder);
+		}
 
 		Map<String, Object> map = new FastMap<String, Object>();
 		map.put("barcode_form", form);
@@ -83,13 +93,14 @@ public class BarcodeGroupService
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> preadd2(InventoryForm form) throws ServiceException
+	public Map<String, Object> preadd2(InventoryForm form) throws Exception
 	{
 		List<Item> items = new FastList<Item>();
 
 		if (form.getBarcodeGroupType().equals(BarcodeGroupType.PURCHASE_ORDER))
 		{
 			PurchaseOrder purchaseOrder = genericDao.load(PurchaseOrder.class, form.getReferenceId());
+			form.setPurchaseOrder(purchaseOrder);
 
 			for (PurchaseOrderItem purchaseItem : purchaseOrder.getItems())
 			{
@@ -97,7 +108,8 @@ public class BarcodeGroupService
 				{
 					Item item = new Item();
 					item.setProduct(purchaseItem.getProduct());
-					item.setRoll(purchaseItem.getQuantity());
+					item.setQuantity(purchaseItem.getQuantity());
+					item.setReference(purchaseItem.getId());
 
 					items.add(item);
 				}
@@ -112,7 +124,7 @@ public class BarcodeGroupService
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> preadd3(InventoryForm form) throws ServiceException
+	public Map<String, Object> preadd3(InventoryForm form) throws Exception
 	{
 		Map<String, Object> map = new FastMap<String, Object>();
 		FastList<Barcode> barcodes = new FastList<Barcode>();
@@ -123,35 +135,54 @@ public class BarcodeGroupService
 			{
 				Barcode barcode = new Barcode();
 				barcode.setProduct(item.getProduct());
+				barcode.setReferenceId(item.getReference());
 
 				barcodes.add(barcode);
+
+				if (i == item.getRoll().intValue() - 1 && form.getPurchaseOrder() != null)
+				{
+					Barcode empty = new Barcode();
+					empty.setQuantity(item.getQuantity());
+					empty.setReferenceId(item.getReference());
+
+					barcodes.add(empty);
+				}
 			}
 		}
 
 		map.put("barcode_form", form);
+		map.put("itemReferences", form.getItems());
 		map.put("barcodes", barcodes);
 
 		return map;
 	}
 
 	@AuditTrails(className = BarcodeGroup.class, actionType = AuditTrailsActionType.CREATE)
-	public void add(BarcodeGroup barcodeGroup) throws ServiceException
+	public void add(BarcodeGroup barcodeGroup) throws Exception
 	{
+		InventoryForm form = (InventoryForm) barcodeGroup.getForm();
 		barcodeGroup.setCode(GeneratorHelper.instance().generate(TableType.BARCODE_GROUP, codeSequenceDao, barcodeGroup.getFacility().getCode()));
 
 		for (Item item : barcodeGroup.getForm().getItems())
-			if (SiriusValidator.gz(item.getQuantity()))
+		{
+			if (item.getProduct() != null && SiriusValidator.gz(item.getQuantity()))
 			{
 				Barcode barcode = new Barcode();
 				barcode.setCode(GeneratorHelper.instance().generate(TableType.BARCODE_PRODUCT, codeSequenceDao));
 				barcode.setBarcodeGroup(barcodeGroup);
 				barcode.setProduct(item.getProduct());
 				barcode.setQuantity(item.getQuantity());
+				barcode.setQuantityReal(item.getQuantityReal());
+				item.setSerial(barcode.getCode());
 
 				barcodeGroup.getBarcodes().add(barcode);
 			}
+		}
 
 		genericDao.add(barcodeGroup);
+
+		if (form.getPurchaseOrder() != null)
+			purchaseOrderService.addItem(form.getPurchaseOrder().getId(), barcodeGroup.getForm().getItems());
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
@@ -168,11 +199,12 @@ public class BarcodeGroupService
 	}
 
 	@AuditTrails(className = BarcodeGroup.class, actionType = AuditTrailsActionType.UPDATE)
-	public void update(BarcodeGroup barcodeGroup) throws ServiceException
+	public void update(BarcodeGroup barcodeGroup) throws Exception
 	{
 		genericDao.update(barcodeGroup);
 
 		for (Item item : barcodeGroup.getForm().getItems())
+		{
 			if (SiriusValidator.gz(item.getQuantity()))
 			{
 				Barcode barcode = genericDao.load(Barcode.class, item.getReference());
@@ -180,16 +212,17 @@ public class BarcodeGroupService
 
 				genericDao.update(barcode);
 			}
+		}
 	}
 
 	@AuditTrails(className = BarcodeGroup.class, actionType = AuditTrailsActionType.DELETE)
-	public void delete(BarcodeGroup barcodeGroup) throws ServiceException
+	public void delete(BarcodeGroup barcodeGroup) throws Exception
 	{
 		genericDao.delete(barcodeGroup);
 	}
 
 	@AuditTrails(className = BarcodeGroup.class, actionType = AuditTrailsActionType.DELETE)
-	public void deleteBarcode(Barcode barcode) throws ServiceException
+	public void deleteBarcode(Barcode barcode) throws Exception
 	{
 		genericDao.delete(barcode);
 	}
@@ -264,7 +297,7 @@ public class BarcodeGroupService
 	}
 
 	@AuditTrails(className = BarcodeGroup.class, actionType = AuditTrailsActionType.UPDATE)
-	public void updateStatus(Long id, BarcodeStatus available) throws ServiceException
+	public void updateStatus(Long id, BarcodeStatus available) throws Exception
 	{
 		BarcodeGroup barcodeGroup = load(id);
 

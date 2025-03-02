@@ -191,7 +191,7 @@
           </tr>
         </table>
       </div>
-      <div id="productLineItem" dojoType="ContentPane" label="<spring:message code='salesorder.lineitem'/>" class="tab-pages" refreshOnShow="true" selected="true">
+      <div id="productLineItem" dojoType="ContentPane" label="<spring:message code='salesorder.lineitem'/>" class="tab-pages" refreshOnShow="true">
         <div class="toolbar-clean">
           <table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">
             <thead>
@@ -202,11 +202,13 @@
               <th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
               <th width="8%" nowrap="nowrap"><spring:message code="purchaseorder.amount"/></th>
               <th width="8%" nowrap="nowrap"><spring:message code="purchaseorder.total"/></th>
-              <th width="50%" nowrap="nowrap"><spring:message code="sirius.note"/></th>
+              <th width="10%" nowrap="nowrap"><spring:message code="sirius.note"/></th>
+              <th width="50%" nowrap="nowrap"><spring:message code="sirius.reference"/></th>
             </tr>
             </thead>
             <tbody id="lineItem">
             <c:forEach items="${purchase_edit.items}" var="item" varStatus="idx">
+            <c:if test="${item.purchaseItemType eq 'BASE'}">
               <tr>
                 <td>&nbsp;</td>
                 <td><input id="product[${idx.index}]" size="26" value="${item.product.name}" class="input-disabled" name="items[${idx.index}].product" index="${idx.index}" next="product" disabled/></td>
@@ -215,7 +217,9 @@
                 <td><input id="amount[${idx.index}]" size="12" value="<fmt:formatNumber value='${item.money.amount}' pattern=',##0.00'/>" class="input-disabled input-decimal" name="items[${idx.index}].amount" index="${idx.index}" next="amount" disabled/></td>
                 <td><input id="totalAmount[${idx.index}]" size="12" class="input-number input-disabled" disabled value="<fmt:formatNumber value='${item.totalAmount}' pattern=',##0.00'/>"/></td>
                 <td><input id="note[${idx.index}]" type="text" value="${item.note}" name="purchaseOrder.items[${idx.index}].note"index="${idx.index}" next="note" size="40"/></td>
+                <td><a href="<c:url value='/page/purchaserequisitionpreedit.htm?id=${item.requisitionItem.purchaseRequisition.id}'/>"><c:out value="${item.requisitionItem.purchaseRequisition.code}"></c:out></a></td>
               </tr>
+            </c:if>
             </c:forEach>
             </tbody>
             <tfoot>

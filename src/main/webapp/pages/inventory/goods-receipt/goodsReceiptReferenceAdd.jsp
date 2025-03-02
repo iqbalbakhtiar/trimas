@@ -26,7 +26,7 @@
     <td width="3%">&nbsp;</td>
     <td width="20%">&nbsp;&nbsp;&nbsp;<c:out value='${item.item.product.code} - ${item.item.product.name}'/></td>
     <td colspan="4">&nbsp;</td>
-    <td style="text-align: center"><fmt:formatNumber value='${item.item.unreceipted}' pattern=',##0'/></td>
+    <td style="text-align: center"><fmt:formatNumber value='${item.item.unreceipted}' pattern=',##0.00'/></td>
     <td><c:out value="${item.item.product.unitOfMeasure.measureId}"></c:out></td>
     <input type="hidden" name="adapters[${status.index}].enabled" id="enabled_${status.index}" class="enabled-input ref-${item.item.referenceItem.warehouseTransaction.id}" value="false"/>
 </tr>

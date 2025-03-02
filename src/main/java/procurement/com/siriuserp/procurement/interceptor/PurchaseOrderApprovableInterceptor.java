@@ -44,9 +44,12 @@ public class PurchaseOrderApprovableInterceptor extends AbstractApprovableInterc
 				item.setLocked(false);
 				genericDao.update(item);
 
-				WarehouseTransactionItem warehouseTransactionItem = item.getTransactionItem();
-				warehouseTransactionItem.setLocked(false);
-				genericDao.update(warehouseTransactionItem);
+				if (item.getTransactionItem() != null)
+				{
+					WarehouseTransactionItem warehouseTransactionItem = item.getTransactionItem();
+					warehouseTransactionItem.setLocked(false);
+					genericDao.update(warehouseTransactionItem);
+				}
 			}
 
 			if (purchaseOrder.isInvoiceBeforeReceipt() && purchaseOrder.getPurchaseType().equals(PurchaseType.STANDARD))

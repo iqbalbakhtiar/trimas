@@ -25,41 +25,49 @@ import java.util.Map;
 @Entity
 @Table(name = "barcode")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Barcode extends Model implements JSONSupport {
-    private static final long serialVersionUID = 433030378080324431L;
+public class Barcode extends Model implements JSONSupport
+{
+	private static final long serialVersionUID = 433030378080324431L;
 
-    @Column(name = "code")
-    private String code;
+	@Column(name = "code")
+	private String code;
 
-    @Column(name = "quantity")
-    private BigDecimal quantity;
+	@Column(name = "quantity")
+	private BigDecimal quantity = BigDecimal.ZERO;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_barcode_group")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private BarcodeGroup barcodeGroup;
+	@Column(name = "quantity_real")
+	private BigDecimal quantityReal = BigDecimal.ZERO;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_product")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private Product product;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_barcode_group")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private BarcodeGroup barcodeGroup;
 
-    @Override
-    public String getAuditCode() {
-        return this.id + "," + this.code;
-    }
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_product")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Product product;
 
-    @Override
-    public Map<String, Object> val()
-    {
-        FastMap<String, Object> map = new FastMap<String, Object>();
-        map.put("id", getId());
-        map.put("code", getCode());
-        map.put("quantity", getQuantity());
-        map.put("uomSymbol", getProduct().getUnitOfMeasure().getMeasureId());
+	@Transient
+	private Long referenceId;
 
-        return map;
-    }
+	@Override
+	public Map<String, Object> val()
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("id", getId());
+		map.put("code", getCode());
+		map.put("quantity", getQuantity());
+		map.put("uomSymbol", getProduct().getUnitOfMeasure().getMeasureId());
+
+		return map;
+	}
+
+	@Override
+	public String getAuditCode()
+	{
+		return this.id + "," + this.code;
+	}
 }

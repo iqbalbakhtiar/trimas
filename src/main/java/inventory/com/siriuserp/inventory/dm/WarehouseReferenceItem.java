@@ -45,114 +45,110 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 
 	@Column(name = "note")
 	protected String note;
-	
+
 	@Column(name = "reference_to")
 	protected String referenceTo;
-	
+
 	@Column(name = "reference_from")
 	protected String referenceFrom;
-	
-	@Embedded 
+
+	@Embedded
 	protected Tag tag = new Tag();
-			
+
 	@Embedded
 	protected Lot lot = new Lot();
 
 	@Embedded
 	private Money money = new Money();
-	
+
 	@Column(name = "verificated")
 	@Type(type = "yes_no")
 	protected boolean verificated = false;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_party_organization")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	protected Party organization;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_facility")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	protected Facility facility;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_party")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	protected Party party;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_facility_destination")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	protected Facility facilityDestination;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_facility_source")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	protected Facility facilitySource;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_grid_source")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	protected Grid sourceGrid;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_grid_destination")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	protected Grid destinationGrid;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_product")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	protected Product product;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_tax")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	protected Tax tax;
-	
+
 	@OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_tax_ext")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    protected Tax extTax1;
-	
+	@JoinColumn(name = "fk_tax_ext")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	protected Tax extTax1;
+
 	@OneToOne(mappedBy = "referenceItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
 	protected WarehouseTransactionItem transactionItem;
 
 	@Override
-	public Money getMoney() {
+	public Money getMoney()
+	{
 		return this.money;
-	};
-	
+	}
+
 	public abstract WarehouseTransaction getWarehouseTransaction();
-	
+
 	public abstract WarehouseTransactionSource getTransactionSource();
-	
+
 	public Person getApprover()
 	{
 		return null;
 	}
-	
+
 	public Person getSecondaryApprover()
 	{
 		return null;
 	}
-	
-//	public Discountable getDiscountable() 
-//	{
-//		return null;
-//	}
 
 	public String getRefTo()
 	{
@@ -163,15 +159,15 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 	{
 		return getFacilitySource().getName();
 	}
-	
+
 	public void setSourceContainer(Container container)
 	{
 	}
-	
+
 	public void setDestinationContainer(Container container)
 	{
 	}
-	
+
 	public Container getPosition()
 	{
 		return null;
@@ -181,7 +177,7 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 	{
 		return null;
 	}
-	
+
 	public Container getSourceContainer()
 	{
 		return null;
@@ -196,23 +192,23 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 	{
 		return null;
 	}
-	
+
 	@Override
-	public Long getMemoableId() 
+	public Long getMemoableId()
 	{
 		return null;
 	}
-	
+
 	public Long getReferenceId()
 	{
 		return null;
 	}
 
-    public Long getConversionId()
+	public Long getConversionId()
 	{
 		return null;
 	}
-	
+
 	public Long getTransferId()
 	{
 		return null;
@@ -232,11 +228,11 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 	{
 		return GoodsType.STOCK;
 	}
-	
+
 	public Set<GoodsReceipt> getReceipts()
 	{
 		Set<GoodsReceipt> receipts = new HashSet<GoodsReceipt>();
-		if(getTransactionItem() != null)
+		if (getTransactionItem() != null)
 			receipts.addAll(getTransactionItem().getReceiptedItems().stream().map(item -> item.getGoodsReceipt()).collect(Collectors.toSet()));
 
 		return receipts;
@@ -245,7 +241,7 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 	public Set<GoodsIssue> getIssueds()
 	{
 		Set<GoodsIssue> issueds = new HashSet<GoodsIssue>();
-		if(getTransactionItem() != null)
+		if (getTransactionItem() != null)
 			issueds.addAll(getTransactionItem().getIssuedItems().stream().map(item -> item.getGoodsIssue()).collect(Collectors.toSet()));
 
 		return issueds;
@@ -255,20 +251,21 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 	{
 		return null;
 	}
-	
-	public BigDecimal getQuantity() 
+
+	public BigDecimal getQuantity()
 	{
 		return BigDecimal.ZERO;
 	}
-	
+
 	@Override
-	public String getAuditCode() 
+	public String getAuditCode()
 	{
-		return this.id+" ";
+		return this.id + " ";
 	}
 
 	// Needed for PO Item
-	public Date getDeliveryDate() {
+	public Date getDeliveryDate()
+	{
 		return null;
 	}
 }

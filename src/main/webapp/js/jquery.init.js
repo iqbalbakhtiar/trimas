@@ -10,30 +10,23 @@ var $confirmDialog, $dialog;
 //import widget dojo
 dojo.require("dojo.widget.*");
 
-var ctrlDown = false;
-var format = {decimal : "#,##0.00000", number : "#,##0.00"};
-var keydownEvent = {negative : function(event) {
-         if (((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) &&
-        	!(event.keyCode == 46 || event.keyCode == 110 || event.keyCode == 13 || event.keyCode == 8 
-        		|| event.keyCode == 9 || event.keyCode == 173 || event.keyCode == 109 || (event.keyCode > 187 && event.keyCode < 191))){
-            event.preventDefault();
-        }
-	}, whole : function(event) {
-		
-		if (event.keyCode == 17 || event.keyCode == 91) ctrlDown = true;
-		
-        if (((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) &&
-        	!(event.keyCode == 46 || event.keyCode == 110 || event.keyCode == 13 || event.keyCode == 8 
-        		|| event.keyCode == 9 || event.keyCode == 188 || event.keyCode == 190 || (ctrlDown && (event.keyCode == 67)) || (ctrlDown && (event.keyCode == 86)))){
-            event.preventDefault();
-        }
-	}};
+var format = {currency : "#,##0.##", decimal : "#,##0.##", number : "#,##0"};
 
-function getEvent(obj) {
-	if($(obj).hasClass('negative'))
-		return keydownEvent['negative'];
+function setInputDynamic(){
+	$('.input-dynamic').each(function(idx, obj){
+		var decimal = obj.getAttribute('decimal');
+
+		$(obj).removeClass('input-number');
+		$(obj).removeClass('input-decimal');
+		
+		if(decimal == 'false' || decimal == null)
+			$(obj).addClass('input-number');
+		else
+			$(obj).addClass('input-decimal');
+	});
 	
-	return keydownEvent['whole'];
+	$(".input-number").bind(inputFormat);
+	$(".input-decimal").bind(inputFormat);
 }
 
 function getFormat(obj) {
@@ -46,39 +39,14 @@ function getFormat(obj) {
 	return format['number'];
 }
 
-var inputNumber = {
-	keydown : function(event){
-		getEvent(this)(event);
-	},
-	keyup : function(event) {
-		if(event.keyCode==188){
-			if(!$(this).val().indexOf(".")===1)
-				$(this).val(Number.parse($(this).val()).numberFormat(getFormat(this)));
-		}else if(event.keyCode==13){
-			$(this).val(Number.parse($(this).val()).numberFormat(getFormat(this)));
-			$(this).parents("tr").next().find($('[name='+$(this).attr("name")+']')).focus();
-		}
-		else
-			if(!$(this).val().indexOf(".")===1)
-				$(this).val(Number.parse($(this).val()).numberFormat(getFormat(this)));
-	},
-	blur : function() {
-		if($(this).val()!=""){
-			$(this).val(Number.parse($(this).val()).numberFormat(getFormat(this)));
-		}else{
-			$(this).val(0);
-		}
-	}
-};
-
 var inputFormat = {
 	keydown : function(event) {
-		if (((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) &&
-			!(event.keyCode == 46 || event.keyCode == 110 || event.keyCode == 13 || event.keyCode == 8
-				|| event.keyCode == 109 ||  event.keyCode == 173 || event.keyCode == 9
-				|| (event.keyCode > 187 && event.keyCode < 191))){
-			event.preventDefault();
-		}
+         if (((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) &&
+        	!(event.keyCode == 46 || event.keyCode == 110 || event.keyCode == 13 || event.keyCode == 8 
+        		|| event.keyCode == 109 ||  event.keyCode == 173 || event.keyCode == 9 
+        			|| (event.keyCode > 187 && event.keyCode < 191))){
+            event.preventDefault();
+        }
 	},
 	keyup : function(event) {
 		if(event.keyCode==188){
@@ -92,8 +60,8 @@ var inputFormat = {
 			$nextrow.select();
 		}
 		else
-		if(!$(this).val().indexOf(".")===1)
-			$(this).val(Number.parse($(this).val()).numberFormat(getFormat(this)));
+			if(!$(this).val().indexOf(".")===1)
+				$(this).val(Number.parse($(this).val()).numberFormat(getFormat(this)));
 	},
 	blur : function() {
 		if($(this).val()!=""){
@@ -142,10 +110,10 @@ const revents = {
 //jquery function for key binding
 $(document).ready(function() {
 	generate_menu();
-
+	
 	if (!(/Mobi|Android/i.test(navigator.userAgent)))
-	   prevent_multi_click();
-
+	  prevent_multi_click();
+	
 	initialize_widget();
 });
 
@@ -160,17 +128,7 @@ function prevent_multi_click() {
 	});
 }
 
-function initialize_widget(){
-
-	//bind session form
-	const $form = $('.session');
-
-	let $in_c = $('<input/>').attr("type", "hidden");
-	$in_c.attr("name", $form.attr('data'));
-	$in_c.attr("value", $form.attr('value'));
-
-	$in_c.appendTo($form);
-	
+function initialize_widget(){	
 	const $ctrl = function(key, callback, args) {
 	    $(document).keydown(function(e) {
 	        if(!args) args=[]; // IE barks when args is null
@@ -223,8 +181,9 @@ function initialize_widget(){
 	*190=.
 	*188=,
 	*/
-	$(".input-number").bind(inputNumber);
-	$(".input-decimal").bind(inputNumber);
+	$(".input-number").bind(inputFormat);
+	$(".input-decimal").bind(inputFormat);
+	$(".input-currency").bind(inputFormat);
 	
 	//initialize tab component
 	$("#tabs").tabs();
@@ -250,11 +209,10 @@ function initialize_widget(){
 	});
 
 	$.fn.parseDatepicker=function(){
-		var id=this.selector;
-		id=id.replace("[","\\[");
-		id=id.replace("]","\\]");
-		$("#"+id).wrapAll("<div class='datepicker_wrapper'>");
-		$("#"+id).datepicker({
+		let datepick=$(this);
+
+		datepick.wrapAll("<div class='datepicker_wrapper'>");
+		datepick.datepicker({
 			showOn: "button",
 			buttonImage: base_url+"assets/icons/datepicker.gif",
 			buttonImageOnly:true,
@@ -262,65 +220,89 @@ function initialize_widget(){
 			dateFormat: 'dd-mm-yy'
 		});
 	}
-	
 	//resize the content body
 	resizeContent();
 }
+//DUPLICATE METHOD WITH dialog.js
+/*function showDialog(html){
+	$dialog.empty();
+	$dialog.html(html);
+	$dialog.dialog('open');
+}*/
 
 function generate_menu() {
-	Object.entries(submenu).forEach(([key, value]) => {
-		const menus = value.split('>');
-		const root = menus[0].trim().replace(/ /g,"_");
-		const length = menus.length-1;
+	if(!$popupid) {
+		Object.entries(submenu || {}).forEach(([key, value]) => {
+			const menus = value.split('>');
+			const root = menus[0].trim().replace(/ /g,"_");
+			const length = menus.length-1;
 
-		let Rootli = $('#'+root);
-		if(!Rootli.length) {
-			Rootli = $('<li id="'+root+'"/>');
-			Rootli.append($('<a>'+menus[0]+'</a>'));
-			Rootli.append($('<ul class="'+root+' dropdown"/>'));
+			let Rootli = $('#'+root);
+			if(!Rootli.length) {
+				Rootli = $('<li id="'+root+'"/>');
+				Rootli.append($('<a>'+menus[0]+'</a>'));
+				Rootli.append($('<ul class="'+root+' dropdown"/>'));
 
-			$('.menuzord-menu').append(Rootli);
-		}
-
-		for (let i = 1; i < length; i++) {
-			const menu = menus[i].trim().replace(/ /g,"_");
-			const parent = menus[i-1].trim().replace(/ /g,"_");
-
-			let Objli = $('<li id="'+menu+'"></li>');
-			let Obja = $('<a></a>');
-
-			Obja.text(menus[i].trim());
-			Objli.append(Obja);
-
-			if((i+1) == length) {
-				let Objul = $('.'+parent);
-				Objul.append(Objli);
-				Obja.attr('href',menus[length].trim().substring(1));
-				Object.keys(revents).forEach((key) => {
-				  Obja[0].addEventListener(key, () => revents[key](Obja[0]));
-				});
-			} else {
-				let Objul = $('.'+menu);
-				if(!Objul.length)
-					Objul = $('<ul class="'+menu+' dropdown"></ul>');
-
-				let ObjliPrev = $('#'+menu);
-				if(ObjliPrev.length)
-					ObjliPrev.append(Objul);
-				else
-					Objli.append(Objul);
-
-				let ObjulParent = $('.'+parent);
-				if(!ObjliPrev.length)
-					ObjulParent.append(Objli);
+				$('.menuzord-menu').append(Rootli);
 			}
-		}
-	});
+			
+			for (let i = 1; i < length; i++) {
+				const menu = menus[i].trim().replace(/ /g,"_");
+				const parent = menus[i-1].trim().replace(/ /g,"_");
+
+				let Objli = $('<li id="'+menu+'"/>');
+				let Obja = $('<a/>');
+
+				Obja.text(menus[i].trim());
+				Objli.append(Obja);
+
+				if((i+1) == length) {
+					let Objul = $('.'+parent);
+					Objul.append(Objli);
+
+					Obja.attr('href',menus[length].trim().substring(1));
+					Object.keys(revents).forEach((key) => {
+					  Obja[0].addEventListener(key, () => revents[key](Obja[0]));
+					});
+				} else {
+					let Objul = $('.'+menu);
+					if(!Objul.length) 
+						Objul = $('<ul class="'+menu+' dropdown"/>');
+
+					let ObjliPrev = $('#'+menu);
+					if(ObjliPrev.length)
+						ObjliPrev.append(Objul);
+					else
+						Objli.append(Objul);
+
+					let ObjulParent = $('.'+parent);
+					if(!ObjliPrev.length)
+						ObjulParent.append(Objli);
+				}
+			}
+		});
+		
+		//fix menu
+		$("#menuzord").menuzord({
+			align: "right"
+		});
+		
+		bind_form();
+	}
+}
+
+//bind session form
+function bind_form() {
+	const $form = document.querySelectorAll('form[class="session"]');
+	const last = $form.length -1;
 	
-	//fix menu
-	$("#menuzord").menuzord({
-		align: "right"
-	});
+	if(last > -1) {
+		let $in_c = $('<input/>').attr("type", "hidden");
+		$in_c.attr("name", $form[last].getAttribute('data'));
+		$in_c.attr("value", $form[last].getAttribute('value'));
+	
+		$in_c.appendTo($form[last]);
+	}
 }
 
 function beforeSend($dialog, $text){
@@ -425,33 +407,6 @@ function confirmDialog(message,yesCallback,noCallback) {
 	});
 }
 
-function cancelDialog(url,message){
-	if(message==null)
-		message="Do you really want to Cancel this data ?";
-	$confirmDialog = $("<div><span>"+message+"</span></div>").dialog({
-		title : 'Information',
-		modal : true,
-		buttons : {
-			"Yes" :{
-				text:"Yes",
-				id:"btn-dialog-delete",
-				click:function() {
-					$(this).dialog("close");
-					window.location = url;
-				}
-			},
-			"No" :{
-				text:"No",
-				id:"btn-dialog-cancel",
-				click:function() {
-					$(this).dialog("close");
-				}
-			}
-		}
-	});
-	$confirmDialog.dialog("open");
-}
-
 //set value to title
 function emptyValue(elem) {
 	elem.value = "";
@@ -459,11 +414,6 @@ function emptyValue(elem) {
 		if (elem.value == "")
 			elem.value = elem.getAttribute("title");
 	}
-}
-
-//go to with location
-function go_to(url) {
-	window.location = url;
 }
 
 //resize the content body
@@ -502,6 +452,20 @@ function remove() {
 
 function deleted() {
 	window.location = document.getElementById("deletedId").value;
+}
+
+function hideseek(id) {
+	let $passwd = $('#'+id);
+	if($passwd.hasClass('masking'))
+	{
+		$passwd.removeClass('masking');
+		$('#'+id+'img').attr('class', 'item-hide-password');
+	}
+	else
+	{
+		$passwd.attr('class', 'masking inputbox-medium');
+		$('#'+id+'img').attr('class', 'item-show-password');
+	}
 }
 
 function submit(id, url) {

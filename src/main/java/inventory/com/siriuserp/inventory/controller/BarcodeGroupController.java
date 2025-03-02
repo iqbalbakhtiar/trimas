@@ -25,13 +25,13 @@ import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.form.InventoryForm;
 import com.siriuserp.inventory.query.BarcodeGroupGridViewQuery;
 import com.siriuserp.inventory.service.BarcodeGroupService;
+import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.BarcodeGroup;
 import com.siriuserp.sdk.dm.BarcodeGroupType;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Party;
-import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.view.ViewHelper;
 import com.siriuserp.sdk.utility.FormHelper;
@@ -57,34 +57,35 @@ public class BarcodeGroupController extends ControllerBase
 		binder.registerCustomEditor(Product.class, modelEditor.forClass(Product.class));
 		binder.registerCustomEditor(Facility.class, modelEditor.forClass(Facility.class));
 		binder.registerCustomEditor(BarcodeGroup.class, modelEditor.forClass(BarcodeGroup.class));
+		binder.registerCustomEditor(PurchaseOrder.class, modelEditor.forClass(PurchaseOrder.class));
 	}
 
 	@RequestMapping("/barcodegroupview.htm")
-	public ModelAndView view(HttpServletRequest request) throws ServiceException
+	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
 		return new ModelAndView("/inventory/item-management/barcodeGroupList", service.view(criteriaFactory.create(request, BarcodeGroupFilterCriteria.class), BarcodeGroupGridViewQuery.class));
 	}
 
 	@RequestMapping("/barcodegrouppreadd1.htm")
-	public ModelAndView preadd1(@RequestParam(value = "referenceId", required = false) Long referenceId, @RequestParam(value = "barcodeType", required = false) BarcodeGroupType barcodeType) throws ServiceException
+	public ModelAndView preadd1(@RequestParam(value = "referenceId", required = false) Long referenceId, @RequestParam(value = "barcodeType", required = false) BarcodeGroupType barcodeType) throws Exception
 	{
 		return new ModelAndView("/inventory/item-management/barcodeGroupAdd1", service.preadd1(referenceId, barcodeType));
 	}
 
 	@RequestMapping("/barcodegrouppreadd2.htm")
-	public ModelAndView preadd2(@ModelAttribute("barcode_form") InventoryForm form) throws ServiceException
+	public ModelAndView preadd2(@ModelAttribute("barcode_form") InventoryForm form) throws Exception
 	{
 		return new ModelAndView("/inventory/item-management/barcodeGroupAdd2", service.preadd2(form));
 	}
 
 	@RequestMapping("/barcodegrouppreadd3.htm")
-	public ModelAndView preadd3(@ModelAttribute("barcode_form") InventoryForm form) throws ServiceException
+	public ModelAndView preadd3(@ModelAttribute("barcode_form") InventoryForm form) throws Exception
 	{
 		return new ModelAndView("/inventory/item-management/barcodeGroupAdd3", service.preadd3(form));
 	}
 
 	@RequestMapping("/barcodegroupadd.htm")
-	public ModelAndView add(@ModelAttribute("barcode_form") InventoryForm form, SessionStatus status) throws ServiceException
+	public ModelAndView add(@ModelAttribute("barcode_form") InventoryForm form, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
@@ -111,7 +112,7 @@ public class BarcodeGroupController extends ControllerBase
 	}
 
 	@RequestMapping("/barcodegroupedit.htm")
-	public ModelAndView edit(@ModelAttribute("barcode_form") InventoryForm form, BindingResult result, SessionStatus status) throws ServiceException
+	public ModelAndView edit(@ModelAttribute("barcode_form") InventoryForm form, BindingResult result, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
@@ -131,7 +132,7 @@ public class BarcodeGroupController extends ControllerBase
 	}
 
 	@RequestMapping("/barcodegroupdelete.htm")
-	public ModelAndView delete(@RequestParam("id") Long id) throws ServiceException
+	public ModelAndView delete(@RequestParam("id") Long id) throws Exception
 	{
 		service.delete(service.load(id));
 		return ViewHelper.redirectTo("barcodegroupview.htm");
@@ -154,7 +155,7 @@ public class BarcodeGroupController extends ControllerBase
 	}
 
 	@RequestMapping("/barcodedelete.htm")
-	public ModelAndView barcodeIdDelete(@RequestParam("id") Long id) throws ServiceException
+	public ModelAndView barcodeIdDelete(@RequestParam("id") Long id) throws Exception
 	{
 		Long groupId = service.loadBarcode(id).getBarcodeGroup().getId();
 		service.deleteBarcode(service.loadBarcode(id));

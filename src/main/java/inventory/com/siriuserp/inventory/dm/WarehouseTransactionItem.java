@@ -60,14 +60,14 @@ public class WarehouseTransactionItem extends Model implements TransactionItem
 
 	@Column(name = "unissued")
 	protected BigDecimal unissued = BigDecimal.ZERO;
-	
+
 	@Column(name = "returned")
 	protected BigDecimal returned = BigDecimal.ZERO;
 
 	@Column(name = "locked")
 	@Type(type = "yes_no")
 	protected boolean locked = false;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "warehouse_transaction_type")
 	protected WarehouseTransactionType type;
@@ -77,22 +77,22 @@ public class WarehouseTransactionItem extends Model implements TransactionItem
 	protected GoodsType goodsType = GoodsType.STOCK;
 
 	@Setter
-    @Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.STRING)
 	@Column(name = "warehouse_transaction_source")
 	protected WarehouseTransactionSource transactionSource;
-	
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_reference_item")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	protected WarehouseReferenceItem referenceItem;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_transaction_item")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	protected WarehouseTransactionItem transactionItem;
-	
+
 	@OneToMany(mappedBy = "transactionItem", fetch = FetchType.LAZY)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
@@ -110,7 +110,7 @@ public class WarehouseTransactionItem extends Model implements TransactionItem
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	protected Set<ProductInOutTransaction> inOuts = new FastSet<ProductInOutTransaction>();
-	
+
 	@OneToMany(mappedBy = "sourceItem", fetch = FetchType.LAZY)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
@@ -131,12 +131,12 @@ public class WarehouseTransactionItem extends Model implements TransactionItem
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@OrderBy("id ASC")
 	protected Set<InventoryControl> inventoryControls = new FastSet<InventoryControl>();
-	
+
 	public Party getOrganization()
 	{
 		return getReferenceItem().getOrganization();
 	}
-	
+
 	public Container getSourceContainer()
 	{
 		return getReferenceItem().getSourceContainer();
@@ -189,17 +189,17 @@ public class WarehouseTransactionItem extends Model implements TransactionItem
 		return transactionSource;
 	}
 
-    public Lot getLot()
+	public Lot getLot()
 	{
 		return getReferenceItem().getLot();
 	}
-	
+
 	public Lot getExtLot()
 	{
 		return getReferenceItem().getExtLot();
 	}
-	
-	public Tag getTag() 
+
+	public Tag getTag()
 	{
 		return getReferenceItem().getTag();
 	}
@@ -215,46 +215,49 @@ public class WarehouseTransactionItem extends Model implements TransactionItem
 	}
 
 	@Override
-	public Long getTransactionId() {
+	public Long getTransactionId()
+	{
 		return getReferenceItem().getWarehouseTransaction().getId();
 	}
 
 	@Override
-	public String getTransactionCode() {
+	public String getTransactionCode()
+	{
 		return getReferenceItem().getReferenceCode();
 	}
-	
+
 	@Override
-	public String getAuditCode() {
+	public String getAuditCode()
+	{
 		return getId() + "";
 	}
-	
+
 	public Set<InventoryControl> getInternalInventories()
 	{
 		Set<InventoryControl> controls = new FastSet<InventoryControl>();
-		
-		if(getTransactionItem() != null)
+
+		if (getTransactionItem() != null)
 			controls.addAll(getTransactionItem().getInternalInventories());
-		
+
 		controls.addAll(getInventoryControls());
-		
+
 		return controls;
 	}
-	
+
 	public Set<StockControl> getInternalStocks()
 	{
 		Set<StockControl> controls = new FastSet<StockControl>();
-		
-		if(getTransactionItem() != null)
+
+		if (getTransactionItem() != null)
 			controls.addAll(getTransactionItem().getInternalStocks());
-		
+
 		controls.addAll(getDestinations());
-		
+
 		return controls;
 	}
-	
-	public String getFullUri() 
+
+	public String getFullUri()
 	{
-		return "<a href=\"page/" + getTransactionSource().getUri() + "preedit.htm?id=" + getReferenceItem().getWarehouseTransaction().getId() + "\">" + getReferenceItem().getReferenceCode() +"</a>";
+		return "<a href=\"page/" + getTransactionSource().getUri() + "preedit.htm?id=" + getReferenceItem().getWarehouseTransaction().getId() + "\">" + getReferenceItem().getReferenceCode() + "</a>";
 	}
 }

@@ -5,6 +5,8 @@
  */
 package com.siriuserp.procurement.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -25,6 +27,7 @@ import com.siriuserp.procurement.dm.POStatus;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.procurement.dm.PurchaseOrderApprovableBridge;
 import com.siriuserp.procurement.dm.PurchaseOrderItem;
+import com.siriuserp.procurement.dm.PurchaseOrderItemType;
 import com.siriuserp.procurement.dm.PurchaseRequisitionItem;
 import com.siriuserp.procurement.dm.PurchaseType;
 import com.siriuserp.procurement.form.PurchaseForm;
@@ -51,6 +54,7 @@ import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
 import com.siriuserp.sdk.utility.ReferenceItemHelper;
+import com.siriuserp.sdk.utility.SiriusValidator;
 
 import javolution.util.FastMap;
 
@@ -162,6 +166,40 @@ public class StandardPurchaseOrderService extends Service
 
 		if (purchaseOrder.getApprovable() == null && purchaseOrder.isInvoiceBeforeReceipt())
 			createInvoice(purchaseOrder);
+	}
+
+	@AuditTrails(className = PurchaseOrderItem.class, actionType = AuditTrailsActionType.CREATE)
+	public void addItem(Long purchaseOrderId, List<Item> items) throws Exception
+	{
+		PurchaseOrder purchaseOrder = load(purchaseOrderId);
+
+		for (Item item : items)
+		{
+			if (item.getProduct() != null && SiriusValidator.validateParam(item.getReference()))
+			{
+				PurchaseOrderItem purchaseItem = new PurchaseOrderItem();
+				purchaseItem.setItemParent(genericDao.load(PurchaseOrderItem.class, item.getReference()));
+				purchaseItem.setPurchaseItemType(PurchaseOrderItemType.SERIAL);
+				purchaseItem.getLot().setSerial(item.getSerial());
+				purchaseItem.setProduct(item.getProduct());
+				purchaseItem.setQuantity(item.getQuantityReal());
+				purchaseItem.getMoney().setAmount(purchaseItem.getMoney().getAmount());
+				purchaseItem.getMoney().setCurrency(purchaseItem.getMoney().getCurrency());
+				purchaseItem.setFacilityDestination(purchaseOrder.getShipTo());
+				purchaseItem.setPurchaseOrder(purchaseOrder);
+				purchaseItem.setTransactionSource(WarehouseTransactionSource.STANDARD_PURCHASE_ORDER);
+
+				WarehouseTransactionItem warehouseTransactionItem = ReferenceItemHelper.init(genericDao, purchaseItem.getQuantity(), WarehouseTransactionType.IN, purchaseItem);
+				warehouseTransactionItem.setLocked(false);
+
+				purchaseItem.setTransactionItem(warehouseTransactionItem);
+
+				purchaseOrder.getItems().add(purchaseItem);
+			}
+		}
+
+		purchaseOrder.setStatus(POStatus.OPEN);
+		genericDao.update(purchaseOrder);
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)

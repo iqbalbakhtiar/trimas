@@ -48,6 +48,16 @@
                     </select>
                 </td>
             </tr>
+            <c:if test="${barcode_form.barcodeGroupType eq 'PURCHASE_ORDER'}">
+            <tr>
+                <td align="right"><spring:message code="sirius.reference"/> :</td>
+                <td>
+                    <select id="purchaseOrder" name="purchaseOrder" class="combobox input-disabled">
+                        <option value="${barcode_form.purchaseOrder.id}" label="${barcode_form.purchaseOrder.code}"></option>
+                    </select>
+                </td>
+            </tr>
+            </c:if>
             <tr>
                 <td nowrap="nowrap" align="right"><spring:message code="sirius.note"/> :</td>
                 <td><form:textarea path='note' cols='45' rows='5'/></td>
@@ -63,14 +73,17 @@
                     </c:if>
                     <div class="item-navigator">&nbsp;</div>
                     </div>
-                    <table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">
+                    <table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center" style="width:100%;">
                         <thead>
                         <tr>
                             <th width="1%" nowrap="nowrap"><input class="checkall" type="checkbox"/></th>
                             <th width="12%" nowrap="nowrap"><spring:message code="product.code"/></th>
                             <th width="15%" nowrap="nowrap"><spring:message code="product"/></th>
+                            <c:if test="${not empty items}">
+                            	<th width="5%" nowrap="nowrap"><spring:message code="product.quantity"/></th>
+                            </c:if>
                             <th width="4%" nowrap="nowrap"><spring:message code="product.uom"/></th>
-                            <th width="55%" nowrap="nowrap"><spring:message code="barcode.roll"/></th>
+                            <th width="55%" nowrap="nowrap"><spring:message code="barcode.quantity"/></th>
                         </tr>
                         </thead>
                         <tbody id="lineItem">
@@ -83,13 +96,19 @@
                         			<option value="${item.product.id}">${item.product.name}</option>
                         		</select>
                         	</td>
+                            <c:if test="${not empty items}">
+                               	<td><input value="<fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/>"" name="items[${stat.index}].quantity" type="text" readonly="true" class="number-disabled" size="10"/></td>
+                            </c:if>
                         	<td><input value="${item.product.unitOfMeasure.measureId}" type="text" disabled class="input-disabled" size="5"/></td>
-                        	<td><input value="<fmt:formatNumber value='${item.roll}' pattern=',##0.00'/>" name="items[${stat.index}].roll" type="text" class="number-disabled quan" size="7" readonly="true"/></td>
+                        	<td>
+                        		<input value="0" name="items[${stat.index}].roll" type="text" class="input-number quan" size="7"/>
+                        		<input style="display: none;" value="${item.reference}" name="items[${stat.index}].reference" type="text" readonly="true" size="7"/>
+                        	</td>
                         </tr>
                         </c:forEach>
                         </tbody>
                         <tfoot>
-                        <tr class="end-table"><td colspan="13">&nbsp;</td></tr>
+                        <tr class="end-table"><td colspan="6">&nbsp;</td></tr>
                         </tfoot>
                     </table>
                 </div>
