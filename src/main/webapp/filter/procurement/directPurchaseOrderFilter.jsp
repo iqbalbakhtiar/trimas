@@ -19,7 +19,7 @@
 	<tr>
 		<td align="right" style="WIDTH:130px;"><spring:message code="supplier"/>&nbsp;&nbsp;</td>
 		<td width="4">:&nbsp;</td>
-		<td width="310" height="28"><input type="text" id="supplier" name="supplier" class="inputbox" value="<c:out value='${filterCriteria.supplier}'/>"/></td>
+		<td width="310" height="28"><input type="text" id="supplierName" name="supplierName" class="inputbox" value="<c:out value='${filterCriteria.supplierName}'/>"/></td>
 	</tr>
 	<tr>
 		<td align="right" style="WIDTH:130px;"><spring:message code="sirius.tax"/>&nbsp;&nbsp;</td>

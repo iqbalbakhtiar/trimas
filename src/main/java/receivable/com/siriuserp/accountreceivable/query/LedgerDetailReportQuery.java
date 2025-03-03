@@ -1,10 +1,10 @@
 package com.siriuserp.accountreceivable.query;
 
+import com.siriuserp.accountpayable.dm.PaymentMethodType;
 import com.siriuserp.accountreceivable.adapter.LedgerDetailAdapter;
 import com.siriuserp.accountreceivable.adapter.LedgerDetailAdapterComparator;
 import com.siriuserp.accountreceivable.criteria.LedgerSummaryReportFilterCriteria;
 import com.siriuserp.sdk.db.AbstractStandardReportQuery;
-import com.siriuserp.sdk.dm.PaymentMethodType;
 import com.siriuserp.sdk.utility.DateHelper;
 import com.siriuserp.sdk.utility.SiriusValidator;
 import javolution.util.FastList;

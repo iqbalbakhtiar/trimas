@@ -1,19 +1,8 @@
 package com.siriuserp.inventory.dm;
 
-import com.siriuserp.sdk.dm.Container;
-import com.siriuserp.sdk.dm.Grid;
-import com.siriuserp.sdk.dm.JSONSupport;
-import com.siriuserp.sdk.dm.Lot;
-import com.siriuserp.sdk.dm.Party;
-import com.siriuserp.sdk.dm.ReferenceItem;
-import com.siriuserp.sdk.dm.Tag;
-import com.siriuserp.sdk.utility.DecimalHelper;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,9 +10,24 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Date;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+
+import com.siriuserp.sdk.dm.Container;
+import com.siriuserp.sdk.dm.Grid;
+import com.siriuserp.sdk.dm.JSONSupport;
+import com.siriuserp.sdk.dm.Lot;
+import com.siriuserp.sdk.dm.Money;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.ReferenceItem;
+import com.siriuserp.sdk.dm.Tag;
+import com.siriuserp.sdk.utility.DecimalHelper;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Merepresentasikan item dalam goods receipt.
@@ -34,138 +38,149 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "goods_receipt_item")
-public class GoodsReceiptItem extends Controllable implements ReferenceItem, JSONSupport {
-    private static final long serialVersionUID = 3926488454351390346L;
+public class GoodsReceiptItem extends Controllable implements ReferenceItem, JSONSupport
+{
+	private static final long serialVersionUID = 3926488454351390346L;
 
-    @Column(name = "receipted")
-    private BigDecimal receipted = BigDecimal.ZERO;
+	@Column(name = "receipted")
+	private BigDecimal receipted = BigDecimal.ZERO;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_goods_receipt")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private GoodsReceipt goodsReceipt;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_goods_receipt")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private GoodsReceipt goodsReceipt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_grid")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private Grid grid;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_grid")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Grid grid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_container")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private Container container;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_container")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Container container;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_warehouse_transaction_item")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private WarehouseTransactionItem warehouseTransactionItem;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_warehouse_transaction_item")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private WarehouseTransactionItem warehouseTransactionItem;
 
-    @Override
-    public BigDecimal getUnitPrice() {
-        BigDecimal price = getInOuts().stream().map((ProductInOutTransaction inout) -> inout.getReceipted().multiply(inout.getPrice())).collect(DecimalHelper.sum());;
+	@Override
+	public BigDecimal getUnitPrice()
+	{
+		BigDecimal price = getInOuts().stream().map((ProductInOutTransaction inout) -> inout.getReceipted().multiply(inout.getPrice())).collect(DecimalHelper.sum());
 
-        return price.divide(getQuantity(), 23, RoundingMode.HALF_UP);
-    }
+		return price.divide(getQuantity(), 23, RoundingMode.HALF_UP);
+	}
 
-    @Override
-    public Date getDate() {
-        return getGoodsReceipt().getDate();
-    }
+	@Override
+	public Date getDate()
+	{
+		return getGoodsReceipt().getDate();
+	}
 
-    @Override
-    public Product getProduct() {
-        return getWarehouseTransactionItem().getProduct();
-    }
+	@Override
+	public Product getProduct()
+	{
+		return getWarehouseTransactionItem().getProduct();
+	}
 
-    @Override
-    public BigDecimal getQuantity() {
-        return getReceipted();
-    }
+	@Override
+	public BigDecimal getQuantity()
+	{
+		return getReceipted();
+	}
 
-    @Override
-    public BigDecimal getQuantityBase() {
-//        return getQuantity().multiply(getProduct().getQtyToBase());
-        return BigDecimal.ONE;
-    }
+	@Override
+	public BigDecimal getQuantityBase()
+	{
+		return BigDecimal.ONE;
+	}
 
-    @Override
-    public Long getReferenceId() {
-        return getWarehouseTransactionItem().getReferenceItem().getId();
-    }
+	public Money getMoney()
+	{
+		return getWarehouseTransactionItem().getReferenceItem().getMoney();
+	}
 
-    @Override
-    public BigDecimal getTaxRate() {
-        return null;
-    }
+	@Override
+	public Long getReferenceId()
+	{
+		return getWarehouseTransactionItem().getReferenceItem().getId();
+	}
 
-    @Override
-    public Party getOrganization() {
-        return getGoodsReceipt().getOrganization();
-    }
+	@Override
+	public BigDecimal getTaxRate()
+	{
+		return null;
+	}
 
-    @Override
-    public Container getContainer() {
-        return this.container;
-    }
+	@Override
+	public Party getOrganization()
+	{
+		return getGoodsReceipt().getOrganization();
+	}
 
-    @Override
-    public Grid getGrid() {
-        return this.grid;
-    }
+	@Override
+	public Container getContainer()
+	{
+		return this.container;
+	}
 
-    @Override
-    public Container getSourceContainer() {
-        return getWarehouseTransactionItem().getSourceContainer();
-    }
+	@Override
+	public Grid getGrid()
+	{
+		return this.grid;
+	}
 
-    @Override
-    public Grid getSourceGrid() {
-        return getWarehouseTransactionItem().getSourceGrid();
-    }
+	@Override
+	public Container getSourceContainer()
+	{
+		return getWarehouseTransactionItem().getSourceContainer();
+	}
 
-    @Override
-    public Container getDestinationContainer() {
-        return getWarehouseTransactionItem().getDestinationContainer();
-    }
+	@Override
+	public Grid getSourceGrid()
+	{
+		return getWarehouseTransactionItem().getSourceGrid();
+	}
 
-    @Override
-    public Grid getDestinationGrid()
-    {
-        return getWarehouseTransactionItem().getDestinationGrid();
-    }
+	@Override
+	public Container getDestinationContainer()
+	{
+		return getWarehouseTransactionItem().getDestinationContainer();
+	}
 
-    @Override
-    public Lot getLot()
-    {
-//        if(getWarehouseTransactionItem().getTransactionSource().isCleanLot())
-//            return new Lot();
-//
-//        if(getWarehouseTransactionItem().getTransactionSource().isExtLot())
-//            return getWarehouseTransactionItem().getExtLot();
+	@Override
+	public Grid getDestinationGrid()
+	{
+		return getWarehouseTransactionItem().getDestinationGrid();
+	}
 
-        return getWarehouseTransactionItem().getLot();
-    }
+	@Override
+	public Lot getLot()
+	{
+		return getWarehouseTransactionItem().getLot();
+	}
 
-    @Override
-    public Tag getTag() {
-//        if(getWarehouseTransactionItem().getTransactionSource().isAutoTag())
-//            return Tag.stock(InventoryReference.TRANSFER_ORDER);
+	@Override
+	public Tag getTag()
+	{
+		return getWarehouseTransactionItem().getTag();
+	}
 
-        return getWarehouseTransactionItem().getTag();
-    }
+	@Override
+	public Lot getOriginLot()
+	{
+		return getWarehouseTransactionItem().getLot();
+	}
 
-    @Override
-    public Lot getOriginLot()
-    {
-        return getWarehouseTransactionItem().getLot();
-    }
-
-    @Override
-    public String getAuditCode() {
-        return "";
-    }
+	@Override
+	public String getAuditCode()
+	{
+		return "";
+	}
 }

@@ -1,4 +1,4 @@
-package com.siriuserp.sdk.dm;
+package com.siriuserp.accountpayable.dm;
 
 import org.apache.commons.lang.WordUtils;
 

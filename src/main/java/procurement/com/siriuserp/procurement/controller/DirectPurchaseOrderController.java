@@ -16,7 +16,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.inventory.dm.Product;
-import com.siriuserp.procurement.criteria.DirectPurchaseOrderFilterCriteria;
+import com.siriuserp.procurement.criteria.PurchaseOrderFilterCriteria;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.procurement.dm.PurchaseOrderItem;
 import com.siriuserp.procurement.form.PurchaseForm;
@@ -35,12 +35,12 @@ import com.siriuserp.sdk.utility.FormHelper;
 @Controller
 @SessionAttributes(value = "dpo_form", types = PurchaseForm.class)
 @DefaultRedirect(url = "directpurchaseorderview.htm")
-public class DirectPurchaseOrderController extends ControllerBase {
-
-    @Autowired
+public class DirectPurchaseOrderController extends ControllerBase
+{
+	@Autowired
 	private DirectPurchaseOrderService service;
 
-    @InitBinder
+	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
 		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
@@ -51,33 +51,33 @@ public class DirectPurchaseOrderController extends ControllerBase {
 		binder.registerCustomEditor(Facility.class, modelEditor.forClass(Facility.class));
 		binder.registerCustomEditor(PostalAddress.class, modelEditor.forClass(PostalAddress.class));
 		binder.registerCustomEditor(ApprovalDecisionStatus.class, enumEditor.forClass(ApprovalDecisionStatus.class));
-
 	}
 
-    @RequestMapping("/directpurchaseorderview.htm")
+	@RequestMapping("/directpurchaseorderview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/procurement/directPurchaseOrderList",
-				service.view(criteriaFactory.create(request, DirectPurchaseOrderFilterCriteria.class), DirectPurchaseOrderGridViewQuery.class));
+		return new ModelAndView("/procurement/directPurchaseOrderList", service.view(criteriaFactory.create(request, PurchaseOrderFilterCriteria.class), DirectPurchaseOrderGridViewQuery.class));
 	}
 
-    @RequestMapping("/directpurchaseorderpreadd.htm")
-    public ModelAndView preadd()
-    {
-        return new ModelAndView("/procurement/directPurchaseOrderAdd", service.preadd());
-    }
+	@RequestMapping("/directpurchaseorderpreadd.htm")
+	public ModelAndView preadd()
+	{
+		return new ModelAndView("/procurement/directPurchaseOrderAdd", service.preadd());
+	}
 
 	@RequestMapping("/directpurchaseorderadd.htm")
 	public ModelAndView add(@ModelAttribute("dpo_form") PurchaseForm form, BindingResult result, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
-		try {
+		try
+		{
 			service.add(FormHelper.create(PurchaseOrder.class, form));
 			status.setComplete();
 
 			response.store("id", form.getPurchaseOrder().getId());
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 			response.statusError();
 			response.setMessage(e.getLocalizedMessage());
@@ -87,7 +87,8 @@ public class DirectPurchaseOrderController extends ControllerBase {
 	}
 
 	@RequestMapping("/directpurchaseorderpreedit.htm")
-	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception {
+	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
+	{
 		return new ModelAndView("/procurement/directPurchaseOrderUpdate", service.preedit(id));
 	}
 
@@ -96,12 +97,14 @@ public class DirectPurchaseOrderController extends ControllerBase {
 	{
 		JSONResponse response = new JSONResponse();
 
-		try {
+		try
+		{
 			service.edit(FormHelper.update(form.getPurchaseOrder(), form));
 			status.setComplete();
 
 			response.store("id", form.getPurchaseOrder().getId());
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 			response.statusError();
 			response.setMessage(e.getLocalizedMessage());

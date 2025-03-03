@@ -1,6 +1,7 @@
 package com.siriuserp.inventory.query;
 
 import org.hibernate.Query;
+
 import com.siriuserp.inventory.criteria.ProductFilterCriteria;
 import com.siriuserp.inventory.dm.ProductType;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
@@ -44,6 +45,9 @@ public class ProductGridViewQuery extends AbstractGridViewQuery
 		if (SiriusValidator.validateParam(criteria.getStatus()))
 			builder.append("AND pro.enabled =:status ");
 
+		if (SiriusValidator.validateParam(criteria.getSerial()))
+			builder.append("AND pro.serial =:serial ");
+
 		if (ExecutorType.HQL.equals(type))
 			builder.append("ORDER BY pro.id DESC");
 
@@ -68,6 +72,9 @@ public class ProductGridViewQuery extends AbstractGridViewQuery
 
 		if (SiriusValidator.validateParam(criteria.getStatus()))
 			query.setParameter("status", criteria.getStatus());
+
+		if (SiriusValidator.validateParam(criteria.getSerial()))
+			query.setParameter("serial", criteria.getSerial());
 
 		return query;
 	}

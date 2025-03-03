@@ -1,6 +1,7 @@
 package com.siriuserp.inventory.dm;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -23,9 +24,9 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
-import com.siriuserp.sdk.dm.JSONSupport;
 import com.siriuserp.sdk.dm.Model;
 
+import javolution.util.FastMap;
 import javolution.util.FastSet;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,7 +44,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "product")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Product extends Model implements JSONSupport
+public class Product extends Model
 {
 	private static final long serialVersionUID = -3594353574616790831L;
 
@@ -114,6 +115,18 @@ public class Product extends Model implements JSONSupport
 			return false;
 
 		return true;
+	}
+
+	@Override
+	public Map<String, Object> val()
+	{
+		Map<String, Object> map = new FastMap<String, Object>();
+		map.put("id", getId());
+		map.put("name", getName());
+		map.put("productCategory", getProductCategory());
+		map.put("unitOfMeasure", getUnitOfMeasure());
+
+		return map;
 	}
 
 	@Override

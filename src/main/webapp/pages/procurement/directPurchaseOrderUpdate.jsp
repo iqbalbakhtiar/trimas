@@ -217,10 +217,7 @@
           if(json.status === 'OK')
           {
             $dialog.dialog('close');
-            window.location="<c:url value='/page/directpurchaseorderview.htm'/>";
-            <%--window.location="<c:url value='/page/directpurchaseorderpreadd.htm'/>";--%>
-            // Or Can use This
-            <%--window.location="<c:url value='/page/directpurchaseorderpreedit.htm?id='/>"+json.data.id;--%>
+            window.location="<c:url value='/page/directpurchaseorderpreedit.htm?id='/>"+json.id;
           }
           else
           {

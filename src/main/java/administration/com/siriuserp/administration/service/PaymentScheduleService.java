@@ -5,13 +5,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.siriuserp.accountpayable.dm.PaymentMethod;
+import com.siriuserp.accountpayable.dm.PaymentSchedule;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.base.Service;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.GridViewQuery;
-import com.siriuserp.sdk.dm.PaymentMethod;
-import com.siriuserp.sdk.dm.PaymentSchedule;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.utility.QueryFactory;

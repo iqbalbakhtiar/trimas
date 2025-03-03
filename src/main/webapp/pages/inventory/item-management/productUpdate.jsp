@@ -56,6 +56,13 @@
 		</td>
 	</tr>
 	<tr>
+		<td align="right"><spring:message code="product.serial"/> :</td>
+		<td>
+			<form:radiobutton path="serial" value="true" disabled="true"/><spring:message code="sirius.yes"/>
+			<form:radiobutton path="serial" value="false" disabled="true"/><spring:message code="sirius.no"/>	
+		</td>
+	</tr>
+	<tr>
 		<td align="right"><spring:message code="product.picture"/> :</td>
 		<td>
 			<input name="file" type="file" src="${product_edit.picture}"/>

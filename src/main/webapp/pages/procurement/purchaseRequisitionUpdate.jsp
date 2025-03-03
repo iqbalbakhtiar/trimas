@@ -60,26 +60,32 @@
           <table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">
             <thead>
             <tr>
-              <th width="1%" nowrap="nowrap">&nbsp;</th>
+              <th width="1%" nowrap="nowrap"><div style="width: 30px;">&nbsp;</div></th>
               <th width="8%" nowrap="nowrap"><spring:message code="product"/></th>
               <th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
               <th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
-              <th width="60%" nowrap="nowrap"><spring:message code="sirius.note"/></th>
+              <th width="10%" nowrap="nowrap"><spring:message code="sirius.note"/></th>
+              <th width="50%" nowrap="nowrap"><spring:message code="purchaseorder"/></th>
             </tr>
             </thead>
             <tbody id="lineItem">
-            <c:forEach items="${requisition_edit.items}" var="item" varStatus="idx">
+            <c:forEach items="${requisition_edit.items}" var="item">
               <tr>
-                <td></td>
+                <td class="tools">
+                	<c:if test='${access.edit and item.available}'>
+                    	<a class="item-button-lock" href="javascript:lockItem(${item.id});" title="<spring:message code='sirius.lock'/>"><span><spring:message code='sirius.lock'/></span></a>
+                   	</c:if>
+                </td>
                 <td><input size="25" value="${item.product.name}" class="input-disabled" disabled/></td>
                 <td><input size="8" value="${item.quantity}" class="input-disabled input-decimal" disabled/></td>
                 <td><input size="10" value="${item.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
-                <td><input type="text" value="${item.note}" name="purchaseRequisition.items[${idx.index}].note" size="40"/></td>
+                <td><input type="text" value="${item.note}" name="purchaseRequisition.items[${idx.index}].note" size="40" ${item.available ? "":"disabled='true' class='input-disabled'"}/></td>
+                <td><a href="<c:url value='/page/standardpurchaseorderpreedit.htm?id=${item.purchaseOrderItem.purchaseOrder.id}'/>"><c:out value='${item.purchaseOrderItem.purchaseOrder.code}'/></a></td>
               </tr>
             </c:forEach>
             </tbody>
             <tfoot>
-            <tr class="end-table"><td colspan="5">&nbsp;</td></tr>
+            <tr class="end-table"><td colspan="6">&nbsp;</td></tr>
             </tfoot>
           </table>
         </div>
@@ -91,8 +97,6 @@
 <%@ include file="/common/sirius-general-bottom.jsp"%>
 <script type="text/javascript">
   $(function(){
-    var $index = 0; // For Line Item Index
-
     $('.item-button-save').click(function(){
         save();
     });
@@ -126,5 +130,26 @@
         }
       }
     });
+  }
+  
+  function lockItem(id)
+  {
+	const confirmDialog = $('<div><spring:message code="notif.proceed"/> ?</div>').dialog(
+	{
+		autoOpen: false, title: '<spring:message code="notif.confirmation"/>', modal:true,
+		buttons: {
+			'<spring:message code="sirius.yes"/>': function() {
+				$(this).dialog('close');
+
+				var url = "<c:url value='/page/purchaserequisitionlockitem.htm?id='/>"+id;
+				window.location = url;
+			},
+			'<spring:message code="sirius.no"/>': function() {
+				$(this).dialog('close');
+			}
+		}
+	});
+
+	confirmDialog.dialog('open');
   }
 </script>

@@ -1,5 +1,6 @@
 package com.siriuserp.procurement.dm;
 
-public enum POStatus {
-    OPEN,CLOSED,LOCK,UNLOCK
+public enum POStatus
+{
+	OPEN, CLOSED, LOCK, UNLOCK, BARCODE;
 }

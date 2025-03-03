@@ -75,6 +75,15 @@ public class PurchaseRequisition extends Model
 	@OrderBy("id ASC")
 	private Set<PurchaseRequisitionItem> items = new FastSet<PurchaseRequisitionItem>();
 
+	public boolean isDeleteable()
+	{
+		for (PurchaseRequisitionItem item : getItems())
+			if (item.getPurchaseOrderItem() != null)
+				return false;
+
+		return true;
+	}
+
 	@Override
 	public String getAuditCode()
 	{

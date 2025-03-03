@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.procurement.criteria.PurchaseRequisitionFilterCriteria;
 import com.siriuserp.procurement.dm.PurchaseRequisition;
+import com.siriuserp.procurement.dm.PurchaseRequisitionItem;
 import com.siriuserp.procurement.form.PurchaseForm;
 import com.siriuserp.procurement.query.PurchaseRequisitionViewQuery;
 import com.siriuserp.procurement.service.PurchaseRequisitionService;
@@ -113,6 +114,15 @@ public class PurchaseRequisitionController extends ControllerBase
 		}
 
 		return response;
+	}
+
+	@RequestMapping("/purchaserequisitionlockitem.htm")
+	public ModelAndView lockItem(@RequestParam("id") Long id) throws ServiceException
+	{
+		PurchaseRequisitionItem item = service.loadItem(id);
+		service.lockItem(item);
+
+		return ViewHelper.redirectTo("purchaserequisitionpreedit.htm?id=" + item.getPurchaseRequisition().getId());
 	}
 
 	@RequestMapping("/purchaserequisitiondelete.htm")

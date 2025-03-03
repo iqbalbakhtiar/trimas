@@ -5,16 +5,6 @@ package com.siriuserp.inventory.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.siriuserp.inventory.criteria.BarcodeGroupFilterCriteria;
-import com.siriuserp.inventory.query.BarcodeGroupGridViewQuery;
-import com.siriuserp.inventory.service.BarcodeGroupService;
-import com.siriuserp.sdk.dm.BarcodeStatus;
-import com.siriuserp.sdk.dm.Container;
-import com.siriuserp.sdk.dm.Currency;
-import com.siriuserp.sdk.dm.ExchangeType;
-import com.siriuserp.sdk.dm.Facility;
-import com.siriuserp.sdk.dm.Grid;
-import com.siriuserp.sdk.dm.Party;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -27,14 +17,24 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.siriuserp.inventory.criteria.BarcodeGroupFilterCriteria;
 import com.siriuserp.inventory.criteria.StockAdjustmentFilterCriteria;
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.dm.StockAdjustment;
 import com.siriuserp.inventory.form.InventoryForm;
+import com.siriuserp.inventory.query.BarcodeGroupGridViewQuery;
 import com.siriuserp.inventory.query.StockAdjustmentGridViewQuery;
+import com.siriuserp.inventory.service.BarcodeGroupService;
 import com.siriuserp.inventory.service.StockAdjustmentService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
+import com.siriuserp.sdk.dm.BarcodeStatus;
+import com.siriuserp.sdk.dm.Container;
+import com.siriuserp.sdk.dm.Currency;
+import com.siriuserp.sdk.dm.ExchangeType;
+import com.siriuserp.sdk.dm.Facility;
+import com.siriuserp.sdk.dm.Grid;
+import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.ResponseStatus;
@@ -148,14 +148,14 @@ public class StockAdjustmentController extends ControllerBase
 	}
 
 	@RequestMapping("/stockadjustmentbarcodepreadd1.htm")
-	public ModelAndView barcodePreAdd1(HttpServletRequest request) throws ServiceException {
+	public ModelAndView barcodePreAdd1(HttpServletRequest request) throws Exception
+	{
 		BarcodeGroupFilterCriteria criteria = (BarcodeGroupFilterCriteria) criteriaFactory.create(request, BarcodeGroupFilterCriteria.class);
 
 		criteria.setBarcodeGroupType("STOCK_ADJUSTMENT");
 		criteria.setStatus("CREATED");
 
-		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentBarcodeAdd1",
-				barcodeGroupService.view(criteria, BarcodeGroupGridViewQuery.class));
+		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentBarcodeAdd1", barcodeGroupService.view(criteria, BarcodeGroupGridViewQuery.class));
 	}
 
 	@RequestMapping("/stockadjustmentbarcodepreadd2.htm")
