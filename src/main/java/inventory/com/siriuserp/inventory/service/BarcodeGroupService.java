@@ -188,12 +188,31 @@ public class BarcodeGroupService
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> preedit(Long id) throws Exception
 	{
-		FastMap<String, Object> map = new FastMap<String, Object>();
 		BarcodeGroup barcode = genericDao.load(BarcodeGroup.class, id);
 		InventoryForm form = FormHelper.bind(InventoryForm.class, barcode);
+		Map<Product, List<Barcode>> products = new FastMap<Product, List<Barcode>>();
 
+		for (Barcode item : barcode.getBarcodes())
+		{
+			if (!products.containsKey(item.getProduct()))
+			{
+				List<Barcode> items = new FastList<Barcode>();
+				items.add(item);
+
+				products.put(item.getProduct(), items);
+			} else
+			{
+				List<Barcode> items = products.get(item.getProduct());
+				items.add(item);
+
+				products.put(item.getProduct(), items);
+			}
+		}
+
+		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("barcode_edit", barcode);
 		map.put("barcode_form", form);
+		map.put("products", products);
 
 		return map;
 	}

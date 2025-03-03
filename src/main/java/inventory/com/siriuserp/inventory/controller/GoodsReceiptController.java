@@ -55,13 +55,13 @@ public class GoodsReceiptController extends ControllerBase
 	@RequestMapping("/goodsreceiptpreadd1.htm")
 	public ModelAndView preadd1(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/inventory/goods-receipt/goodsReceiptPreadd1", service.preadd1(criteriaFactory.create(request, GoodsReceiptFilterCriteria.class), ReceiptableGridViewQuery.class));
+		return new ModelAndView("/inventory/goods-receipt/goodsReceiptAdd1", service.preadd1(criteriaFactory.create(request, GoodsReceiptFilterCriteria.class), ReceiptableGridViewQuery.class));
 	}
 
 	@RequestMapping("/goodsreceiptpreadd2.htm")
 	public ModelAndView preadd2(@ModelAttribute("adapter") WarehouseItemAdapter adapter) throws Exception
 	{
-		return new ModelAndView("/inventory/goods-receipt/goodsReceiptPreadd2", service.preadd2(adapter));
+		return new ModelAndView("/inventory/goods-receipt/goodsReceiptAdd2", service.preadd2(adapter));
 	}
 
 	@RequestMapping("/goodsreceiptadd.htm")

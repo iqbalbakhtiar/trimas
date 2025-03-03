@@ -131,7 +131,7 @@
                         <c:if test="${not empty purchase_edit.receipts}">
                         <tr>
                             <td width="80%" align="right" valign="top"><spring:message code="goodsreceipt"/>:&nbsp;</td>
-                            <td width="20%" align="right">
+                            <td width="20%" align="right" nowrap="nowrap">
                                 <c:forEach items="${purchase_edit.receipts}" var="rec" varStatus="status">
                                     <a href="<c:url value='/page/goodsreceiptpreedit.htm?id=${rec.id}'/>"><c:out value="${rec.code}"></c:out></a>
                                     <br>
@@ -142,7 +142,7 @@
                         <c:if test="${not empty purchase_edit.invoiceVerifications}">
                         <tr>
                             <td width="80%" align="right" valign="top"><spring:message code="invoiceverification"/>:&nbsp;</td>
-                            <td width="20%" align="right">
+                            <td width="20%" align="right" nowrap="nowrap">
                                 <c:forEach items="${purchase_edit.invoiceVerifications}" var="ver" varStatus="status">
                                     <a href="<c:url value='/page/invoiceverificationpreedit.htm?id=${ver.id}'/>"><c:out value="${ver.code}"></c:out></a>
                                     <br>

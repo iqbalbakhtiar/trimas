@@ -221,7 +221,7 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 
 	public String getMeasureName()
 	{
-		return getProduct().getUnitOfMeasure().getName();
+		return getProduct().getUnitOfMeasure().getMeasureId();
 	}
 
 	public GoodsType getGoodsType()

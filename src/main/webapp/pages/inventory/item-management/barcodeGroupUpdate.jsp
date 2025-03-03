@@ -73,12 +73,26 @@
                     <table width="100%" style="border:none">
                         <tr>
                             <td align="right"><spring:message code="barcode.quantity"/> : </td>
-                            <td><input id="totalRoll" value="<fmt:formatNumber value='${barcode_edit.barcodes.size()}' pattern=',##0'/>" class="number-disabled" disabled size="15"/></td>
+                            <td><input id="totalRoll" value="<fmt:formatNumber value='${barcode_edit.barcodes.size()}' pattern=',##0'/>" class="number-disabled" disabled size="10"/></td>
                         </tr>
-                        <tr>
-                            <td align="right">Total <spring:message code="product.quantity"/> : </td>
-                            <td><input id="totalQuantity" value="0.00" class="number-disabled" disabled size="15"/></td>
+                        <tr style="font-weight: bold;">
+                        	<td width="30%;">&nbsp;</td>
+                        	<td width="10%;"><spring:message code="sirius.total"/></td>
+                        	<td width="60%;"><spring:message code="sirius.total.real"/></td>
                         </tr>
+                        <c:forEach items="${products}" var="prod" varStatus="status">
+                            <c:set var="totalQuantity" value="${0}"/>
+                            <c:set var="totalQuantityReal" value="${0}"/>
+                            <c:forEach items="${prod.value}" var="det">
+	                            <c:set var="totalQuantity" value="${totalQuantity+det.quantity}"/>
+	                            <c:set var="totalQuantityReal" value="${totalQuantityReal+det.quantityReal}"/>
+                            </c:forEach>
+                            <tr>
+	                            <td align="right">${prod.key.name} : </td>
+	                            <td><input id="totalQuantity" value="<fmt:formatNumber value='${totalQuantity}' pattern=',##0'/> ${prod.key.unitOfMeasure.measureId}" class="number-disabled" disabled size="10"/></td>
+	                            <td><input id="totalQuantityReal" value="<fmt:formatNumber value='${totalQuantityReal}' pattern=',##0'/> ${prod.key.unitOfMeasure.measureId}" class="number-disabled" disabled size="10"/></td>
+	                        </tr>
+                        </c:forEach>
                     </table>
                 </fieldset>
             </td>
@@ -99,7 +113,13 @@
                 </tr>
                 </thead>
                 <tbody id="lineItem">
+                <c:set var="prd" value=""/>
                 <c:forEach items="${barcode_edit.barcodes}" var="barcode" varStatus="status">
+                    <c:if test="${not empty prd and barcode.product.id ne prd}">
+                    <tr>
+                    	<td colspan="7">&nbsp;</td>
+                    </tr>
+                    </c:if>
                     <tr>
                         <td class="tools">
                             <%-- <c:if test="${access.delete && !barcode_edit.active}">
@@ -120,13 +140,14 @@
                             <input type="hidden" name="items[${status.index}].reference" value="${barcode.id}"/>
                         </td>
                     </tr>
+                    <c:set var="prd" value="${barcode.product.id}"/>
                 </c:forEach>
-                <tr>
+                <%-- <tr>
                     <td colspan="4" align="right"></td>
                     <td><strong>TOTAL</strong></td>
                     <td><input id="totalQuantity2" class="input-disabled input-number" value="<fmt:formatNumber value='' pattern=',##0.00'/>" disabled size="10"/></td>
                     <td><input id="totalQuantity3" class="input-disabled input-number" value="<fmt:formatNumber value='' pattern=',##0.00'/>" disabled size="10"/></td>
-                </tr>
+                </tr> --%>
                 </tbody>
                 <tfoot>
                 <tr class="end-table"><td colspan="13">&nbsp;</td></tr>
@@ -141,7 +162,7 @@
 
 <script type="text/javascript">
     $(function(){
-        countQuan();
+        //countQuan();
         var $dialog = $('<div></div>').dialog({autoOpen: false,title: '${title}',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
 
         $('.b_entry').click(function(e){

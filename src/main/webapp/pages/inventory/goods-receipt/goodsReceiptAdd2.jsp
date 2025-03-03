@@ -52,10 +52,10 @@
                 <td width="26%" nowrap="nowrap" align="right"><spring:message code="goodsreceipt.receive.from"/> :</td>
                 <td width="74%"><input value="${ref.referenceFrom}" class='input-disabled' size='25'/></td>
             </tr>
-            <tr>
+            <%-- <tr>
                 <td width="26%" nowrap="nowrap" align="right"><spring:message code="goodsreceipt.supplier.invoice"/> :</td>
                 <td width="74%"><input size='25' id="invoiceNo" name="invoiceNo"/></td>
-            </tr>
+            </tr> --%>
         </table>
         <br/>
         <div style="overflow-x: auto;">
@@ -65,6 +65,7 @@
                     <th width="10%"><spring:message code="product"/></th>
                     <th width="5%" style="white-space: normal; line-height: 10px; text-align: center"><spring:message code="invoiceverificationitem.receivedqty"/></th>
                     <th width="5%"><spring:message code="goodsreceiptitem.uom"/></th>
+                    <th width="5%"><spring:message code="barcode"/></th>
                     <th width="5%"><spring:message code="container"/></th>
                     <th><spring:message code="grid"/></th>
                 </tr>
@@ -83,6 +84,9 @@
                         </td>
                         <td>
                             <input class="input-disabled" size="7" value="${item.warehouseTransactionItem.referenceItem.measureName}" disabled/>
+                        </td>
+                        <td>
+                            <input class="input-disabled" size="10" value="${item.warehouseTransactionItem.referenceItem.lot.serial}" disabled/>
                         </td>
                         <td>
                             <form:select id='container[${status.index}]' path='items[${status.index}].container' cssClass='combobox containers'>
@@ -124,11 +128,11 @@
                 return;
             }
 
-            if(!$('#invoiceNo').val())
+            /* if(!$('#invoiceNo').val())
             {
                 alert('<spring:message code="goodsreceipt.supplier.invoice"/> <spring:message code="notif.empty"/> !');
                 return;
-            }
+            } */
 
             $('.product').each(function(){
                 let $idx = $(this).attr('index');
@@ -161,8 +165,7 @@
                             if(json.status == 'OK')
                             {
                                 $dialog.dialog('close');
-                                window.location="<c:url value='/page/goodsreceiptview.htm'/>";
-                                <%--window.location="<c:url value='/page/goodsreceiptpreedit.htm?id='/>"+json.id;--%>
+                                window.location="<c:url value='/page/goodsreceiptpreedit.htm?id='/>"+json.id;
                             }
                             else
                                 afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
