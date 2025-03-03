@@ -11,6 +11,7 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -34,7 +35,7 @@ public class BillingItem extends Model {
     @Fetch(FetchMode.SELECT)
     private Billing billing;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="fk_billing_reference")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)

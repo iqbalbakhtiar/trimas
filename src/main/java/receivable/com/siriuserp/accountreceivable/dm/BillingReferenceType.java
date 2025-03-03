@@ -1,5 +1,5 @@
 package com.siriuserp.accountreceivable.dm;
 
 public enum BillingReferenceType {
-    DELIVERY_ORDER_REALIZATION
+    DELIVERY_ORDER_REALIZATION, MANUAL
 }

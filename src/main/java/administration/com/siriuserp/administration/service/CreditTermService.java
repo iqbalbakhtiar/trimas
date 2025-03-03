@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.siriuserp.sdk.dao.CreditTermDao;
+import com.siriuserp.sdk.dao.PartyRelationshipDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -31,8 +33,11 @@ public class CreditTermService extends Service {
 	@Autowired
 	private GenericDao genericDao;
 	
-//	@Autowired
-//	private CreditTermDao creditTermDao;
+	@Autowired
+	private CreditTermDao creditTermDao;
+
+	@Autowired
+	private PartyRelationshipDao partyRelationshipDao;
 	
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception {
@@ -94,4 +99,10 @@ public class CreditTermService extends Service {
 
         genericDao.add(creditTerm);
     }
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public CreditTerm getByPartyOrgTypeDate(Long partyId, Long orgId, Long relationshipType, Date date) throws ServiceException {
+		PartyRelationship relationship = partyRelationshipDao.load(partyId, orgId, relationshipType);
+		return creditTermDao.loadByRelationship(relationship.getId(), true, date);
+	}
 }

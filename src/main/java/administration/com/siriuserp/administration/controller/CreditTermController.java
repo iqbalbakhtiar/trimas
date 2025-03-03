@@ -1,5 +1,6 @@
 package com.siriuserp.administration.controller;
 
+import com.siriuserp.sdk.exceptions.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -18,6 +19,8 @@ import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.CreditTerm;
 import com.siriuserp.sdk.dm.PartyRelationship;
 import com.siriuserp.sdk.springmvc.JSONResponse;
+
+import java.util.Date;
 
 @Controller
 @SessionAttributes(value = { "creditTerm_add", "creditTerm_edit" }, types = CreditTerm.class)
@@ -55,6 +58,26 @@ public class CreditTermController extends ControllerBase{
 			response.setMessage(e.getLocalizedMessage());
 		}
 		
+		return response;
+	}
+
+	@RequestMapping("/popupcredittermjson.htm")
+	public ModelAndView getByPartyAndDate(
+						@RequestParam("id") Long partyId,
+						@RequestParam("org") Long orgId,
+						@RequestParam("type") Long type,
+						@RequestParam("date") Date date) throws ServiceException {
+
+		JSONResponse response = new JSONResponse();
+
+		try {
+			response.store("creditTerm", service.getByPartyOrgTypeDate(partyId, orgId, type, date));
+		} catch (Exception e) {
+			response.statusError();
+			response.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+
 		return response;
 	}
 }

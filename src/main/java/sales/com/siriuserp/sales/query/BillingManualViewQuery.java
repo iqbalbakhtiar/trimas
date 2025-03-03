@@ -8,7 +8,7 @@ import com.siriuserp.sdk.db.ExecutorType;
 import com.siriuserp.sdk.utility.SiriusValidator;
 import org.hibernate.Query;
 
-public class BillingViewQuery extends AbstractGridViewQuery {
+public class BillingManualViewQuery extends AbstractGridViewQuery {
     @Override
     public Query getQuery(ExecutorType executorType)
     {
@@ -22,7 +22,7 @@ public class BillingViewQuery extends AbstractGridViewQuery {
             builder.append("SELECT DISTINCT(bill) ");
 
         builder.append("FROM Billing bill WHERE 1=1 ");
-        builder.append("AND bill.billingType.id NOT IN(:types) ");
+        builder.append("AND bill.billingType.id IN(:types) ");
 
         if (SiriusValidator.validateParam(criteria.getCode()))
             builder.append("AND bill.code LIKE :code ");
