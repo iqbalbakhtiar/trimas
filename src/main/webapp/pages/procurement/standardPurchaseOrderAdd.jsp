@@ -35,7 +35,7 @@
             <tr>
               <td align="right"><spring:message code="sirius.date.delivery"/></td>
               <td width="1%" align="center">:</td>
-              <td><input id="deliveryDate" name="deliveryDate" class="datepicker" /></td>
+              <td><input id="deliveryDate" name="deliveryDate" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>"/></td>
             </tr>
             <tr>
               <td align="right"><spring:message code="supplier"/></td>
@@ -64,7 +64,7 @@
                     <option value="${tax.id}" data-taxrate="${tax.taxRate}">${tax.taxName}</option>
                   </c:forEach>
                 </form:select>
-                <input size="7" id="taxRate" class="input-number input-disabled" disabled />&nbsp;%
+                <input size="5" id="taxRate" class="input-number input-disabled" disabled />&nbsp;%
               </td>
             </tr>
             <tr>
@@ -139,8 +139,8 @@
               <th width="8%" nowrap="nowrap"><spring:message code="product"/></th>
               <th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
               <th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
-              <th width="8%" nowrap="nowrap"><spring:message code="purchaseorder.amount"/></th>
-              <th width="8%" nowrap="nowrap"><spring:message code="purchaseorder.total"/></th>
+              <th width="8%" nowrap="nowrap"><spring:message code="purchaseorderitem.unitprice"/></th>
+              <th width="8%" nowrap="nowrap"><spring:message code="purchaseorderitem.total"/></th>
               <th width="50%" nowrap="nowrap"><spring:message code="sirius.note"/></th>
             </tr>
             </thead>
@@ -181,98 +181,6 @@
     
     $('#org').trigger('change');
   });
-
-  function updateDisplay() {
-    // Update Tax
-    var taxRate = Number.parse($('#tax option:selected').data('taxrate')) || 0;
-    $('#taxRate').val(taxRate ? taxRate.toFixed(2) : '');
-
-    // Inisialisasi total
-    var totalSales = 0;
-
-    // Fungsi helper untuk mendapatkan nilai numerik
-    function getNumericValue($input) {
-      return $input.val().toNumber() || 0;
-    }
-
-    // Update setiap line item
-    $('#lineItem tr').each(function(){
-      var $row = $(this);
-
-      var qty = getNumericValue($row.find('input[id^="quantity["]'));
-      var price = getNumericValue($row.find('input[id^="amount["]'));
-
-      var amount = qty * price;
-
-      totalSales += amount;
-
-      // Update Buying Price per-line Item
-      $row.find('input[id^="totalAmount["]').val(amount.numberFormat('#,##0.00'));
-    });
-
-    // Menghitung totalTax dan totalTransaction
-    var totalTax = totalSales * (taxRate / 100);
-    var totalTransaction = totalSales + totalTax;
-
-    // Memperbarui field recapitulation dengan nilai yang diformat
-    $('#totalSales').val(totalSales.numberFormat('#,##0.00'));
-    $('#totalTax').val(totalTax.numberFormat('#,##0.00'));
-    $('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
-    
-    $('#approver').empty();
-    
-    if(totalTransaction > new Number(1000000))
-    	$('#rowApprover').removeAttr('style');
-    else
-    	$('#rowApprover').attr('style','display:none;');
-  }
-
-  function updateBillShipAddress(element){
-    // Populate (Bill To Address)
-    Party.load(element.value);
-
-    let _billingToAddress = $('#billingToAddress');
-    if (_billingToAddress.find('option').length > 0) { // Clear options if any
-      _billingToAddress.empty();
-    }
-
-    let addresses = Party.data.partyAddresses;
-
-    addresses.forEach(address => {
-      // Periksa apakah postalTypes memiliki tipe 'OFFICE' dengan enabled == true
-      let hasShippingEnabled = address.postalTypes.some(postalType =>
-              postalType.type === 'OFFICE' && postalType.enabled === true
-      );
-
-      if (hasShippingEnabled) {
-        let option = $('<option></option>')
-                .val(address.postalId)
-                .text(address.addressName);
-
-        if (address.isDefault) { // Jika alamat ini adalah default, set sebagai selected
-          option.attr('selected', 'selected');
-        }
-
-        _billingToAddress.append(option); // Tambahkan opsi ke elemen _shippingAddress
-      }
-    });
-
-    //Populate Facilites (Ship To Address)
-    Facility.loadByOrg(element.value);
-
-    let _shippingToAddress = $('#shippingToAddress');
-    if (_shippingToAddress.find('option').length > 0) { // Clear options if any
-      _shippingToAddress.empty();
-    }
-
-    Facility.data.forEach(facility => {
-      let option = $('<option></option>')
-              .val(facility.facilityId)
-              .text(facility.facilityName);
-
-      _shippingToAddress.append(option);
-    });
-  }
 
   function validation() {
     var organization = $('#org').val();
@@ -370,6 +278,98 @@
     });
   }
 
+  function updateDisplay() {
+    // Update Tax
+    var taxRate = Number.parse($('#tax option:selected').data('taxrate')) || 0;
+    $('#taxRate').val(taxRate ? taxRate.toFixed(2) : '');
+
+    // Inisialisasi total
+    var totalSales = 0;
+
+    // Fungsi helper untuk mendapatkan nilai numerik
+    function getNumericValue($input) {
+      return $input.val().toNumber() || 0;
+    }
+
+    // Update setiap line item
+    $('#lineItem tr').each(function(){
+      var $row = $(this);
+
+      var qty = getNumericValue($row.find('input[id^="quantity["]'));
+      var price = getNumericValue($row.find('input[id^="amount["]'));
+
+      var amount = qty * price;
+
+      totalSales += amount;
+
+      // Update Buying Price per-line Item
+      $row.find('input[id^="totalAmount["]').val(amount.numberFormat('#,##0.00'));
+    });
+
+    // Menghitung totalTax dan totalTransaction
+    var totalTax = totalSales * (taxRate / 100);
+    var totalTransaction = totalSales + totalTax;
+
+    // Memperbarui field recapitulation dengan nilai yang diformat
+    $('#totalSales').val(totalSales.numberFormat('#,##0.00'));
+    $('#totalTax').val(totalTax.numberFormat('#,##0.00'));
+    $('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
+    
+    $('#approver').empty();
+    
+    if(totalTransaction > new Number(1000000))
+    	$('#rowApprover').removeAttr('style');
+    else
+    	$('#rowApprover').attr('style','display:none;');
+  }
+
+  function updateBillShipAddress(element){
+    // Populate (Bill To Address)
+    Party.load(element.value);
+
+    let _billingToAddress = $('#billingToAddress');
+    if (_billingToAddress.find('option').length > 0) { // Clear options if any
+      _billingToAddress.empty();
+    }
+
+    let addresses = Party.data.partyAddresses;
+
+    addresses.forEach(address => {
+      // Periksa apakah postalTypes memiliki tipe 'OFFICE' dengan enabled == true
+      let hasShippingEnabled = address.postalTypes.some(postalType =>
+              postalType.type === 'OFFICE' && postalType.enabled === true
+      );
+
+      if (hasShippingEnabled) {
+        let option = $('<option></option>')
+                .val(address.postalId)
+                .text(address.addressName);
+
+        if (address.isDefault) { // Jika alamat ini adalah default, set sebagai selected
+          option.attr('selected', 'selected');
+        }
+
+        _billingToAddress.append(option); // Tambahkan opsi ke elemen _shippingAddress
+      }
+    });
+
+    //Populate Facilites (Ship To Address)
+    Facility.loadByOrg(element.value);
+
+    let _shippingToAddress = $('#shippingToAddress');
+    if (_shippingToAddress.find('option').length > 0) { // Clear options if any
+      _shippingToAddress.empty();
+    }
+
+    Facility.data.forEach(facility => {
+      let option = $('<option></option>')
+              .val(facility.facilityId)
+              .text(facility.facilityName);
+
+      _shippingToAddress.append(option);
+    });
+  }
+
 	var selectedRequisitions = [];
 	var index = 0;
 	function popupRequisitions()
@@ -407,10 +407,6 @@
     $tbody.append($tr);
 	index++;
     $(".input-number").bind(inputFormat);
-  }
-
-  function openProduct(index) {
-    openpopup("<c:url value='/page/popupproductview.htm?&target=product['/>"+index+"]&index="+index);
   }
 
   function openSupplier() {

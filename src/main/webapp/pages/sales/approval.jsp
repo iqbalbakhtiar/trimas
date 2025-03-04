@@ -115,10 +115,10 @@
         <tr>
             <td>
                 <fieldset>
-                    <legend><strong>Approval Decision </strong></legend>
+                    <legend><strong><spring:message code="approval"/></strong></legend>
                     <table width="100%" style="border:none">
                         <tr>
-                            <td align="right">Decision</td>
+                            <td align="right"><spring:message code="approval.decision"/></td>
                             <td>:</td>
                             <td>
                                 <select id="decision_${apprIdx}" class="combobox" onchange="checkStatus_${apprIdx}()">
@@ -130,7 +130,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td align="right">Forward To</td>
+                            <td align="right"><spring:message code="approval.forwardto"/></td>
                             <td>:</td>
                             <td>
                                 <select id="forwardTo${apprIdx}" class="combobox input-disabled" disabled>
@@ -142,7 +142,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td align="right">Remark</td>
+                            <td align="right"><spring:message code="approval.remark"/></td>
                             <td>:</td>
                             <td valign="top"><textarea id="remark_${apprIdx}" cols="45" rows="3"></textarea>
                             </td>

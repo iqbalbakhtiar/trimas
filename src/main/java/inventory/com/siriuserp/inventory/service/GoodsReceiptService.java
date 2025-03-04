@@ -31,6 +31,7 @@ import com.siriuserp.inventory.dm.WarehouseTransactionSource;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
 import com.siriuserp.inventory.form.InventoryForm;
 import com.siriuserp.inventory.util.InventoryItemTagUtil;
+import com.siriuserp.procurement.dm.PurchaseOrderItem;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.AutomaticSibling;
@@ -194,7 +195,7 @@ public class GoodsReceiptService extends Service
 
 		goodsReceipt.setCode(GeneratorHelper.instance().generate(TableType.GOODS_RECEIPT, codeSequenceDao, goodsReceipt.getOrganization()));
 
-		boolean autoInvoice = false;
+		boolean createInvoice = false;
 		for (Item item : goodsReceipt.getForm().getItems())
 		{
 			GoodsReceiptItem receiptItem = new GoodsReceiptItem();
@@ -206,8 +207,13 @@ public class GoodsReceiptService extends Service
 
 			goodsReceipt.getItems().add(receiptItem);
 
-			if (item.getWarehouseTransactionItem().getTransactionSource().equals(WarehouseTransactionSource.DIRECT_PURCHASE_ORDER))
-				autoInvoice = true;
+			if (item.getWarehouseTransactionItem().getTransactionSource().equals(WarehouseTransactionSource.DIRECT_PURCHASE_ORDER)
+					|| item.getWarehouseTransactionItem().getTransactionSource().equals(WarehouseTransactionSource.STANDARD_PURCHASE_ORDER))
+			{
+				PurchaseOrderItem purchaseItem = genericDao.load(PurchaseOrderItem.class, item.getWarehouseTransactionItem().getReferenceItem().getId());
+				if (purchaseItem != null && !purchaseItem.getPurchaseOrder().isInvoiceBeforeReceipt())
+					createInvoice = true;
+			}
 		}
 
 		//Remove Unused Items
@@ -220,8 +226,8 @@ public class GoodsReceiptService extends Service
 
 		genericDao.add(goodsReceipt);
 
-		// Auto Create Invoice Verification (Direct Invoice Only)
-		if (autoInvoice)
+		// Auto Create Invoice Verification for PO & DPO (Auto Create Invoice Before Receipt = false)
+		if (createInvoice)
 			createInvoice(goodsReceipt);
 	}
 

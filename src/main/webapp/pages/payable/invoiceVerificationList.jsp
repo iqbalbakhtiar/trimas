@@ -60,33 +60,38 @@
                                 <th width="1%"><div style="width:45px;"></div></th>
                                 <th width="8%"><spring:message code="sirius.code"/></th>
                                 <th width="5%"><spring:message code="sirius.date"/></th>
-                                <th width="12%"><spring:message code="supplier"/></th>
-                                <%-- <th width="10%"><spring:message code="sirius.reference"/></th> --%>
+                                <th width="10%"><spring:message code="supplier"/></th>
                                 <th width="5%"><spring:message code="sirius.tax"/></th>
+                                <th width="8%"><spring:message code="sirius.status"/></th>
                                 <th width="8%"><spring:message code="sirius.unpaid"/></th>
-                                <!-- <th width="10%">PO Ref</th> -->
-                                <th width="13%"><spring:message code="sirius.note"/></th>
+                                <th width="40%"><spring:message code="sirius.note"/></th>
                             </tr>
-                            <c:forEach items="${verifications}" var="verif">
+                            <c:forEach items="${verifications}" var="ver">
+                            <c:set var="totalPaid" value="${ver.money.amount-ver.unpaid}"/>
+							<c:set var="invoiceStatus" value="unpaid"/>
+							<c:choose>
+								<c:when test="${totalPaid eq 0}"><c:set var="invoiceStatus" value="unpaid"/></c:when>
+								<c:when test="${totalPaid gt 0 and totalPaid eq billing.amount}"><c:set var="invoiceStatus" value="paid"/></c:when>
+								<c:when test="${totalPaid gt 0 and totalPaid ne billing.amount}"><c:set var="invoiceStatus" value="halfpaid"/></c:when>
+							</c:choose>
                                 <tr>
                                     <td class="tools">
-                                        <a class="item-button-edit"  href="<c:url value='/page/invoiceverificationpreedit.htm?id=${verif.id}'/>"  title="Edit"><span>Edit</span></a>
+                                        <a class="item-button-edit" href="<c:url value='/page/invoiceverificationpreedit.htm?id=${ver.id}'/>"  title="Edit"><span>Edit</span></a>
                                     </td>
-                                    <td nowrap="nowrap"><c:out value="${verif.code}" /></td>
-                                    <td nowrap="nowrap"><fmt:formatDate value='${verif.date}' pattern='dd-MM-yyyy'/></td>
-                                    <td><c:out value='${verif.supplier.fullName}'/></td>
-                                    <%-- <td><a href="<c:url value='/page/goodsreceiptpreedit.htm?id=${verif.goodsReceipt.id}'/>"><c:out value='${verif.goodsReceipt.code}'/></a></td> --%>
-                                    <td><c:out value='${verif.tax.taxName}'/></td>
-                                    <td unpaid="${verif.id}"><fmt:formatNumber value='${verif.unpaid}' pattern=',##0.00'/></td>
-                                    <%-- <td align="center">
-                                        <c:forEach items="${verif.goodsReceipt.reference}" var="message" varStatus="status">
-                                            ${message}<br/>
-                                        </c:forEach>
-                                    </td> --%>
-                                    <td class="break-over">${verif.note}</td>
+                                    <td nowrap="nowrap"><c:out value="${ver.code}" /></td>
+                                    <td nowrap="nowrap"><fmt:formatDate value='${ver.date}' pattern='dd-MM-yyyy'/></td>
+                                    <td><c:out value='${ver.supplier.fullName}'/></td>
+                                    <td><c:out value='${ver.tax.taxName}'/></td>
+                                    <td>
+										<c:if test="${invoiceStatus eq 'unpaid'}"><div style="color: red;"><spring:message code="sirius.${invoiceStatus}"/></div></c:if>
+										<c:if test="${invoiceStatus eq 'halfpaid'}"><div style="color: blue;"><spring:message code="sirius.${invoiceStatus}"/></div></c:if>
+										<c:if test="${invoiceStatus eq 'paid'}"><div style="color: green;"><spring:message code="sirius.${invoiceStatus}"/></div></c:if>
+                                    </td>
+                                    <td unpaid="${ver.id}"><fmt:formatNumber value='${ver.unpaid}' pattern=',##0.00'/></td>
+                                    <td class="break-over">${ver.note}</td>
                                 </tr>
                             </c:forEach>
-                            <tr class="end-table"><td colspan="9">&nbsp;</td></tr>
+                            <tr class="end-table"><td colspan="8">&nbsp;</td></tr>
                         </table>
                         <table border="0" cellpadding="0" cellspacing="0" width="99%" align="center">
                             <tr><td width="70%" align="right" height="20"><%@ include file="/common/navigate.jsp"%></td></tr>

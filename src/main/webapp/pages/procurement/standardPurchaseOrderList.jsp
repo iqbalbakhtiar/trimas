@@ -59,7 +59,7 @@
                 <th width="8%"><spring:message code="sirius.date"/></th>
                 <th width="10%"><spring:message code="organization"/></th>
                 <th width="10%"><spring:message code="supplier"/></th>
-                <th width="10%"><spring:message code="sirius.approver"/></th>
+                <th width="10%"><spring:message code="approver"/></th>
                 <th width="10%"><spring:message code="salesorder.approvalstatus"/></th>
                 <th width="50%"><spring:message code="sirius.note"/></th>
               </tr>

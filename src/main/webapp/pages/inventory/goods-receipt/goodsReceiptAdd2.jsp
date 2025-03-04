@@ -56,6 +56,16 @@
                 <td width="26%" nowrap="nowrap" align="right"><spring:message code="goodsreceipt.supplier.invoice"/> :</td>
                 <td width="74%"><input size='25' id="invoiceNo" name="invoiceNo"/></td>
             </tr> --%>
+			<tr>
+				<td nowrap="nowrap" align="right"><spring:message code="grid"/> & <spring:message code="container"/> :</td>
+				<td>
+					<select id="grid[-1]" class="combobox allgrid input-disabled" style="display: none;">
+					</select>
+					<select id="container[-1]" class="combobox allcontainer">
+					</select>
+					<a class="item-popup" onclick="opencontainerall('-1');" title='<spring:message code="container"/>'/>
+				</td>
+			</tr>
         </table>
         <br/>
         <div style="overflow-x: auto;">
@@ -66,8 +76,8 @@
                     <th width="5%" style="white-space: normal; line-height: 10px; text-align: center"><spring:message code="invoiceverificationitem.receivedqty"/></th>
                     <th width="5%"><spring:message code="goodsreceiptitem.uom"/></th>
                     <th width="5%"><spring:message code="barcode"/></th>
-                    <th width="5%"><spring:message code="container"/></th>
-                    <th><spring:message code="grid"/></th>
+                    <th width="5%"><spring:message code="grid"/></th>
+                    <th><spring:message code="container"/></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -89,21 +99,21 @@
                             <input class="input-disabled" size="10" value="${item.warehouseTransactionItem.referenceItem.lot.serial}" disabled/>
                         </td>
                         <td>
-                            <form:select id='container[${status.index}]' path='items[${status.index}].container' cssClass='combobox containers'>
-                                <c:if test="${not empty item.warehouseTransactionItem.destinationContainer}">
-                                    <option value="${item.warehouseTransactionItem.destinationContainer.id}"><c:out value='${item.warehouseTransactionItem.destinationContainer.name}'/></option>
-                                </c:if>
-                            </form:select>
-                            <c:if test="${empty item.warehouseTransactionItem.destinationContainer}">
-                                <a class="item-popup" onclick="opencontainerall('${status.index}');"  title='<spring:message code="container"/>'/>
-                            </c:if>
-                        </td>
-                        <td>
                             <form:select id='grid[${status.index}]' path='items[${status.index}].grid' cssClass='combobox grids input-disabled'>
                                 <c:if test="${not empty item.warehouseTransactionItem.destinationGrid}">
                                     <option value="${item.warehouseTransactionItem.destinationGrid.id}"><c:out value='${item.warehouseTransactionItem.destinationGrid.name}'/></option>
                                 </c:if>
                             </form:select>
+                        </td>
+                        <td>
+                            <form:select id='container[${status.index}]' path='items[${status.index}].container' cssClass='combobox containers' index="${status.index}">
+                                <c:if test="${not empty item.warehouseTransactionItem.destinationContainer}">
+                                    <option value="${item.warehouseTransactionItem.destinationContainer.id}"><c:out value='${item.warehouseTransactionItem.destinationContainer.name}'/></option>
+                                </c:if>
+                            </form:select>
+                            <c:if test="${empty item.warehouseTransactionItem.destinationContainer}">
+                                <a class="item-popup" onclick="opencontainerall('${status.index}');" title='<spring:message code="container"/>'/>
+                            </c:if>
                         </td>
                     </tr>
                 </c:forEach>
@@ -185,24 +195,22 @@
                 $(this).val(onhand);
         });
 
-        $('.allgrid').change(function(){
-            $ops = $(this).find("option");
-
-            $grd = $(".grids");
-            $grd.empty();
-
-            $ops.clone().appendTo($grd);
-        });
-
         $('.allcontainer').change(function(){
-            $opt = $(this).find("option");
-
+        	$opt = $(this).find("option");
             $cont = $(".containers");
             $cont.empty();
-
+            
             $opt.clone().appendTo($cont);
-
+            
             $('.allgrid').change();
+        });
+
+        $('.allgrid').change(function(){
+        	$opt = $(this).find("option");
+            $grid = $(".grids");
+            $grid.empty();
+
+            $opt.clone().appendTo($grid);
         });
 
         $('.input-number').blur();

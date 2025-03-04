@@ -134,6 +134,7 @@ public class StandardPurchaseOrderService extends Service
 				purchaseItem.setRequisitionItem(requisitionItem);
 				purchaseItem.setProduct(requisitionItem.getProduct());
 				purchaseItem.setQuantity(item.getQuantity());
+				purchaseItem.setDiscount(item.getDiscount());
 				purchaseItem.getMoney().setAmount(item.getAmount());
 				purchaseItem.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
 				purchaseItem.setNote(item.getNote());
@@ -157,10 +158,10 @@ public class StandardPurchaseOrderService extends Service
 				if (purchaseItem.getProduct().isSerial())
 					barcode = true;
 			}
-
-			if (barcode)
-				purchaseOrder.setStatus(POStatus.BARCODE);
 		}
+
+		if (barcode)
+			purchaseOrder.setStatus(POStatus.BARCODE);
 
 		genericDao.add(purchaseOrder);
 

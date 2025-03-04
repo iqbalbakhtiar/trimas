@@ -14,7 +14,7 @@
             </td>
 		</tr>
 		<tr>
-            <td align="right"><spring:message code="sirius.datefrom"/> &nbsp;&nbsp;</td>
+            <td align="right"><spring:message code="sirius.date"/> &nbsp;&nbsp;</td>
             <td>:&nbsp;</td>
             <td>
                 <input id="dateFrom" name="dateFrom" value="<fmt:formatDate value='${filterCriteria.dateFrom}' pattern='dd-MM-yyyy'/>" class="datepicker"/>

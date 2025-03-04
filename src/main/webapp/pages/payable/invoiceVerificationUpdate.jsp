@@ -87,20 +87,30 @@
                         <tr>
                             <td>
                                 <fieldset>
-                                    <legend><strong><spring:message code="billing.receiptinformation"/></strong></legend>
+                                    <legend><strong><spring:message code="payment.information"/></strong></legend>
                                     <table width="100%" style="border: none">
-                                        <tr>
-                                            <td colspan="2" align="right">
-                                                <c:if test="${verification_edit.status eq 'UNPAID'}"><h2 style="color: red;"><c:out value="${verification_edit.status.formattedName}"/></h2></c:if>
-                                                <c:if test="${verification_edit.status eq 'PAID'}"><h2 style="color: green;"><c:out value="${verification_edit.status.formattedName}"/></h2></c:if>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="80%" align="right"><spring:message code="billing.unpaidamount"/>:&nbsp;</td>
-                                            <td width="20%">
-                                                <input id="unpaid" value="<fmt:formatNumber value='${verification_edit.unpaid}' pattern=',##0.00'/>" class="number-disabled" readonly="readonly" size="20" disabled/>
-                                            </td>
-                                        </tr>
+		                            <c:set var="totalPaid" value="${verification_edit.money.amount-verification_edit.unpaid}"/>
+									<c:set var="invoiceStatus" value="unpaid"/>
+									<c:choose>
+										<c:when test="${totalPaid eq 0}"><c:set var="invoiceStatus" value="unpaid"/></c:when>
+										<c:when test="${totalPaid gt 0 and totalPaid eq billing.amount}"><c:set var="invoiceStatus" value="paid"/></c:when>
+										<c:when test="${totalPaid gt 0 and totalPaid ne billing.amount}"><c:set var="invoiceStatus" value="halfpaid"/></c:when>
+									</c:choose>
+                                    <tr>
+                                        <td colspan="2" align="right">
+                                        <h2>
+											<c:if test="${invoiceStatus eq 'unpaid'}"><div style="color: red;"><spring:message code="sirius.${invoiceStatus}"/></div></c:if>
+											<c:if test="${invoiceStatus eq 'halfpaid'}"><div style="color: blue;"><spring:message code="sirius.${invoiceStatus}"/></div></c:if>
+											<c:if test="${invoiceStatus eq 'paid'}"><div style="color: green;"><spring:message code="sirius.${invoiceStatus}"/></div></c:if>
+										</h2>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="80%" align="right"><spring:message code="billing.unpaidamount"/>:&nbsp;</td>
+                                        <td width="20%">
+                                            <input id="unpaid" value="<fmt:formatNumber value='${verification_edit.unpaid}' pattern=',##0.00'/>" class="number-disabled" readonly="readonly" size="20" disabled/>
+                                        </td>
+                                    </tr>
                                     </table>
                                 </fieldset>
                             </td>
