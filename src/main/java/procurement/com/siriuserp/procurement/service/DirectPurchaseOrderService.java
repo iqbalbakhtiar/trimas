@@ -150,6 +150,9 @@ public class DirectPurchaseOrderService extends Service
 		if (barcode)
 			purchaseOrder.setStatus(POStatus.BARCODE);
 
+		System.out.println(purchaseOrder.getSupplierPhone().getContact());
+
+//		throw new ServiceException("Test");
 		genericDao.add(purchaseOrder);
 
 		if (purchaseOrder.getApprovable() == null && purchaseOrder.isInvoiceBeforeReceipt())

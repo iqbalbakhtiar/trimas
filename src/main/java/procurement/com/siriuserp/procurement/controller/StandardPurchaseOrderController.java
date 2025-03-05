@@ -7,6 +7,7 @@ package com.siriuserp.procurement.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.siriuserp.sdk.dm.ContactMechanism;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -63,6 +64,7 @@ public class StandardPurchaseOrderController extends ControllerBase
 		binder.registerCustomEditor(PurchaseOrderItem.class, modelEditor.forClass(PurchaseOrderItem.class));
 		binder.registerCustomEditor(Facility.class, modelEditor.forClass(Facility.class));
 		binder.registerCustomEditor(PostalAddress.class, modelEditor.forClass(PostalAddress.class));
+		binder.registerCustomEditor(ContactMechanism.class, modelEditor.forClass(ContactMechanism.class));
 		binder.registerCustomEditor(ApprovalDecisionStatus.class, enumEditor.forClass(ApprovalDecisionStatus.class));
 	}
 
@@ -132,5 +134,11 @@ public class StandardPurchaseOrderController extends ControllerBase
 		service.delete(service.load(id));
 
 		return ViewHelper.redirectTo("standardpurchaseorderview.htm");
+	}
+
+	@RequestMapping("/standardpurchaseorderprint.htm")
+	public ModelAndView print(@RequestParam("id") Long id) throws Exception
+	{
+		return new ModelAndView("/procurement/standardPurchaseOrderPrint", service.preedit(id));
 	}
 }

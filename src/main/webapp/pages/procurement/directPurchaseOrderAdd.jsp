@@ -42,7 +42,7 @@
               <td align="right"><spring:message code="supplier"/></td>
               <td width="1%" align="center">:</td>
               <td>
-                <form:select id="supplier" path="supplier" cssClass="combobox-ext">
+                <form:select id="supplier" path="supplier" cssClass="combobox-ext" onchange="updateSupplierAddress(this);">
                 </form:select>
                 <a class="item-popup" onclick="openSupplier()" title="Supplier" />
               </td>
@@ -109,6 +109,21 @@
     <div id="mainTab" dojoType="TabContainer" style="width:100% ; height: 400px;">
       <div id="address" dojoType="ContentPane" label="<spring:message code='postaladdress.detail'/>" class="tab-pages" refreshOnShow="true" selected="true">
         <table width="100%">
+          <tr>
+            <td align="right"><spring:message code="purchaseorder.supplieraddress"/></td>
+            <td width="1%" align="center">:</td>
+            <td>
+              <select id="supplierAddress" name="supplierAddress" class="combobox-ext">
+              </select>
+            </td>
+          <tr>
+            <td align="right"><spring:message code="supplier.contact"/></td>
+            <td width="1%" align="center">:</td>
+            <td>
+              <select id="supplierPhone" name="supplierPhone" class="combobox-ext">
+              </select>
+            </td>
+          </tr>
           <tr>
             <td align="right"><spring:message code="purchaseorder.billto"/></td>
             <td width="1%" align="center">:</td>
@@ -348,9 +363,9 @@
     $('#totalSales').val(totalSales.numberFormat('#,##0.00'));
     $('#totalTax').val(totalTax.numberFormat('#,##0.00'));
     $('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
-    
+
     $('#approver').empty();
-    
+
     if(totalTransaction > new Number(1000000))
     	$('#rowApprover').removeAttr('style');
     else
@@ -487,5 +502,53 @@
     };
 
     openpopup(buildUrl(baseUrl, params));
+  }
+
+  function updateSupplierAddress(element) {
+    // Un-comment this if Party.data is not loaded
+    // Party.load(element.value);
+
+    let _supplierAddress = $('#supplierAddress');
+    if (_supplierAddress.find('option').length > 0) { // Clear options if any
+      _supplierAddress.empty();
+    }
+
+    let addresses = Party.data.partyAddresses;
+
+    addresses.forEach(address => {
+      // Periksa apakah postalTypes memiliki tipe 'OFFICE' atau 'TAX' dengan enabled == true
+      let hasShippingEnabled = address.postalTypes.some(postalType =>
+              (postalType.type === 'OFFICE' || postalType.type === 'TAX') && postalType.enabled === true
+      );
+
+      if (hasShippingEnabled) {
+        let option = $('<option></option>')
+                .val(address.postalId)
+                .text(address.addressName);
+
+        if (address.isDefault) { // Jika alamat ini adalah default, set sebagai selected
+          option.attr('selected', 'selected');
+        }
+
+        _supplierAddress.append(option);
+      }
+    });
+
+    let _supplierPhone = $('#supplierPhone');
+    if (_supplierPhone.find('option').length > 0) {
+      _supplierPhone.empty();
+    }
+
+    let contacts = Party.data.contactMechanises;
+
+    contacts.forEach(contact => {
+      if (contact.contactType === 'PHONE' && contact.active === true) {
+        let option = $('<option></option>')
+                .val(contact.contactId)
+                .text(contact.contactName);
+
+        _supplierPhone.append(option);
+      }
+    });
   }
 </script>

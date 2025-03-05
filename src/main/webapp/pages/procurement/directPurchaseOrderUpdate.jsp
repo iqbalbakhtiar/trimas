@@ -3,6 +3,7 @@
 <div class="toolbar">
   <a class="item-button-list" href="<c:url value='/page/directpurchaseorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
   <a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
+  <a class="item-button-print"  href="<c:url value='/page/directpurchaseorderprint.htm?id=${dpo_edit.id}'/>"><span><spring:message code="sirius.print"/></span></a>
   <c:if test="${access.add and dpo_edit.barcodeable}">
   	<a class="item-button-doc" href="javascript:createBarcode(${dpo_edit.id});"><span><spring:message code="sirius.create"/>&nbsp;<spring:message code="barcode"/></span></a>
   </c:if>

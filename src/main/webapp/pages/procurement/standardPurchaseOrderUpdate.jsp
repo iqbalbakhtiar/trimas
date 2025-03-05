@@ -2,6 +2,7 @@
 <div class="toolbar">
   <a class="item-button-list" href="<c:url value='/page/standardpurchaseorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
   <a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
+  <a class="item-button-print"  href="<c:url value='/page/standardpurchaseorderprint.htm?id=${purchase_edit.id}'/>"><span><spring:message code="sirius.print"/></span></a>
   <c:if test="${access.add and purchase_edit.barcodeable}">
   	<a class="item-button-doc" href="javascript:createBarcode(${purchase_edit.id});"><span><spring:message code="sirius.create"/>&nbsp;<spring:message code="barcode"/></span></a>
   </c:if>
@@ -171,6 +172,28 @@
     <div id="mainTab" dojoType="TabContainer" style="width:100% ; height: 400px;">
       <div id="address" dojoType="ContentPane" label="<spring:message code='postaladdress.detail'/>" class="tab-pages" refreshOnShow="true" selected="true">
         <table width="100%">
+          <tr>
+            <td align="right"><spring:message code="purchaseorder.supplieraddress"/></td>
+            <td width="1%" align="center">:</td>
+            <td>
+              <select id="supplierAddress" name="supplierAddress" class="combobox-ext input-disabled" disabled>
+                <c:if test="${purchase_edit.supplierAddress != null}">
+                  <option value="${purchase_edit.supplierAddress.id}">${purchase_edit.supplierAddress.addressName}</option>
+                </c:if>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td align="right"><spring:message code="supplier.contact"/></td>
+            <td width="1%" align="center">:</td>
+            <td>
+              <select id="supplierPhone" name="supplierPhone" class="combobox-ext input-disabled" disabled>
+                <c:if test="${purchase_edit.supplierPhone != null}">
+                  <option value="${purchase_edit.supplierPhone.id}">${purchase_edit.supplierPhone.contact}</option>
+                </c:if>
+              </select>
+            </td>
+          </tr>
           <tr>
             <td align="right"><spring:message code="dpo.billto"/></td>
             <td width="1%" align="center">:</td>

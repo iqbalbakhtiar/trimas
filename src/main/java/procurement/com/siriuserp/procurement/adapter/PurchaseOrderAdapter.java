@@ -23,7 +23,6 @@ public class PurchaseOrderAdapter extends AbstractUIAdapter {
         BigDecimal total = BigDecimal.ZERO;
 
         for (PurchaseOrderItem item : purchaseOrder.getItems()) {
-            // Tambahkan totalAmount dari setiap item ke total
             total = total.add(item.getTotalAmount());
         }
 
