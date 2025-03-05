@@ -147,7 +147,7 @@
                                         <td width="80%" align="right" valign="top"><spring:message code="receipt"/>:&nbsp;</td>
                                         <td width="20%" align="right">
                                             <c:forEach items="${verification_edit.applications}" var="app" varStatus="status">
-                                                <a href="<c:url value='/page/receiptpreedit.htm?id=${app.payment.id}'/>"><c:out value="${app.payment.code}"></c:out></a>
+                                                <a href="<c:url value='/page/paymentpreedit.htm?id=${app.payment.id}'/>"><c:out value="${app.payment.code}"></c:out></a>
                                                 <br>
                                             </c:forEach>
                                         </td>
