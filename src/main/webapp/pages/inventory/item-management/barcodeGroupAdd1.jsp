@@ -47,9 +47,7 @@
                 <td>
                 	<c:if test="${empty barcode_form.barcodeGroupType}">
 	                    <select id="barcodeGroupType" name="barcodeGroupType" class="combobox">
-	                        <c:forEach var="type" items="${types}">
-	                            <option value="${type}" label="${type.normalizedName}"></option>
-	                        </c:forEach>
+                            <option value="STOCK_ADJUSTMENT" label="Stock Adjustment"></option>
 	                    </select>
                     </c:if>
                     <c:if test="${not empty barcode_form.barcodeGroupType}">

@@ -78,7 +78,7 @@ public class BarcodeGroupService
 		form.setReferenceId(referenceId);
 		form.setBarcodeGroupType(barcodeType);
 
-		if (form.getBarcodeGroupType().equals(BarcodeGroupType.PURCHASE_ORDER))
+		if (form.getBarcodeGroupType() != null && form.getBarcodeGroupType().equals(BarcodeGroupType.PURCHASE_ORDER))
 		{
 			PurchaseOrder purchaseOrder = genericDao.load(PurchaseOrder.class, form.getReferenceId());
 			form.setFacility(purchaseOrder.getShipTo());
