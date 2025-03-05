@@ -93,15 +93,15 @@
 									<c:set var="invoiceStatus" value="unpaid"/>
 									<c:choose>
 										<c:when test="${totalPaid eq 0}"><c:set var="invoiceStatus" value="unpaid"/></c:when>
-										<c:when test="${totalPaid gt 0 and totalPaid eq billing.amount}"><c:set var="invoiceStatus" value="paid"/></c:when>
-										<c:when test="${totalPaid gt 0 and totalPaid ne billing.amount}"><c:set var="invoiceStatus" value="halfpaid"/></c:when>
+										<c:when test="${totalPaid gt 0 and totalPaid eq verification_edit.money.amount}"><c:set var="invoiceStatus" value="paid"/></c:when>
+										<c:when test="${totalPaid gt 0 and totalPaid ne verification_edit.money.amount}"><c:set var="invoiceStatus" value="partlypaid"/></c:when>
 									</c:choose>
                                     <tr>
                                         <td colspan="2" align="right">
                                         <h2>
-											<c:if test="${invoiceStatus eq 'unpaid'}"><div style="color: red;"><spring:message code="sirius.${invoiceStatus}"/></div></c:if>
-											<c:if test="${invoiceStatus eq 'halfpaid'}"><div style="color: blue;"><spring:message code="sirius.${invoiceStatus}"/></div></c:if>
-											<c:if test="${invoiceStatus eq 'paid'}"><div style="color: green;"><spring:message code="sirius.${invoiceStatus}"/></div></c:if>
+											<c:if test="${invoiceStatus eq 'unpaid'}"><div style="color: red;"><spring:message code="invoiceverification.status.${invoiceStatus}"/></div></c:if>
+											<c:if test="${invoiceStatus eq 'partlypaid'}"><div style="color: blue;"><spring:message code="invoiceverification.status.${invoiceStatus}"/></div></c:if>
+											<c:if test="${invoiceStatus eq 'paid'}"><div style="color: green;"><spring:message code="invoiceverification.status.${invoiceStatus}"/></div></c:if>
 										</h2>
                                         </td>
                                     </tr>
