@@ -184,11 +184,15 @@ public class StandardPurchaseOrderService extends Service
 				purchaseItem.getLot().setSerial(item.getSerial());
 				purchaseItem.setProduct(item.getProduct());
 				purchaseItem.setQuantity(item.getQuantityReal());
-				purchaseItem.getMoney().setAmount(purchaseItem.getMoney().getAmount());
-				purchaseItem.getMoney().setCurrency(purchaseItem.getMoney().getCurrency());
+				purchaseItem.getMoney().setAmount(purchaseItem.getItemParent().getMoney().getAmount());
+				purchaseItem.getMoney().setCurrency(purchaseItem.getItemParent().getMoney().getCurrency());
 				purchaseItem.setFacilityDestination(purchaseOrder.getShipTo());
 				purchaseItem.setPurchaseOrder(purchaseOrder);
-				purchaseItem.setTransactionSource(WarehouseTransactionSource.STANDARD_PURCHASE_ORDER);
+
+				if (purchaseOrder.getPurchaseType().equals(PurchaseType.STANDARD))
+					purchaseItem.setTransactionSource(WarehouseTransactionSource.STANDARD_PURCHASE_ORDER);
+				else
+					purchaseItem.setTransactionSource(WarehouseTransactionSource.DIRECT_PURCHASE_ORDER);
 
 				WarehouseTransactionItem warehouseTransactionItem = ReferenceItemHelper.init(genericDao, purchaseItem.getQuantity(), WarehouseTransactionType.IN, purchaseItem);
 				warehouseTransactionItem.setLocked(false);

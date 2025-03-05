@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.siriuserp.accountpayable.adapter.PaymentUIAdapter;
+import com.siriuserp.accountpayable.dm.Payable;
 import com.siriuserp.accountpayable.dm.Payment;
 import com.siriuserp.accountpayable.dm.PaymentApplication;
 import com.siriuserp.accountpayable.dm.PaymentInformation;
@@ -40,57 +41,60 @@ import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class PaymentService {
+public class PaymentService
+{
 
-    @Autowired
-    private GenericDao genericDao;
+	@Autowired
+	private GenericDao genericDao;
 
-    @Autowired
-    private CurrencyDao currencyDao;
+	@Autowired
+	private CurrencyDao currencyDao;
 
-    @Autowired
-    private CodeSequenceDao codeSequenceDao;
+	@Autowired
+	private CodeSequenceDao codeSequenceDao;
 
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception {
-        FastMap<String, Object> map = new FastMap<String, Object>();
-        map.put("filterCriteria", filterCriteria);
-        map.put("payments", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("filterCriteria", filterCriteria);
+		map.put("payments", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
 
-        return map;
-    }
+		return map;
+	}
 
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    @InjectParty(keyName = "payment_add")
-    public Map<String, Object> preadd() throws ServiceException
-    {
-        FastMap<String, Object> map = new FastMap<String, Object>();
-        PaymentMethodType[] types = new PaymentMethodType[]
-                { PaymentMethodType.CASH, PaymentMethodType.TRANSFER };
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	@InjectParty(keyName = "payment_add")
+	public Map<String, Object> preadd() throws ServiceException
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		PaymentMethodType[] types = new PaymentMethodType[]
+		{ PaymentMethodType.CASH, PaymentMethodType.TRANSFER };
 
-        PayablesForm payment = new PayablesForm();
-        payment.setDate(DateHelper.now());
-        payment.setPaymentInformation(new PaymentInformation());
+		PayablesForm payment = new PayablesForm();
+		payment.setDate(DateHelper.now());
+		payment.setPaymentInformation(new PaymentInformation());
 		payment.setCurrency(currencyDao.loadDefaultCurrency());
 
-        map.put("payment_add", payment);
-        map.put("currencys", genericDao.loadAll(Currency.class));
-        map.put("defaultCurrency", currencyDao.loadDefaultCurrency());
-        map.put("writes", WriteOffType.values());
-        map.put("types", types);
+		map.put("payment_add", payment);
+		map.put("currencys", genericDao.loadAll(Currency.class));
+		map.put("defaultCurrency", currencyDao.loadDefaultCurrency());
+		map.put("writes", WriteOffType.values());
+		map.put("types", types);
 
-        return map;
-    }
+		return map;
+	}
 
-    @AuditTrails(className = Payment.class, actionType = AuditTrailsActionType.CREATE)
-    public void add(Payment payment) throws ServiceException {
-        if (payment.getForm().getItems().isEmpty())
-            throw new ServiceException("Empty item transaction, please recheck !");
+	@AuditTrails(className = Payment.class, actionType = AuditTrailsActionType.CREATE)
+	public void add(Payment payment) throws ServiceException
+	{
+		if (payment.getForm().getItems().isEmpty())
+			throw new ServiceException("Empty item transaction, please recheck !");
 
-        Facility facility = null;
+		Facility facility = null;
 
-//		FastList<PostingType> types = new FastList<PostingType>();
-//		types.add(PostingType.NONE);
+		//		FastList<PostingType> types = new FastList<PostingType>();
+		//		types.add(PostingType.NONE);
 
 		for (Item item : payment.getForm().getItems())
 			if (item.getInvoiceVerification() != null)
@@ -117,28 +121,28 @@ public class PaymentService {
 					} else
 						application.getPayable().setUnpaid(unpaid);
 				}
-//				else if (payment.getPaymentInformation().getPaymentMethodType().equals(PaymentMethodType.CLEARING) && payment.getClearPayment() != null)
-//				{
-//					BigDecimal cleared = (application.getPaidAmount().subtract(DecimalHelper.safe(application.getWriteOff())));
-//
-//					application.getPayable().setUnpaid(application.getPayable().getUnpaid().subtract(cleared));
-//					if (application.getPayable().getUnpaid().compareTo(BigDecimal.ZERO) <= 0)
-//					{
-//						application.getPayable().setUnpaid(BigDecimal.ZERO);
-//						application.getPayable().setStatus(FinancialStatus.PAID);
-//					}
-//
-//					application.getPayable().setClearing(application.getPayable().getClearing().subtract(cleared));
-//
-//					if (application.getPayable().getClearing().compareTo(BigDecimal.ZERO) <= 0)
-//						application.getPayable().setClearing(BigDecimal.ZERO);
-//
-//					payment.setCleared(true);
-//
-//					ClearPayment clearPayment = genericDao.load(ClearPayment.class, payment.getClearPayment().getId());
-//					clearPayment.setPayment(payment);
-//					genericDao.update(clearPayment);
-//				}
+				//				else if (payment.getPaymentInformation().getPaymentMethodType().equals(PaymentMethodType.CLEARING) && payment.getClearPayment() != null)
+				//				{
+				//					BigDecimal cleared = (application.getPaidAmount().subtract(DecimalHelper.safe(application.getWriteOff())));
+				//
+				//					application.getPayable().setUnpaid(application.getPayable().getUnpaid().subtract(cleared));
+				//					if (application.getPayable().getUnpaid().compareTo(BigDecimal.ZERO) <= 0)
+				//					{
+				//						application.getPayable().setUnpaid(BigDecimal.ZERO);
+				//						application.getPayable().setStatus(FinancialStatus.PAID);
+				//					}
+				//
+				//					application.getPayable().setClearing(application.getPayable().getClearing().subtract(cleared));
+				//
+				//					if (application.getPayable().getClearing().compareTo(BigDecimal.ZERO) <= 0)
+				//						application.getPayable().setClearing(BigDecimal.ZERO);
+				//
+				//					payment.setCleared(true);
+				//
+				//					ClearPayment clearPayment = genericDao.load(ClearPayment.class, payment.getClearPayment().getId());
+				//					clearPayment.setPayment(payment);
+				//					genericDao.update(clearPayment);
+				//				}
 				else
 					application.getPayable().setClearing(application.getPayable().getClearing().add(oriWriteOff));
 
@@ -146,18 +150,18 @@ public class PaymentService {
 
 				payment.getApplications().add(application);
 
-//				if (application.getPayable().getExchange().getRate().compareTo(payment.getExchange().getRate()) != 0)
-//					types.add(PostingType.GAIN_LOSS);
+				//				if (application.getPayable().getExchange().getRate().compareTo(payment.getExchange().getRate()) != 0)
+				//					types.add(PostingType.GAIN_LOSS);
 			}
 
-//		for (PostingType type : types)
-//		{
-//			PaymentPostingBridge bridge = new PaymentPostingBridge();
-//			bridge.setPayment(payment);
-//			bridge.setPostingType(type);
-//
-//			payment.getPostings().add(bridge);
-//		}
+		//		for (PostingType type : types)
+		//		{
+		//			PaymentPostingBridge bridge = new PaymentPostingBridge();
+		//			bridge.setPayment(payment);
+		//			bridge.setPostingType(type);
+		//
+		//			payment.getPostings().add(bridge);
+		//		}
 
 		if (facility != null)
 		{
@@ -168,11 +172,11 @@ public class PaymentService {
 
 		genericDao.add(payment);
 
-//		for (PaymentPostingBridge bridge : payment.getPostings())
-//			bridgeService.posting(bridge);
-    }
+		//		for (PaymentPostingBridge bridge : payment.getPostings())
+		//			bridgeService.posting(bridge);
+	}
 
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> preedit(Long id) throws ServiceException
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
@@ -197,5 +201,31 @@ public class PaymentService {
 	public void edit(Payment payment) throws ServiceException
 	{
 		genericDao.update(payment);
+	}
+
+	@AuditTrails(className = Payment.class, actionType = AuditTrailsActionType.DELETE)
+	public void delete(Payment payment) throws Exception
+	{
+		for (PaymentApplication application : payment.getApplications())
+		{
+			BigDecimal unpaid = BigDecimal.ZERO;
+			unpaid = unpaid.subtract(application.getWriteOff());
+			unpaid = unpaid.add(application.getPaidAmount());
+
+			Payable payable = genericDao.load(Payable.class, application.getPayable().getId());
+			if (payable != null)
+			{
+				payable.setUnpaid(payable.getUnpaid().add(unpaid));
+				payable.setPaidDate(null);
+
+				if (payment.getPaymentInformation().getPaymentMethodType().equals(PaymentMethodType.CLEARING))
+					payable.setClearing(payable.getClearing().subtract(unpaid));
+
+				payable.setStatus(FinancialStatus.UNPAID);
+				genericDao.update(payable);
+			}
+		}
+
+		genericDao.delete(payment);
 	}
 }

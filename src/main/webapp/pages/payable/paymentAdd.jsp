@@ -301,38 +301,50 @@
         const tbl = document.getElementById("lineItemTable");
         if(tbl)
         {
-            let invoice = 0.00;
+        	var totalUnapplied = document.getElementById('totalUnapplied');
+        	var totalApplied = document.getElementById('totalApplied');
+        	var totalWriteOff = document.getElementById('totalWriteOff');
 
-            let totalUnapplied = document.getElementById('totalUnapplied');
-            let totalApplied = document.getElementById('totalApplied');
-            let totalWriteOff = document.getElementById('totalWriteOff');
-            let amount = document.getElementById('amount');
-
-            totalUnapplied.value = parseFloat(amount.value.toNumber()).numberFormat('#,##0.00');
-            totalApplied.value = 0.0.numberFormat('#,##0.00');
-            totalWriteOff.value = 0.0.numberFormat('#,##0.00');
+            var $unapplied = parseFloat($('#amount').val().toNumber());
+    		var $applied = 0.0;
+    		var $writeoff = 0.0;
 
             // Loop through Paid Amount Element
-            $('.paid').each(function () {
-                idx = $(this).attr('index');
+            $('.payables').each(function () {
+                let $idx = $(this).attr('index');
+                let $value = $(this).text();
 
-                $unpaid = parseFloat($('#unpaid\\['+idx+'\\]').val().toNumber());
-                $writeOff = parseFloat($('#writeOff\\['+idx+'\\]').val().toNumber());
-                $paidAmount = parseFloat($('#paidAmount\\['+idx+'\\]').val().toNumber());
+                let _unpaid = $('#unpaid\\['+$idx+'\\]');
+                let _writeoff = $('#writeOff\\['+$idx+'\\]');
+                let _paid = $('#paidAmount\\['+$idx+'\\]');
+                
+    			if(parseFloat(_writeoff.val().toNumber() + _unpaid.val().toNumber()) < 0)
+    			{
+    				alert("<spring:message code='payment.writeoff'/> ["+$value+"] <spring:message code='notif.greater'/> "+ _unpaid.val());
+    				_writeoff.value = "0";
+    			}
+    			
+    			if(_paid.val().toNumber() > _unpaid.val().toNumber()) {
+    				_writeoff.val(_paid.val().toNumber() - _unpaid.val().toNumber());
+    				_writeoff.readOnly = true;
+    			}
+    			else
+    				_writeoff.readOnly = false;
 
-                if ($paidAmount > $unpaid) {
-                    $paidAmount = $unpaid;
-                    $('#paidAmount\\['+idx+'\\]').val($paidAmount.numberFormat('#,##0.00'));
-                }
-
-                totalUnapplied.value = parseFloat(totalUnapplied.value.toNumber()-$paidAmount).numberFormat('#,##0.00');
-                totalApplied.value = parseFloat(totalApplied.value.toNumber()+$paidAmount).numberFormat('#,##0.00');
-                totalWriteOff.value = parseFloat(totalWriteOff.value.toNumber()+$writeOff).numberFormat('#,##0.00');
+    			if(_writeoff.val().toNumber() < 0 && (_writeoff.val().toNumber() + _unpaid.val().toNumber() < _paid.val().toNumber()))
+    			{	
+    				alert("<spring:message code='payment.paid.amount'/> + <spring:message code='payment.writeoff'/> ["+$value+"] <spring:message code='notif.greater'/> "+_unpaid.val());
+    				_paid.val(_writeoff.val().toNumber() + _unpaid.val().toNumber());
+    			}
+    			
+                $unapplied -= _paid.val().toNumber();
+    			$writeoff += _writeoff.val().toNumber();
+    			$applied += _paid.val().toNumber();
             });
-
-            document.getElementById('totalUnapplied').value = parseFloat(totalUnapplied.value.toNumber()).numberFormat('#,##0.00');
-            document.getElementById('totalApplied').value = parseFloat(totalApplied.value.toNumber()).numberFormat('#,##0.00');
-            document.getElementById('totalWriteOff').value = parseFloat(totalWriteOff.value.toNumber()).numberFormat('#,##0.00');
+    			
+            totalUnapplied.value = $unapplied.numberFormat('#,##0.00');
+    		totalApplied.value =  $applied.numberFormat('#,##0.00');
+    		totalWriteOff.value =  $writeoff.numberFormat('#,##0.00');
         }
     }
 
@@ -342,7 +354,7 @@
 
         $cbox = List.get('<input type="checkbox" class="check"/>','check'+$index);
 
-        $invoice = List.get('<select class="combobox-ext invoiceInput" onchange="checkDuplicate(this);updateDisplay();"/>','invoiceVerification['+$index+']');
+        $invoice = List.get('<select class="combobox-ext payables" onchange="checkDuplicate(this);updateDisplay();"/>','invoiceVerification['+$index+']');
         $invoiceImg = List.img('<spring:message code="invoiceverification"/>', $index, 'openInvoice("'+$index+'")');
 
         $unpaid = List.get('<input type="text" class="input-number input-disabled" disabled size="20"/>','unpaid['+$index+']', '0.00');
@@ -418,7 +430,7 @@
     }
 
     function checkDuplicate(element) {
-        const isDuplicated = String.duplicate('invoiceInput'); // Check Duplicate for Class "invoiceInput"
+        const isDuplicated = String.duplicate('payables'); // Check Duplicate for Class "payables"
 
         if (isDuplicated) {
             alert('<spring:message code="product"/>  <strong>'+ $(element).find('option:selected').text() +'</strong> <spring:message code="notif.duplicate"/> !');
