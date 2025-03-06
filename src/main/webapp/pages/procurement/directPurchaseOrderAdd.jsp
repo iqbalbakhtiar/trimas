@@ -1,5 +1,4 @@
 <%@ include file="/common/sirius-general-top.jsp"%>
-<%--This Page Copied From SalesOrderAdd--%>
 <div class="toolbar">
   <a class="item-button-list" href="<c:url value='/page/directpurchaseorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
   <a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
@@ -32,23 +31,23 @@
             <tr>
               <td align="right"><spring:message code="dpo.date"/></td>
               <td width="1%" align="center">:</td>
-              <td><input id="date" name="date" class="datepicker" /></td>
+              <td><input id="date" name="date" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>"/></td>
             </tr>
             <tr>
               <td align="right"><spring:message code="dpo.delivery.date"/></td>
               <td width="1%" align="center">:</td>
-              <td><input id="deliveryDate" name="deliveryDate" class="datepicker" /></td>
+              <td><input id="deliveryDate" name="deliveryDate" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>"/></td>
             </tr>
             <tr>
               <td align="right"><spring:message code="supplier"/></td>
               <td width="1%" align="center">:</td>
               <td>
-                <form:select id="supplier" path="supplier" cssClass="combobox-ext">
+                <form:select id="supplier" path="supplier" cssClass="combobox-ext" onchange="updateSupplierAddress(this);">
                 </form:select>
                 <a class="item-popup" onclick="openSupplier()" title="Supplier" />
               </td>
             </tr>
-            <tr>
+            <tr id="rowApprover" style="display: none;">
               <td align="right"><spring:message code="approver"/></td>
               <td width="1%" align="center">:</td>
               <td>
@@ -58,7 +57,7 @@
               </td>
             </tr>
             <tr>
-              <td align="right"><spring:message code="salesorder.tax.type"/></td>
+              <td align="right"><spring:message code="purchaseorder.tax"/></td>
               <td width="1%" align="center">:</td>
               <td>
                 <form:select id="tax" path="tax" onchange="updateDisplay();">
@@ -66,9 +65,7 @@
                     <option value="${tax.id}" data-taxrate="${tax.taxRate}">${tax.taxName}</option>
                   </c:forEach>
                 </form:select>
-                <spring:message code="salesorder.tax.rate"/>
-                <input size="7" id="taxRate" class="input-number input-disabled" disabled />
-                &nbsp;%
+                <input size="5" id="taxRate" class="input-number input-disabled" disabled />&nbsp;%
               </td>
             </tr>
             <tr>
@@ -88,15 +85,15 @@
                   <legend><strong><spring:message code="salesorder.recapitulation"/></strong></legend>
                   <table width="100%" style="border: none">
                     <tr>
-                      <td width="80%" align="right"><spring:message code="dpo.purchase"/></td>
+                      <td width="80%" align="right"><spring:message code="purchaseorder.purchase"/></td>
                       <td width="20%">:&nbsp;&nbsp;<input id="totalSales" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
                     </tr>
                     <tr>
-                      <td width="80%" align="right"><spring:message code="salesorder.tax.amount"/></td>
+                      <td width="80%" align="right"><spring:message code="purchaseorder.tax"/></td>
                       <td width="20%">:&nbsp;&nbsp;<input id="totalTax" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
                     </tr>
                     <tr>
-                      <td width="80%" align="right"><strong><spring:message code="salesorder.total.transaction"/></strong></td>
+                      <td width="80%" align="right"><strong><spring:message code="purchaseorder.total"/></strong></td>
                       <td width="20%">:&nbsp;&nbsp;<input id="totalTransaction" value="0.00" name="amount" class="number-disabled" readonly="readonly" size="20"/></td>
                     </tr>
                   </table>
@@ -113,7 +110,22 @@
       <div id="address" dojoType="ContentPane" label="<spring:message code='postaladdress.detail'/>" class="tab-pages" refreshOnShow="true" selected="true">
         <table width="100%">
           <tr>
-            <td align="right"><spring:message code="dpo.billto"/></td>
+            <td align="right"><spring:message code="purchaseorder.supplieraddress"/></td>
+            <td width="1%" align="center">:</td>
+            <td>
+              <select id="supplierAddress" name="supplierAddress" class="combobox-ext">
+              </select>
+            </td>
+          <tr>
+            <td align="right"><spring:message code="supplier.contact"/></td>
+            <td width="1%" align="center">:</td>
+            <td>
+              <select id="supplierPhone" name="supplierPhone" class="combobox-ext">
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td align="right"><spring:message code="purchaseorder.billto"/></td>
             <td width="1%" align="center">:</td>
             <td>
               <select id="billingToAddress" name="billTo" class="combobox-ext">
@@ -121,7 +133,7 @@
             </td>
           </tr>
           <tr>
-            <td align="right"><spring:message code="dpo.shipto"/></td>
+            <td align="right"><spring:message code="purchaseorder.shipto"/></td>
             <td width="1%" align="center">:</td>
             <td>
               <form:select id="shippingToAddress" path="shipTo" cssClass="combobox-ext">
@@ -130,7 +142,7 @@
           </tr>
         </table>
       </div>
-      <div id="productLineItem" dojoType="ContentPane" label="<spring:message code='salesorder.lineitem'/>" class="tab-pages" refreshOnShow="true" selected="true">
+      <div id="productLineItem" dojoType="ContentPane" label="<spring:message code='purchaseorder.line'/>" class="tab-pages" refreshOnShow="true" selected="true">
         <div class="toolbar-clean">
           <div class="toolbar-clean">
             <a class="item-button-new"><span><spring:message code="sirius.row.new"/></span></a>
@@ -144,15 +156,15 @@
               <th width="8%" nowrap="nowrap"><spring:message code="product"/></th>
               <th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
               <th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
-              <th width="8%" nowrap="nowrap"><spring:message code="dpo.buying.price"/></th>
-              <th width="8%" nowrap="nowrap"><spring:message code="sirius.amount"/></th>
-              <th width="8%" nowrap="nowrap"><spring:message code="sirius.note"/></th>
+              <th width="8%" nowrap="nowrap"><spring:message code="purchaseorderitem.unitprice"/></th>
+              <th width="8%" nowrap="nowrap"><spring:message code="purchaseorderitem.total"/></th>
+              <th width="50%" nowrap="nowrap"><spring:message code="sirius.note"/></th>
             </tr>
             </thead>
             <tbody id="lineItem">
             </tbody>
             <tfoot>
-            <tr class="end-table"><td colspan="10">&nbsp;</td></tr>
+            <tr class="end-table"><td colspan="7">&nbsp;</td></tr>
             </tfoot>
           </table>
         </div>
@@ -163,12 +175,10 @@
 <%@ include file="/common/sirius-general-bottom.jsp"%>
 <script type="text/javascript">
   $(function(){
-    var $index = 0; // For Line Item Index
-
     updateDisplay();
 
     $('.item-button-save').click(function(){
-      if(validateForm()) {
+      if(validation()) {
         save();
       }
     });
@@ -196,54 +206,7 @@
     $('#org').trigger('change');
   });
 
-  function updateBillShipAddress(element){
-    // Populate (Bill To Address)
-    Party.load(element.value);
-
-    let _billingToAddress = $('#billingToAddress');
-    if (_billingToAddress.find('option').length > 0) { // Clear options if any
-      _billingToAddress.empty();
-    }
-
-    let addresses = Party.data.partyAddresses;
-
-    addresses.forEach(address => {
-      // Periksa apakah postalTypes memiliki tipe 'OFFICE' dengan enabled == true
-      let hasShippingEnabled = address.postalTypes.some(postalType =>
-              postalType.type === 'OFFICE' && postalType.enabled === true
-      );
-
-      if (hasShippingEnabled) {
-        let option = $('<option></option>')
-                .val(address.postalId)
-                .text(address.addressName);
-
-        if (address.isDefault) { // Jika alamat ini adalah default, set sebagai selected
-          option.attr('selected', 'selected');
-        }
-
-        _billingToAddress.append(option); // Tambahkan opsi ke elemen _shippingAddress
-      }
-    });
-
-    //Populate Facilites (Ship To Address)
-    Facility.loadByOrg(element.value);
-
-    let _shippingToAddress = $('#shippingToAddress');
-    if (_shippingToAddress.find('option').length > 0) { // Clear options if any
-      _shippingToAddress.empty();
-    }
-
-    Facility.data.forEach(facility => {
-      let option = $('<option></option>')
-              .val(facility.facilityId)
-              .text(facility.facilityName);
-
-      _shippingToAddress.append(option);
-    });
-  }
-
-  function validateForm() {
+  function validation() {
     // Validasi organisasi
     var organization = $('#org').val();
     if (organization == null || organization === "") {
@@ -280,10 +243,12 @@
     }
 
     // Validasi approver
-    var approver = $('#approver').val();
-    if (approver == null || approver === "") {
-      alert('<spring:message code="approver"/> <spring:message code="notif.empty"/> !');
-      return false;
+    if($('#totalTransaction').val().toNumber() > new Number(1000000)) {
+	    var approver = $('#approver').val();
+	    if (approver == null || approver === "") {
+	      alert('<spring:message code="sirius.approver"/> <spring:message code="notif.empty"/> !');
+	      return false;
+	    }
     }
 
     // **Tambahkan validasi untuk memastikan setidaknya ada satu line item**
@@ -350,9 +315,7 @@
           if(json.status === 'OK')
           {
             $dialog.dialog('close');
-            <%--window.location="<c:url value='/page/directpurchaseorderview.htm'/>";--%>
-            // Or Can use This
-            window.location="<c:url value='/page/directpurchaseorderpreedit.htm?id='/>"+json.data.id;
+            window.location="<c:url value='/page/directpurchaseorderpreedit.htm?id='/>"+json.id;
           }
           else
           {
@@ -400,8 +363,63 @@
     $('#totalSales').val(totalSales.numberFormat('#,##0.00'));
     $('#totalTax').val(totalTax.numberFormat('#,##0.00'));
     $('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
+
+    $('#approver').empty();
+
+    if(totalTransaction > new Number(1000000))
+    	$('#rowApprover').removeAttr('style');
+    else
+    	$('#rowApprover').attr('style','display:none;');
   }
 
+  function updateBillShipAddress(element){
+    // Populate (Bill To Address)
+    Party.load(element.value);
+
+    let _billingToAddress = $('#billingToAddress');
+    if (_billingToAddress.find('option').length > 0) { // Clear options if any
+      _billingToAddress.empty();
+    }
+
+    let addresses = Party.data.partyAddresses;
+
+    addresses.forEach(address => {
+      // Periksa apakah postalTypes memiliki tipe 'OFFICE' dengan enabled == true
+      let hasShippingEnabled = address.postalTypes.some(postalType =>
+              postalType.type === 'OFFICE' && postalType.enabled === true
+      );
+
+      if (hasShippingEnabled) {
+        let option = $('<option></option>')
+                .val(address.postalId)
+                .text(address.addressName);
+
+        if (address.isDefault) { // Jika alamat ini adalah default, set sebagai selected
+          option.attr('selected', 'selected');
+        }
+
+        _billingToAddress.append(option); // Tambahkan opsi ke elemen _shippingAddress
+      }
+    });
+
+    //Populate Facilites (Ship To Address)
+    Facility.loadByOrg(element.value);
+
+    let _shippingToAddress = $('#shippingToAddress');
+    if (_shippingToAddress.find('option').length > 0) { // Clear options if any
+      _shippingToAddress.empty();
+    }
+
+    Facility.data.forEach(facility => {
+      let option = $('<option></option>')
+              .val(facility.facilityId)
+              .text(facility.facilityName);
+
+      _shippingToAddress.append(option);
+    });
+  }
+
+  var $index = 0;
   function addLine($index) {
     $tbody = $('#lineItem');
     $tr = $('<tr/>');
@@ -484,5 +502,53 @@
     };
 
     openpopup(buildUrl(baseUrl, params));
+  }
+
+  function updateSupplierAddress(element) {
+    // Un-comment this if Party.data is not loaded
+    // Party.load(element.value);
+
+    let _supplierAddress = $('#supplierAddress');
+    if (_supplierAddress.find('option').length > 0) { // Clear options if any
+      _supplierAddress.empty();
+    }
+
+    let addresses = Party.data.partyAddresses;
+
+    addresses.forEach(address => {
+      // Periksa apakah postalTypes memiliki tipe 'OFFICE' atau 'TAX' dengan enabled == true
+      let hasShippingEnabled = address.postalTypes.some(postalType =>
+              (postalType.type === 'OFFICE' || postalType.type === 'TAX') && postalType.enabled === true
+      );
+
+      if (hasShippingEnabled) {
+        let option = $('<option></option>')
+                .val(address.postalId)
+                .text(address.addressName);
+
+        if (address.isDefault) { // Jika alamat ini adalah default, set sebagai selected
+          option.attr('selected', 'selected');
+        }
+
+        _supplierAddress.append(option);
+      }
+    });
+
+    let _supplierPhone = $('#supplierPhone');
+    if (_supplierPhone.find('option').length > 0) {
+      _supplierPhone.empty();
+    }
+
+    let contacts = Party.data.contactMechanises;
+
+    contacts.forEach(contact => {
+      if (contact.contactType === 'PHONE' && contact.active === true) {
+        let option = $('<option></option>')
+                .val(contact.contactId)
+                .text(contact.contactName);
+
+        _supplierPhone.append(option);
+      }
+    });
   }
 </script>

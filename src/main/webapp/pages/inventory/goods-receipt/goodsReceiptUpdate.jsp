@@ -65,6 +65,7 @@
                     <th width="10%"><spring:message code="product"/></th>
                     <th width="5%" style="white-space: normal; line-height: 10px; text-align: center"><spring:message code="invoiceverificationitem.receivedqty"/></th>
                     <th width="5%"><spring:message code="goodsreceiptitem.uom"/></th>
+                    <th width="5%"><spring:message code="barcode"/></th>
                     <th width="5%"><spring:message code="container"/></th>
                     <th><spring:message code="grid"/></th>
                 </tr>
@@ -82,7 +83,10 @@
                                    size='6' value="<fmt:formatNumber value='${item.receipted}' pattern=',##0'/>" disabled/>
                         </td>
                         <td>
-                            <input class="input-disabled" size="7" value="${item.warehouseTransactionItem.referenceItem.measureName}" disabled/>
+                            <input class="input-disabled" size="5" value="${item.warehouseTransactionItem.referenceItem.measureName}" disabled/>
+                        </td>
+                        <td>
+                            <input class="input-disabled" size="10" value="${item.warehouseTransactionItem.lot.serial}" disabled/>
                         </td>
                         <td>
                             <form:select id='container[${status.index}]' path='items[${status.index}].container' cssClass='combobox containers input-disabled' disabled="true">

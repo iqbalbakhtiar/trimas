@@ -3,6 +3,7 @@ package com.siriuserp.procurement.form;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.procurement.dm.PurchaseRequisition;
 import com.siriuserp.sdk.dm.Approvable;
+import com.siriuserp.sdk.dm.ContactMechanism;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Form;
 import com.siriuserp.sdk.dm.PostalAddress;
@@ -28,4 +29,5 @@ public class PurchaseForm extends Form
 	private Approvable approvable;
 	private PurchaseRequisition purchaseRequisition;
 	private PurchaseOrder purchaseOrder;
+	private ContactMechanism supplierPhone;
 }

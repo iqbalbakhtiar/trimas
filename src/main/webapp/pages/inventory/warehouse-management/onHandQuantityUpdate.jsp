@@ -39,10 +39,11 @@
     <table width="100%" cellpadding="0" cellspacing="0" class="table-list">
     <thead>
         <tr>
+            <%-- <th width="15%"><spring:message code="organization"/></th> --%>
             <th width="8%"><spring:message code="facility"/></th>
-            <th width="15%"><spring:message code="organization"/></th>
             <th width="10%"><spring:message code="grid"/></th>
             <th width="10%"><spring:message code="container"/></th>
+            <th width="8%"><spring:message code="barcode"/></th>
             <th width="8%"><spring:message code="product.onhand"/></th>
             <th width="8%"><spring:message code="product.reserved"/></th>
             <th width="8%"><spring:message code="product.ontransfer"/></th>
@@ -52,14 +53,14 @@
     <tbody>
         <c:forEach items="${details}" var="detail" varStatus="status">
             <tr class="details" data-index="${status.index}">
+                <%-- <td>
+                    <c:if test="${status.index == 0 || detail.organization.id != details[status.index-1].organization.id}">
+                        <c:out value='${detail.organization.fullName}'/>
+                    </c:if>
+                </td> --%>
                 <td>
                     <c:if test="${status.index == 0 || detail.container.grid.facility.id != details[status.index-1].container.grid.facility.id}">
                         <c:out value='${detail.container.grid.facility.name}'/>
-                    </c:if>
-                </td>
-                <td>
-                    <c:if test="${status.index == 0 || detail.organization.id != details[status.index-1].organization.id}">
-                        <c:out value='${detail.organization.fullName}'/>
                     </c:if>
                 </td>
                 <td>
@@ -72,6 +73,7 @@
                         <c:out value='${detail.container.name}'/>
                     </c:if>
                 </td>
+                <td><c:out value='${detail.lot.serial}'/></td>
                 <td id="onHand${status.index}"><fmt:formatNumber value='${detail.onHand}' pattern=',##0.00'/></td>
                 <td id="reserved${status.index}"><fmt:formatNumber value='${detail.reserved}' pattern=',##0.00'/></td>
                 <td><fmt:formatNumber value='${detail.onTransfer}' pattern=',##0.00'/></td>

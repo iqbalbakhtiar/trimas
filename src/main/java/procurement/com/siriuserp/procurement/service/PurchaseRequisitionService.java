@@ -111,6 +111,13 @@ public class PurchaseRequisitionService
 		genericDao.update(requisition);
 	}
 
+	@AuditTrails(className = PurchaseRequisitionItem.class, actionType = AuditTrailsActionType.DELETE)
+	public void lockItem(PurchaseRequisitionItem requisitionItem) throws ServiceException
+	{
+		requisitionItem.setAvailable(false);
+		genericDao.update(requisitionItem);
+	}
+
 	@AuditTrails(className = PurchaseRequisition.class, actionType = AuditTrailsActionType.DELETE)
 	public void delete(PurchaseRequisition requisition) throws ServiceException
 	{
@@ -121,5 +128,11 @@ public class PurchaseRequisitionService
 	public PurchaseRequisition load(Long id)
 	{
 		return genericDao.load(PurchaseRequisition.class, id);
+	}
+
+	@Transactional(readOnly = false)
+	public PurchaseRequisitionItem loadItem(Long id)
+	{
+		return genericDao.load(PurchaseRequisitionItem.class, id);
 	}
 }

@@ -38,6 +38,7 @@ import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
 import com.siriuserp.accounting.dm.BankAccount;
+import com.siriuserp.accountpayable.dm.PaymentMethod;
 
 import javolution.util.FastMap;
 import javolution.util.FastSet;

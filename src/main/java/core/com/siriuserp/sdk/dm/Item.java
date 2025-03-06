@@ -12,6 +12,8 @@ import com.siriuserp.sales.dm.SalesReferenceItem;
 import com.siriuserp.sales.dm.SalesType;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.siriuserp.accountpayable.dm.InvoiceVerification;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationItem;
 import com.siriuserp.accountreceivable.dm.BillingReferenceItem;
 import com.siriuserp.accountreceivable.dm.WriteOffType;
 import com.siriuserp.administration.dm.Geographic;
@@ -35,6 +37,7 @@ public class Item extends SiriusItem
 	private static final long serialVersionUID = 3584646505653801611L;
 
 	private BigDecimal quantity = BigDecimal.ZERO;
+	private BigDecimal quantityReal = BigDecimal.ZERO;
 	private BigDecimal assigned = BigDecimal.ZERO;
 	private BigDecimal price = BigDecimal.ZERO;
 	private BigDecimal rate = BigDecimal.ZERO;
@@ -85,7 +88,7 @@ public class Item extends SiriusItem
 	private SalesReferenceItem salesReferenceItem;
 	private BillingReferenceItem billingReferenceItem;
 	private WarehouseTransactionItem warehouseTransactionItem;
-	private InvoiceVerificationReceipt invoiceVerificationReceipt;
+	private InvoiceVerificationItem invoiceVerificationItem;
 	private InvoiceVerification invoiceVerification;
 	private CostCenter costCenter;
 

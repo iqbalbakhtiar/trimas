@@ -22,21 +22,22 @@ import java.util.stream.Collectors;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class ApprovableSiblingRole extends AbstractSiblingRole implements ApplicationContextAware {
+public class ApprovableSiblingRole extends AbstractSiblingRole implements ApplicationContextAware
+{
+	private ApplicationContext context;
 
-    private ApplicationContext context;
-
-    @Override
-    public void execute() throws Exception {
-        Model object = (Model) getSiblingable();
+	@Override
+	public void execute() throws Exception
+	{
+		Model object = (Model) getSiblingable();
 		Form form = object.getForm();
 
-		if(form.getApprovalDecisionStatus() != null)
+		if (form.getApprovalDecisionStatus() != null)
 		{
-			if(object instanceof ApprovableBridge)
+			if (object instanceof ApprovableBridge)
 				object = (Model) ReflectionTestUtils.invokeGetterMethod(object, "getApprovable");
 
-			if(!SiriusValidator.validateParam(form.getRemark()))
+			if (!SiriusValidator.validateParam(form.getRemark()))
 				form.setRemark(form.getApprovalDecisionStatus().getNormalizedName().toLowerCase());
 
 			Approvable approvable = (Approvable) object;
@@ -52,7 +53,7 @@ public class ApprovableSiblingRole extends AbstractSiblingRole implements Applic
 			ApprovalDecision approvalDecision = genericDao.load(ApprovalDecision.class, approvable.getApprovalDecision().getId());
 			approvalDecision.getHistories().add(history);
 
-			if(form.getForwardTo() != null)
+			if (form.getForwardTo() != null)
 				approvalDecision.setForwardTo(form.getForwardTo());
 
 			approvalDecision.setApprovalDecisionStatus(form.getApprovalDecisionStatus());
@@ -60,9 +61,7 @@ public class ApprovableSiblingRole extends AbstractSiblingRole implements Applic
 			genericDao.update(approvalDecision);
 
 			//Use stream avoiding ConcurrentModificationException
-			List<String> interceptorNames = approvable.getInterceptors().stream()
-					.map(interceptor -> interceptor.getName())
-					.collect(Collectors.toList());
+			List<String> interceptorNames = approvable.getInterceptors().stream().map(interceptor -> interceptor.getName()).collect(Collectors.toList());
 
 			for (String interceptorName : interceptorNames)
 			{
@@ -75,10 +74,11 @@ public class ApprovableSiblingRole extends AbstractSiblingRole implements Applic
 				}
 			}
 		}
-    }
+	}
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.context = applicationContext;
-    }
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
+	{
+		this.context = applicationContext;
+	}
 }

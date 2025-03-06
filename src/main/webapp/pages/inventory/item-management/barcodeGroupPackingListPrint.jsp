@@ -64,8 +64,8 @@
                         <tr>
                             <th width="15%" align="center" class="border-left border-top"><spring:message code="product"/></th>
                             <th width="70%"align="center" class="border-left border-top">&nbsp;</th>
-                            <th width="5%" align="center" class="border-left border-top"><spring:message code="barcode.roll"/></th>
-                            <th width="5%" align="center" class="border-left border-top border-right">Yards</th>
+                            <th width="5%" align="center" class="border-left border-top"><spring:message code="barcode.quantity.base"/></th>
+                            <th width="5%" align="center" class="border-left border-top border-right"><spring:message code="product.uom"/></th>
                         </tr>
                         <c:set var="totalRoll" value="${0}"/>
                         <c:set var="totalQty" value="${0}"/>
@@ -95,7 +95,7 @@
                                     </table>
                                 </td>
                                 <td width="3%" align="right" class="border-left border-top"><fmt:formatNumber value='${roll}' pattern=',##0.00'/>&nbsp;</td>
-                                <td width="3%" align="right" class="border-left border-top border-right"><fmt:formatNumber value='${quantity}' pattern=',##0.00'/>&nbsp;</td>
+                                <td width="3%" align="right" class="border-left border-top border-right"><fmt:formatNumber value='${quantity}' pattern=',##0.00'/>&nbsp;${prod.key.unitOfMeasure.measureId}</td>
                             </tr>
                             <c:set var="totalRoll" value="${totalRoll+roll}"/>
                             <c:set var="totalQty" value="${totalQty+quantity}"/>
@@ -103,7 +103,7 @@
                         <tr>
                             <td colspan="2" class="border-left border-top" align="right"><strong>Total&nbsp;</strong></td>
                             <td class="border-left border-top" align="right"><fmt:formatNumber value='${totalRoll}' pattern=',##0.00'/>&nbsp;</td>
-                            <td class="border-left border-right border-top"align="right"><fmt:formatNumber value='${totalQty}' pattern=',##0.00'/>&nbsp;</td>
+                            <td class="border-left border-right border-top"align="right">&nbsp;</td>
                         </tr>
                         <tr>
                             <td colspan="6" class="border-top">&nbsp;</td>

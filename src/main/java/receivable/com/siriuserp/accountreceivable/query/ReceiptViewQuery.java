@@ -2,10 +2,10 @@ package com.siriuserp.accountreceivable.query;
 
 import org.hibernate.Query;
 
+import com.siriuserp.accountpayable.dm.PaymentMethodType;
 import com.siriuserp.accountreceivable.criteria.ReceiptFilterCriteria;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
-import com.siriuserp.sdk.dm.PaymentMethodType;
 import com.siriuserp.sdk.utility.SiriusValidator;
 
 public class ReceiptViewQuery extends AbstractGridViewQuery {

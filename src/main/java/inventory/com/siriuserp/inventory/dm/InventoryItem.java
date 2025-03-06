@@ -54,13 +54,13 @@ public class InventoryItem extends Model implements Inventory, JSONSupport
 
 	@Formula("(on_hand_quantity + on_transfer)")
 	private BigDecimal total;
-	
+
 	@Embedded
 	private Lot lot = new Lot();
-	
+
 	@Embedded
 	private Tag tag = new Tag();
-	
+
 	@Column(name = "on_hand_quantity")
 	private BigDecimal onHand = BigDecimal.ZERO;
 
@@ -87,23 +87,18 @@ public class InventoryItem extends Model implements Inventory, JSONSupport
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private Container container;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_grid")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private Grid grid;
-	
+
 	@Override
-	public void setPosition(Container position) {
-		
+	public void setPosition(Container position)
+	{
 	}
-	
-	@Override
-	public String getAuditCode() {
-		return getId() + "";
-	}
-	
+
 	@Override
 	public Map<String, Object> val()
 	{
@@ -114,8 +109,15 @@ public class InventoryItem extends Model implements Inventory, JSONSupport
 		map.put("container", getContainer());
 		map.put("onhand", getOnHand());
 		map.put("available", getAvailableSale());
+		map.put("lot", getLot());
 		map.put("tag", getTag());
-		
+
 		return map;
+	}
+
+	@Override
+	public String getAuditCode()
+	{
+		return getId() + "";
 	}
 }

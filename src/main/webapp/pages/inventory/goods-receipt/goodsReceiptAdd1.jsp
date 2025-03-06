@@ -10,7 +10,6 @@
 <head>
     <title>${title}</title>
     <%@ include file="/common/sirius-header.jsp"%>
-<%--    <%@ include file="/filter/procurement/directPurchaseOrderFilter.jsp"%>--%>
 </head>
 <body>
 

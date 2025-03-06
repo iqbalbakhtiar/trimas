@@ -16,6 +16,8 @@
 		{
 			if(id && name)
 			{
+				Container.load(id);
+				
 				var _client = self.opener.document.getElementById('${param.target}');
 				if(_client)
 				{
@@ -36,8 +38,6 @@
 				if(_grid)
 				{
 					_grid.remove(_grid.selectedIndex);
-
-					Container.load(id);
 
 					let _opt = document.createElement('option');
 					_opt.value = Container.data.grid.gridId;

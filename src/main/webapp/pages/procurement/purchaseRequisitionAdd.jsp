@@ -206,7 +206,7 @@
     $cbox = List.get('<input type="checkbox" class="check"/>','check'+$index);
     $product = List.get('<select class="combobox productInput" onchange="checkDuplicate(this);"/>','product['+$index+']');
     $productImg = List.img('<spring:message code="product"/>', $index, 'openProduct("'+$index+'")');
-    $qty = List.get('<input type="text" class="input-number" size="6"/>','quantity['+$index+']', '0.00');
+    $qty = List.get('<input type="text" class="input-decimal" size="6"/>','quantity['+$index+']', '0.00');
     $uom = List.get('<input type="text" class="input-disabled" disabled size="6" />','uom['+$index+']');
     $note = List.get('<input type="text" size="40"/>','note['+$index+']');
 
@@ -218,7 +218,7 @@
 
     $tbody.append($tr);
 
-    $(".input-number").bind(inputFormat);
+    $(".input-decimal").bind(inputFormat);
   }
 
   function openProduct(index) {

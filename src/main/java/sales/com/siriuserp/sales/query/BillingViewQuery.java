@@ -1,6 +1,7 @@
 package com.siriuserp.sales.query;
 
 import com.siriuserp.accountreceivable.criteria.BillingFilterCriteria;
+import com.siriuserp.accountreceivable.dm.BillingType;
 import com.siriuserp.accountreceivable.dm.FinancialStatus;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
@@ -21,13 +22,10 @@ public class BillingViewQuery extends AbstractGridViewQuery {
             builder.append("SELECT DISTINCT(bill) ");
 
         builder.append("FROM Billing bill WHERE 1=1 ");
-//        builder.append("bill.billingType.id =:billingType ");
+        builder.append("AND bill.billingType.id NOT IN(:types) ");
 
         if (SiriusValidator.validateParam(criteria.getCode()))
             builder.append("AND bill.code LIKE :code ");
-
-//        if (SiriusValidator.validateParam(criteria.getStatus()))
-//            builder.append("AND bill.financialStatus =:status ");
 
         if (SiriusValidator.validateDate(criteria.getDateFrom()))
         {
@@ -51,13 +49,12 @@ public class BillingViewQuery extends AbstractGridViewQuery {
 
         Query query = getSession().createQuery(builder.toString());
         query.setReadOnly(true);
-//        query.setParameter("billingType", BillingType.SALES_CONTRACT);
+
+        query.setParameterList("types",new Long[] {
+                BillingType.MANUAL,});
 
         if (SiriusValidator.validateParam(criteria.getCode()))
             query.setParameter("code", "%" + criteria.getCode() + "%");
-
-//        if (SiriusValidator.validateParam(criteria.getStatus()))
-//            query.setParameter("status", CostType.valueOf(criteria.getStatus()));
 
         if (SiriusValidator.validateDate(criteria.getDateFrom()))
             query.setParameter("startDate", criteria.getDateFrom());

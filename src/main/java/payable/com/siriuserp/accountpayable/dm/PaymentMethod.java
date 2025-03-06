@@ -1,4 +1,4 @@
-package com.siriuserp.sdk.dm;
+package com.siriuserp.accountpayable.dm;
 
 import java.util.Set;
 
@@ -21,6 +21,10 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
+
+import com.siriuserp.sdk.dm.JSONSupport;
+import com.siriuserp.sdk.dm.Model;
+import com.siriuserp.sdk.dm.Party;
 
 import javolution.util.FastSet;
 import lombok.Getter;

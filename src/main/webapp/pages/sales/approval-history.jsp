@@ -2,14 +2,14 @@
 <tr>
 <td>-->
 <fieldset>
-    <legend><strong>Approval History </strong></legend>
+    <legend><strong><spring:message code="approval.history"/></strong></legend>
     <table width="100%" cellpadding="0" cellspacing="0" class="table-list">
         <tr>
             <th width="3%">No</th>
             <th width="27%"><spring:message code="approval.approver"/></th>
             <th width="22%"><spring:message code="sirius.status"/></th>
             <th width="26%"><spring:message code="sirius.date"/></th>
-            <th width="22%">Remark</th>
+            <th width="22%"><spring:message code="approval.remark"/></th>
         </tr>
         <c:forEach items='${approvalDecision.histories}' var='history'>
             <tr>

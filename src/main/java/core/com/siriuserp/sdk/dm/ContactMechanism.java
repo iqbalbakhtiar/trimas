@@ -81,7 +81,8 @@ public class ContactMechanism extends Model implements JSONSupport
         map.put("contactId",getId());
         map.put("contactName",getContact());
         map.put("contactType",getContactMechanismType());
-        
+        map.put("active",isActive());
+
         return map;
     }
 }

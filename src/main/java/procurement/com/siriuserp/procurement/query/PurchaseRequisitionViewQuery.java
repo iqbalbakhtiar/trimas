@@ -31,7 +31,8 @@ public class PurchaseRequisitionViewQuery extends AbstractGridViewQuery
 		else
 			builder.append("SELECT DISTINCT(req) ");
 
-		builder.append("FROM PurchaseRequisition req WHERE req.id IS NOT NULL ");
+		builder.append("FROM PurchaseRequisition req ");
+		builder.append("WHERE req.id IS NOT NULL ");
 
 		if (SiriusValidator.validateParam(criteria.getCode()))
 			builder.append("AND req.code LIKE :code");

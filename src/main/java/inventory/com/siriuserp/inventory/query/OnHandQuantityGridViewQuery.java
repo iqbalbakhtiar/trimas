@@ -20,17 +20,17 @@ public class OnHandQuantityGridViewQuery extends AbstractGridViewQuery
 	public Query getQuery(ExecutorType type)
 	{
 		OnHandQuantityFilterCriteria criteria = (OnHandQuantityFilterCriteria) getFilterCriteria();
-		
+
 		StringBuilder builder = new StringBuilder();
-		
+
 		if (type.compareTo(ExecutorType.COUNT) == 0)
 			builder.append("SELECT COUNT(DISTINCT inv.product) ");
-		
+
 		if (type.compareTo(ExecutorType.HQL) == 0)
 			builder.append("SELECT new com.siriuserp.inventory.adapter.OnhandQuantityUIAdapter(inv.product, SUM(inv.onHand), SUM(inv.onTransfer), SUM(inv.reserved)) ");
-		
+
 		builder.append("FROM InventoryItem inv WHERE inv.total > 0 ");
-		
+
 		if (SiriusValidator.validateParam(criteria.getCode()))
 			builder.append("AND inv.product.code like :code ");
 
@@ -44,7 +44,7 @@ public class OnHandQuantityGridViewQuery extends AbstractGridViewQuery
 			builder.append("AND inv.product.unitOfMeasure.measureId LIKE :uom ");
 
 		if (type.compareTo(ExecutorType.HQL) == 0)
-			builder.append("GROUP BY inv.product.id ORDER BY inv.product.id DESC");
+			builder.append("GROUP BY inv.product.id ORDER BY inv.product.name ASC");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);

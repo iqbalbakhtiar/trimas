@@ -1,8 +1,9 @@
 package com.siriuserp.accountpayable.form;
 
+import com.siriuserp.accountpayable.dm.InvoiceVerification;
 import com.siriuserp.inventory.dm.GoodsReceipt;
 import com.siriuserp.sdk.dm.Form;
-import com.siriuserp.sdk.dm.InvoiceVerification;
+
 import lombok.Getter;
 import lombok.Setter;
 

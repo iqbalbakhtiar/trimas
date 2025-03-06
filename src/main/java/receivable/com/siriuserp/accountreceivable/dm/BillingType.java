@@ -20,6 +20,7 @@ public class BillingType extends Model {
     private static final long serialVersionUID = 1725317245148646705L;
 
     public static final Long DELIVERY_ORDER_REALIZATION = Long.valueOf(1);
+    public static final Long MANUAL = Long.valueOf(2);
 
     @Column(name = "code")
     private String code;

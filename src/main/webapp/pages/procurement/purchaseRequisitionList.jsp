@@ -65,7 +65,7 @@
                 <tr>
                   <td class="tools">
                     <a class="item-button-edit" href="<c:url value='/page/purchaserequisitionpreedit.htm?id=${requisition.id}'/>" title="<spring:message code='sirius.edit'/>"><span><spring:message code="sirius.edit"/></span></a>
-                    <c:if test='${access.delete}'>
+                    <c:if test='${access.delete and requisition.deleteable}'>
                     	<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/purchaserequisitiondelete.htm?id=${requisition.id}'/>');" title="<spring:message code='sirius.delete'/>"><span><spring:message code='sirius.delete'/></span></a>
                    	</c:if>
                   </td>
@@ -76,7 +76,7 @@
                   <td nowrap="nowrap">${requisition.reason}</td>
                 </tr>
               </c:forEach>
-              <tr class="end-table"><td colspan="11">&nbsp;</td></tr>
+              <tr class="end-table"><td colspan="6">&nbsp;</td></tr>
             </table>
             <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
               <tr>

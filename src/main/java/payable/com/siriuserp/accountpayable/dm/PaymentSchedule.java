@@ -1,4 +1,4 @@
-package com.siriuserp.sdk.dm;
+package com.siriuserp.accountpayable.dm;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +12,9 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
+import com.siriuserp.sdk.dm.JSONSupport;
+import com.siriuserp.sdk.dm.Model;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,23 +23,23 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="payment_schedule")
-public class PaymentSchedule extends Model implements JSONSupport {
-	
+@Table(name = "payment_schedule")
+public class PaymentSchedule extends Model implements JSONSupport
+{
 	private static final long serialVersionUID = 1612983552842273317L;
-	
-	@Column(name="schedule")
-    private String schedule;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="fk_payment_method")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
+
+	@Column(name = "schedule")
+	private String schedule;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_payment_method")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
 	private PaymentMethod paymentMethod;
 
 	@Override
-	public String getAuditCode() {
+	public String getAuditCode()
+	{
 		return id + "," + schedule;
 	}
-
 }

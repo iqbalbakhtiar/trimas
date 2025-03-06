@@ -24,6 +24,7 @@ public class ProductFilterCriteria extends AbstractFilterCriteria
 
 	private Boolean status;
 	private Boolean base;
+	private Boolean serial;
 
 	private Long categoryId;
 	private Long container;
