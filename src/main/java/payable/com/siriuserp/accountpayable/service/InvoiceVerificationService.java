@@ -7,6 +7,7 @@ package com.siriuserp.accountpayable.service;
 
 import java.util.Map;
 
+import com.siriuserp.sdk.dm.Tax;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -53,6 +54,7 @@ public class InvoiceVerificationService
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("filterCriteria", filterCriteria);
 		map.put("verifications", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
+		map.put("taxes", genericDao.loadAll(Tax.class));
 
 		return map;
 	}
