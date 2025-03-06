@@ -103,4 +103,10 @@ public class InvoiceVerificationController extends ControllerBase
 
 		return view;
 	}
+
+	@RequestMapping("/invoiceverificationprint.htm")
+	public ModelAndView print(@RequestParam("id") Long id) throws Exception
+	{
+		return new ModelAndView("/payable/invoiceVerificationPrint", service.preedit(id));
+	}
 }
