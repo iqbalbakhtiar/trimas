@@ -61,10 +61,10 @@
 						<c:forEach items="${suppliers}" var="com">
 						<tr>
 					  		<td class="tools">
-					  			<a class="item-button-add-row" href="javascript:setclient('${com.id}')"  title="Edit"><span>Edit</span></a>
+					  			<a class="item-button-add-row" href="javascript:setclient('${com.partyFrom.id}')"  title="Edit"><span>Edit</span></a>
 					  		</td>
-							<td>${com.code}</td> 
-							<td>${com.fullName}</td>
+							<td>${com.partyFrom.code}</td> 
+							<td>${com.partyFrom.fullName}</td>
 					  		</tr>
 						</c:forEach>
 					  	<tr class="end-table"><td colspan="3">&nbsp;</td></tr>
@@ -92,7 +92,7 @@
 	{
 		Party.load(id);
 		var supplier = Party.data;
-
+		
 		if(!jQuery.isEmptyObject(supplier))
 		{
 			var _client = self.opener.document.getElementById('${param.target}');
