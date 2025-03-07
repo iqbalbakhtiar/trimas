@@ -148,16 +148,18 @@
                                         <td><fmt:formatNumber value='${report.tax}' pattern=',##0.00'/></td>
                                         <td><fmt:formatNumber value='${report.total}' pattern=',##0.00'/></td>
                                         <c:forEach items='${report.purchaseOrder.items}' var='item' varStatus="stat">
-                                        <c:set var="tQty" value="${tQty + item.quantity}"/>
-                                            <tr>
-                                                <td colspan="3"></td>
-                                                <td><c:out value='(${stat.index+1}) ${item.product.name}'/></td>
-                                                <td><fmt:formatNumber value='${item.quantity*item.money.amount}' pattern=',##0.00'/></td>
-                                                <td><fmt:formatNumber value='${item.quantity}' pattern=',##0'/></td>
-                                                <td><fmt:formatNumber value='${item.money.amount}' pattern=',##0.00'/></td>
-                                                <td nowrap="nowrap"><fmt:formatDate value='${item.deliveryDate}' pattern='dd-MM-yyyy'/></td>
-                                                <td colspan="3"></td>
-                                            </tr>
+                                        	<c:if test="${item.purchaseItemType == 'BASE'}">
+	                                        	<c:set var="tQty" value="${tQty + item.quantity}"/>
+	                                            <tr>
+	                                                <td colspan="3"></td>
+	                                                <td><c:out value='(${stat.index+1}) ${item.product.name}'/></td>
+	                                                <td><fmt:formatNumber value='${item.quantity*item.money.amount}' pattern=',##0.00'/></td>
+	                                                <td><fmt:formatNumber value='${item.quantity}' pattern=',##0'/></td>
+	                                                <td><fmt:formatNumber value='${item.money.amount}' pattern=',##0.00'/></td>
+	                                                <td nowrap="nowrap"><fmt:formatDate value='${item.deliveryDate}' pattern='dd-MM-yyyy'/></td>
+	                                                <td colspan="3"></td>
+	                                            </tr>
+	                                        </c:if>
                                         </c:forEach>
                                         <tr>
                                             <td colspan="11" style="border-top:1px solid black;">&nbsp;</td>

@@ -21,8 +21,6 @@ public interface Dao<T>
     public void add(T bean)throws DataAdditionException;
     public void update(T bean)throws DataEditException;
     public void delete(T bean)throws DataDeletionException;
-
     public void merge(T bean)throws DataEditException;
-    
     public void clear()throws ServiceException;
 }

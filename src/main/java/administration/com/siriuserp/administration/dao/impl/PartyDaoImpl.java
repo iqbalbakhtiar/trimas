@@ -93,4 +93,9 @@ public class PartyDaoImpl extends DaoHelper<Party> implements PartyDao
 
 		return query.list();
 	}
+	
+	public Party load(Long id) 
+    {
+        return (Party)getSession().load(Party.class,id);
+    }
 }

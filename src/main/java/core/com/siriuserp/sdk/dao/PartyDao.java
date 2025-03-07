@@ -22,5 +22,6 @@ public interface PartyDao extends Dao<Party>, Filterable
 	public Party load(String firstName, String middleName, String lastName);
 	public Long loadByFullName(String firstName, String middleName, String lastName);
 	public Party load(String name);
+	 public Party load(Long id);
 	public List<Party> loadAllNoUser();
 }
