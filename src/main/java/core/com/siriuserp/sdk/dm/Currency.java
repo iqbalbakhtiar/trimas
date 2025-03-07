@@ -34,6 +34,9 @@ public class Currency extends Model implements JSONSupport
 	@Column(name = "name", nullable = false, unique = true, length = 100)
 	private String name;
 
+	@Column(name = "alias", nullable = false, unique = true, length = 100)
+	private String alias;
+
 	@Column(name = "symbol", nullable = false, unique = true, length = 50)
 	private String symbol;
 
@@ -63,6 +66,7 @@ public class Currency extends Model implements JSONSupport
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("currId", getId());
 		map.put("currSymbol", getSymbol());
+		map.put("currAlias", getAlias());
 
 		return map;
 	}

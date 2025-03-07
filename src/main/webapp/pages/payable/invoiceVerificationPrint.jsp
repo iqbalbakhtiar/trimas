@@ -141,8 +141,8 @@
                             <td width="10%" valign="top" align="left">Terbilang </td>
                             <td width="2%" valign="top" align="center">&nbsp;:&nbsp;</td>
                             <td valign="top" colspan="2" align="left">
-                                <c:set var="string" value="${said_id} ${verification_edit.money.currency.name}"/>
-                                <c:out value='${fn:toLowerCase(string)}'/>
+                                <c:set var="string" value="${said_id} ${verification_edit.money.currency.alias}"/>
+                                <c:out value='${string}'/>
                             </td>
                         </tr>
                     </table>

@@ -18,6 +18,7 @@ import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.utility.DateHelper;
 import com.siriuserp.sdk.utility.EnglishNumber;
 import com.siriuserp.sdk.utility.EnglishNumberHelper;
+import org.apache.commons.lang.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -105,12 +106,15 @@ public class InvoiceVerificationService
 		PaymentForm form = FormHelper.bind(PaymentForm.class, genericDao.load(InvoiceVerification.class, id));
 		InvoiceVerificationAdapter adapter = new InvoiceVerificationAdapter(form.getInvoiceVerification());
 
+		String said = EnglishNumberHelper.convert(adapter.getTotalAfterTax().setScale(2, RoundingMode.HALF_UP));
+		String saidId = EnglishNumber.convertIdComma(adapter.getTotalAfterTax().setScale(2, RoundingMode.HALF_UP));
+
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("verification_form", form);
 		map.put("verification_edit", form.getInvoiceVerification());
 		map.put("adapter", adapter);
-		map.put("said", EnglishNumberHelper.convert(adapter.getTotalAfterTax().setScale(2, RoundingMode.HALF_UP)));
-		map.put("said_id", EnglishNumber.convertIdComma(adapter.getTotalAfterTax().setScale(2, RoundingMode.HALF_UP)));
+		map.put("said", WordUtils.capitalizeFully(said)); // Capitalize all words
+		map.put("said_id", WordUtils.capitalizeFully(saidId));
 
 		return map;
 	}
