@@ -25,8 +25,9 @@
                 <td align="center">:</td>
                 <td >
                     <select id="taxName" name="taxName">
+                        <option value=""><spring:message code="sirius.all"/></option>
                         <c:forEach var="tax" items="${taxes}">
-                            <option value="${tax.taxName}">${tax.taxName}</option>
+                            <option value="${tax.taxName}" ${filterCriteria.taxName eq tax.taxName ? "selected" : ""}>${tax.taxName}</option>
                         </c:forEach>
                     </select>
                 </td>

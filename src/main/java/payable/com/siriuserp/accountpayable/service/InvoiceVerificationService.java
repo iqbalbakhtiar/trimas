@@ -5,9 +5,12 @@
  */
 package com.siriuserp.accountpayable.service;
 
+import java.math.RoundingMode;
 import java.util.Map;
 
 import com.siriuserp.sdk.dm.Tax;
+import com.siriuserp.sdk.utility.EnglishNumber;
+import com.siriuserp.sdk.utility.EnglishNumberHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -79,11 +82,14 @@ public class InvoiceVerificationService
 	public Map<String, Object> preedit(Long id) throws Exception
 	{
 		PaymentForm form = FormHelper.bind(PaymentForm.class, genericDao.load(InvoiceVerification.class, id));
+		InvoiceVerificationAdapter adapter = new InvoiceVerificationAdapter(form.getInvoiceVerification());
 
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("verification_form", form);
 		map.put("verification_edit", form.getInvoiceVerification());
-		map.put("adapter", new InvoiceVerificationAdapter(form.getInvoiceVerification()));
+		map.put("adapter", adapter);
+		map.put("said", EnglishNumberHelper.convert(adapter.getTotalAfterTax().setScale(2, RoundingMode.HALF_UP)));
+		map.put("said_id", EnglishNumber.convertIdComma(adapter.getTotalAfterTax().setScale(2, RoundingMode.HALF_UP)));
 
 		return map;
 	}
