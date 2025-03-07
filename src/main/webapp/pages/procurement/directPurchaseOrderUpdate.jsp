@@ -159,6 +159,28 @@
       <div id="address" dojoType="ContentPane" label="<spring:message code='postaladdress.detail'/>" class="tab-pages" refreshOnShow="true" selected="true">
         <table width="100%">
           <tr>
+            <td align="right"><spring:message code="purchaseorder.supplieraddress"/></td>
+            <td width="1%" align="center">:</td>
+            <td>
+              <select id="supplierAddress" name="supplierAddress" class="combobox-ext input-disabled" disabled>
+                <c:if test="${dpo_edit.supplierAddress != null}">
+                  <option value="${dpo_edit.supplierAddress.id}">${dpo_edit.supplierAddress.addressName}</option>
+                </c:if>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td align="right"><spring:message code="supplier.contact"/></td>
+            <td width="1%" align="center">:</td>
+            <td>
+              <select id="supplierPhone" name="supplierPhone" class="combobox-ext input-disabled" disabled>
+                <c:if test="${dpo_edit.supplierPhone != null}">
+                  <option value="${dpo_edit.supplierPhone.id}">${dpo_edit.supplierPhone.contact}</option>
+                </c:if>
+              </select>
+            </td>
+          </tr>
+          <tr>
             <td align="right"><spring:message code="dpo.billto"/></td>
             <td width="1%" align="center">:</td>
             <td>

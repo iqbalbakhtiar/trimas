@@ -8,7 +8,14 @@ package com.siriuserp.accountpayable.service;
 import java.math.RoundingMode;
 import java.util.Map;
 
+import com.siriuserp.sdk.dao.CreditTermDao;
+import com.siriuserp.sdk.dao.PartyRelationshipDao;
+import com.siriuserp.sdk.dm.CreditTerm;
+import com.siriuserp.sdk.dm.PartyRelationship;
+import com.siriuserp.sdk.dm.PartyRelationshipType;
 import com.siriuserp.sdk.dm.Tax;
+import com.siriuserp.sdk.exceptions.ServiceException;
+import com.siriuserp.sdk.utility.DateHelper;
 import com.siriuserp.sdk.utility.EnglishNumber;
 import com.siriuserp.sdk.utility.EnglishNumberHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +58,12 @@ public class InvoiceVerificationService
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
 
+	@Autowired
+	private PartyRelationshipDao partyRelationshipDao;
+
+	@Autowired
+	private CreditTermDao creditTermDao;
+
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
 	{
@@ -67,6 +80,14 @@ public class InvoiceVerificationService
 	{
 		InventoryForm form = (InventoryForm) invoiceVerification.getForm();
 		invoiceVerification.setCode(GeneratorHelper.instance().generate(TableType.INVOICE_VERIFICATION, codeSequenceDao, invoiceVerification.getOrganization()));
+
+		// Set Due Date by Load active Credit Term from Supplier
+		PartyRelationship relationship = partyRelationshipDao.load(invoiceVerification.getSupplier().getId(), invoiceVerification.getOrganization().getId(), PartyRelationshipType.SUPPLIER_RELATIONSHIP);
+		CreditTerm creditTerm = creditTermDao.loadByRelationship(relationship.getId(), true, invoiceVerification.getDate());
+		if (creditTerm == null) {
+			throw new ServiceException("Supplier doesn't have active Credit Term, please set it first on supplier page.");
+		}
+		invoiceVerification.setDueDate(DateHelper.plusDays(invoiceVerification.getDate(), creditTerm.getTerm()));
 
 		genericDao.add(invoiceVerification);
 
