@@ -49,6 +49,13 @@
 					</td>
 				</tr>
 				<tr>
+					<td width="19%" align="right"><spring:message code="creditterm.term"/> :</td>
+					<td width="1%" align="center">:</td>
+					<td>
+						<form:input id='term' path='term' cssClass='input-number' size="8"/>
+					</td>
+				</tr>
+				<tr>
 					<td align="right"><spring:message code="salesorder.shipping.date"/></td>
 					<td width="1%" align="center">:</td>
 					<td><input id="shippingDate" name="shippingDate" class="datepicker"/></td>
@@ -62,11 +69,10 @@
 								<option value="${tax.id}" data-taxrate="${tax.taxRate}">${tax.taxName}</option>
 							</c:forEach>
 						</form:select>
-						<spring:message code="salesorder.tax.rate"/>
 						<input size="7" id="taxRate" class="input-disabled" disabled />
 					</td>
 				</tr>
-				<tr>
+				<tr style="display: none;">
 					<td align="right"><spring:message code="approver"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
@@ -153,18 +159,18 @@
 			    	<thead>
 				    	<tr>
 				    		<th width="1%" nowrap="nowrap"><input class="checkall" type="checkbox"/></th>
-							<th width="8%" nowrap="nowrap"><spring:message code="product"/></th>
+							<th width="10%" nowrap="nowrap"><spring:message code="product"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
 							<th width="8%" nowrap="nowrap"><spring:message code="sirius.unitprice"/></th>
 							<th width="8%" nowrap="nowrap"><spring:message code="sirius.total"/> <spring:message code="sirius.amount"/></th>
-							<th width="8%" nowrap="nowrap"><spring:message code="salesorder.packing.note"/></th>
+							<th width="50%" nowrap="nowrap"><spring:message code="salesorder.packing.note"/></th>
 						</tr>
 					</thead>
 					<tbody id="lineItem">
 					</tbody>
 					<tfoot>
-						<tr class="end-table"><td colspan="10">&nbsp;</td></tr>
+						<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
 					</tfoot>
 				</table>
 			</div>
@@ -314,11 +320,11 @@ function validateForm() {
     }
 
     // Validasi approver
-    var approver = $('#approver').val();
+    /* var approver = $('#approver').val();
     if (approver == null || approver === "") {
         alert('<spring:message code="approver"/> <spring:message code="notif.empty"/> !');
         return false;
-    }
+    } */
     
  	// **Tambahkan validasi untuk memastikan setidaknya ada satu line item**
     if ($('#lineItem tr').length === 0) {
@@ -445,7 +451,7 @@ function addLine($index) {
     
 	$cbox = List.get('<input type="checkbox" class="check"/>','check'+$index);
 	
-	$product = List.get('<select class="combobox productInput" onchange="checkDuplicate(this);updateDisplay();"/>','product['+$index+']');
+	$product = List.get('<select class="combobox-ext productInput" onchange="checkDuplicate(this);updateDisplay();"/>','product['+$index+']');
 	$productImg = List.img('<spring:message code="product"/>', $index, 'openProduct("'+$index+'")');
 	
 	$qty = List.get('<input type="text" class="input-number" size="6" onchange="updateDisplay();"/>','quantity['+$index+']', '0.00');
@@ -456,7 +462,7 @@ function addLine($index) {
 
 	$totalAmount = List.get('<input type="text" class="input-number input-disabled" disabled size="12"/>','totalAmount['+$index+']', '0.00');
 	
-	$packNote = List.get('<input type="text"/>','note['+$index+']');
+	$packNote = List.get('<input type="text" size="30"/>','note['+$index+']');
 	
 	$tr.append(List.col([$cbox]));
 	$tr.append(List.col([$product, $productImg]));

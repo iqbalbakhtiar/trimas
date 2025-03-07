@@ -1,6 +1,5 @@
 package com.siriuserp.sales.service;
 
-import com.siriuserp.sales.dm.SOStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -8,10 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.siriuserp.sales.adapter.SalesOrderAdapter;
 import com.siriuserp.sales.dm.ApprovableType;
+import com.siriuserp.sales.dm.DeliveryPlanning;
+import com.siriuserp.sales.dm.SOStatus;
 import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sales.dm.SalesOrderApprovableBridge;
 import com.siriuserp.sales.dm.SalesOrderItem;
-import com.siriuserp.sales.dm.SalesReferenceItem;
+import com.siriuserp.sales.dm.SalesOrderReferenceItem;
 import com.siriuserp.sales.dm.SalesType;
 import com.siriuserp.sales.form.SalesForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
@@ -20,18 +21,13 @@ import com.siriuserp.sdk.annotation.AutomaticSibling;
 import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.base.Service;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
-import com.siriuserp.sdk.dao.CreditTermDao;
 import com.siriuserp.sdk.dao.GenericDao;
-import com.siriuserp.sdk.dao.PartyRelationshipDao;
 import com.siriuserp.sdk.dao.SalesReferenceItemDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
-import com.siriuserp.sdk.dm.CreditTerm;
 import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.Item;
 import com.siriuserp.sdk.dm.Money;
-import com.siriuserp.sdk.dm.PartyRelationship;
-import com.siriuserp.sdk.dm.PartyRelationshipType;
 import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.dm.Tax;
 import com.siriuserp.sdk.exceptions.ServiceException;
@@ -47,32 +43,30 @@ import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class SalesOrderService extends Service {
-	
+public class SalesOrderService extends Service
+{
 	@Autowired
 	private GenericDao genericDao;
-	
+
 	@Autowired
 	private SalesReferenceItemDao salesReferenceItemDao;
-	
+
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
 
 	@Autowired
-	private PartyRelationshipDao partyRelationshipDao;
+	private DeliveryPlanningService planningService;
 
-	@Autowired
-	private CreditTermDao creditTermDao;
-	
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws Exception {
+	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws Exception
+	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("salesOrders", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
 		map.put("filterCriteria", filterCriteria);
 
 		return map;
 	}
-	
+
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	@InjectParty(keyName = "salesOrder_form")
 	public FastMap<String, Object> preadd()
@@ -85,111 +79,97 @@ public class SalesOrderService extends Service {
 
 		return map;
 	}
-	
+
 	@AuditTrails(className = SalesOrder.class, actionType = AuditTrailsActionType.CREATE)
-	public void add(SalesOrder salesOrder) throws Exception {
+	public void add(SalesOrder salesOrder) throws Exception
+	{
 		SalesForm form = (SalesForm) salesOrder.getForm();
 
-		if (salesOrder.getShippingAddress() == null) {
+		if (salesOrder.getShippingAddress() == null)
 			throw new ServiceException("Customer doesn't have Shipping Address, please set it first on customer page.");
-		}
 
-		Money moneySalesOrder = new Money();
-		Currency currencyIdr = genericDao.load(Currency.class, 1L);
-		moneySalesOrder.setCurrency(currencyIdr);
-		moneySalesOrder.setAmount(form.getAmount());
-		
+		Money money = new Money();
+		Currency currency = genericDao.load(Currency.class, 1L);
+		money.setCurrency(currency);
+		money.setAmount(form.getAmount());
+
 		salesOrder.setCode(GeneratorHelper.instance().generate(TableType.SALES_ORDER, codeSequenceDao));
-		salesOrder.setMoney(moneySalesOrder);
+		salesOrder.setMoney(money);
 		salesOrder.setSalesType(SalesType.STANDARD);
 
-		// Credit Term harus didapatkan dari party relationship
-		PartyRelationship relationship = partyRelationshipDao.load(salesOrder.getCustomer().getId(), salesOrder.getOrganization().getId(), PartyRelationshipType.CUSTOMER_RELATIONSHIP);
-		CreditTerm creditTerm = creditTermDao.loadByRelationship(relationship.getId(), true, salesOrder.getDate());
-		if (creditTerm == null)
-			throw new ServiceException("Customer doesn't have active Credit Term, please set it first on customer page.");
+		if (form.getApprover() != null)
+		{
+			SalesOrderApprovableBridge approvableBridge = ApprovableBridgeHelper.create(SalesOrderApprovableBridge.class, salesOrder);
+			approvableBridge.setApprovableType(ApprovableType.SALES_ORDER);
+			approvableBridge.setUri("salesorderpreedit.htm");
+			salesOrder.setApprovable(approvableBridge);
+		}
 
-		salesOrder.setCreditTerm(creditTerm);
+		for (Item item : form.getItems())
+		{
+			if (item.getProduct() != null)
+			{
+				Money itemMoney = new Money();
+				itemMoney.setAmount(item.getAmount());
+				itemMoney.setCurrency(salesOrder.getMoney().getCurrency());
 
-		//Add ApprovableBridge using Helper
-		SalesOrderApprovableBridge approvableBridge = ApprovableBridgeHelper.create(SalesOrderApprovableBridge.class, salesOrder);
-		approvableBridge.setApprovableType(ApprovableType.SALES_ORDER);
-		approvableBridge.setUri("salesorderpreedit.htm");
-		salesOrder.setApprovable(approvableBridge);
-
-		// Add every Sales Order Item
-		for (Item item : form.getItems()) {
-			if (item.getProduct() != null) { // Untuk menghindari bug line item kosong
 				SalesOrderItem salesOrderItem = new SalesOrderItem();
-				Money money = new Money();
+				salesOrderItem.setMoney(itemMoney);
 
-				money.setAmount(item.getAmount());
-				money.setCurrency(genericDao.load(Currency.class, 1L));
-
-				salesOrderItem.setDate(salesOrder.getDate());
-				salesOrderItem.setReferenceCode(salesOrder.getCode());
 				salesOrderItem.setProduct(item.getProduct());
 				salesOrderItem.setQuantity(item.getQuantity());
-				salesOrderItem.setMoney(money);
 				salesOrderItem.setDiscount(item.getDiscount());
 				salesOrderItem.setNote(item.getNote());
-				salesOrderItem.setSalesType(SalesType.STANDARD);
-				salesOrderItem.setOrganization(salesOrder.getOrganization());
-				salesOrderItem.setCustomer(salesOrder.getCustomer());
-				salesOrderItem.setApprover(salesOrder.getApprover());
-				salesOrderItem.setFacility(salesOrder.getFacility());
-				salesOrderItem.setShippingAddress(salesOrder.getShippingAddress());
-				salesOrderItem.setTax(salesOrder.getTax());
-				salesOrderItem.setCreatedBy(getPerson());
 				salesOrderItem.setSalesOrder(salesOrder);
-				salesOrderItem.setTerm(salesOrder.getCreditTerm().getTerm());
 
 				salesOrder.getItems().add(salesOrderItem);
 			}
 		}
-		
-		genericDao.add(salesOrder);
-	}
-	
-	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public FastMap<String, Object> preedit(Long id) throws Exception {
-		SalesOrder salesOrder = genericDao.load(SalesOrder.class, id);
-		SalesForm salesForm = FormHelper.bind(SalesForm.class, salesOrder);
-		SalesOrderAdapter adapter = new SalesOrderAdapter(salesOrder);
 
-		salesForm.setSalesOrder(salesOrder);
-		
+		genericDao.add(salesOrder);
+
+		if (form.getApprover() != null)
+		{
+			DeliveryPlanning deliveryPlanning = new DeliveryPlanning();
+			deliveryPlanning.setDate(DateHelper.today());
+			deliveryPlanning.setSalesOrder(salesOrder);
+
+			planningService.add(deliveryPlanning);
+		}
+	}
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> preedit(Long id) throws Exception
+	{
+		SalesForm salesForm = FormHelper.bind(SalesForm.class, genericDao.load(SalesOrder.class, id));
+		SalesOrderAdapter adapter = new SalesOrderAdapter(salesForm.getSalesOrder());
+
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("salesOrder_form", salesForm);
+		map.put("salesOrder_edit", salesForm.getSalesOrder());
 		map.put("approvalDecisionStatuses", ApprovalDecisionStatus.values());
-		map.put("approvalDecision", salesForm.getSalesOrder().getApprovable().getApprovalDecision());
+		map.put("approvalDecision", salesForm.getSalesOrder().getApprovable() != null ? salesForm.getSalesOrder().getApprovable().getApprovalDecision() : null);
 		map.put("adapter", adapter);
 
 		return map;
 	}
 
-	@AutomaticSibling(roles = "ApprovableSiblingRole")
 	@AuditTrails(className = SalesOrder.class, actionType = AuditTrailsActionType.UPDATE)
-	public FastMap<String, Object> edit(SalesOrder salesOrder) throws Exception {
-		salesOrder.setUpdatedBy(getPerson());
-		salesOrder.setUpdatedDate(DateHelper.now());
-
+	@AutomaticSibling(roles = "ApprovableSiblingRole")
+	public void edit(SalesOrder salesOrder) throws Exception
+	{
 		genericDao.update(salesOrder);
-
-		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("id", salesOrder.getId());
-
-		return map;
 	}
-	
+
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public SalesReferenceItem load(Long productId)
+	public SalesOrderReferenceItem load(Long productId)
 	{
 		return salesReferenceItemDao.loadByProduct(productId);
 	}
 
 	@AuditTrails(className = SalesOrder.class, actionType = AuditTrailsActionType.UPDATE)
-	public void close(Long id) throws ServiceException {
+	public void close(Long id) throws ServiceException
+	{
 		SalesOrder salesOrder = genericDao.load(SalesOrder.class, id);
 		salesOrder.setSoStatus(SOStatus.CLOSE);
 

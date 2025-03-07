@@ -11,7 +11,7 @@ import com.siriuserp.sales.dm.DeliveryOrder;
 import com.siriuserp.sales.dm.DeliveryOrderItem;
 import com.siriuserp.sales.dm.SOStatus;
 import com.siriuserp.sales.dm.SalesOrder;
-import com.siriuserp.sales.dm.SalesReferenceItem;
+import com.siriuserp.sales.dm.SalesOrderReferenceItem;
 import com.siriuserp.sales.form.DeliveryOrderForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
@@ -36,19 +36,21 @@ import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class DeliveryOrderService extends Service {
+public class DeliveryOrderService extends Service
+{
 
-    @Autowired
-    private GenericDao genericDao;
+	@Autowired
+	private GenericDao genericDao;
 
-    @Autowired
-    private CodeSequenceDao codeSequenceDao;
-    
-    @Autowired
-    private ProfileService profileService;
+	@Autowired
+	private CodeSequenceDao codeSequenceDao;
 
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws Exception {
+	@Autowired
+	private ProfileService profileService;
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws Exception
+	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("deliveryOrders", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
 		map.put("filterCriteria", filterCriteria);
@@ -57,30 +59,32 @@ public class DeliveryOrderService extends Service {
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public FastMap<String, Object> preadd2(Long id) throws ServiceException {
+	public FastMap<String, Object> preadd2(Long id) throws ServiceException
+	{
 		SalesOrder salesOrder = genericDao.load(SalesOrder.class, id);
 		DeliveryOrderForm form = new DeliveryOrderForm();
-		
+
 		Profile profile = profileService.loadProfile();
 
-		for (SalesReferenceItem salesReference: salesOrder.getItems()) {
+		/*for (SalesOrderReferenceItem salesReference: salesOrder.getItems()) {
 			Item item = new Item();
 			item.setSalesReferenceItem(salesReference);
-
+		
 			form.getItems().add(item);
-		}
+		}*/
 
 		form.setSalesOrder(salesOrder);
 
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("deliveryOrder_form", form);
 		map.put("facility", profile.getFacility());
-		
+
 		return map;
 	}
 
 	@AuditTrails(className = DeliveryOrder.class, actionType = AuditTrailsActionType.CREATE)
-	public void add(DeliveryOrder deliveryOrder) throws Exception {
+	public void add(DeliveryOrder deliveryOrder) throws Exception
+	{
 		DeliveryOrderForm form = (DeliveryOrderForm) deliveryOrder.getForm();
 
 		// Set DO value
@@ -92,9 +96,10 @@ public class DeliveryOrderService extends Service {
 		deliveryOrder.setCustomer(form.getSalesOrder().getCustomer());
 		deliveryOrder.setShippingAddress(form.getSalesOrder().getShippingAddress());
 
-		for (Item item: form.getItems()) {
+		for (Item item : form.getItems())
+		{
 			DeliveryOrderItem deliveryOrderItem = new DeliveryOrderItem();
-			deliveryOrderItem.setSalesReferenceItem(item.getSalesReferenceItem());
+			deliveryOrderItem.setSalesReference(item.getSalesReferenceItem());
 			deliveryOrderItem.setNote(item.getNote());
 			deliveryOrderItem.setDeliveryOrder(deliveryOrder);
 			deliveryOrderItem.setCreatedBy(getPerson());
@@ -105,9 +110,9 @@ public class DeliveryOrderService extends Service {
 
 			// Set deliverable menjadi false pada SalesReference terkait
 			// Set delivered sebagai DO Quantity
-			SalesReferenceItem salesReference = item.getSalesReferenceItem();
+			SalesOrderReferenceItem salesReference = item.getSalesReferenceItem();
 			salesReference.setDeliverable(false);
-			salesReference.setDelivered(item.getDelivered());
+			//salesReference.setDelivered(item.getDelivered());
 			salesReference.setUpdatedBy(getPerson());
 			salesReference.setUpdatedDate(DateHelper.now());
 
@@ -118,7 +123,8 @@ public class DeliveryOrderService extends Service {
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public FastMap<String,Object> preedit(Long id) throws Exception {
+	public FastMap<String, Object> preedit(Long id) throws Exception
+	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		DeliveryOrder deliveryOrder = genericDao.load(DeliveryOrder.class, id);
 		DeliveryOrderForm form = FormHelper.bind(DeliveryOrderForm.class, deliveryOrder);
@@ -126,13 +132,15 @@ public class DeliveryOrderService extends Service {
 		form.setDeliveryOrder(deliveryOrder);
 
 		// Set Reference Code from one of the Sales Reference
-		for (DeliveryOrderItem item: deliveryOrder.getItems()) {
-			if (item.getSalesReferenceItem().getReferenceId() != null) {
+		for (DeliveryOrderItem item : deliveryOrder.getItems())
+		{
+			/*if (item.getSalesReferenceItem().getReferenceId() != null)
+			{
 				SalesOrder salesOrder = genericDao.load(SalesOrder.class, item.getSalesReferenceItem().getReferenceId());
 				map.put("referenceCode", salesOrder.getCode());
 				map.put("poCode", salesOrder.getPoCode());
 				break;
-			}
+			}*/
 		}
 		map.put("deliveryOrder_form", form);
 
@@ -140,7 +148,8 @@ public class DeliveryOrderService extends Service {
 	}
 
 	@AuditTrails(className = DeliveryOrder.class, actionType = AuditTrailsActionType.UPDATE)
-	public FastMap<String, Object> edit(DeliveryOrder deliveryOrder) throws Exception {
+	public FastMap<String, Object> edit(DeliveryOrder deliveryOrder) throws Exception
+	{
 		deliveryOrder.setUpdatedBy(getPerson());
 		deliveryOrder.setUpdatedDate(DateHelper.now());
 
@@ -153,7 +162,8 @@ public class DeliveryOrderService extends Service {
 	}
 
 	@AuditTrails(className = DeliveryOrder.class, actionType = AuditTrailsActionType.UPDATE)
-	public DeliveryOrder sent(Long id) throws DataEditException {
+	public DeliveryOrder sent(Long id) throws DataEditException
+	{
 		DeliveryOrder deliveryOrder = genericDao.load(DeliveryOrder.class, id);
 		deliveryOrder.setStatus(SOStatus.SENT);
 

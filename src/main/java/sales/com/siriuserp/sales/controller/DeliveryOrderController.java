@@ -19,7 +19,7 @@ import com.siriuserp.sales.criteria.DeliveryOrderFilterCriteria;
 import com.siriuserp.sales.dm.DeliveryOrder;
 import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sales.dm.SalesOrderItem;
-import com.siriuserp.sales.dm.SalesReferenceItem;
+import com.siriuserp.sales.dm.SalesOrderReferenceItem;
 import com.siriuserp.sales.form.DeliveryOrderForm;
 import com.siriuserp.sales.query.DeliveryOrderGridViewQuery;
 import com.siriuserp.sales.query.DeliveryOrderPreaddViewQuery;
@@ -35,17 +35,17 @@ import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.utility.FormHelper;
 
 @Controller
-@SessionAttributes(value = { "deliveryOrder_form" }, types = DeliveryOrderForm.class)
+@SessionAttributes(value = "deliveryOrder_form", types = DeliveryOrderForm.class)
 @DefaultRedirect(url = "deliveryorderview.htm")
-public class DeliveryOrderController extends ControllerBase {
-
-    @Autowired
-    DeliveryOrderService doService;
+public class DeliveryOrderController extends ControllerBase
+{
+	@Autowired
+	DeliveryOrderService doService;
 
 	@Autowired
 	SalesOrderService salesOrderService;
 
-    @InitBinder
+	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
 		binder.registerCustomEditor(SalesOrder.class, modelEditor.forClass(SalesOrder.class));
@@ -54,21 +54,19 @@ public class DeliveryOrderController extends ControllerBase {
 		binder.registerCustomEditor(Container.class, modelEditor.forClass(Container.class));
 		binder.registerCustomEditor(PostalAddress.class, modelEditor.forClass(PostalAddress.class));
 		binder.registerCustomEditor(SalesOrderItem.class, modelEditor.forClass(SalesOrderItem.class));
-		binder.registerCustomEditor(SalesReferenceItem.class, modelEditor.forClass(SalesReferenceItem.class));
+		binder.registerCustomEditor(SalesOrderReferenceItem.class, modelEditor.forClass(SalesOrderReferenceItem.class));
 	}
 
-    @RequestMapping("/deliveryorderview.htm")
+	@RequestMapping("/deliveryorderview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/sales/deliveryOrderList",
-				doService.view(criteriaFactory.create(request, DeliveryOrderFilterCriteria.class), DeliveryOrderGridViewQuery.class));
+		return new ModelAndView("/sales/deliveryOrderList", doService.view(criteriaFactory.create(request, DeliveryOrderFilterCriteria.class), DeliveryOrderGridViewQuery.class));
 	}
 
 	@RequestMapping("/deliveryorderpreadd1.htm")
 	public ModelAndView preadd1(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/sales/deliveryOrderAdd1",
-				salesOrderService.view(criteriaFactory.create(request, DeliveryOrderFilterCriteria.class), DeliveryOrderPreaddViewQuery.class));
+		return new ModelAndView("/sales/deliveryOrderAdd1", salesOrderService.view(criteriaFactory.create(request, DeliveryOrderFilterCriteria.class), DeliveryOrderPreaddViewQuery.class));
 	}
 
 	@RequestMapping("/deliveryorderpreadd2.htm")
@@ -82,12 +80,14 @@ public class DeliveryOrderController extends ControllerBase {
 	{
 		JSONResponse response = new JSONResponse();
 
-		try {
+		try
+		{
 			doService.add(FormHelper.create(DeliveryOrder.class, deliveryOrderForm));
 			status.setComplete();
 
 			response.store("id", deliveryOrderForm.getDeliveryOrder().getId());
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 			response.statusError();
 			response.setMessage(e.getLocalizedMessage());
@@ -97,7 +97,8 @@ public class DeliveryOrderController extends ControllerBase {
 	}
 
 	@RequestMapping("/deliveryorderpreedit.htm")
-	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception {
+	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
+	{
 		return new ModelAndView("/sales/deliveryOrderUpdate", doService.preedit(id));
 	}
 
@@ -106,12 +107,14 @@ public class DeliveryOrderController extends ControllerBase {
 	{
 		JSONResponse response = new JSONResponse();
 
-		try {
+		try
+		{
 			doService.edit(FormHelper.update(deliveryOrderForm.getDeliveryOrder(), deliveryOrderForm));
 			status.setComplete();
 
 			response.store("id", deliveryOrderForm.getDeliveryOrder().getId());
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 			response.statusError();
 			response.setMessage(e.getLocalizedMessage());
@@ -121,15 +124,18 @@ public class DeliveryOrderController extends ControllerBase {
 	}
 
 	@RequestMapping("/deliveryordersent.htm")
-	public ModelAndView sent(@RequestParam("id") Long id, SessionStatus status) throws Exception {
+	public ModelAndView sent(@RequestParam("id") Long id, SessionStatus status) throws Exception
+	{
 		JSONResponse response = new JSONResponse();
 
-		try {
+		try
+		{
 			DeliveryOrder deliveryOrder = doService.sent(id);
 			status.setComplete();
 
 			response.store("id", deliveryOrder.getId());
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 			response.statusError();
 			response.setMessage(e.getLocalizedMessage());
@@ -139,12 +145,14 @@ public class DeliveryOrderController extends ControllerBase {
 	}
 
 	@RequestMapping("/deliveryorderprint.htm")
-	public ModelAndView print(@RequestParam("id") Long id) throws Exception {
+	public ModelAndView print(@RequestParam("id") Long id) throws Exception
+	{
 		return new ModelAndView("/sales/deliveryOrderPrint", doService.preedit(id));
 	}
-	
+
 	@RequestMapping("/deliveryorderinvoiceprint.htm")
-	public ModelAndView invoicePrint(@RequestParam("id") Long id) throws Exception {
+	public ModelAndView invoicePrint(@RequestParam("id") Long id) throws Exception
+	{
 		return new ModelAndView("/sales/deliveryOrderInvoicePrint", doService.preedit(id));
 	}
 }

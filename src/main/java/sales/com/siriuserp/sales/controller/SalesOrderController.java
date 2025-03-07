@@ -36,13 +36,13 @@ import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.utility.FormHelper;
 
 @Controller
-@SessionAttributes(value = { "salesOrder_form" }, types = SalesForm.class)
+@SessionAttributes(value = "salesOrder_form", types = SalesForm.class)
 @DefaultRedirect(url = "salesorderview.htm")
-public class SalesOrderController extends ControllerBase {
-	
+public class SalesOrderController extends ControllerBase
+{
 	@Autowired
 	private SalesOrderService service;
-	
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
@@ -56,33 +56,33 @@ public class SalesOrderController extends ControllerBase {
 		binder.registerCustomEditor(SalesType.class, enumEditor.forClass(SalesType.class));
 		binder.registerCustomEditor(SOStatus.class, enumEditor.forClass(SOStatus.class));
 		binder.registerCustomEditor(ApprovalDecisionStatus.class, enumEditor.forClass(ApprovalDecisionStatus.class));
-		
 	}
-	
+
 	@RequestMapping("/salesorderview.htm")
-	public ModelAndView view(HttpServletRequest request) throws Exception	
+	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/sales/salesOrderList",
-				service.view(criteriaFactory.create(request, SalesOrderFilterCriteria.class), SalesOrderGridViewQuery.class));
+		return new ModelAndView("/sales/salesOrderList", service.view(criteriaFactory.create(request, SalesOrderFilterCriteria.class), SalesOrderGridViewQuery.class));
 	}
-	
+
 	@RequestMapping("/salesorderpreadd.htm")
 	public ModelAndView preadd()
 	{
 		return new ModelAndView("/sales/salesOrderAdd", service.preadd());
 	}
-	
+
 	@RequestMapping("/salesorderadd.htm")
 	public ModelAndView add(@ModelAttribute("salesOrder_form") SalesForm salesForm, BindingResult result, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
-		try {
+		try
+		{
 			service.add(FormHelper.create(SalesOrder.class, salesForm));
 			status.setComplete();
 
 			response.store("id", salesForm.getSalesOrder().getId());
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 			response.statusError();
 			response.setMessage(e.getLocalizedMessage());
@@ -90,28 +90,11 @@ public class SalesOrderController extends ControllerBase {
 
 		return response;
 	}
-	
+
 	@RequestMapping("/salesorderpreedit.htm")
-	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception {
+	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
+	{
 		return new ModelAndView("/sales/salesOrderUpdate", service.preedit(id));
-	}
-
-	@RequestMapping("/salesorderclose.htm")
-	public ModelAndView close(@RequestParam("id") Long id, SessionStatus status) throws Exception {
-		JSONResponse response = new JSONResponse();
-
-		try {
-			service.close(id);
-			status.setComplete();
-
-			response.store("id", id);
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.statusError();
-			response.setMessage(e.getLocalizedMessage());
-		}
-
-		return response;
 	}
 
 	@RequestMapping("/salesorderedit.htm")
@@ -119,12 +102,35 @@ public class SalesOrderController extends ControllerBase {
 	{
 		JSONResponse response = new JSONResponse();
 
-		try {
+		try
+		{
 			service.edit(FormHelper.update(salesForm.getSalesOrder(), salesForm));
 			status.setComplete();
 
 			response.store("id", salesForm.getSalesOrder().getId());
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			response.statusError();
+			response.setMessage(e.getLocalizedMessage());
+		}
+
+		return response;
+	}
+
+	@RequestMapping("/salesorderclose.htm")
+	public ModelAndView close(@RequestParam("id") Long id, SessionStatus status) throws Exception
+	{
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			service.close(id);
+			status.setComplete();
+
+			response.store("id", id);
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 			response.statusError();
 			response.setMessage(e.getLocalizedMessage());
@@ -134,10 +140,11 @@ public class SalesOrderController extends ControllerBase {
 	}
 
 	@RequestMapping("/salesorderprint.htm")
-	public ModelAndView print(@RequestParam("id") Long id) throws Exception {
+	public ModelAndView print(@RequestParam("id") Long id) throws Exception
+	{
 		return new ModelAndView("/sales/salesOrderPrint", service.preedit(id));
 	}
-	
+
 	@RequestMapping("/salesorderbyproductjson.htm")
 	public ModelAndView viewJson(@RequestParam("productId") Long productId) throws ServiceException
 	{

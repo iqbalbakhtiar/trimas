@@ -8,7 +8,7 @@ import java.util.Date;
 
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.production.dm.CostCenter;
-import com.siriuserp.sales.dm.SalesReferenceItem;
+import com.siriuserp.sales.dm.SalesOrderReferenceItem;
 import com.siriuserp.sales.dm.SalesType;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -85,7 +85,7 @@ public class Item extends SiriusItem
 	private Currency currency;
 	private Tax tax;
 	private Product product;
-	private SalesReferenceItem salesReferenceItem;
+	private SalesOrderReferenceItem salesReferenceItem;
 	private BillingReferenceItem billingReferenceItem;
 	private WarehouseTransactionItem warehouseTransactionItem;
 	private InvoiceVerificationItem invoiceVerificationItem;

@@ -65,7 +65,7 @@ public class InvoiceVerificationItem extends Model
 	@JoinColumn(name = "fk_invoice_reference")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
-	private InvoiceVerificationItemReference invoiceReference;
+	private InvoiceVerificationReferenceItem invoiceReference;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_invoice_verification")

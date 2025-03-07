@@ -35,39 +35,40 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "delivery_order_item")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class DeliveryOrderItem extends Model {
+public class DeliveryOrderItem extends Model
+{
+	private static final long serialVersionUID = -4841672668391969021L;
 
-    private static final long serialVersionUID = -4841672668391969021L;
+	@Column(name = "note")
+	private String note;
 
-    @Column(name = "note")
-    private String note;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_delivery_order")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private DeliveryOrder deliveryOrder;
 
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name="fk_delivery_order")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private DeliveryOrder deliveryOrder;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_container")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Container container;
 
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name="fk_container")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private Container container;
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "fk_sales_reference")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private SalesOrderReferenceItem salesReference;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_sales_reference")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private SalesReferenceItem salesReferenceItem;
+	@OneToMany(mappedBy = "deliveryOrderItem", fetch = FetchType.LAZY)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	private Set<DeliveryOrderRealizationItem> realizationItems = new FastSet<DeliveryOrderRealizationItem>();
 
-    @OneToMany(mappedBy = "deliveryOrderItem", fetch = FetchType.LAZY)
-   	@LazyCollection(LazyCollectionOption.EXTRA)
-   	@Fetch(FetchMode.SELECT)
-   	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
-    private Set<DeliveryOrderRealizationItem> realizationItems = new FastSet<DeliveryOrderRealizationItem>();
-
-    @Override
-    public String getAuditCode() {
-        return id + "," + salesReferenceItem.getReferenceCode();
-    }
+	@Override
+	public String getAuditCode()
+	{
+		return getId().toString();
+	}
 }

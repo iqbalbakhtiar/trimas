@@ -13,7 +13,7 @@ package com.siriuserp.accountpayable.dm;
 
 public class InvoiceVerificationReferenceHelper
 {
-	public static InvoiceVerificationItem initItem(InvoiceVerificationItemReference itemReference) throws Exception
+	public static InvoiceVerificationItem initItem(InvoiceVerificationReferenceItem itemReference) throws Exception
 	{
 		InvoiceVerificationItem item = new InvoiceVerificationItem();
 		item.setInvoiceReference(itemReference);

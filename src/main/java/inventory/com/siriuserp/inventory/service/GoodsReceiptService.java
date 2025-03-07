@@ -11,7 +11,7 @@ import org.springframework.util.Assert;
 
 import com.siriuserp.accountpayable.dm.InvoiceVerification;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationItem;
-import com.siriuserp.accountpayable.dm.InvoiceVerificationItemReference;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceItem;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceHelper;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceType;
 import com.siriuserp.accountpayable.service.InvoiceVerificationService;
@@ -266,13 +266,14 @@ public class GoodsReceiptService extends Service
 		{
 			WarehouseReferenceItem wrReferenceItem = goodsReceiptItem.getWarehouseTransactionItem().getReferenceItem();
 
-			InvoiceVerificationItemReference invoiceReference = new InvoiceVerificationItemReference();
+			InvoiceVerificationReferenceItem invoiceReference = new InvoiceVerificationReferenceItem();
 			invoiceReference.setCode(goodsReceipt.getCode());
 			invoiceReference.setDate(goodsReceipt.getDate());
 			invoiceReference.setOrganization(goodsReceipt.getOrganization());
 			invoiceReference.setFacility(goodsReceipt.getFacility());
 			invoiceReference.setSupplier(goodsReceiptItem.getWarehouseTransactionItem().getReferenceItem().getParty());
 			invoiceReference.setGoodsReceiptItem(goodsReceiptItem);
+			invoiceReference.setPurchaseOrderItem(genericDao.load(PurchaseOrderItem.class, wrReferenceItem.getId()));
 			invoiceReference.setVerificated(true);
 			invoiceReference.setReferenceType(InvoiceVerificationReferenceType.GOODS_RECEIPT);
 			genericDao.add(invoiceReference);

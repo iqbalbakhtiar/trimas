@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.siriuserp.accountpayable.dm.InvoiceVerification;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationItem;
-import com.siriuserp.accountpayable.dm.InvoiceVerificationItemReference;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceItem;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceHelper;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceType;
 import com.siriuserp.accountpayable.service.InvoiceVerificationService;
@@ -263,7 +263,7 @@ public class StandardPurchaseOrderService extends Service
 
 		for (PurchaseOrderItem purchaseItem : purchaseOrder.getItems())
 		{
-			InvoiceVerificationItemReference invoiceReference = new InvoiceVerificationItemReference();
+			InvoiceVerificationReferenceItem invoiceReference = new InvoiceVerificationReferenceItem();
 			invoiceReference.setCode(purchaseOrder.getCode());
 			invoiceReference.setDate(purchaseOrder.getDate());
 			invoiceReference.setOrganization(purchaseOrder.getOrganization());

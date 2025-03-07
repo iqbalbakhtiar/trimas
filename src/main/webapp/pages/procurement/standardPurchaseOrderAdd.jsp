@@ -64,7 +64,7 @@
                     <option value="${tax.id}" data-taxrate="${tax.taxRate}">${tax.taxName}</option>
                   </c:forEach>
                 </form:select>
-                <input size="5" id="taxRate" class="input-number input-disabled" disabled />&nbsp;%
+                <input size="5" id="taxRate" class="number-disabled" disabled />&nbsp;%
               </td>
             </tr>
             <tr>

@@ -1,4 +1,4 @@
-package com.siriuserp.sales.query;
+package com.siriuserp.accountreceivable.query;
 
 import com.siriuserp.accountreceivable.criteria.BillingFilterCriteria;
 import com.siriuserp.accountreceivable.dm.BillingType;
