@@ -111,6 +111,7 @@ public class StandardPurchaseOrderService extends Service
 		purchaseOrder.setPurchaseType(PurchaseType.STANDARD);
 		purchaseOrder.setStatus(POStatus.OPEN);
 		purchaseOrder.setInvoiceBeforeReceipt(true);
+		purchaseOrder.setUri("standardpurchaseorderpreedit.htm");
 
 		//Add ApprovableBridge using Helper when needed approval
 		if (purchaseOrder.getApprover() != null)

@@ -36,6 +36,8 @@ import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.view.ViewHelper;
 import com.siriuserp.sdk.utility.FormHelper;
 
+import java.util.Map;
+
 /**
  * @author Iqbal Bakhtiar
  * PT. Sirius Indonesia
@@ -67,21 +69,44 @@ public class BarcodeGroupController extends ControllerBase
 	}
 
 	@RequestMapping("/barcodegrouppreadd1.htm")
-	public ModelAndView preadd1(@RequestParam(value = "referenceId", required = false) Long referenceId, @RequestParam(value = "barcodeType", required = false) BarcodeGroupType barcodeType) throws Exception
-	{
-		return new ModelAndView("/inventory/item-management/barcodeGroupAdd1", service.preadd1(referenceId, barcodeType));
+	public ModelAndView preadd1(
+			@RequestParam(value = "referenceId", required = false) Long referenceId,
+			@RequestParam(value = "barcodeType", required = false) BarcodeGroupType barcodeType) throws Exception {
+
+		Map<String, Object> model = service.preadd1(referenceId, barcodeType);
+
+		model.put("referenceId", referenceId);
+		model.put("barcodeType", barcodeType);
+
+		return new ModelAndView("/inventory/item-management/barcodeGroupAdd1", model);
 	}
 
 	@RequestMapping("/barcodegrouppreadd2.htm")
-	public ModelAndView preadd2(@ModelAttribute("barcode_form") InventoryForm form) throws Exception
-	{
-		return new ModelAndView("/inventory/item-management/barcodeGroupAdd2", service.preadd2(form));
+	public ModelAndView preadd2(
+			@ModelAttribute("barcode_form") InventoryForm form,
+			@RequestParam(value = "referenceId", required = false) Long referenceId,
+			@RequestParam(value = "barcodeType", required = false) BarcodeGroupType barcodeType) throws Exception {
+
+		Map<String, Object> model = service.preadd2(form);
+
+		model.put("referenceId", referenceId);
+		model.put("barcodeType", barcodeType);
+
+		return new ModelAndView("/inventory/item-management/barcodeGroupAdd2", model);
 	}
 
 	@RequestMapping("/barcodegrouppreadd3.htm")
-	public ModelAndView preadd3(@ModelAttribute("barcode_form") InventoryForm form) throws Exception
+	public ModelAndView preadd3(
+			@ModelAttribute("barcode_form") InventoryForm form,
+			@RequestParam(value = "referenceId", required = false) Long referenceId,
+			@RequestParam(value = "barcodeType", required = false) BarcodeGroupType barcodeType) throws Exception
 	{
-		return new ModelAndView("/inventory/item-management/barcodeGroupAdd3", service.preadd3(form));
+		Map<String, Object> model = service.preadd3(form);
+
+		model.put("referenceId", referenceId);
+		model.put("barcodeType", barcodeType);
+
+		return new ModelAndView("/inventory/item-management/barcodeGroupAdd3", model);
 	}
 
 	@RequestMapping("/barcodegroupadd.htm")

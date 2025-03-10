@@ -103,6 +103,7 @@ public class DirectPurchaseOrderService extends Service
 		purchaseOrder.setPurchaseType(PurchaseType.DIRECT);
 		purchaseOrder.setStatus(POStatus.OPEN);
 		purchaseOrder.setInvoiceBeforeReceipt(true);
+		purchaseOrder.setUri("directpurchaseorderpreedit.htm");
 
 		//Add ApprovableBridge using Helper when needed approval
 		if (purchaseOrder.getApprover() != null)
@@ -151,8 +152,7 @@ public class DirectPurchaseOrderService extends Service
 			purchaseOrder.setStatus(POStatus.BARCODE);
 
 		System.out.println(purchaseOrder.getSupplierPhone().getContact());
-
-//		throw new ServiceException("Test");
+		
 		genericDao.add(purchaseOrder);
 
 		if (purchaseOrder.getApprovable() == null && purchaseOrder.isInvoiceBeforeReceipt())

@@ -1,7 +1,14 @@
 <%@ include file="/common/sirius-general-top.jsp"%>
 
 <div class="toolbar">
-    <a class="item-button-back" href="<c:url value='/page/barcodegrouppreadd1.htm'/>"><span><spring:message code="sirius.back"/></span></a>
+    <a class="item-button-back" href="
+    <c:url value='/page/barcodegrouppreadd1.htm'>
+        <c:if test="${not empty referenceId and not empty barcodeType}">
+            <c:param name='referenceId' value='${referenceId != null ? referenceId : ""}'/>
+            <c:param name='barcodeType' value='${barcodeType != null ? barcodeType : ""}'/>
+        </c:if>
+    </c:url>"><span><spring:message code="sirius.back"/></span>
+    </a>
     <a class="item-button-save b_entry" ><span><spring:message code="sirius.save"/></span></a>
 </div>
 

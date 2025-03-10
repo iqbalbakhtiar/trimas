@@ -2,6 +2,14 @@
 
 <div class="toolbar">
     <a class="item-button-list" href="<c:url value='/page/barcodegroupview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
+    <c:if test="${not empty barcode_form.purchaseOrder.uri}">
+        <c:url var="backUrl" value="/page/${barcode_form.purchaseOrder.uri}">
+            <c:param name="id" value="${barcode_form.purchaseOrder.id}" />
+        </c:url>
+        <a class="item-button-back" href="${backUrl}">
+            <span><spring:message code="sirius.back"/></span>
+        </a>
+    </c:if>
     <a class="item-button-next" ><span><spring:message code="sirius.next"/></span></a>
 </div>
 
@@ -87,7 +95,14 @@
                 return;
             }
 
-            document.addForm.action = "<c:url value='/page/barcodegrouppreadd2.htm'/>";
+            <c:url var="targetUrl" value="/page/barcodegrouppreadd2.htm">
+                <c:if test="${not empty referenceId and not empty barcodeType}">
+                    <c:param name="referenceId" value="${referenceId}" />
+                    <c:param name="barcodeType" value="${barcodeType}" />
+                </c:if>
+            </c:url>
+
+            document.addForm.action = "${targetUrl}";
             document.addForm.submit();
         });
     });

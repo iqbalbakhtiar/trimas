@@ -94,6 +94,9 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 	@Column(name = "note")
 	private String note;
 
+	@Column(name = "uri")
+	private String uri;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_party_organization")
 	@LazyToOne(LazyToOneOption.PROXY)
@@ -176,7 +179,7 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 	@Override
 	public String getUri()
 	{
-		return "";
+		return this.uri;
 	}
 
 	@Override
