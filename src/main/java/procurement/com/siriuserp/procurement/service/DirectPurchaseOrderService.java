@@ -195,6 +195,14 @@ public class DirectPurchaseOrderService extends Service
 
 		genericDao.update(purchaseOrder);
 
+		for (Item item : purchaseOrder.getForm().getItems()) {
+			if (item.getReference() != null) {
+				PurchaseOrderItem poi = genericDao.load(PurchaseOrderItem.class, item.getReference());
+				purchaseOrder.getItems().remove(poi);
+				genericDao.delete(poi);
+			}
+		}
+
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("id", purchaseOrder.getId());
 
