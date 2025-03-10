@@ -9,7 +9,7 @@
 <sesform:form id="addForm" name="addForm" method="post" modelAttribute="supplier_edit" enctype="multipart/form-data">
 	<table style="border:none" width="100%">
 		<tr>
-			<td width="34%" align="right"><span>Supplier ID</td>
+			<td width="34%" align="right">Supplier ID</td>
 			<td width="1%" align="center">:</td>
 			<td width="64%"><form:input id='code' path="code" disabled='true' class='input-disabled'/></td>
 		</tr>
@@ -30,19 +30,27 @@
 			<td><form:input path="salutation" size="10" class="input-disabled" disabled='true'/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>Supplier Name</td>
+			<td align="right"><spring:message code="supplier.name"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="fullName" cssClass="inputbox input-disabled" disabled='true'/></td>
 			<td><form:errors path="fullName"/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>NPWP</td>
+			<td align="right"><spring:message code="party.pkp"/> :</td>
+			<td width="1%" align="center">:</td>
+			<td>
+				<form:radiobutton path="taxable" value="true" label="Yes" disabled="true"/>
+				<form:radiobutton path="taxable" value="false" label="No" disabled="true"/>
+			</td>
+		</tr>
+		<tr>
+			<td align="right"><spring:message code="party.npwp"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="taxCode" cssClass="inputbox input-disabled" disabled='true'/></td>
 			<td><form:errors path="taxCode"/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>SIUP</td>
+			<td align="right"><spring:message code="party.siup"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="permitCode" cssClass="inputbox input-disabled" disabled='true'/></td>
 			<td><form:errors path="permitCode"/></td>
@@ -56,7 +64,7 @@
 			</td>
 		</tr>	
 		<tr>
-			<td align="right"><span>Keterangan Tambahan</td>
+			<td align="right"><spring:message code="sirius.note"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:textarea path="note" rows="6" cols="45"/></td>
 			<td>&nbsp;</td>
@@ -232,33 +240,27 @@ $(function(){
 });
 
 function save() {
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', "<c:url value='/page/supplieredit.htm?relationshipId='/>" + ${relationship.id});
-	xhr.responseType = 'json';
-	
-	if(xhr.readyState == 1) {
-		$dialog.empty();
-		$dialog.html('<spring:message code="notif.saving"/>');
-		$dialog.dialog('open');
-	}
-	
-	xhr.onreadystatechange = function () {
-		if(xhr.readyState == 4) {
-			var json = xhr.response;
-			if(json) {
-				if(json.status == 'OK') {
+	$.ajax({
+		url: "<c:url value='/page/supplieredit.htm?relationshipId='/>" + ${relationship.id},
+		data: $('#addForm').serialize(),
+		type: 'POST',
+		dataType: 'json',
+		beforeSend: function() {
+			$dialog.empty();
+			$dialog.html('<spring:message code="notif.saving"/>');
+			$dialog.dialog('open');
+		},
+		success: function(json) {
+			if (json) {
+				if (json.status === 'OK') {
 					$dialog.dialog('close');
-					
-					let url = "<c:url value='/page/supplierpreedit.htm?id='/>"+json.data.relationshipId;;
-					
-					window.location=url;
+					window.location = "<c:url value='/page/supplierpreedit.htm?id='/>" + json.data.relationshipId;
 				} else {
-					afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
+					$dialog.empty();
+					$dialog.html('<spring:message code="notif.profailed"/> :<br/>' + json.message);
 				}
 			}
 		}
-	};
-	
-	xhr.send(new FormData($('#addForm')[0]));
+	});
 }
 </script>

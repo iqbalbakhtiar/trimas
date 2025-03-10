@@ -9,7 +9,7 @@
 <sesform:form id="addForm" name="addForm" method="post" modelAttribute="supplier_add" enctype="multipart/form-data">
 	<table style="border:none" width="100%">
 		<tr>
-			<td width="34%" align="right"><span>Supplier ID</td>
+			<td width="34%" align="right">Supplier ID</td>
 			<td width="1%" align="center">:</td>
 			<td width="64%"><input class="inputbox input-disabled" value="Auto Number" disabled/></td>
 			<td width="1%"><form:errors path="code"/></td>
@@ -32,19 +32,27 @@
 			<td><form:input path="salutation" size="10"/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>Supplier Name</td>
+			<td align="right"><spring:message code="supplier.name"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="fullName" cssClass="inputbox" /></td>
 			<td><form:errors path="fullName"/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>NPWP</td>
+			<td align="right"><spring:message code="party.pkp"/> :</td>
+			<td width="1%" align="center">:</td>
+			<td>
+				<form:radiobutton path="taxable" value="true" label="Yes"/>
+				<form:radiobutton path="taxable" value="false" label="No"/>
+			</td>
+		</tr>
+		<tr>
+			<td align="right"><spring:message code="party.npwp"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="taxCode" cssClass="inputbox" /></td>
 			<td><form:errors path="taxCode"/></td>
 		</tr>
 		<tr>
-			<td align="right"><span>SIUP</td>
+			<td align="right"><spring:message code="party.siup"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:input path="permitCode" cssClass="inputbox" /></td>
 			<td><form:errors path="permitCode"/></td>
@@ -58,7 +66,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right"><span>Keterangan Tambahan</td>
+			<td align="right"><spring:message code="sirius.note"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:textarea path="note" rows="6" cols="45"/></td>
 			<td>&nbsp;</td>
@@ -80,8 +88,8 @@ function validateForm() {
 	var organization = $('#org').val();
 	var salutation = $('input[name="salutation"]').val();
 	var fullName = $('input[name="fullName"]').val();
+	var taxable = $('input[name="taxable"]:checked').val();
 	var taxCode = $('input[name="taxCode"]').val();
-	var permitCode = $('input[name="permitCode"]').val();
 	var active = $('input[name="active"]:checked').val();
 
 	if (organization == null || organization === "") {
@@ -95,18 +103,15 @@ function validateForm() {
 	}
 	
 	if (fullName == null || fullName.trim() === "") {
-		alert('<spring:message code="customer.name"/> <spring:message code="notif.empty"/> !');
+		alert('<spring:message code="supplier.name"/> <spring:message code="notif.empty"/> !');
 		return false;
 	}
 
-	if (taxCode == null || taxCode.trim() === "") {
-		alert('NPWP <spring:message code="notif.empty"/> !');
-		return false;
-	}
-	
-	if (permitCode == null || permitCode.trim() === "") {
-		alert('SIUP <spring:message code="notif.empty"/> !');
-		return false;
+	if (taxable === "true") {
+		if (taxCode == null || taxCode.trim() === "") {
+			alert('<spring:message code="party.npwp"/> <spring:message code="notif.empty"/> !');
+			return false;
+		}
 	}
 
 	if (active == null || active === undefined) {
@@ -118,33 +123,34 @@ function validateForm() {
 }
 
 function save() {
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', "<c:url value='/page/supplieradd.htm'/>");
-	xhr.responseType = 'json';
-	
-	if(xhr.readyState == 1) {
-		$dialog.empty();
-		$dialog.html('<spring:message code="notif.saving"/>');
-		$dialog.dialog('open');
-	}
-	
-	xhr.onreadystatechange = function () {
-		if(xhr.readyState == 4) {
-			var json = xhr.response;
-			if(json) {
-				if(json.status == 'OK') {
+	$.ajax({
+		url:"<c:url value='/page/supplieradd.htm'/>",
+		data:$('#addForm').serialize(),
+		type : 'POST',
+		dataType : 'json',
+		beforeSend:function()
+		{
+			$dialog.empty();
+			$dialog.html('<spring:message code="notif.saving"/>');
+			$dialog.dialog('open');
+		},
+		success : function(json) {
+			if(json)
+			{
+				if(json.status === 'OK')
+				{
 					$dialog.dialog('close');
-					
-					let url = "<c:url value='/page/supplierpreedit.htm?id='/>"+json.data.id;;
-					
-					window.location=url;
-				} else {
-					afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
+					<%--window.location="<c:url value='/page/supplierview.htm'/>";--%>
+					// Or Can use This
+					window.location="<c:url value='/page/supplierpreedit.htm?id='/>"+json.data.id;
+				}
+				else
+				{
+					$dialog.empty();
+					$dialog.html('<spring:message code="notif.profailed"/> :<br/>'+json.message);
 				}
 			}
 		}
-	};
-	
-	xhr.send(new FormData($('#addForm')[0]));
+	});
 }
 </script>

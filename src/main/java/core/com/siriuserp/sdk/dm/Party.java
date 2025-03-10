@@ -98,6 +98,11 @@ public class Party extends Model implements JSONSupport
 	@Type(type = "yes_no")
 	private boolean base = Boolean.FALSE;
 
+	// Alias PKP ( Pengusaha Kena Pajak )
+	@Column(name = "taxable")
+	@Type(type = "yes_no")
+	private boolean taxable = Boolean.FALSE;
+
 	@Column(name = "level")
 	@Enumerated(EnumType.STRING)
 	protected FlagLevel flagLevel = FlagLevel.USERLEVEL;
