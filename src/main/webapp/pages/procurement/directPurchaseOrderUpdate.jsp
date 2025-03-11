@@ -7,6 +7,9 @@
   <c:if test="${access.add and dpo_edit.barcodeable}">
   	<a class="item-button-doc" href="javascript:createBarcode(${dpo_edit.id});"><span><spring:message code="sirius.create"/>&nbsp;<spring:message code="barcode"/></span></a>
   </c:if>
+  <c:if test="${dpo_edit.status != 'CLOSED'}">
+    <a class="item-button-close"><span><spring:message code="sirius.close"/></span></a>
+  </c:if>
 </div>
 
 <div class="main-box">
@@ -15,6 +18,7 @@
       <tr valign="top">
         <td width="60%">
           <table style="border:none" width="100%">
+            <input type="hidden" id="status" name="status" value="${dpo_edit.status}"/>
             <tr>
               <td width="34%" align="right"><spring:message code="sirius.id"/></td>
               <td width="1%" align="center">:</td>
@@ -256,13 +260,22 @@
       </div>
     </div>
   </sesform:form>
-</div>
+</div><spring:message code="notif.proceed"/>
 <div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${dpo_edit.createdBy.fullName}'/> (<fmt:formatDate value='${dpo_edit.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${dpo_edit.updatedBy.fullName}'/> (<fmt:formatDate value='${dpo_edit.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
 <%@ include file="/common/sirius-general-bottom.jsp"%>
 <script type="text/javascript">
   $(function(){
     $('.item-button-save').click(function(){
         save();
+    });
+
+    $('.item-button-close').click(function(){
+      confirmDialog("<spring:message code="notif.proceed"/> (<spring:message code="sirius.close"/> <spring:message code="purchaseorder"/>) ?", function(){
+        $('#status').val("CLOSED");
+        save();
+      }, function(){
+        return false;
+      });
     });
 
     $('.item-button-delete').click(function () {
@@ -315,7 +328,7 @@
       }
     });
   }
-  
+
   function createBarcode(id)
   {
 	const confirmDialog = $('<div><spring:message code="notif.proceed"/> (<spring:message code="sirius.create"/> <spring:message code="barcode"/>) ?</div>').dialog(

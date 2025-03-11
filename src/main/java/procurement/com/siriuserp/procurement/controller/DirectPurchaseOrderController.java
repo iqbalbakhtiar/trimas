@@ -2,6 +2,7 @@ package com.siriuserp.procurement.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.siriuserp.procurement.dm.POStatus;
 import com.siriuserp.sdk.dm.ContactMechanism;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,6 +54,7 @@ public class DirectPurchaseOrderController extends ControllerBase
 		binder.registerCustomEditor(PostalAddress.class, modelEditor.forClass(PostalAddress.class));
 		binder.registerCustomEditor(ContactMechanism.class, modelEditor.forClass(ContactMechanism.class));
 		binder.registerCustomEditor(ApprovalDecisionStatus.class, enumEditor.forClass(ApprovalDecisionStatus.class));
+		binder.registerCustomEditor(POStatus.class, enumEditor.forClass(POStatus.class));
 	}
 
 	@RequestMapping("/directpurchaseorderview.htm")

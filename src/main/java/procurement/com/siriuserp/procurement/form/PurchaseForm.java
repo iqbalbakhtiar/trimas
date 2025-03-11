@@ -1,5 +1,6 @@
 package com.siriuserp.procurement.form;
 
+import com.siriuserp.procurement.dm.POStatus;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.procurement.dm.PurchaseRequisition;
 import com.siriuserp.sdk.dm.Approvable;
@@ -30,4 +31,6 @@ public class PurchaseForm extends Form
 	private PurchaseRequisition purchaseRequisition;
 	private PurchaseOrder purchaseOrder;
 	private ContactMechanism supplierPhone;
+
+	private POStatus status;
 }

@@ -63,6 +63,7 @@
                 <th width="10%"><spring:message code="supplier"/></th>
                 <th width="5%"><spring:message code="sirius.tax"/></th>
                 <th width="10%"><spring:message code="salesorder.approvalstatus"/></th>
+                <th width="5%"><spring:message code="sirius.status"/></th>
                 <th width="10%"><spring:message code="sirius.approver"/></th>
                 <th width="10%"><spring:message code="dpo.billto"/></th>
                 <th width="10%"><spring:message code="dpo.shipto"/></th>
@@ -79,13 +80,14 @@
                   <td nowrap="nowrap">${dpo.supplier.fullName}</td>
                   <td nowrap="nowrap">${dpo.tax.taxName}</td>
                   <td nowrap="nowrap">${dpo.approvable.approvalDecision.approvalDecisionStatus.normalizedName}</td>
+                  <td nowrap="nowrap">${dpo.status}</td>
                   <td nowrap="nowrap">${dpo.approvable.approvalDecision.forwardTo.fullName}</td>
                   <td nowrap="nowrap">${dpo.billTo.addressName}</td>
                   <td nowrap="nowrap">${dpo.shipTo.name}</td>
                   <td nowrap="nowrap"><fmt:formatNumber value='${dpo.money.amount}' pattern=',##0.00'/></td>
                 </tr>
               </c:forEach>
-              <tr class="end-table"><td colspan="11">&nbsp;</td></tr>
+              <tr class="end-table"><td colspan="12">&nbsp;</td></tr>
             </table>
             <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
               <tr>

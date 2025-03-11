@@ -1,6 +1,7 @@
 package com.siriuserp.procurement.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -203,6 +204,15 @@ public class DirectPurchaseOrderService extends Service
 			}
 		}
 
+		if (purchaseOrder.getStatus() == POStatus.CLOSED) {
+			// Ambil invoice verifications yang terkait dari PurchaseOrder
+			Set<InvoiceVerification> invoiceVerifs = purchaseOrder.getInvoiceVerifications();
+			for (InvoiceVerification inv : invoiceVerifs) {
+				// Hapus data invoice verification
+				genericDao.delete(inv);
+			}
+		}
+		
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("id", purchaseOrder.getId());
 
