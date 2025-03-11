@@ -7,8 +7,8 @@
   <c:if test="${access.add and dpo_edit.barcodeable}">
   	<a class="item-button-doc" href="javascript:createBarcode(${dpo_edit.id});"><span><spring:message code="sirius.create"/>&nbsp;<spring:message code="barcode"/></span></a>
   </c:if>
-  <c:if test="${dpo_edit.status != 'CLOSED'}">
-    <a class="item-button-close"><span><spring:message code="sirius.close"/></span></a>
+  <c:if test="${dpo_edit.status != 'CLOSED' and (approvalDecision == null or approvalDecision.approvalDecisionStatus == 'APPROVE_AND_FINISH')}">
+  <a class="item-button-close"><span><spring:message code="sirius.close"/></span></a>
   </c:if>
 </div>
 
