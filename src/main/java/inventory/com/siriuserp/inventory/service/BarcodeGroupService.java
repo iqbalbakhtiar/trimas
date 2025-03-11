@@ -1,5 +1,6 @@
 package com.siriuserp.inventory.service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,11 +105,12 @@ public class BarcodeGroupService
 
 			for (PurchaseOrderItem purchaseItem : purchaseOrder.getItems())
 			{
-				if (purchaseItem.getProduct().isSerial() && purchaseItem.getItemParent() == null)
+				BigDecimal quantity = purchaseItem.getQuantity().subtract(purchaseItem.getBarcodeQuantity());
+				if (purchaseItem.getProduct().isSerial() && purchaseItem.getItemParent() == null && quantity.compareTo(BigDecimal.ZERO) > 0)
 				{
 					Item item = new Item();
 					item.setProduct(purchaseItem.getProduct());
-					item.setQuantity(purchaseItem.getQuantity());
+					item.setQuantity(quantity);
 					item.setReference(purchaseItem.getId());
 
 					items.add(item);
@@ -168,11 +170,16 @@ public class BarcodeGroupService
 			if (item.getProduct() != null && SiriusValidator.gz(item.getQuantity()))
 			{
 				Barcode barcode = new Barcode();
-				barcode.setCode(GeneratorHelper.instance().generate(TableType.BARCODE_PRODUCT, codeSequenceDao));
-				barcode.setBarcodeGroup(barcodeGroup);
+
+				if (SiriusValidator.validateParam(item.getCode()))
+					barcode.setCode(item.getCode());
+				else
+					barcode.setCode(GeneratorHelper.instance().generate(TableType.BARCODE_PRODUCT, codeSequenceDao));
+
 				barcode.setProduct(item.getProduct());
 				barcode.setQuantity(item.getQuantity());
 				barcode.setQuantityReal(item.getQuantityReal());
+				barcode.setBarcodeGroup(barcodeGroup);
 				item.setSerial(barcode.getCode());
 
 				barcodeGroup.getBarcodes().add(barcode);

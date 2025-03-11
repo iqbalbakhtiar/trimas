@@ -18,6 +18,7 @@ import com.siriuserp.accountpayable.dm.InvoiceVerificationItemReference;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceHelper;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceType;
 import com.siriuserp.accountpayable.service.InvoiceVerificationService;
+import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.inventory.dm.WarehouseTransactionSource;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
@@ -125,13 +126,17 @@ public class PurchaseOrderService extends Service
 		{
 			if (item.getReference() != null)
 			{
-				PurchaseRequisitionItem requisitionItem = genericDao.load(PurchaseRequisitionItem.class, item.getReference());
-				requisitionItem.setAvailable(false);
-				genericDao.update(requisitionItem);
-
 				PurchaseOrderItem purchaseItem = new PurchaseOrderItem();
-				purchaseItem.setRequisitionItem(requisitionItem);
-				purchaseItem.setProduct(requisitionItem.getProduct());
+				if (purchaseOrder.getPurchaseType().equals(PurchaseType.STANDARD))
+				{
+					PurchaseRequisitionItem requisitionItem = genericDao.load(PurchaseRequisitionItem.class, item.getReference());
+					requisitionItem.setAvailable(false);
+					genericDao.update(requisitionItem);
+					purchaseItem.setRequisitionItem(requisitionItem);
+					purchaseItem.setProduct(requisitionItem.getProduct());
+				} else
+					purchaseItem.setProduct(genericDao.load(Product.class, item.getReference()));
+
 				purchaseItem.setQuantity(item.getQuantity());
 				purchaseItem.setDiscount(item.getDiscount());
 				purchaseItem.getMoney().setAmount(item.getAmount());
@@ -183,6 +188,7 @@ public class PurchaseOrderService extends Service
 				purchaseItem.getLot().setSerial(item.getSerial());
 				purchaseItem.setProduct(item.getProduct());
 				purchaseItem.setQuantity(item.getQuantityReal());
+				purchaseItem.setBarcodeQuantity(item.getQuantity());
 				purchaseItem.getMoney().setAmount(purchaseItem.getItemParent().getMoney().getAmount());
 				purchaseItem.getMoney().setCurrency(purchaseItem.getItemParent().getMoney().getCurrency());
 				purchaseItem.setFacilityDestination(purchaseOrder.getShipTo());

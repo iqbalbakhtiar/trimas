@@ -98,6 +98,7 @@
                             <th width="10%" nowrap="nowrap"><spring:message code="product.code"/></th>
                             <th width="15%" nowrap="nowrap"><spring:message code="product"/></th>
                             <th width="4%" nowrap="nowrap"><spring:message code="product.uom"/></th>
+                            <th width="10%" nowrap="nowrap"><spring:message code="barcode"/></th>
                             <th width="5%" nowrap="nowrap"><spring:message code="barcode.quantity.base"/></th>
                             <th width="55%" nowrap="nowrap"><spring:message code="barcode.quantity.real"/></th>
                         </tr>
@@ -115,6 +116,7 @@
                                 </select>
                             </td>
                             <td><input value="${barcode.product.unitOfMeasure.measureId}" class="input-disabled" size="5" disabled/></td>
+                            <td><input id="code[${status.index}]" value="" name="items[${status.index}].code" index="${status.index}" class="inputbox barcodes" size="15" next="barcode"/></td>
                             <td><input id="quantity[${status.index}]" value="0.00" name="items[${status.index}].quantity" index="${status.index}" class="input-decimal quantities ref${barcode.referenceId}" size="10" onchange="countQuantities(${status.index})" next="quan" group="${barcode.referenceId}"/></td>
                             <td>
                             	<input id="quantityReal[${status.index}]" value="0.00" name="items[${status.index}].quantityReal" index="${status.index}" class="input-decimal realQuantities refReal${barcode.referenceId}" size="10" onchange="countRealQuantities(${status.index})" next="realQuan" group="${barcode.referenceId}"/>
@@ -125,7 +127,7 @@
                         	<c:set var="number" value="${number+1}"/>
                         </c:if>
                         <c:if test="${empty barcode.product}">
-                        	<td colspan="4"></td>
+                        	<td colspan="5"></td>
                         	<td><input id="total${barcode.referenceId}" value="0.00" class="number-disabled totals" size="10" disabled="true" group="${barcode.referenceId}"/></td>
                         	<td><input id="totalReal${barcode.referenceId}" value="0.00" class="number-disabled" size="10" disabled="true" group="${barcode.referenceId}"/></td>
                         </c:if>
@@ -133,7 +135,7 @@
                         </c:forEach>
                         </tbody>
                         <tfoot>
-                        <tr class="end-table"><td colspan="13">&nbsp;</td></tr>
+                        <tr class="end-table"><td colspan="7">&nbsp;</td></tr>
                         </tfoot>
                     </table>
                 </div>
@@ -174,7 +176,7 @@
             }
         });
         
-        $.each($(".totals"), function(i, obj)
+        /* $.each($(".totals"), function(i, obj)
         {
             var idx = obj.getAttribute('index');
             var group = obj.getAttribute('group');
@@ -187,7 +189,7 @@
                 alert('<spring:message code="sirius.total.quantity"/> <spring:message code="notif.different"/> <spring:message code="sirius.total"/> <spring:message code="sirius.reference"/> ('+product+') !!!');
                 return $status = false;
             }
-        });
+        }); */
 
         if($status) {
             $.ajax({

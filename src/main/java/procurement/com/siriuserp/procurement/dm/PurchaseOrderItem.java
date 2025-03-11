@@ -51,6 +51,9 @@ public class PurchaseOrderItem extends WarehouseReferenceItem implements JSONSup
 	@Column(name = "quantity")
 	private BigDecimal quantity = BigDecimal.ZERO;
 
+	@Column(name = "barcode_quantity")
+	private BigDecimal barcodeQuantity = BigDecimal.ZERO;
+
 	@Column(name = "discount")
 	private BigDecimal discount = BigDecimal.ZERO;
 

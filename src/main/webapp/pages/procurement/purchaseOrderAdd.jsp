@@ -32,17 +32,18 @@
               <td width="1%" align="center">:</td>
               <td>
                 <form:select id="purchaseType" path="purchaseType">
-	                <c:forEach var="type" items="${types}">
-	                    <form:option value="${type}" label="<spring:message code='purchaseorder.type.${type.normalizedName}'/>"/>
+	                <c:forEach var="type" items="${purchaseTypes}">
+	                    <form:option value="${type}"><spring:message code='purchaseorder.type.${type.normalizedName.toLowerCase()}'/></form:option>
 	                </c:forEach>
                 </form:select>
               </td>
             </tr>
-			<tr>
-				<td align="right"><spring:message code="purchaseorder.invoicetype"/> :</td>
+			<tr id="rowInvoice">
+				<td align="right"><spring:message code="purchaseorder.invoicetype"/></td>
+              	<td width="1%" align="center">:</td>
 				<td>
-					<form:radiobutton path="invoiceBeforeReceipt" value="true"/><spring:message code="purchaseorder.invoicetype.before"/>
-					<form:radiobutton path="invoiceBeforeReceipt" value="false"/><spring:message code="purchaseorder.invoicetype.after"/>	
+					<form:radiobutton id="invoiceTrue" path="invoiceBeforeReceipt" value="true"/><spring:message code="purchaseorder.invoicetype.before"/>
+					<form:radiobutton id="invoiceFalse" path="invoiceBeforeReceipt" value="false"/><spring:message code="purchaseorder.invoicetype.after"/>	
 				</td>
 			</tr>
             <tr>
@@ -146,7 +147,7 @@
       <div id="productLineItem" dojoType="ContentPane" label="<spring:message code='purchaseorder.line'/>" class="tab-pages" refreshOnShow="true" selected="true">
         <div class="toolbar-clean">
           <div class="toolbar-clean">
-          	<div id="nonstandard">
+          	<div id="nonstandard" style="display: none;">
 	            <a class="item-button-new newnonstandard"><span><spring:message code="sirius.row.new"/></span></a>
           	</div>
           	<div id="standard">
@@ -184,21 +185,35 @@ $(function(){
   updateDisplay();
   
   $('#supplier').change(function(){
-	  cleanItems();
+	cleanItems();
   });
   
   $('#purchaseType').change(function(){
-	  cleanItems();
+	cleanItems();
+    var type = this.value;
+    if(type == 'STANDARD') {
+    	$('#standard').removeAttr('style');
+    	$('#nonstandard').attr('style','display:none;');
+    	$('#rowInvoice').removeAttr('style');
+    } else if(type == 'DIRECT') {
+    	$('#nonstandard').removeAttr('style');
+    	$('#standard').attr('style','display:none;');
+    	$('#rowInvoice').removeAttr('style');
+    } else {
+    	$('#nonstandard').removeAttr('style');
+    	$('#standard').attr('style','display:none;');
+    	$('#rowInvoice').attr('style','display:none;');
+    	$("#invoiceTrue").prop("checked", true);
+    }
   });
 
   $('.item-button-save').click(function(){
     if(validation())
       save();
   });
-
+  
   $('.newnonstandard').click(function() {
-    addLine($index);
-    $index++;
+    addLine();
   });
 
   $('.checkall').click(function () {
@@ -255,12 +270,12 @@ function updateDisplay() {
   $('#totalTax').val(totalTax.numberFormat('#,##0.00'));
   $('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
 
-  $('#approver').empty();
-
   if(totalTransaction > new Number(1000000))
     $('#rowApprover').removeAttr('style');
-  else
+  else {
+	$('#approver').empty();
     $('#rowApprover').attr('style','display:none;');
+  }
 }
 
 function updateBillShipAddress(element){
@@ -434,8 +449,8 @@ function addLine() {
 
   $cbox = List.get('<input type="checkbox" class="check"/>','check'+index);
   //value is product id for non standard purchase type and requisition item id for standard purchase type
-  $reference = List.get('<select class="combobox-ext references" onchange="updateDisplay();"/>','reference['+index+']');
-  $productImg = List.img('<spring:message code="product"/>', $index, 'openProduct("'+$index+'")');
+  $reference = List.get('<select class="combobox-ext references" onchange="checkDuplicate(this);updateDisplay();"/>','reference['+index+']');
+  $productImg = List.img('<spring:message code="product"/>', index, 'openProduct("'+index+'")');
   
   $qty = List.get('<input type="text" class="input-number" size="6" onchange="updateDisplay();"/>','quantity['+index+']', '0.00');
   $uom = List.get('<input type="text" class="input-disabled" disabled size="6" />','uom['+index+']');
@@ -463,6 +478,16 @@ function addLine() {
 
 function openProduct(index) {
   openpopup("<c:url value='/page/popupproductview.htm?&target=reference['/>"+index+"]&index="+index);
+}
+
+function checkDuplicate(element) {
+  // Memanggil String.duplicate untuk mengecek duplikasi pada kelas 'references'
+  var isDuplicated = String.duplicate('references');
+
+  if (isDuplicated) {
+    alert('<spring:message code="product"/>  <strong>'+ $(element).find('option:selected').text() +'</strong> <spring:message code="notif.duplicate"/> !');
+    $(element).closest('tr').remove();
+  }
 }
 
 function openSupplier() {

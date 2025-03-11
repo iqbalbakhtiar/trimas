@@ -2,6 +2,7 @@ package com.siriuserp.procurement.form;
 
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.procurement.dm.PurchaseRequisition;
+import com.siriuserp.procurement.dm.PurchaseType;
 import com.siriuserp.sdk.dm.Approvable;
 import com.siriuserp.sdk.dm.ContactMechanism;
 import com.siriuserp.sdk.dm.Facility;
@@ -19,15 +20,16 @@ public class PurchaseForm extends Form
 {
 	private static final long serialVersionUID = -3975750510372614700L;
 
-	private BigDecimal totalTransaction;
-
-	private Date deliveryDate;
-
 	private PostalAddress supplierAddress;
 	private PostalAddress billTo;
 	private Facility shipTo;
 	private Approvable approvable;
 	private PurchaseRequisition purchaseRequisition;
 	private PurchaseOrder purchaseOrder;
+	private PurchaseType purchaseType;
 	private ContactMechanism supplierPhone;
+
+	private BigDecimal totalTransaction;
+	private Date deliveryDate;
+	private boolean invoiceBeforeReceipt = true;
 }

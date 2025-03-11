@@ -5,6 +5,7 @@
  */
 package com.siriuserp.procurement.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,14 +173,23 @@ public class StandardPurchaseOrderService extends Service
 	@AuditTrails(className = PurchaseOrderItem.class, actionType = AuditTrailsActionType.CREATE)
 	public void addItem(Long purchaseOrderId, List<Item> items) throws Exception
 	{
+		boolean barcode = false;
 		PurchaseOrder purchaseOrder = load(purchaseOrderId);
 
 		for (Item item : items)
 		{
 			if (item.getProduct() != null && SiriusValidator.validateParam(item.getReference()))
 			{
+				PurchaseOrderItem parentItem = genericDao.load(PurchaseOrderItem.class, item.getReference());
+				parentItem.setBarcodeQuantity(parentItem.getBarcodeQuantity().add(item.getQuantity()));
+				genericDao.update(parentItem);
+
+				//Cek masih ada sisa barcode atau tidak
+				if ((parentItem.getQuantity().subtract(parentItem.getBarcodeQuantity())).compareTo(BigDecimal.ZERO) > 0)
+					barcode = true;
+
 				PurchaseOrderItem purchaseItem = new PurchaseOrderItem();
-				purchaseItem.setItemParent(genericDao.load(PurchaseOrderItem.class, item.getReference()));
+				purchaseItem.setItemParent(parentItem);
 				purchaseItem.setPurchaseItemType(PurchaseOrderItemType.SERIAL);
 				purchaseItem.getLot().setSerial(item.getSerial());
 				purchaseItem.setProduct(item.getProduct());
@@ -188,11 +198,7 @@ public class StandardPurchaseOrderService extends Service
 				purchaseItem.getMoney().setCurrency(purchaseItem.getItemParent().getMoney().getCurrency());
 				purchaseItem.setFacilityDestination(purchaseOrder.getShipTo());
 				purchaseItem.setPurchaseOrder(purchaseOrder);
-
-				if (purchaseOrder.getPurchaseType().equals(PurchaseType.STANDARD))
-					purchaseItem.setTransactionSource(WarehouseTransactionSource.STANDARD_PURCHASE_ORDER);
-				else
-					purchaseItem.setTransactionSource(WarehouseTransactionSource.DIRECT_PURCHASE_ORDER);
+				purchaseItem.setTransactionSource(purchaseOrder.getPurchaseType().getTransactionSource());
 
 				WarehouseTransactionItem warehouseTransactionItem = ReferenceItemHelper.init(genericDao, purchaseItem.getQuantity(), WarehouseTransactionType.IN, purchaseItem);
 				warehouseTransactionItem.setLocked(false);
@@ -203,8 +209,12 @@ public class StandardPurchaseOrderService extends Service
 			}
 		}
 
-		purchaseOrder.setStatus(POStatus.OPEN);
-		genericDao.update(purchaseOrder);
+		//Jika masih ada sisa item yg blm dibarcode
+		if (!barcode)
+		{
+			purchaseOrder.setStatus(POStatus.OPEN);
+			genericDao.update(purchaseOrder);
+		}
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
