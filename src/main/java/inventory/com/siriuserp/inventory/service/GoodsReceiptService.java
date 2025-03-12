@@ -263,12 +263,9 @@ public class GoodsReceiptService extends Service
 		// Looping through GR Item
 		for (GoodsReceiptItem goodsReceiptItem : goodsReceipt.getItems())
 		{
-
 			//WarehouseReferenceItem wrReferenceItem = goodsReceiptItem.getWarehouseTransactionItem().getReferenceItem();
 			//Parent purchase order jika itemnya serial, jika non serial maka tidak ada parent
 			PurchaseOrderItem purchaseItem = genericDao.load(PurchaseOrderItem.class, goodsReceiptItem.getWarehouseTransactionItem().getReferenceItem().getId());
-			if (purchaseItem.getItemParent() != null)
-				purchaseItem = genericDao.load(PurchaseOrderItem.class, purchaseItem.getId());
 
 			InvoiceVerificationItemReference invoiceReference = new InvoiceVerificationItemReference();
 			invoiceReference.setCode(goodsReceipt.getCode());
@@ -295,7 +292,8 @@ public class GoodsReceiptService extends Service
 			if (invoiceVerification.getMoney().getCurrency() == null)
 				invoiceVerification.getMoney().setCurrency(purchaseItem.getMoney().getCurrency());
 
-			totalAmount = totalAmount.add(goodsReceiptItem.getReceipted().multiply(purchaseItem.getMoney().getAmount()));
+			//Receipted Qty adalah Qty Timbang yg masuk ke stock, tp yg masuk invoice adalah Qty Awal (Qty Barcode Beli)
+			totalAmount = totalAmount.add(purchaseItem.getBarcodeQuantity().multiply(purchaseItem.getMoney().getAmount()));
 
 			Item item = new Item();
 			item.setInvoiceVerificationItem(invoiceItem);

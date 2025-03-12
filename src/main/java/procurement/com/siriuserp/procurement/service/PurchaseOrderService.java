@@ -5,6 +5,7 @@
  */
 package com.siriuserp.procurement.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceHelper;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceType;
 import com.siriuserp.accountpayable.service.InvoiceVerificationService;
 import com.siriuserp.inventory.dm.Product;
+import com.siriuserp.inventory.dm.ProductCategoryType;
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.inventory.dm.WarehouseTransactionSource;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
@@ -117,7 +119,7 @@ public class PurchaseOrderService extends Service
 		{
 			PurchaseOrderApprovableBridge approvableBridge = ApprovableBridgeHelper.create(PurchaseOrderApprovableBridge.class, purchaseOrder);
 			approvableBridge.setApprovableType(ApprovableType.PURCHASE_ORDER);
-			approvableBridge.setUri("standardpurchaseorderpreedit.htm");
+			approvableBridge.setUri("purchaseorderpreedit.htm");
 			purchaseOrder.setApprovable(approvableBridge);
 		}
 
@@ -146,7 +148,7 @@ public class PurchaseOrderService extends Service
 				purchaseItem.setPurchaseOrder(purchaseOrder);
 				purchaseItem.setTransactionSource(purchaseOrder.getPurchaseType().getTransactionSource());
 
-				if ((purchaseOrder.getPurchaseType().equals(PurchaseType.STANDARD) || purchaseOrder.getPurchaseType().equals(PurchaseType.DIRECT)) && !purchaseItem.getProduct().isSerial())
+				if (purchaseItem.getProduct().getProductCategory().getType().equals(ProductCategoryType.STOCK) && !purchaseItem.getProduct().isSerial())
 				{
 					WarehouseTransactionItem warehouseTransactionItem = ReferenceItemHelper.init(genericDao, item.getQuantity(), WarehouseTransactionType.IN, purchaseItem);
 					if (purchaseOrder.getApprover() != null)
@@ -176,14 +178,23 @@ public class PurchaseOrderService extends Service
 	@AuditTrails(className = PurchaseOrderItem.class, actionType = AuditTrailsActionType.CREATE)
 	public void addItem(Long purchaseOrderId, List<Item> items) throws Exception
 	{
+		boolean barcode = false;
 		PurchaseOrder purchaseOrder = load(purchaseOrderId);
 
 		for (Item item : items)
 		{
 			if (item.getProduct() != null && SiriusValidator.validateParam(item.getReference()))
 			{
+				PurchaseOrderItem parentItem = genericDao.load(PurchaseOrderItem.class, item.getReference());
+				parentItem.setBarcodeQuantity(parentItem.getBarcodeQuantity().add(item.getQuantity()));
+				genericDao.update(parentItem);
+
+				//Cek masih ada sisa barcode atau tidak
+				if ((parentItem.getQuantity().subtract(parentItem.getBarcodeQuantity())).compareTo(BigDecimal.ZERO) > 0)
+					barcode = true;
+
 				PurchaseOrderItem purchaseItem = new PurchaseOrderItem();
-				purchaseItem.setItemParent(genericDao.load(PurchaseOrderItem.class, item.getReference()));
+				purchaseItem.setItemParent(parentItem);
 				purchaseItem.setPurchaseItemType(PurchaseOrderItemType.SERIAL);
 				purchaseItem.getLot().setSerial(item.getSerial());
 				purchaseItem.setProduct(item.getProduct());
@@ -208,8 +219,12 @@ public class PurchaseOrderService extends Service
 			}
 		}
 
-		purchaseOrder.setStatus(POStatus.OPEN);
-		genericDao.update(purchaseOrder);
+		//Jika masih ada sisa item yg blm dibarcode
+		if (!barcode)
+		{
+			purchaseOrder.setStatus(POStatus.OPEN);
+			genericDao.update(purchaseOrder);
+		}
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)

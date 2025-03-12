@@ -477,7 +477,15 @@ function addLine() {
 }
 
 function openProduct(index) {
-  openpopup("<c:url value='/page/popupproductview.htm?&target=reference['/>"+index+"]&index="+index);
+  var cat = "";
+  var purchaseType = $('#purchaseType').val();
+  
+  if(purchaseType == 'DIRECT')
+	  cat = "STOCK";
+  else
+	  cat = "NONSTOCK&serial=false";
+  
+  openpopup("<c:url value='/page/popupproductview.htm?&target=reference['/>"+index+"]&index="+index+"&productCategoryType="+cat);
 }
 
 function checkDuplicate(element) {

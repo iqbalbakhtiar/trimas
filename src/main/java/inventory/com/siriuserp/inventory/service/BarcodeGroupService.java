@@ -16,7 +16,7 @@ import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.form.InventoryForm;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.procurement.dm.PurchaseOrderItem;
-import com.siriuserp.procurement.service.StandardPurchaseOrderService;
+import com.siriuserp.procurement.service.PurchaseOrderService;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.InjectParty;
@@ -57,7 +57,7 @@ public class BarcodeGroupService
 	private CodeSequenceDao codeSequenceDao;
 
 	@Autowired
-	private StandardPurchaseOrderService purchaseOrderService;
+	private PurchaseOrderService purchaseOrderService;
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
@@ -169,13 +169,15 @@ public class BarcodeGroupService
 		{
 			if (item.getProduct() != null && SiriusValidator.gz(item.getQuantity()))
 			{
-				Barcode barcode = new Barcode();
+				String code = "";
 
 				if (SiriusValidator.validateParam(item.getCode()))
-					barcode.setCode(item.getCode());
+					code = item.getCode();
 				else
-					barcode.setCode(GeneratorHelper.instance().generate(TableType.BARCODE_PRODUCT, codeSequenceDao));
+					code = GeneratorHelper.instance().generate(TableType.BARCODE_PRODUCT, codeSequenceDao);
 
+				Barcode barcode = new Barcode();
+				barcode.setCode(code);
 				barcode.setProduct(item.getProduct());
 				barcode.setQuantity(item.getQuantity());
 				barcode.setQuantityReal(item.getQuantityReal());
