@@ -1,5 +1,6 @@
 package com.siriuserp.inventory.service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.form.InventoryForm;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.procurement.dm.PurchaseOrderItem;
-import com.siriuserp.procurement.service.StandardPurchaseOrderService;
+import com.siriuserp.procurement.service.PurchaseOrderService;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.InjectParty;
@@ -56,7 +57,7 @@ public class BarcodeGroupService
 	private CodeSequenceDao codeSequenceDao;
 
 	@Autowired
-	private StandardPurchaseOrderService purchaseOrderService;
+	private PurchaseOrderService purchaseOrderService;
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
@@ -104,11 +105,12 @@ public class BarcodeGroupService
 
 			for (PurchaseOrderItem purchaseItem : purchaseOrder.getItems())
 			{
-				if (purchaseItem.getProduct().isSerial() && purchaseItem.getItemParent() == null)
+				BigDecimal quantity = purchaseItem.getQuantity().subtract(purchaseItem.getBarcodeQuantity());
+				if (purchaseItem.getProduct().isSerial() && purchaseItem.getItemParent() == null && quantity.compareTo(BigDecimal.ZERO) > 0)
 				{
 					Item item = new Item();
 					item.setProduct(purchaseItem.getProduct());
-					item.setQuantity(purchaseItem.getQuantity());
+					item.setQuantity(quantity);
 					item.setReference(purchaseItem.getId());
 
 					items.add(item);
@@ -167,12 +169,19 @@ public class BarcodeGroupService
 		{
 			if (item.getProduct() != null && SiriusValidator.gz(item.getQuantity()))
 			{
+				String code = "";
+
+				if (SiriusValidator.validateParam(item.getCode()))
+					code = item.getCode();
+				else
+					code = GeneratorHelper.instance().generate(TableType.BARCODE_PRODUCT, codeSequenceDao);
+
 				Barcode barcode = new Barcode();
-				barcode.setCode(GeneratorHelper.instance().generate(TableType.BARCODE_PRODUCT, codeSequenceDao));
-				barcode.setBarcodeGroup(barcodeGroup);
+				barcode.setCode(code);
 				barcode.setProduct(item.getProduct());
 				barcode.setQuantity(item.getQuantity());
 				barcode.setQuantityReal(item.getQuantityReal());
+				barcode.setBarcodeGroup(barcodeGroup);
 				item.setSerial(barcode.getCode());
 
 				barcodeGroup.getBarcodes().add(barcode);

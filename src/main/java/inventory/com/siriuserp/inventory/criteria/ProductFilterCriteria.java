@@ -19,6 +19,7 @@ public class ProductFilterCriteria extends AbstractFilterCriteria
 	private String packagingCode;
 	private String unitOfMeasure;
 	private String productCategory;
+	private String productCategoryType;
 	private String type;
 	private String uom;
 

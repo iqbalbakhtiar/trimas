@@ -17,20 +17,15 @@ public class InvoiceVerificationReferenceHelper
 	{
 		InvoiceVerificationItem item = new InvoiceVerificationItem();
 		item.setInvoiceReference(itemReference);
+		item.setDiscount(itemReference.getPurchaseOrderItem().getDiscount());
+		item.setDiscountPercent(itemReference.getPurchaseOrderItem().getDiscountPercent());
+		item.setMoney(itemReference.getPurchaseOrderItem().getMoney());
+		item.setProduct(itemReference.getPurchaseOrderItem().getProduct());
 
 		if (itemReference.getReferenceType().equals(InvoiceVerificationReferenceType.PURCHASE_ORDER))
-		{
 			item.setQuantity(itemReference.getPurchaseOrderItem().getQuantity());
-			item.setDiscount(itemReference.getPurchaseOrderItem().getDiscount());
-			item.setDiscountPercent(itemReference.getPurchaseOrderItem().getDiscountPercent());
-			item.setMoney(itemReference.getPurchaseOrderItem().getMoney());
-			item.setProduct(itemReference.getPurchaseOrderItem().getProduct());
-		} else
-		{
-			item.setQuantity(itemReference.getGoodsReceiptItem().getQuantity());
-			item.setMoney(itemReference.getGoodsReceiptItem().getMoney());
-			item.setProduct(itemReference.getGoodsReceiptItem().getProduct());
-		}
+		else
+			item.setQuantity(itemReference.getPurchaseOrderItem().getBarcodeQuantity());
 
 		return item;
 	}

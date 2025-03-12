@@ -1,5 +1,5 @@
 /**
- * File Name  : StandardPurchaseOrderService.java
+ * File Name  : PurchaseOrderService.java
  * Created On : Feb 22, 2025
  * Email	  : iqbal@siriuserp.com
  */
@@ -19,6 +19,8 @@ import com.siriuserp.accountpayable.dm.InvoiceVerificationItemReference;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceHelper;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceType;
 import com.siriuserp.accountpayable.service.InvoiceVerificationService;
+import com.siriuserp.inventory.dm.Product;
+import com.siriuserp.inventory.dm.ProductCategoryType;
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.inventory.dm.WarehouseTransactionSource;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
@@ -67,7 +69,7 @@ import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class StandardPurchaseOrderService extends Service
+public class PurchaseOrderService extends Service
 {
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
@@ -96,6 +98,7 @@ public class StandardPurchaseOrderService extends Service
 		map.put("purchase_form", new PurchaseForm());
 		map.put("taxes", genericDao.loadAll(Tax.class));
 		map.put("facilities", genericDao.loadAll(Facility.class));
+		map.put("purchaseTypes", PurchaseType.values());
 
 		return map;
 	}
@@ -107,19 +110,16 @@ public class StandardPurchaseOrderService extends Service
 		purchaseOrder.setMoney(new Money());
 		purchaseOrder.getMoney().setAmount(form.getAmount());
 		purchaseOrder.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
-		purchaseOrder.setCode(GeneratorHelper.instance().generate(TableType.STANDARD_PURCHASE_ORDER, codeSequenceDao));
+		purchaseOrder.setCode(GeneratorHelper.instance().generate(TableType.PURCHASE_ORDER, codeSequenceDao));
 		purchaseOrder.setShippingDate(form.getDeliveryDate());
-		purchaseOrder.setPurchaseType(PurchaseType.STANDARD);
 		purchaseOrder.setStatus(POStatus.OPEN);
-		purchaseOrder.setInvoiceBeforeReceipt(true);
-		purchaseOrder.setUri("standardpurchaseorderpreedit.htm");
 
 		//Add ApprovableBridge using Helper when needed approval
 		if (purchaseOrder.getApprover() != null)
 		{
 			PurchaseOrderApprovableBridge approvableBridge = ApprovableBridgeHelper.create(PurchaseOrderApprovableBridge.class, purchaseOrder);
 			approvableBridge.setApprovableType(ApprovableType.PURCHASE_ORDER);
-			approvableBridge.setUri("standardpurchaseorderpreedit.htm");
+			approvableBridge.setUri("purchaseorderpreedit.htm");
 			purchaseOrder.setApprovable(approvableBridge);
 		}
 
@@ -128,13 +128,17 @@ public class StandardPurchaseOrderService extends Service
 		{
 			if (item.getReference() != null)
 			{
-				PurchaseRequisitionItem requisitionItem = genericDao.load(PurchaseRequisitionItem.class, item.getReference());
-				requisitionItem.setAvailable(false);
-				genericDao.update(requisitionItem);
-
 				PurchaseOrderItem purchaseItem = new PurchaseOrderItem();
-				purchaseItem.setRequisitionItem(requisitionItem);
-				purchaseItem.setProduct(requisitionItem.getProduct());
+				if (purchaseOrder.getPurchaseType().equals(PurchaseType.STANDARD))
+				{
+					PurchaseRequisitionItem requisitionItem = genericDao.load(PurchaseRequisitionItem.class, item.getReference());
+					requisitionItem.setAvailable(false);
+					genericDao.update(requisitionItem);
+					purchaseItem.setRequisitionItem(requisitionItem);
+					purchaseItem.setProduct(requisitionItem.getProduct());
+				} else
+					purchaseItem.setProduct(genericDao.load(Product.class, item.getReference()));
+
 				purchaseItem.setQuantity(item.getQuantity());
 				purchaseItem.setDiscount(item.getDiscount());
 				purchaseItem.getMoney().setAmount(item.getAmount());
@@ -142,9 +146,9 @@ public class StandardPurchaseOrderService extends Service
 				purchaseItem.setNote(item.getNote());
 				purchaseItem.setFacilityDestination(purchaseOrder.getShipTo());
 				purchaseItem.setPurchaseOrder(purchaseOrder);
-				purchaseItem.setTransactionSource(WarehouseTransactionSource.STANDARD_PURCHASE_ORDER);
+				purchaseItem.setTransactionSource(purchaseOrder.getPurchaseType().getTransactionSource());
 
-				if (!purchaseItem.getProduct().isSerial())
+				if (purchaseItem.getProduct().getProductCategory().getType().equals(ProductCategoryType.STOCK) && !purchaseItem.getProduct().isSerial())
 				{
 					WarehouseTransactionItem warehouseTransactionItem = ReferenceItemHelper.init(genericDao, item.getQuantity(), WarehouseTransactionType.IN, purchaseItem);
 					if (purchaseOrder.getApprover() != null)
@@ -157,7 +161,7 @@ public class StandardPurchaseOrderService extends Service
 
 				purchaseOrder.getItems().add(purchaseItem);
 
-				if (purchaseItem.getProduct().isSerial())
+				if ((purchaseOrder.getPurchaseType().equals(PurchaseType.STANDARD) || purchaseOrder.getPurchaseType().equals(PurchaseType.DIRECT)) && purchaseItem.getProduct().isSerial())
 					barcode = true;
 			}
 		}
@@ -195,11 +199,16 @@ public class StandardPurchaseOrderService extends Service
 				purchaseItem.getLot().setSerial(item.getSerial());
 				purchaseItem.setProduct(item.getProduct());
 				purchaseItem.setQuantity(item.getQuantityReal());
+				purchaseItem.setBarcodeQuantity(item.getQuantity());
 				purchaseItem.getMoney().setAmount(purchaseItem.getItemParent().getMoney().getAmount());
 				purchaseItem.getMoney().setCurrency(purchaseItem.getItemParent().getMoney().getCurrency());
 				purchaseItem.setFacilityDestination(purchaseOrder.getShipTo());
 				purchaseItem.setPurchaseOrder(purchaseOrder);
-				purchaseItem.setTransactionSource(purchaseOrder.getPurchaseType().getTransactionSource());
+
+				if (purchaseOrder.getPurchaseType().equals(PurchaseType.STANDARD))
+					purchaseItem.setTransactionSource(WarehouseTransactionSource.STANDARD_PURCHASE_ORDER);
+				else
+					purchaseItem.setTransactionSource(WarehouseTransactionSource.DIRECT_PURCHASE_ORDER);
 
 				WarehouseTransactionItem warehouseTransactionItem = ReferenceItemHelper.init(genericDao, purchaseItem.getQuantity(), WarehouseTransactionType.IN, purchaseItem);
 				warehouseTransactionItem.setLocked(false);

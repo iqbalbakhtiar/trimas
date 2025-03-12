@@ -104,10 +104,10 @@
                 <thead>
                 <tr>
                     <th width="1%" nowrap="nowrap"><div style="width: 30px;">&nbsp;</div></th>
-                    <th width="8%" nowrap="nowrap"><spring:message code="sirius.code"/></th>
                     <th width="10%" nowrap="nowrap"><spring:message code="product.code"/></th>
                     <th width="15%" nowrap="nowrap"><spring:message code="product"/></th>
                     <th width="4%" nowrap="nowrap"><spring:message code="product.uom"/></th>
+                    <th width="8%" nowrap="nowrap"><spring:message code="barcode"/></th>
                     <th width="5%" nowrap="nowrap"><spring:message code="barcode.quantity.base"/></th>
                     <th width="55%" nowrap="nowrap"><spring:message code="barcode.quantity.real"/></th>
                 </tr>
@@ -126,7 +126,6 @@
                                 <a class="item-button-delete" href="javascript:deleteDialog('<c:url value='/page/barcodedelete.htm?id=${barcode.id}'/>');" title="Delete"><span>Delete</span></a>
                             </c:if> --%>
                         </td>
-                        <td><c:out value="${barcode.code}"/></td>
                         <td><c:out value="${barcode.product.code}"/></td>
                         <td>
                             <select class="combobox-ext input-disabled" disabled>
@@ -134,6 +133,7 @@
                             </select>
                         </td>
                         <td><input class="input-disabled" value="${barcode.product.unitOfMeasure.measureId}" disabled size="5"/></td>
+                        <td><input class="input-disabled" value="${barcode.code}" disabled size="12"/></td>
                         <td><input class="number-disabled quan" disabled value="<fmt:formatNumber value='${barcode.quantity}' pattern=',##0.00'/>" size="10"/></td>
                         <td>
                         	<input class="number-disabled quanReal" disabled value="<fmt:formatNumber value='${barcode.quantityReal}' pattern=',##0.00'/>" size="10"/>
