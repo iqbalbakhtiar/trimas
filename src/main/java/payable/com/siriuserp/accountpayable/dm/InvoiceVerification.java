@@ -5,6 +5,7 @@
  */
 package com.siriuserp.accountpayable.dm;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ import org.hibernate.annotations.Type;
 
 import com.siriuserp.inventory.dm.GoodsReceipt;
 import com.siriuserp.procurement.dm.PurchaseOrder;
+import com.siriuserp.sdk.dm.datawarehouse.APLedgerView;
 
 import javolution.util.FastSet;
 import lombok.Getter;
@@ -85,5 +87,29 @@ public class InvoiceVerification extends Payable
 	public String getAuditCode()
 	{
 		return getId() + ',' + getCode();
+	}
+
+	@Override
+	public BigDecimal getCredit()
+	{
+		return getMoney().getAmount();
+	}
+
+	@Override
+	public BigDecimal getDebet()
+	{
+		return BigDecimal.ZERO;
+	}
+
+	@Override
+	public String getLedgerType()
+	{
+		return "INV";
+	}
+
+	@Override
+	public int compareTo(APLedgerView o)
+	{
+		return getDate().compareTo(o.getDate());
 	}
 }

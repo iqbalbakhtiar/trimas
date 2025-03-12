@@ -40,6 +40,7 @@ import com.siriuserp.sdk.dm.Model;
 import com.siriuserp.sdk.dm.Money;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.Tax;
+import com.siriuserp.sdk.dm.datawarehouse.APLedgerView;
 
 import javolution.util.FastSet;
 import lombok.Getter;
@@ -58,7 +59,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "payable")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Payable extends Model implements JSONSupport
+public abstract class Payable extends Model implements JSONSupport, APLedgerView
 {
 	private static final long serialVersionUID = 7614117724195870029L;
 	@Column(name = "code")
@@ -152,4 +153,5 @@ public abstract class Payable extends Model implements JSONSupport
 	protected Set<DebitMemoManual> debitMemoManuals = new FastSet<DebitMemoManual>();
 
 	public abstract String getUri();
+	
 }

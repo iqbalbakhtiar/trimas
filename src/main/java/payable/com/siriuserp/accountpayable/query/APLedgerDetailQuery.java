@@ -6,14 +6,18 @@
 package com.siriuserp.accountpayable.query;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.Query;
 
 import com.siriuserp.accountpayable.criteria.APLedgerFilterCriteria;
+import com.siriuserp.accountpayable.dm.InvoiceVerification;
+import com.siriuserp.accountpayable.dm.PaymentApplication;
 import com.siriuserp.sdk.db.AbstractStandardReportQuery;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.PartyRelationshipType;
+import com.siriuserp.sdk.dm.datawarehouse.APLedgerView;
 import com.siriuserp.sdk.utility.DateHelper;
 import com.siriuserp.sdk.utility.DecimalHelper;
 import com.siriuserp.sdk.utility.SiriusValidator;
@@ -55,18 +59,26 @@ public class APLedgerDetailQuery extends AbstractStandardReportQuery
 			supliers.add(criteria.getSupplier());
 		else
 			supliers.addAll(getSupplier(criteria));
-
+		
 		for (Party supplier : supliers)
 		{
 			BigDecimal opening = getOpening(criteria, supplier).subtract(getPayment(criteria, supplier));
 
-			if (opening.compareTo(BigDecimal.ZERO) > 0)
+			FastList<APLedgerView> view = new FastList<APLedgerView>();
+			view.addAll(getCredit(criteria, supplier));
+			view.addAll(getDebet(criteria, supplier));
+
+			if (opening.compareTo(BigDecimal.ZERO) > 0 || !view.isEmpty())
 			{
 				FastMap<String, Object> map = new FastMap<String, Object>();
 				map.put("supplier", supplier);
 				map.put("opening", opening);
 				map.put("start", DateHelper.toStartDate(criteria.getDateFrom()));
 				map.put("end", DateHelper.toEndDate(criteria.getDateTo()));
+
+				Collections.sort(view);
+
+				map.put("views", view);
 
 				list.add(map);
 			}
@@ -78,10 +90,10 @@ public class APLedgerDetailQuery extends AbstractStandardReportQuery
 	private BigDecimal getOpening(APLedgerFilterCriteria criteria, Party suplier)
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT SUM(ver.amount) FROM Verification ver ");
-		builder.append("WHERE ver.date < :from ");
-		builder.append("AND ver.organization.id in(:orgs) ");
-		builder.append("AND ver.supplier.id =:supplier");
+		builder.append("SELECT SUM(((ver.money.amount-ver.discount) * ver.quantity) + ((ver.money.amount-ver.discount)*invoiceVerification.tax.taxRate/100)) FROM InvoiceVerificationItem ver ");
+		builder.append("WHERE ver.invoiceVerification.date < :from ");
+		builder.append("AND ver.invoiceVerification.organization.id in(:orgs) ");
+		builder.append("AND ver.invoiceVerification.supplier.id =:supplier");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setCacheable(true);
@@ -95,7 +107,7 @@ public class APLedgerDetailQuery extends AbstractStandardReportQuery
 	private BigDecimal getPayment(APLedgerFilterCriteria criteria, Party suplier)
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT SUM(app.paid-app.writeOff) FROM PaymentApplication app ");
+		builder.append("SELECT SUM(app.paidAmount-app.writeOff) FROM PaymentApplication app ");
 		builder.append("WHERE app.payment.date < :from ");
 		builder.append("AND app.payable.organization.id in(:orgs) ");
 		builder.append("AND app.payable.supplier.id =:supplier");
@@ -108,7 +120,42 @@ public class APLedgerDetailQuery extends AbstractStandardReportQuery
 
 		return DecimalHelper.safe(query.uniqueResult());
 	}
+	
+	private List<InvoiceVerification> getCredit(APLedgerFilterCriteria criteria, Party suplier)
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("FROM InvoiceVerification ver ");
+		builder.append("WHERE (ver.date BETWEEN :start AND :end) ");
+		builder.append("AND ver.organization.id in(:orgs) ");
+		builder.append("AND ver.supplier.id =:supplier");
 
+		Query query = getSession().createQuery(builder.toString());
+		query.setCacheable(true);
+		query.setParameter("start", criteria.getDateFrom());
+		query.setParameter("end", criteria.getDateTo());
+		query.setParameterList("orgs", criteria.getOrganizations());
+		query.setParameter("supplier", suplier.getId());
+
+		return query.list();
+	}
+
+	private List<PaymentApplication> getDebet(APLedgerFilterCriteria criteria, Party supplier)
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("FROM PaymentApplication app ");
+		builder.append("WHERE (app.payment.date BETWEEN :start AND :end) ");
+		builder.append("AND app.payment.organization.id in(:orgs) ");
+		builder.append("AND app.payment.supplier.id =:supplier");
+
+		Query query = getSession().createQuery(builder.toString());
+		query.setCacheable(true);
+		query.setParameter("start", criteria.getDateFrom());
+		query.setParameter("end", criteria.getDateTo());
+		query.setParameterList("orgs", criteria.getOrganizations());
+		query.setParameter("supplier", supplier.getId());
+
+		return query.list();
+	}
 
 	private List<Party> getSupplier(APLedgerFilterCriteria criteria)
 	{
@@ -122,8 +169,8 @@ public class APLedgerDetailQuery extends AbstractStandardReportQuery
 		Query query = getSession().createQuery(builder.toString());
 		query.setCacheable(true);
 		query.setParameter("relationshipType", PartyRelationshipType.SUPPLIER_RELATIONSHIP);
-		query.setParameter("from", Long.valueOf(2));
-		query.setParameter("to", Long.valueOf(1));
+		query.setParameter("from", Long.valueOf(5));
+		query.setParameter("to", Long.valueOf(4));
 		query.setParameterList("orgs", criteria.getOrganizations());
 
 		return query.list();

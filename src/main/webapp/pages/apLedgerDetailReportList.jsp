@@ -120,7 +120,7 @@
                                 <c:set var='t_credit' value='${0}'/>
                                 <tr>
                                 	<%-- <td align="left"><c:out value='${report.supplier.code}'/></td>  --%>
-                                    <td align="left" colspan="5"><c:out value='${report.supplier.firstName} ${report.supplier.middleName} ${report.supplier.lastName}'/></td>
+                                    <td align="left" colspan="5"><c:out value='${report.supplier.fullName}'/></td>
                                 </tr>
                                 <tr>
                                     <td align="left"><fmt:formatDate value='${report.start}' pattern='dd-MMM-yyyy'/></td>
@@ -129,18 +129,19 @@
                                     <td align="right"><fmt:formatNumber value='${report.opening}' pattern=',##0.00'/></td>
                                 </tr>
                                 <c:forEach items='${report.views}' var='view'>
-                                <c:set var='grand' value='${grand+view.credit-view.debet}'/>
                                 <tr>
                                     <td align="left"><fmt:formatDate value='${view.date}' pattern='dd-MMM-yyyy'/></td>
-                                    <td align="left">${view.code}${(view.ledgerType=='PYM')?view.paymentInformation.reference:' '}</td>
+                                    <td align="left">${view.code}${(view.ledgerType=='PYM')?view.payment.paymentInformation.reference:' '}</td>
                                     <td></td>
                                     <td align="right">
-                                    	<fmt:formatNumber value="${(view.ledgerType=='PYM')?view.paymentInformation.amount:view.debet}" pattern=',##0.00'/>
+                                    	<fmt:formatNumber value="${(view.ledgerType=='PYM')?view.paidAmount:view.debet}" pattern=',##0.00'/>
                                         <c:if test="${view.ledgerType=='PYM'}">
-                                        	<c:set var='t_debet' value='${t_debet+view.paymentInformation.amount}'/>
+                                        	<c:set var='t_debet' value='${t_debet+view.paidAmount}'/>
+                                        	<c:set var='grand' value='${grand+view.credit-view.paidAmount}'/>
                                         </c:if>
-                                        <c:if test="${view.ledgerType!='PYM'}">
+                                        <c:if test="${view.ledgerType!='PYM'}"> 
                                         	<c:set var='t_debet' value='${t_debet+view.debet}'/>
+                                        	  <c:set var='grand' value='${grand+view.credit-view.debet}'/>
                                         </c:if>
                                     </td>
                                     <td align="right">
