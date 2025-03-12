@@ -1,5 +1,9 @@
 package com.siriuserp.procurement.form;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
+import com.siriuserp.procurement.dm.POStatus;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.procurement.dm.PurchaseRequisition;
 import com.siriuserp.procurement.dm.PurchaseType;
@@ -8,11 +12,9 @@ import com.siriuserp.sdk.dm.ContactMechanism;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Form;
 import com.siriuserp.sdk.dm.PostalAddress;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.math.BigDecimal;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -28,6 +30,8 @@ public class PurchaseForm extends Form
 	private PurchaseOrder purchaseOrder;
 	private PurchaseType purchaseType;
 	private ContactMechanism supplierPhone;
+
+	private POStatus status;
 
 	private BigDecimal totalTransaction;
 	private Date deliveryDate;
