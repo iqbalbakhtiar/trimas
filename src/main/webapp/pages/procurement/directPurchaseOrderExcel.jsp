@@ -8,35 +8,35 @@
         <td></td>
         <td></td>
         <td></td>
-        <td colspan="3" align="right"><strong>PURCHASE ORDER</strong></td>
+        <td colspan="3" align="right"><strong><spring:message code="po.capital"/></strong></td>
     </tr>
     <tr>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td>PO Number</td>
+        <td><spring:message code="po.number"/></td>
         <td colspan="2"><c:out value='${dpo_form.purchaseOrder.code}'/></td>
         <td></td>
         <td></td>
         <td></td>
-        <td colspan="2">Payment Type</td>
+        <td colspan="2"><spring:message code="paymenttype"/></td>
         <td>: </td>
         <td></td>
         <td></td>
     </tr>
     <tr>
-        <td>Date</td>
+        <td><spring:message code="sirius.date"/></td>
         <td colspan="2">: <fmt:formatDate value='${dpo_form.purchaseOrder.date}' pattern='dd - MMM - yyyy'/></td>
         <td></td>
         <td></td>
         <td></td>
-        <td colspan="2">Delivery Date</td>
+        <td colspan="2"><spring:message code="sirius.date"/></td>
         <td>: <fmt:formatDate value='${dpo_form.purchaseOrder.shippingDate}' pattern='dd - MMM - yyyy'/></td>
         <td></td>
         <td></td>
     </tr>
     <tr>
-        <td>Supplier No</td>
+        <td><spring:message code="po.supplier.no"/></td>
         <td colspan="2">: </td>
         <td></td>
         <td></td>
@@ -51,13 +51,13 @@
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><strong>VENDOR</strong></td>
+        <td><strong><spring:message code="po.vendor.capital"/></strong></td>
         <td>:</td>
         <td></td>
         <td></td>
         <td></td>
         <td></td>
-        <td><strong>BILL TO</strong></td>
+        <td><strong><spring:message code="po.billto.capital"/></strong></td>
         <td>:</td>
         <td></td>
         <td></td>
@@ -87,15 +87,15 @@
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td align="center"><strong>No</strong></td>
-        <td colspan="3"><strong>Nama Barang</strong></td>
-        <td><strong>Dari Barang</strong></td>
-        <td><strong>Warna</strong></td>
-        <td><strong>Proses</strong></td>
-        <td align="right"><strong>Jumlah</strong></td>
-        <td align="right"><strong>Harga (${dpo_form.purchaseOrder.currency.symbol})</strong></td>
-        <td align="right"><strong>Total (${dpo_form.purchaseOrder.currency.symbol})</strong></td>
-        <td><strong>Keterangan</strong></td>
+        <td align="center"><strong><spring:message code="sirius.no"/></strong></td>
+        <td colspan="3"><strong><spring:message code="product.name"/></strong></td>
+        <td><strong><spring:message code="po.fromprocuct"/></strong></td>
+        <td><strong><spring:message code="sirius.color"/></strong></td>
+        <td><strong><spring:message code="sirius.process"/></strong></td>
+        <td align="right"><strong><spring:message code="sirius.amount"/></strong></td>
+        <td align="right"><strong><spring:message code="sirius.price"/>(${dpo_form.purchaseOrder.currency.symbol})</strong></td>
+        <td align="right"><strong><spring:message code="sirius.total"/>(${dpo_form.purchaseOrder.currency.symbol})</strong></td>
+        <td><strong><spring:message code="sirius.note"/></strong></td>
     </tr>
     <c:forEach items='${adapter.purchaseOrder.items}' var='item' varStatus='status'>
         <tr>
@@ -132,7 +132,7 @@
         <td></td>
         <td></td>
         <td></td>
-        <td colspan="3" align="left">Sub total</td>
+        <td colspan="3" align="left"><spring:message code="purchaseorderitem.subtotal"/></td>
         <td align="right"><fmt:formatNumber value='${adapter.totalItemAmount}' pattern=',##0.00'/></td>
         <td></td>
     </tr>
@@ -143,7 +143,7 @@
         <td></td>
         <td></td>
         <td></td>
-        <td colspan="3" align="left">Pajak Pertambahan nilai (PPN)</td>
+        <td colspan="3" align="left"><spring:message code="tax.ppn.long"/> (<spring:message code="tax.ppn"/>)</td>
         <td align="right"><fmt:formatNumber value='${adapter.taxAmount}' pattern=',##0.00'/></td>
         <td></td>
     </tr>
@@ -154,7 +154,7 @@
         <td></td>
         <td></td>
         <td></td>
-        <td colspan="3" align="left">Total</td>
+        <td colspan="3" align="left"><spring:message code="sirius.total"/></td>
         <td align="right"><strong><fmt:formatNumber value='${adapter.totalTransaction}' pattern=',##0.00'/></strong></td>
         <td></td>
     </tr>
@@ -163,14 +163,14 @@
     </tr>
     <tr>
         <td></td>
-        <td>Approval,</td>
+        <td><spring:message code="approval"/>,</td>
         <td></td>
         <td></td>
         <td></td>
         <td></td>
         <td></td>
         <td></td>
-        <td>Supplier,</td>
+        <td><spring:message code="supplier"/>,</td>
         <td></td>
         <td></td>
     </tr>

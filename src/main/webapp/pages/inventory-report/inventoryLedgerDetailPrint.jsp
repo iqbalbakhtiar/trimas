@@ -46,7 +46,7 @@
       <table style="border-top:solid 1px black;" cellpadding="3" cellspacing="0" width="100%">
       <thead>
       <tr>
-          	<th width="11%" align="left" style="border-left:solid 1px #000000;border-bottom:solid 1px #000000;border-right:solid 1px #000000;">Date</th>
+          	<th width="11%" align="left" style="border-left:solid 1px #000000;border-bottom:solid 1px #000000;border-right:solid 1px #000000;"><spring:message code="sirius.date"/></th>
 	  	  	<th width="12%" align="left" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" ><spring:message code="sirius.description"/></th>
   			<th width="15%" align="left" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"><spring:message code="goodsreceipt.refdoc"/></th>
  	  		<th width="40%" align="left" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"><spring:message code="sirius.note"/></th>
@@ -87,7 +87,7 @@
       <tr>
           <td align="right" colspan='4'><spring:message code="sirius.qty"/>&nbsp;<spring:message code="product.reserved"/> : </td>
           <td align="right"><fmt:formatNumber value='${report.reserved}' pattern=',##0.00'/></td>
-          <td align="right">Total : </td>
+          <td align="right"><spring:message code="sirius.total"/> : </td>
           <td align="right"><fmt:formatNumber value='${report.sum - report.reserved}' pattern=',##0.00'/></td>
       </tr>
       <tr>

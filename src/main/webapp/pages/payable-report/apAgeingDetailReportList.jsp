@@ -2,11 +2,11 @@
 
 <div class="toolbar">
     <c:set var="url" value="/page/apageingdetailview.htm?organization=${criteria.organization}&supplier=${criteria.supplier}"/>
-    <a class="item-button-back" href="<c:url value='/page/apageingdetailpre.htm'/>"><span>Back</span></a>
-    <a class="item-button-print" href="javascript:window.print();"><span>Print</span></a>
-    <a class="item-button-export-xls" download="ageingdetailreportexcell.xls" href="#" onclick="return ExcellentExport.excel(this, 'ageingDetail', 'AP Ageing Detail');"><span>Export</span></a>
-    <a class="item-button-rprev" href="<c:url value='${url}&date='/><fmt:formatDate value='${criteria.prev}' pattern='dd-MM-yyyy'/>"><span>Prev</span></a>
-    <a class="item-button-rnext" href="<c:url value='${url}&date='/><fmt:formatDate value='${criteria.next}' pattern='dd-MM-yyyy'/>"><span>Next</span></a>
+    <a class="item-button-back" href="<c:url value='/page/apageingdetailpre.htm'/>"><span><spring:message code="sirius.back"/></span></a>
+    <a class="item-button-print" href="javascript:window.print();"><span><spring:message code="sirius.print"/></span></a>
+    <a class="item-button-export-xls" download="ageingdetailreportexcell.xls" href="#" onclick="return ExcellentExport.excel(this, 'ageingDetail', 'AP Ageing Detail');"><span><spring:message code="sirius.export"/></span></a>
+    <a class="item-button-rprev" href="<c:url value='${url}&date='/><fmt:formatDate value='${criteria.prev}' pattern='dd-MM-yyyy'/>"><span><spring:message code="sirius.prev"/></span></a>
+    <a class="item-button-rnext" href="<c:url value='${url}&date='/><fmt:formatDate value='${criteria.next}' pattern='dd-MM-yyyy'/>"><span><spring:message code="sirius.next"/></span></a>
 </div>
 
 <div class="main-box">
@@ -30,19 +30,19 @@
                 <td align="left" colspan="9"><strong><c:out value='${report.supplier.code} - ${report.supplier.fullName}'/></strong></td>
             </tr>
             <tr>
-                <th width="9%" align="center" class="border-top border-bottom" rowspan="2">Date</th>
-                <th width="9%" align="center" class="border-top border-bottom" rowspan="2">No Inv Supplier</th>
-                <th width="18%" align="center" class="border-top border-bottom" rowspan="2">Ref No.</th>
-                <th width="9%" align="center" class="border-top border-bottom" rowspan="2">Due Date</th>
-                <th width="10%" align="center" class="border-top border-bottom" rowspan="2">Balance</th>
-                <th width="11%" align="center" class="border-top border-bottom" rowspan="2">Not Yet Due</th>
-                <th align="center" class="border-top" colspan="4">Over Due</th>
+                <th width="9%" align="center" class="border-top border-bottom" rowspan="2"><spring:message code="sirius.date"/></th>
+                <th width="9%" align="center" class="border-top border-bottom" rowspan="2"><spring:message code="ageing.noinv.supplier"/></th>
+                <th width="18%" align="center" class="border-top border-bottom" rowspan="2"><spring:message code="sirius.refno"/>.</th>
+                <th width="9%" align="center" class="border-top border-bottom" rowspan="2"><spring:message code="payment.duedate"/></th>
+                <th width="10%" align="center" class="border-top border-bottom" rowspan="2"><spring:message code="accreport.balance"/></th>
+                <th width="11%" align="center" class="border-top border-bottom" rowspan="2"><spring:message code="ageing.notyet"/></th>
+                <th align="center" class="border-top" colspan="4"><spring:message code="ageing.over"/></th>
             </tr>
             <tr>
-                <th width="11%" align="center" class="border-top border-bottom">0-30 Days</th>
-                <th width="11%" align="center" class="border-top border-bottom">31-60 Days</th>
-                <th width="11%" align="center" class="border-top border-bottom">61-90 Days</th>
-                <th width="10%" align="center" class="border-top border-bottom">&gt; 90 Days</th>
+                <th width="11%" align="center" class="border-top border-bottom">0-30 <spring:message code="sirius.days"/></th>
+                <th width="11%" align="center" class="border-top border-bottom">31-60 <spring:message code="sirius.days"/></th>
+                <th width="11%" align="center" class="border-top border-bottom">61-90 <spring:message code="sirius.days"/></th>
+                <th width="10%" align="center" class="border-top border-bottom">&gt; 90 <spring:message code="sirius.days"/></th>
             </tr>
             </thead>
             <tbody>
@@ -74,7 +74,7 @@
             </c:forEach>
             </tbody>
             <tr>
-                <td class="border-top" colspan="4" align="right"><strong>Sub Total</strong></td>
+                <td class="border-top" colspan="4" align="right"><strong><spring:message code="purchaseorderitem.subtotal"/></strong></td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${report.balance}' pattern=',##0.00'/></strong></td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${report.notYetDue}' pattern=',##0.00'/></strong></td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${report.fstOverDue}' pattern=',##0.00'/></strong></td>
@@ -83,7 +83,7 @@
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${report.fthOverDue}' pattern=',##0.00'/></strong></td>
             </tr>
             <tr>
-                <td class="border-top" colspan="4" align="right"><strong>Sub Percentage</strong></td>
+                <td class="border-top" colspan="4" align="right"><strong><spring:message code="ageing.sub.percentage"/></strong></td>
                 <td class="border-top">&nbsp;</td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${report.notYetDue/report.balance*100}' pattern=',##0.00'/>%</strong></td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${report.fstOverDue/report.balance*100}' pattern=',##0.00'/>%</strong></td>
@@ -104,7 +104,7 @@
             </tr>
             </c:forEach>
             <tr>
-                <td class="border-top" colspan="4" align="right"><strong>Grand Total</strong></td>
+                <td class="border-top" colspan="4" align="right"><strong><spring:message code="ageing.grand.total"/></strong></td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${totBalance}' pattern=',##0.00'/></strong></td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${totNyd}' pattern=',##0.00'/></strong></td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${totFsod}' pattern=',##0.00'/></strong></td>
@@ -113,7 +113,7 @@
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${totFtod}' pattern=',##0.00'/></strong></td>
             </tr>
             <tr>
-                <td class="border-top" colspan="4" align="right"><strong>Grand Percentage</strong></td>
+                <td class="border-top" colspan="4" align="right"><strong><spring:message code="ageing.grand.percentage"/></strong></td>
                 <td class="border-top">&nbsp;</td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${totNyd/totBalance*100}' pattern=',##0.00'/>%</strong></td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${totFsod/totBalance*100}' pattern=',##0.00'/>%</strong></td>

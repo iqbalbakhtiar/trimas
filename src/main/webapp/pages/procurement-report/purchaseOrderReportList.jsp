@@ -71,9 +71,9 @@
 							</h1>
 						
 					  		<div class="toolbar">
-								<a class="item-button-back" href="<c:url value='/page/purchaseorderreportpre.htm'/>"><span>Back</span></a>
-								<a class="item-button-print" href="javascript:window.print();"><span>Print</span></a>
-                            	<a class="item-button-export-xls" download="purchaseorderreport.xls" href="#" onclick="return ExcellentExport.excel(this, 'main_container', 'Purchase Order Report');"><span>Export</span></a>
+								<a class="item-button-back" href="<c:url value='/page/purchaseorderreportpre.htm'/>"><span><spring:message code="sirius.back"/></span></a>
+								<a class="item-button-print" href="javascript:window.print();"><span><spring:message code="sirius.print"/></span></a>
+                            	<a class="item-button-export-xls" download="purchaseorderreport.xls" href="#" onclick="return ExcellentExport.excel(this, 'main_container', 'Purchase Order Report');"><span><spring:message code="sirius.export"/></span></a>
 					  		</div>
 						</div>
 						
@@ -84,12 +84,12 @@
                                 <div class="report">
                                     <table width="498">	
                                     <tr>	
-                                        <td width="100">Company</td>
+                                        <td width="100"><spring:message code="customer.company"/></td>
                                         <td width="11">:&nbsp;&nbsp;</td>
                                         <td width="344"><c:out value='${organization.fullName}'/></td>			  
                                     </tr>
                                     <tr>	
-                                        <td width="100">Period</td>
+                                        <td width="100"><spring:message code="sirius.period"/></td>
                                         <td width="11">:&nbsp;&nbsp;</td>
                                         <td width="344"><fmt:formatDate value='${criteria.dateFrom}' pattern='dd MMM yyyy' /> &nbsp;-&nbsp; <fmt:formatDate value='${criteria.dateTo}' pattern='dd MMM yyyy' /></td>			  
                                     </tr>
@@ -111,17 +111,17 @@
                                 <table width="100%"  cellpadding="5" cellspacing="0" class="report-table" border="0">
                                 <thead>
                                 <tr>
-                                	<th width="5%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;">NO</th>
-                                    <th width="8%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;">Date</th>
-                                  	<th width="15%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;">Supplier Name</th>
-                                  	<th width="20%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;">No PO/Line Item</th>
-                                  	<th width="10%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;">Purchase Price</th>
-                                  	<th width="5%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;">Qty</th>
-                                  	<th width="7%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;">Amount</th>
-                                  	<th width="7%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;">Delivery Date</th>
-                                  	<th width="7%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;">Purchase</th>
-                                  	<th width="7%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;">Tax</th>
-                                  	<th width="9%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;">Total Amount</th>
+                                	<th width="5%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.no"/></th>
+                                    <th width="8%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.date"/></th>
+                                  	<th width="15%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="supplier.name"/></th>
+                                  	<th width="20%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="invoiceverification.po.no"/>/<spring:message code="salesorder.lineitem"/></th>
+                                  	<th width="10%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="po.price"/></th>
+                                  	<th width="5%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.qty"/></th>
+                                  	<th width="7%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.amount"/></th>
+                                  	<th width="7%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="dpo.delivery.date"/></th>
+                                  	<th width="7%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="dpo.purchase"/></th>
+                                  	<th width="7%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.tax"/></th>
+                                  	<th width="9%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="salesreport.totalamount"/></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -168,7 +168,7 @@
                                 </c:forEach>
                                     <tr>
                                         <td colspan="3" style="border-top:1px solid black;">&nbsp;</td>
-                                        <td colspan="1" align="right" style="border-top:1px solid black;"><strong>Grand Total : </strong></td>
+                                        <td colspan="1" align="right" style="border-top:1px solid black;"><strong><spring:message code="ageing.grand.total"/> : </strong></td>
                                         <td style="border-top:1px solid black;"></td>
                                         <td style="border-top:1px solid black;"><strong><fmt:formatNumber value='${tQty}' pattern=',##0'/></strong></td>
                                         <td style="border-top:1px solid black;">&nbsp;</td>

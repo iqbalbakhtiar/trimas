@@ -26,16 +26,16 @@
             </tr>
             <tr><td>&nbsp;</td></tr>
             <tr>
-                <th width="18%" align="center" class="border-top border-bottom" rowspan="2">Supplier</th>
-                <th width="10%" align="center" class="border-top border-bottom" rowspan="2">Balance</th>
-                <th width="11%" align="center" class="border-top border-bottom" rowspan="2">Not Yet Due</th>
-                <th align="center" class="border-top" colspan="4">Over Due</th>
+                <th width="18%" align="center" class="border-top border-bottom" rowspan="2"><spring:message code="supplier"/></th>
+                <th width="10%" align="center" class="border-top border-bottom" rowspan="2"><spring:message code="accreport.balance"/></th>
+                <th width="11%" align="center" class="border-top border-bottom" rowspan="2"><spring:message code="ageing.notyet"/></th>
+                <th align="center" class="border-top" colspan="4"><spring:message code="ageing.over"/></th>
             </tr>
             <tr>
-                <th width="11%" align="center" class="border-top border-bottom">0-30 Days</th>
-                <th width="11%" align="center" class="border-top border-bottom">31-60 Days</th>
-                <th width="11%" align="center" class="border-top border-bottom">61-90 Days</th>
-                <th width="10%" align="center" class="border-top border-bottom">&gt; 90 Days</th>
+                <th width="11%" align="center" class="border-top border-bottom">0-30 <spring:message code="sirius.days"/></th>
+                <th width="11%" align="center" class="border-top border-bottom">31-60 <spring:message code="sirius.days"/></th>
+                <th width="11%" align="center" class="border-top border-bottom">61-90 <spring:message code="sirius.days"/></th>
+                <th width="10%" align="center" class="border-top border-bottom">&gt; 90 <spring:message code="sirius.days"/></th>
             </tr>
             </thead>
             <tbody>
@@ -62,7 +62,7 @@
                 <td>&nbsp;</td>
             </tr>
             <tr>
-                <td class="border-top" align="right"><strong>Grand Total</strong></td>
+                <td class="border-top" align="right"><strong><spring:message code="ageing.grand.total"/></strong></td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${totBalance}' pattern=',##0.00'/></strong></td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${totNyd}' pattern=',##0.00'/></strong></td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${totFsod}' pattern=',##0.00'/></strong></td>
@@ -71,7 +71,7 @@
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${totFtod}' pattern=',##0.00'/></strong></td>
             </tr>
             <tr>
-                <td class="border-top" align="right"><strong>Grand Percentage</strong></td>
+                <td class="border-top" align="right"><strong><spring:message code="ageing.grand.percentage"/></strong></td>
                 <td class="border-top">&nbsp;</td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${totNyd/totBalance*100}' pattern=',##0.00'/>%</strong></td>
                 <td class="border-top" align="right"><strong><fmt:formatNumber value='${totFsod/totBalance*100}' pattern=',##0.00'/>%</strong></td>

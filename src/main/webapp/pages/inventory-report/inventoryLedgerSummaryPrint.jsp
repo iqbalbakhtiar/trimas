@@ -24,7 +24,7 @@
 <table border="0" cellspacing="0" width="100%">
 <thead>
 <tr>
-    <th width="9%" align="left">Warehouse </th>
+    <th width="9%" align="left"><spring:message code="directsalesorder.warehouse"/> </th>
   	<th width="1%">&nbsp;:</th>
   	<th width="90%" align="left"><c:out value='${repo.facilityName}'/></th>
 </tr>
