@@ -217,7 +217,8 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 		for (PurchaseOrderItem item : getItems())
 		{
 			for (InvoiceVerificationItemReference invRef : item.getInvoiceReferences())
-				invoiceVerifications.add(invRef.getInvoiceVerificationItem().getInvoiceVerification());
+				if (invRef.getInvoiceVerificationItem() != null)
+					invoiceVerifications.add(invRef.getInvoiceVerificationItem().getInvoiceVerification());
 		}
 
 		return invoiceVerifications;
