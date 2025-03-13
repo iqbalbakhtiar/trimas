@@ -21,7 +21,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import com.siriuserp.sdk.dm.ContactMechanism;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
@@ -33,11 +32,13 @@ import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
 import com.siriuserp.accountpayable.dm.InvoiceVerification;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationItemReference;
 import com.siriuserp.inventory.dm.GoodsReceipt;
 import com.siriuserp.inventory.dm.Receiptable;
 import com.siriuserp.sales.dm.ApprovableType;
 import com.siriuserp.sdk.dm.ApprovableBridge;
 import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
+import com.siriuserp.sdk.dm.ContactMechanism;
 import com.siriuserp.sdk.dm.CreditTerm;
 import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.Facility;
@@ -215,8 +216,8 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 
 		for (PurchaseOrderItem item : getItems())
 		{
-			if (item.getInvoiceReference() != null && item.getInvoiceReference().getInvoiceVerificationItem() != null)
-				invoiceVerifications.add(item.getInvoiceReference().getInvoiceVerificationItem().getInvoiceVerification());
+			for (InvoiceVerificationItemReference invRef : item.getInvoiceReferences())
+				invoiceVerifications.add(invRef.getInvoiceVerificationItem().getInvoiceVerification());
 		}
 
 		return invoiceVerifications;

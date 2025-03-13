@@ -25,7 +25,12 @@ public class InvoiceVerificationReferenceHelper
 		if (itemReference.getReferenceType().equals(InvoiceVerificationReferenceType.PURCHASE_ORDER))
 			item.setQuantity(itemReference.getPurchaseOrderItem().getQuantity());
 		else
-			item.setQuantity(itemReference.getPurchaseOrderItem().getBarcodeQuantity());
+		{
+			if (item.getProduct().isSerial())
+				item.setQuantity(itemReference.getPurchaseOrderItem().getBarcodeQuantity());
+			else
+				item.setQuantity(itemReference.getGoodsReceiptItem().getReceipted());
+		}
 
 		return item;
 	}

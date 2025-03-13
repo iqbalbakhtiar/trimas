@@ -5,7 +5,6 @@
  */
 package com.siriuserp.procurement.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,7 +177,7 @@ public class PurchaseOrderService extends Service
 	@AuditTrails(className = PurchaseOrderItem.class, actionType = AuditTrailsActionType.CREATE)
 	public void addItem(Long purchaseOrderId, List<Item> items) throws Exception
 	{
-		boolean barcode = false;
+		boolean barcodeFinish = false;
 		PurchaseOrder purchaseOrder = load(purchaseOrderId);
 
 		for (Item item : items)
@@ -190,8 +189,8 @@ public class PurchaseOrderService extends Service
 				genericDao.update(parentItem);
 
 				//Cek masih ada sisa barcode atau tidak
-				if ((parentItem.getQuantity().subtract(parentItem.getBarcodeQuantity())).compareTo(BigDecimal.ZERO) > 0)
-					barcode = true;
+				if (parentItem.getQuantity().compareTo(parentItem.getBarcodeQuantity()) <= 0)
+					barcodeFinish = true;
 
 				PurchaseOrderItem purchaseItem = new PurchaseOrderItem();
 				purchaseItem.setItemParent(parentItem);
@@ -215,12 +214,12 @@ public class PurchaseOrderService extends Service
 
 				purchaseItem.setTransactionItem(warehouseTransactionItem);
 
-				purchaseOrder.getItems().add(purchaseItem);
+				genericDao.add(purchaseItem);
 			}
 		}
 
 		//Jika masih ada sisa item yg blm dibarcode
-		if (!barcode)
+		if (barcodeFinish)
 		{
 			purchaseOrder.setStatus(POStatus.OPEN);
 			genericDao.update(purchaseOrder);
@@ -252,11 +251,14 @@ public class PurchaseOrderService extends Service
 	@AuditTrails(className = PurchaseOrder.class, actionType = AuditTrailsActionType.DELETE)
 	public void delete(PurchaseOrder purchaseOrder) throws ServiceException
 	{
-		for (PurchaseOrderItem item : purchaseOrder.getItems())
+		if (purchaseOrder.getPurchaseType().equals(PurchaseType.STANDARD))
 		{
-			PurchaseRequisitionItem requisitionItem = genericDao.load(PurchaseRequisitionItem.class, item.getRequisitionItem().getId());
-			requisitionItem.setAvailable(true);
-			genericDao.update(requisitionItem);
+			for (PurchaseOrderItem item : purchaseOrder.getItems())
+			{
+				PurchaseRequisitionItem requisitionItem = genericDao.load(PurchaseRequisitionItem.class, item.getRequisitionItem().getId());
+				requisitionItem.setAvailable(true);
+				genericDao.update(requisitionItem);
+			}
 		}
 
 		genericDao.delete(purchaseOrder);

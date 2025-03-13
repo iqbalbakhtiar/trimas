@@ -13,7 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
@@ -90,10 +89,12 @@ public class PurchaseOrderItem extends WarehouseReferenceItem implements JSONSup
 	@Fetch(FetchMode.SELECT)
 	private PurchaseRequisitionItem requisitionItem;
 
-	@OneToOne(mappedBy = "purchaseOrderItem", fetch = FetchType.LAZY)
-	@LazyToOne(LazyToOneOption.PROXY)
+	@OneToMany(mappedBy = "purchaseOrderItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
-	private InvoiceVerificationItemReference invoiceReference;
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	@OrderBy("id")
+	private Set<InvoiceVerificationItemReference> invoiceReferences = new FastSet<InvoiceVerificationItemReference>();
 
 	@OneToMany(mappedBy = "itemParent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)

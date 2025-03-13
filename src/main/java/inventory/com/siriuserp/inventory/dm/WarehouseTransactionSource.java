@@ -120,8 +120,6 @@ public enum WarehouseTransactionSource
 	{
 		switch(this)
 		{
-			case DIRECT_PURCHASE_ORDER:
-			case PURCHASE_ORDER:
 			case PURCHASE_ORDER_CONFIRMATION:
 				return true;
 			default:
