@@ -127,6 +127,21 @@
       <div id="address" dojoType="ContentPane" label="<spring:message code='postaladdress.detail'/>" class="tab-pages" refreshOnShow="true" selected="true">
         <table width="100%">
           <tr>
+            <td align="right"><spring:message code="purchaseorder.supplieraddress"/></td>
+            <td width="1%" align="center">:</td>
+            <td>
+              <select id="supplierAddress" name="supplierAddress" class="combobox-ext">
+              </select>
+            </td>
+          <tr>
+            <td align="right"><spring:message code="supplier.contact"/></td>
+            <td width="1%" align="center">:</td>
+            <td>
+              <select id="supplierPhone" name="supplierPhone" class="combobox-ext">
+              </select>
+            </td>
+          </tr>
+          <tr>
             <td align="right"><spring:message code="purchaseorder.billto"/></td>
             <td width="1%" align="center">:</td>
             <td>
