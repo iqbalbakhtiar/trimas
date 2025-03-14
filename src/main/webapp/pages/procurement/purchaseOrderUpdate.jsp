@@ -6,6 +6,9 @@
   <c:if test="${access.add and purchase_edit.barcodeable}">
   	<a class="item-button-doc" href="javascript:createBarcode(${purchase_edit.id});"><span><spring:message code="sirius.create"/>&nbsp;<spring:message code="barcode"/></span></a>
   </c:if>
+  <c:if test="${purchase_edit.status != 'CLOSED' and (approvalDecision == null or approvalDecision.approvalDecisionStatus == 'APPROVE_AND_FINISH')}">
+    <a class="item-button-close"><span><spring:message code="sirius.close"/></span></a>
+  </c:if>
 </div>
 
 <div class="main-box">
@@ -14,6 +17,7 @@
       <tr valign="top">
         <td width="60%">
           <table style="border:none" width="100%">
+            <input type="hidden" id="status" name="status" value="${purchase_edit.status}"/>
             <tr>
               <td width="34%" align="right"><spring:message code="sirius.id"/></td>
               <td width="1%" align="center">:</td>
@@ -216,6 +220,12 @@
       </div>
       <div id="productLineItem" dojoType="ContentPane" label="<spring:message code='salesorder.lineitem'/>" class="tab-pages" refreshOnShow="true">
         <div class="toolbar-clean">
+          <c:set var="isApprover" value="${not empty person and person.id == approvalDecision.forwardTo.id and approvalDecision.approvalDecisionStatus != 'APPROVE_AND_FINISH' and approvalDecision.approvalDecisionStatus != 'REJECTED'}" />
+          <c:if test="${isApprover and fn:length(purchase_edit.items) >= 2}">
+            <div class="item-navigator">
+              <a class="item-button-delete"><span><spring:message code="sirius.row.delete"/></span></a>
+            </div>
+          </c:if>
           <table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">
             <thead>
             <tr>
@@ -232,10 +242,25 @@
             <tbody id="lineItem">
             <c:forEach items="${purchase_edit.items}" var="item" varStatus="idx">
             <c:if test="${item.purchaseItemType eq 'BASE'}">
-              <tr>
-                <td>&nbsp;</td>
+              <tr style="">
+                <td>
+                  <c:if test="${fn:length(purchase_edit.items) >= 2}">
+                    <input type="checkbox" class="check" id="check${idx.index}">
+                  </c:if>
+                  <input name="items[${idx.index}].reference" id="reference[${idx.index}]" value="${item.id}" size="5" class="input-disabled" disabled type="hidden">
+                </td>
                 <td><input id="product[${idx.index}]" size="26" value="${item.product.name}" class="input-disabled" name="items[${idx.index}].product" index="${idx.index}" next="product" disabled/></td>
-                <td><input id="quantity[${idx.index}]" size="6" value="${item.quantity}" class="input-disabled input-decimal" name="items[${idx.index}].quantity" index="${idx.index}" next="quantity" disabled/></td>
+                <td>
+                  <input
+                          id="quantity[${idx.index}]"
+                          size="6"
+                          value="${item.quantity}"
+                          name="purchaseOrder.items[${idx.index}].quantity"
+                          index="${idx.index}"
+                          next="quantity"
+                          class="${isApprover ? 'input-decimal' : 'input-disabled input-decimal'}"
+                    ${isApprover ? '' : 'disabled="disabled"'} />
+                </td>
                 <td><input id="uom[${idx.index}]" size="6" value="${item.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/></td>
                 <td><input id="amount[${idx.index}]" size="12" value="<fmt:formatNumber value='${item.money.amount}' pattern=',##0.00'/>" class="input-disabled input-decimal" name="items[${idx.index}].amount" index="${idx.index}" next="amount" disabled/></td>
                 <td><input id="totalAmount[${idx.index}]" size="12" class="input-number input-disabled" disabled value="<fmt:formatNumber value='${item.totalAmount}' pattern=',##0.00'/>"/></td>
@@ -260,6 +285,35 @@
   $(function(){
     $('.item-button-save').click(function(){
         save();
+    });
+
+    $('.item-button-close').click(function(){
+      confirmDialog("<spring:message code="notif.proceed"/> (<spring:message code="sirius.close"/> <spring:message code="purchaseorder"/>) ?", function(){
+        $('#status').val("CLOSED");
+        save();
+      }, function(){
+        return false;
+      });
+    });
+
+    $('.item-button-delete').click(function () {
+      // Hitung jumlah baris yang masih terlihat di tabel (misalnya baris item)
+      var totalVisibleRows = $('#lineItem tr:visible').length;
+      // Hitung jumlah baris yang dicentang
+      var selectedCount = $('.check:checked').length;
+
+      // Jika setelah dihapus tidak ada item tersisa (minimal harus 1)
+      if (totalVisibleRows - selectedCount < 1) {
+        alert('<spring:message code="manualbilling.line.item"/> <spring:message code="notif.lower"/> 1');
+        return false; // Batalkan proses delete
+      }
+
+      // Jika memenuhi syarat, lakukan penghapusan pada baris yang dicentang
+      $('.check:checked').each(function () {
+        var $tr = $(this).closest('tr');
+        $tr.css('display', 'none'); // Sembunyikan baris
+        $tr.find('input[id^="reference"]').prop('disabled', false); // Hilangkan atribut disabled khusus pada input reference
+      });
     });
   });
 

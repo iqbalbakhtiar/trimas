@@ -260,7 +260,7 @@
       </div>
     </div>
   </sesform:form>
-</div><spring:message code="notif.proceed"/>
+</div>
 <div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${dpo_edit.createdBy.fullName}'/> (<fmt:formatDate value='${dpo_edit.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${dpo_edit.updatedBy.fullName}'/> (<fmt:formatDate value='${dpo_edit.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
 <%@ include file="/common/sirius-general-bottom.jsp"%>
 <script type="text/javascript">
