@@ -11,7 +11,7 @@
 	<title>${title}</title>
 	</style>
 	<script type="text/javascript">
-		function setclient(id,name,code,initial,type)
+		function setclient(id,name,code,type)
 		{
 			if(id && name) {
 				var _code = self.opener.document.getElementById('categoryCode[${param.index}]');
@@ -28,14 +28,24 @@
 					_opt.setAttribute('code', code);
 					
 					_client.appendChild(_opt);
-
+					
+					console.log(type)
+					
+					if(type == "NONSTOCK"){
+						if ($(".forHideSerial")[0])
+					 		$('.forHideSerial').hide();
+					}else
+						if ($(".forHideSerial")[0])
+							$('.forHideSerial').show();
+					
+					
 					var event = new Event('change');
 					_client.dispatchEvent(event);
 				}
 				
-				var _initial = self.opener.document.getElementById('initial[${param.index}]');
+				/* var _initial = self.opener.document.getElementById('initial[${param.index}]');
 				if(_initial)
-					_initial.value = initial;
+					_initial.value = initial; */
 				
 				var _type = self.opener.document.getElementById('type[${param.index}]');
 				if(_type)

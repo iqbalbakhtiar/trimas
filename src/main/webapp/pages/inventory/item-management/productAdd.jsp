@@ -54,7 +54,7 @@
 			<form:radiobutton path="enabled" value="false"/><spring:message code="sirius.inactive"/>	
 		</td>
 	</tr>
-	<tr>
+	<tr class="forHideSerial">
 		<td align="right"><spring:message code="product.serial"/> :</td>
 		<td>
 			<form:radiobutton path="serial" value="true"/><spring:message code="sirius.yes"/>
