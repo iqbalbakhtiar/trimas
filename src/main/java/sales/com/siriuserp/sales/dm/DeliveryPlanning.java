@@ -5,6 +5,7 @@
  */
 package com.siriuserp.sales.dm;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
@@ -77,6 +78,20 @@ public class DeliveryPlanning extends Model
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@OrderBy("id")
 	private Set<DeliveryPlanningSequence> sequences = new FastSet<DeliveryPlanningSequence>();
+
+	public boolean isPlanable()
+	{
+		boolean planable = false;
+
+		for (SalesOrderItem item : getSalesOrder().getItems())
+			if ((item.getQuantity().subtract(item.getAssigned())).compareTo(BigDecimal.ZERO) > 0)
+				planable = true;
+
+		if (getSalesOrder().getSoStatus().equals(SOStatus.CLOSE))
+			planable = false;
+
+		return planable;
+	}
 
 	@Override
 	public String getAuditCode()

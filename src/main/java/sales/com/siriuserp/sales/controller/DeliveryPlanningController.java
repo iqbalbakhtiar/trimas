@@ -57,23 +57,23 @@ public class DeliveryPlanningController extends ControllerBase
 	@RequestMapping("/deliveryplanningview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/sales-trading/deliveryPlanningList", service.view(criteriaFactory.create(request, DeliveryPlanningFilterCriteria.class), DeliveryPlanningViewQuery.class));
+		return new ModelAndView("/sales/deliveryPlanningList", service.view(criteriaFactory.create(request, DeliveryPlanningFilterCriteria.class), DeliveryPlanningViewQuery.class));
 	}
 
 	@RequestMapping("/deliveryplanningpreadd1.htm")
 	public ModelAndView preadd1() throws Exception
 	{
-		return new ModelAndView("/sales-trading/deliveryPlanningAdd1", service.preadd1());
+		return new ModelAndView("/sales/deliveryPlanningAdd1", service.preadd1());
 	}
 
 	@RequestMapping("/deliveryplanningpreadd2.htm")
 	public ModelAndView preadd2(@RequestParam("id") Long id) throws Exception
 	{
-		return new ModelAndView("/sales-trading/deliveryPlanningAdd2", service.preadd2(id));
+		return new ModelAndView("/sales/deliveryPlanningAdd2", service.preadd2(id));
 	}
 
 	@RequestMapping("/deliveryplanningadd.htm")
-	public ModelAndView add(@ModelAttribute("plan") DeliveryPlanning planning, BindingResult result, SessionStatus status) throws Exception
+	public ModelAndView add(@ModelAttribute("planning_form") DeliveryPlanning planning, BindingResult result, SessionStatus status) throws Exception
 	{
 		service.add(planning);
 		status.setComplete();
@@ -84,7 +84,7 @@ public class DeliveryPlanningController extends ControllerBase
 	@RequestMapping("/deliveryplanningpreedit.htm")
 	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
 	{
-		return new ModelAndView("/sales-trading/deliveryPlanningUpdate", service.preedit(id));
+		return new ModelAndView("/sales/deliveryPlanningUpdate", service.preedit(id));
 	}
 
 	@RequestMapping("/deliveryplanningedit.htm")

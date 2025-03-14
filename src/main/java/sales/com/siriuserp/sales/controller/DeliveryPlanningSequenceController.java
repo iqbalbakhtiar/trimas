@@ -61,13 +61,13 @@ public class DeliveryPlanningSequenceController extends ControllerBase
 	}
 
 	@RequestMapping("/deliveryplanningsequencepreadd.htm")
-	public ModelAndView preadd(@ModelAttribute("plan") SalesForm form) throws Exception
+	public ModelAndView preadd(@RequestParam("id") Long planningId) throws Exception
 	{
-		return new ModelAndView("/sales-trading/deliveryPlanningSequenceAdd2", service.preadd(form));
+		return new ModelAndView("/sales/deliveryPlanningSequenceAdd", service.preadd(planningId));
 	}
 
 	@RequestMapping("/deliveryplanningsequenceadd.htm")
-	public ModelAndView add(@ModelAttribute("plan") SalesForm form, SessionStatus status) throws Exception
+	public ModelAndView add(@ModelAttribute("planning_form") SalesForm form, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
@@ -91,11 +91,11 @@ public class DeliveryPlanningSequenceController extends ControllerBase
 	@RequestMapping("/deliveryplanningsequencepreedit.htm")
 	public ModelAndView preview(@RequestParam("id") Long id) throws Exception
 	{
-		return new ModelAndView("/sales-trading/deliveryPlanningSequencePreview", service.preedit(id));
+		return new ModelAndView("/sales/deliveryPlanningSequencePreview", service.preedit(id));
 	}
 
 	@RequestMapping("/deliveryplanningsequenceedit.htm")
-	public ModelAndView edit(@ModelAttribute("plan") SalesForm form, BindingResult result, SessionStatus status) throws Exception
+	public ModelAndView edit(@ModelAttribute("planning_form") SalesForm form, BindingResult result, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 

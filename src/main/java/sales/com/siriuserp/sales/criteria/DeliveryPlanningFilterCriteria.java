@@ -26,6 +26,7 @@ public class DeliveryPlanningFilterCriteria extends AbstractFilterCriteria
 
 	private String code;
 	private String customerName;
+	private String salesOrderCode;
 
 	private Date dateFrom;
 	private Date dateTo;

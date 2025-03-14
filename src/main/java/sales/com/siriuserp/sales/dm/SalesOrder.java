@@ -1,6 +1,7 @@
 package com.siriuserp.sales.dm;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -146,16 +147,16 @@ public class SalesOrder extends Model implements JSONSupport, ApprovableBridge
 	@OrderBy("id")
 	private Set<SalesOrderItem> items = new FastSet<SalesOrderItem>();
 
+	public boolean isLocked()
+	{
+		Optional<SalesOrderItem> products = getItems().stream().filter(item -> !item.getLockStatus().equals(SOStatus.LOCK)).findFirst();
+		return !products.isPresent();
+	}
+
 	@Override
 	public ApprovableType getApprovableType()
 	{
 		return ApprovableType.SALES_ORDER;
-	}
-
-	@Override
-	public String getUri()
-	{
-		return "";
 	}
 
 	@Override
@@ -165,6 +166,12 @@ public class SalesOrder extends Model implements JSONSupport, ApprovableBridge
 		interceptors.add("salesOrderApprovableInterceptor");
 
 		return interceptors;
+	}
+
+	@Override
+	public String getUri()
+	{
+		return "";
 	}
 
 	@Override

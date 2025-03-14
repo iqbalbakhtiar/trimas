@@ -128,7 +128,7 @@ public class SalesOrderService extends Service
 
 		genericDao.add(salesOrder);
 
-		if (form.getApprover() != null)
+		if (form.getApprover() == null)
 		{
 			DeliveryPlanning deliveryPlanning = new DeliveryPlanning();
 			deliveryPlanning.setDate(DateHelper.today());

@@ -47,43 +47,41 @@ public class DeliveryPlanningSequenceService
 	@Autowired
 	private GenericDao genericDao;
 
-	public Map<String, Object> preadd(SalesForm form) throws Exception
+	public Map<String, Object> preadd(Long id) throws Exception
 	{
-		if (form.getDeliveryPlanning() != null)
+		SalesForm form = new SalesForm();
+		DeliveryPlanning deliveryPlanning = genericDao.load(DeliveryPlanning.class, id);
+		form.setDeliveryPlanning(deliveryPlanning);
+
+		List<Item> items = new FastList<Item>();
+		SalesOrder salesOrder = genericDao.load(SalesOrder.class, deliveryPlanning.getSalesOrder().getId());
+		form.setDate(DateHelper.today());
+		form.setNo(Long.valueOf(deliveryPlanning.getSequenceCounter() + 1));
+		form.setPostalAddress(salesOrder.getShippingAddress());
+		form.setFacility(salesOrder.getFacility());
+		form.setTax(salesOrder.getTax());
+
+		for (SalesOrderItem salesItem : salesOrder.getItems())
 		{
-			List<Item> items = new FastList<Item>();
-			DeliveryPlanning deliveryPlanning = genericDao.load(DeliveryPlanning.class, form.getDeliveryPlanning().getId());
-			SalesOrder salesOrder = genericDao.load(SalesOrder.class, deliveryPlanning.getSalesOrder().getId());
-			form.setDate(DateHelper.today());
-			form.setNo(Long.valueOf(deliveryPlanning.getSequenceCounter() + 1));
-			form.setPostalAddress(salesOrder.getShippingAddress());
-			form.setFacility(salesOrder.getFacility());
-			form.setTax(salesOrder.getTax());
-
-			for (SalesOrderItem salesItem : salesOrder.getItems())
+			if (salesItem.getQuantity().subtract(salesItem.getAssigned()).compareTo(BigDecimal.valueOf(0)) > 0 && salesItem.getLockStatus().equals(SOStatus.UNLOCK))
 			{
-				if (salesItem.getQuantity().subtract(salesItem.getAssigned()).compareTo(BigDecimal.valueOf(0)) > 0 && salesItem.getLockStatus().equals(SOStatus.UNLOCK))
-				{
-					Item item = new Item();
-					item.setProduct(salesItem.getProduct());
-					item.setQuantity(salesItem.getQuantity());
-					item.setAssigned(salesItem.getAssigned());
-					item.setDelivered(salesItem.getDelivered());
-					item.setReference(salesItem.getId());
+				Item item = new Item();
+				item.setProduct(salesItem.getProduct());
+				item.setQuantity(salesItem.getQuantity());
+				item.setAssigned(salesItem.getAssigned());
+				item.setDelivered(salesItem.getDelivered());
+				item.setReference(salesItem.getId());
 
-					items.add(item);
-				}
+				items.add(item);
 			}
-
-			FastMap<String, Object> map = new FastMap<String, Object>();
-			map.put("salesItems", deliveryPlanning.getSalesOrder().getItems());
-			map.put("items", items);
-			map.put("plan", form);
-
-			return map;
 		}
 
-		return null;
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("salesItems", deliveryPlanning.getSalesOrder().getItems());
+		map.put("items", items);
+		map.put("planning_form", form);
+
+		return map;
 	}
 
 	@AuditTrails(className = DeliveryPlanningSequence.class, actionType = AuditTrailsActionType.CREATE)
@@ -130,7 +128,7 @@ public class DeliveryPlanningSequenceService
 		SalesForm form = FormHelper.bind(SalesForm.class, load(id));
 
 		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("plan", form);
+		map.put("planning_form", form);
 		map.put("plan_edit", form.getDeliveryPlanningSequence());
 
 		return map;
