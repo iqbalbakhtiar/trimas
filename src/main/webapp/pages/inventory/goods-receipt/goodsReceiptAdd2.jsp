@@ -82,12 +82,6 @@
                 </thead>
                 <tbody>
                 <c:forEach items='${goodsReceipt_add.items}' var='item' varStatus='status'>
-                	<c:set var="serialClass" value="input-number"/>
-                	<c:set var="serialStatus" value=""/>
-                	<c:if test="${item.product.serial}">
-	                	<c:set var="serialClass" value="number-disabled"/>
-	                	<c:set var="serialStatus" value="readonly='true'"/>
-                	</c:if>
                     <tr>
                         <td>
                             <select class="combobox-ext product input-disabled" id="product[${status.index}]" index="${status.index}">
@@ -95,8 +89,18 @@
                             </select>
                         </td>
                         <td>
-                            <input class="receipt ${serialClass}" index="${status.index}" id="receipted[${status.index}]" name='items[${status.index}].receipted' size='6' value="<fmt:formatNumber value='${item.warehouseTransactionItem.unreceipted}' pattern=',##0'/>" ${serialStatus}/>
-                            <input id="av[${status.index}]" type="hidden" size='10' value="<fmt:formatNumber value='${item.warehouseTransactionItem.unreceipted}' pattern=',##0'/>"/>
+                            <input class="receipt input-number"
+                                   index="${status.index}"
+                                   id="receipted[${status.index}]"
+                                   name="items[${status.index}].receipted"
+                                   size="6"
+                                   value="<fmt:formatNumber value='${item.warehouseTransactionItem.unreceipted}' pattern=',##0'/>"
+                                    <c:if test="${item.product.serial}">
+                                        onchange="checkQtySerial(${status.index});"
+                                    </c:if>
+                            />
+                            <input id="av[${status.index}]" type="hidden" size="10"
+                                   value="<fmt:formatNumber value='${item.warehouseTransactionItem.unreceipted}' pattern=',##0'/>"/>
                         </td>
                         <td>
                             <input class="input-disabled" size="7" value="${item.warehouseTransactionItem.referenceItem.measureName}" disabled/>
@@ -237,5 +241,17 @@
         }
 
         openpopup(buildUrl(baseUrl, params));
+    }
+
+    function checkQtySerial(index) {
+        var receiptVal = parseFloat($('#receipted\\[' + index + '\\]').val());
+        var avVal = parseFloat($('#av\\[' + index + '\\]').val());
+
+        // Jika nilai receipt tidak 0 dan tidak sama dengan nilai serial (av)
+        if (receiptVal !== 0 && receiptVal !== avVal) {
+            alert("Untuk barang serial, Receipt Quantity hanya bisa 0 atau <strong>quantity serialnya.</strong>");
+            // Set nilai receipt kembali ke nilai serial
+            $('#receipted\\[' + index + '\\]').val(avVal);
+        }
     }
 </script>
