@@ -5,7 +5,7 @@
  */
 package com.siriuserp.sdk.dao;
 
-import com.siriuserp.sales.dm.SalesOrderReferenceItem;
+import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
 import com.siriuserp.sdk.base.Dao;
 import com.siriuserp.sdk.base.Filterable;
 
@@ -15,8 +15,8 @@ import com.siriuserp.sdk.base.Filterable;
  * www.siriuserp.com
  */
 
-public interface SalesReferenceItemDao extends Dao<SalesOrderReferenceItem>, Filterable
+public interface SalesReferenceItemDao extends Dao<DeliveryOrderReferenceItem>, Filterable
 {
-	public SalesOrderReferenceItem loadByProduct(Long productId);
+	public DeliveryOrderReferenceItem loadByProduct(Long productId);
 
 }

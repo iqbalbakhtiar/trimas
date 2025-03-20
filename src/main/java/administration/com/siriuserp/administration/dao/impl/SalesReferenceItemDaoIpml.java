@@ -7,7 +7,7 @@ package com.siriuserp.administration.dao.impl;
 import org.hibernate.Query;
 import org.springframework.stereotype.Component;
 
-import com.siriuserp.sales.dm.SalesOrderReferenceItem;
+import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
 import com.siriuserp.sdk.dao.SalesReferenceItemDao;
 import com.siriuserp.sdk.db.DaoHelper;
 
@@ -18,10 +18,10 @@ import com.siriuserp.sdk.db.DaoHelper;
  */
 
 @Component("salesReferenceItemDao")
-public class SalesReferenceItemDaoIpml extends DaoHelper<SalesOrderReferenceItem> implements SalesReferenceItemDao
+public class SalesReferenceItemDaoIpml extends DaoHelper<DeliveryOrderReferenceItem> implements SalesReferenceItemDao
 {
 	@Override
-	public SalesOrderReferenceItem loadByProduct(Long productId)
+	public DeliveryOrderReferenceItem loadByProduct(Long productId)
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("FROM SalesReferenceItem sri  ");
@@ -31,7 +31,7 @@ public class SalesReferenceItemDaoIpml extends DaoHelper<SalesOrderReferenceItem
 		query.setMaxResults(1);
 		query.setParameter("productId", productId);
 
-		return (SalesOrderReferenceItem) query.uniqueResult();
+		return (DeliveryOrderReferenceItem) query.uniqueResult();
 	}
 	
 }

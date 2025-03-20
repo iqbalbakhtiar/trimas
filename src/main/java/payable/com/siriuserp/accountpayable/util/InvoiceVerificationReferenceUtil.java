@@ -1,9 +1,13 @@
 /**
- * File Name  : InvoiceVerificationReferenceHelper.java
+ * File Name  : InvoiceVerificationReferenceUtil.java
  * Created On : Feb 26, 2025
  * Email	  : iqbal@siriuserp.com
  */
-package com.siriuserp.accountpayable.dm;
+package com.siriuserp.accountpayable.util;
+
+import com.siriuserp.accountpayable.dm.InvoiceVerificationItem;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceItem;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceType;
 
 /**
  * @author Iqbal Bakhtiar
@@ -11,7 +15,7 @@ package com.siriuserp.accountpayable.dm;
  * www.siriuserp.com
  */
 
-public class InvoiceVerificationReferenceHelper
+public class InvoiceVerificationReferenceUtil
 {
 	public static InvoiceVerificationItem initItem(InvoiceVerificationReferenceItem itemReference) throws Exception
 	{

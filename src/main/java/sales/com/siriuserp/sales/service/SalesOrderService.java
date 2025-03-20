@@ -12,7 +12,7 @@ import com.siriuserp.sales.dm.SOStatus;
 import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sales.dm.SalesOrderApprovableBridge;
 import com.siriuserp.sales.dm.SalesOrderItem;
-import com.siriuserp.sales.dm.SalesOrderReferenceItem;
+import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
 import com.siriuserp.sales.dm.SalesType;
 import com.siriuserp.sales.form.SalesForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
@@ -162,7 +162,7 @@ public class SalesOrderService extends Service
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public SalesOrderReferenceItem load(Long productId)
+	public DeliveryOrderReferenceItem load(Long productId)
 	{
 		return salesReferenceItemDao.loadByProduct(productId);
 	}

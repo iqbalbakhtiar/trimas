@@ -7,12 +7,14 @@ package com.siriuserp.sales.dm;
 
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -22,7 +24,6 @@ import org.hibernate.annotations.LazyToOneOption;
 
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.sdk.dm.Container;
-import com.siriuserp.sdk.dm.Lot;
 import com.siriuserp.sdk.dm.Model;
 import com.siriuserp.sdk.dm.Money;
 
@@ -39,7 +40,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "delivery_planning_sequence_item")
-public class DeliveryPlanningSequenceItem extends Model
+public class DeliveryPlanningSequenceItem extends Model implements DeliveryOrderReferenceable
 {
 	private static final long serialVersionUID = 2275882991642002784L;
 
@@ -54,9 +55,6 @@ public class DeliveryPlanningSequenceItem extends Model
 
 	@Embedded
 	private Money money = new Money();
-
-	@Embedded
-	private Lot lot = new Lot();
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_container")
@@ -81,6 +79,17 @@ public class DeliveryPlanningSequenceItem extends Model
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private DeliveryPlanningSequence deliveryPlanningSequence;
+
+	@OneToOne(mappedBy = "sequenceItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private DeliveryOrderReferenceItem deliveryOrderReferenceItem;
+
+	@Override
+	public DeliveryOrderReferenceType getReferenceType()
+	{
+		return DeliveryOrderReferenceType.DELIVERY_PLANNING;
+	}
 
 	@Override
 	public String getAuditCode()

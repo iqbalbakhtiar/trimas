@@ -34,7 +34,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "sales_order_item")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class SalesOrderItem extends Model
+public class SalesOrderItem extends Model implements DeliveryOrderReferenceable
 {
 	private static final long serialVersionUID = -2172781865197634218L;
 
@@ -87,6 +87,12 @@ public class SalesOrderItem extends Model
 	public Long getReferenceId()
 	{
 		return getSalesOrder().getId();
+	}
+
+	@Override
+	public DeliveryOrderReferenceType getReferenceType()
+	{
+		return DeliveryOrderReferenceType.SALES_ORDER;
 	}
 
 	@Override

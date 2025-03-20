@@ -36,6 +36,7 @@ public class SalesOrderAdapter extends AbstractUIAdapter
 			item.put("discount", salesOrderItem.getDiscount());
 			item.put("priceNett", getPriceNett(salesOrderItem));
 			item.put("subTotal", getSubTotal(salesOrderItem));
+			item.put("note", salesOrderItem.getNote());
 
 			items.add(item);
 		}

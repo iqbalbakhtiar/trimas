@@ -84,6 +84,19 @@ public class DeliveryPlanningSequence extends Model
 	@OrderBy("salesOrderItem")
 	private Set<DeliveryPlanningSequenceItem> sequenceItems = new HashSet<DeliveryPlanningSequenceItem>();
 
+	public Set<DeliveryOrder> getDeliveryOrders()
+	{
+		Set<DeliveryOrder> deliveryOrders = new HashSet<DeliveryOrder>();
+
+		for (DeliveryPlanningSequenceItem item : getSequenceItems())
+		{
+			if (item.getDeliveryOrderReferenceItem() != null && item.getDeliveryOrderReferenceItem().getDeliveryOrderItem() != null)
+				deliveryOrders.add(item.getDeliveryOrderReferenceItem().getDeliveryOrderItem().getDeliveryOrder());
+		}
+
+		return deliveryOrders;
+	}
+
 	@Override
 	public String getAuditCode()
 	{

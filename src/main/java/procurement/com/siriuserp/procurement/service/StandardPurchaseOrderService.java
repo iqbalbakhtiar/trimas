@@ -15,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.siriuserp.accountpayable.dm.InvoiceVerification;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationItem;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceItem;
-import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceHelper;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceType;
 import com.siriuserp.accountpayable.service.InvoiceVerificationService;
+import com.siriuserp.accountpayable.util.InvoiceVerificationReferenceUtil;
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.inventory.dm.WarehouseTransactionSource;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
@@ -274,7 +274,7 @@ public class StandardPurchaseOrderService extends Service
 			invoiceReference.setReferenceType(InvoiceVerificationReferenceType.PURCHASE_ORDER);
 			genericDao.add(invoiceReference);
 
-			InvoiceVerificationItem invoiceItem = InvoiceVerificationReferenceHelper.initItem(invoiceReference);
+			InvoiceVerificationItem invoiceItem = InvoiceVerificationReferenceUtil.initItem(invoiceReference);
 			invoiceItem.setInvoiceVerification(invoiceVerification);
 
 			Item item = new Item();

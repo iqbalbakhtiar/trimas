@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
 import com.siriuserp.sales.dm.DeliveryPlanning;
 import com.siriuserp.sales.dm.DeliveryPlanningSequence;
 import com.siriuserp.sales.dm.DeliveryPlanningSequenceItem;
@@ -21,10 +22,10 @@ import com.siriuserp.sales.dm.SOStatus;
 import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sales.dm.SalesOrderItem;
 import com.siriuserp.sales.form.SalesForm;
+import com.siriuserp.sales.util.DeliveryOrderReferenceUtil;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.dao.GenericDao;
-import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Item;
 import com.siriuserp.sdk.dm.Money;
 import com.siriuserp.sdk.utility.DateHelper;
@@ -63,7 +64,7 @@ public class DeliveryPlanningSequenceService
 
 		for (SalesOrderItem salesItem : salesOrder.getItems())
 		{
-			if (salesItem.getQuantity().subtract(salesItem.getAssigned()).compareTo(BigDecimal.valueOf(0)) > 0 && salesItem.getLockStatus().equals(SOStatus.UNLOCK))
+			if (salesItem.getQuantity().subtract(salesItem.getAssigned()).compareTo(BigDecimal.valueOf(0)) > 0 && salesItem.getLockStatus().equals(SOStatus.OPEN))
 			{
 				Item item = new Item();
 				item.setProduct(salesItem.getProduct());
@@ -89,7 +90,7 @@ public class DeliveryPlanningSequenceService
 	{
 		for (Item item : deliveryPlanningSequence.getForm().getItems())
 		{
-			if (SiriusValidator.gz(item.getQuantity()))
+			if (SiriusValidator.gz(item.getQuantity()) && SiriusValidator.validateParam(item.getReference()))
 			{
 				SalesOrderItem salesItem = genericDao.load(SalesOrderItem.class, item.getReference());
 				Money money = new Money();
@@ -100,11 +101,11 @@ public class DeliveryPlanningSequenceService
 
 				DeliveryPlanningSequenceItem sequenceItem = new DeliveryPlanningSequenceItem();
 				sequenceItem.setSalesOrderItem(salesItem);
+				sequenceItem.setProduct(salesItem.getProduct());
 				sequenceItem.setQuantity(item.getQuantity());
 				sequenceItem.setDiscount(salesItem.getDiscount());
 				sequenceItem.setMoney(money);
 				sequenceItem.setDeliveryPlanningSequence(deliveryPlanningSequence);
-				sequenceItem.setContainer(genericDao.load(Container.class, item.getContainer().getId()));
 
 				BigDecimal assignedQty = salesItem.getAssigned();
 				assignedQty = assignedQty.add(sequenceItem.getQuantity());
@@ -113,8 +114,13 @@ public class DeliveryPlanningSequenceService
 				genericDao.update(salesItem);
 
 				deliveryPlanningSequence.getSequenceItems().add(sequenceItem);
+
+				DeliveryOrderReferenceItem referenceItem = DeliveryOrderReferenceUtil.initItem(sequenceItem);
+				genericDao.add(referenceItem);
 			}
 		}
+
+		genericDao.add(deliveryPlanningSequence);
 
 		DeliveryPlanning deliveryPlanning = genericDao.load(DeliveryPlanning.class, deliveryPlanningSequence.getDeliveryPlanning().getId());
 		deliveryPlanning.setSequenceCounter(deliveryPlanning.getSequenceCounter() + 1);
@@ -148,7 +154,7 @@ public class DeliveryPlanningSequenceService
 			SalesOrderItem salesItem = genericDao.load(SalesOrderItem.class, item.getSalesOrderItem().getId());
 			BigDecimal unassignedQty = item.getQuantity();
 			salesItem.setAssigned(salesItem.getAssigned().subtract(unassignedQty));
-			salesItem.setLockStatus(SOStatus.UNLOCK);
+			salesItem.setLockStatus(SOStatus.OPEN);
 
 			genericDao.update(salesItem);
 		}

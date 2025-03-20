@@ -2,7 +2,7 @@
 
 <div class="toolbar">
 	<a class="item-button-list" href="<c:url value='/page/deliveryorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
-	<a class="item-button-rprev" href="<c:url value='/page/deliveryorderpreadd1.htm'/>"><span><spring:message code="sirius.back"/></span></a>
+	<a class="item-button-back" href="<c:url value='/page/deliveryorderpreadd1.htm'/>"><span><spring:message code="sirius.back"/></span></a>
 	<a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
 </div>
 
@@ -23,8 +23,8 @@
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="org" path="organization" cssClass="combobox input-disabled" disabled="true">
-							<c:if test='${not empty deliveryOrder_form.salesOrder.organization}'>
-								<form:option value='${deliveryOrder_form.salesOrder.organization.id}' label='${deliveryOrder_form.salesOrder.organization.fullName}'/>
+							<c:if test='${not empty deliveryOrder_form.organization}'>
+								<form:option value='${deliveryOrder_form.organization.id}' label='${deliveryOrder_form.organization.fullName}'/>
 							</c:if>
 						</form:select>
 					</td>
@@ -32,46 +32,23 @@
 				<tr>
 					<td align="right"><spring:message code="deliveryorder.do.date"/></td>
 					<td width="1%" align="center">:</td>
-					<td><input id="date" name="date" class="datepicker" value=""/></td>
-				</tr>
-				<tr>
-					<td align="right"><spring:message code="deliveryorder.salesorder.no"/></td>
-					<td width="1%" align="center">:</td>
-					<td width="64%"><input id="salesOrderNo" name="salesOrderNo" class="inputbox input-disabled" value="${deliveryOrder_form.salesOrder.code}" disabled/></td>
+					<td><input id="date" name="date" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>"/></td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="customer"/></td>
 					<td width="1%" align="center">:</td>
-					<td width="64%"><input id="customerName" name="customerName" class="inputbox input-disabled" value="${deliveryOrder_form.salesOrder.customer.fullName}" disabled/></td>
-				</tr>
-				<tr>
-					<td align="right"><spring:message code="salesorder.shipping.name"/></td>
-					<td width="1%" align="center">:</td>
-					<td width="64%"><input id="addressName" name="addressName" class="inputbox input-disabled" value="${deliveryOrder_form.salesOrder.shippingAddress.addressName}" disabled/></td>
-				</tr>
-				<tr>
-					<td align="right"><spring:message code="deliveryorder.shippingaddress.detail"/></td>
-					<td width="1%" align="center">:</td>
-					<td width="64%"><input id="addressDetail" name="addressDetail" class="inputbox input-disabled" value="${deliveryOrder_form.salesOrder.shippingAddress.address}" disabled/></td>
-				</tr>
-				<tr>
-					<td align="right"><spring:message code="postaladdress.postalcode"/></td>
-					<td width="1%" align="center">:</td>
-					<td width="64%"><input id="postalCode" name="postalCode" class="inputbox input-disabled" value="${deliveryOrder_form.salesOrder.shippingAddress.postalCode}" disabled/></td>
-				</tr>
-				<tr>
-					<td align="right"><spring:message code="postaladdress.city"/></td>
-					<td width="1%" align="center">:</td>
-					<td width="64%"><input id="city" name="city" class="inputbox input-disabled" value="${deliveryOrder_form.salesOrder.shippingAddress.city.name}" disabled/></td>
+					<td width="64%">
+						<form:select id="customer" path="customer" cssClass="combobox-ext" onchange="updateShippingAddress(this)">
+							<form:option value='${deliveryOrder_form.customer.id}' label='${deliveryOrder_form.customer.fullName}'/>
+						</form:select>
+					</td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="deliveryorder.issue.facility"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="facility" path="facility" cssClass="combobox">
-							<c:if test='${not empty facility}'>
-								<form:option value='${facility.id}' label='${facility.name}'/>
-							</c:if>
+								<form:option value='${deliveryOrder_form.facility.id}' label='${deliveryOrder_form.facility.name}'/>
 						</form:select>
 					</td>
 				</tr>
@@ -88,63 +65,75 @@
 	</table>
 	<br/>
 	<div id="mainTab" dojoType="TabContainer" style="width:100% ; height: 400px;">
+		<div id="address" dojoType="ContentPane" label="<spring:message code='postaladdress.detail'/>" class="tab-pages" refreshOnShow="true" selected="true">
+			<table width="100%">
+			<tr>
+				<td align="right"><spring:message code="salesorder.shipping.name"/></td>
+				<td width="1%" align="center">:</td>
+				<td>
+					<form:select id="shippingAddress" path="shippingAddress" cssClass="combobox-ext" onchange="updatedShippingAddressDetail(this.value)">
+					</form:select>
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="postaladdress.detail"/></td>
+				<td width="1%" align="center">:</td>
+				<td><input id="addressDetail" class="input-disabled" size="35" value="${deliveryOrder_form.shippingAddress.address}" disabled/></td>
+			</tr>
+ 				<tr>
+				<td align="right"><spring:message code="postaladdress.postalcode"/></td>
+				<td width="1%" align="center">:</td>
+				<td><input id="addressPostalCode" class="inputbox input-disabled" value="${deliveryOrder_form.shippingAddress.postalCode}" disabled/></td>
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="postaladdress.city"/></td>
+				<td width="1%" align="center">:</td>
+				<td><input id="addressCity" class="inputbox input-disabled" value="${deliveryOrder_form.shippingAddress.city.name}" disabled/></td>
+			</tr>
+        	</table>
+		</div>
 		<div id="productLineItem" dojoType="ContentPane" label="<spring:message code='salesorder.lineitem'/>" class="tab-pages" refreshOnShow="true" selected="true">
   			<div class="toolbar-clean">
 		    	<table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">
-			    	<thead>
-				    	<tr>
-				    		<th width="1%" nowrap="nowrap">&nbsp;</th>
-							<th width="20%" nowrap="nowrap"><spring:message code="product"/></th>
-							<th width="20%" nowrap="nowrap"><spring:message code="product.onhand"/></th>
-							<th width="5%" ><spring:message code="deliveryorder.soquantity"/></th>
-							<th width="5%" ><spring:message code="deliveryorder.doquantity"/></th>
-							<th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
-							<th width="20%" nowrap="nowrap"><spring:message code="container"/></th>
-							<th width="60%" nowrap="nowrap"><spring:message code="deliveryorder.note"/></th>
-						</tr>
-					</thead>
-					<tbody id="lineItem">
-					<c:forEach items="${deliveryOrder_form.items}" var="item" varStatus="idx">
-						<tr>
-							<td></td>
-							<td>
-								<select id="product[${idx.index}]" class="combobox-ext input-disabled productInput"
-										name="items[${idx.index}].product" index="${idx.index}" next="product" disabled>
-										<option value="${item.salesReferenceItem.product.id}">${item.salesReferenceItem.product.name}</option>
-								</select>
-							</td>
-							<td>
-								<input id="onhand[${idx.index}]" size="10" value="0.00" class="input-disabled input-decimal"
-									   name="items[${idx.index}].onhand" index="${idx.index}" next="onhand" disabled/>
-							</td>
-							<td>
-								<input id="soquantity[${idx.index}]" size="10" value="${item.salesReferenceItem.quantity}" class="input-disabled input-decimal"
-									   name="items[${idx.index}].soquantity" index="${idx.index}" next="soquantity" disabled/>
-							</td>
-							<td>
-								<input id="delivered[${idx.index}]" size="10" value="0.00" class="input-number"
-									   name="items[${idx.index}].delivered" index="${idx.index}" next="delivered"/>
-							</td>
-							<td>
-								<input id="uom[${idx.index}]" size="6" value="${item.salesReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled"
-									   name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/>
-							</td>
-							<td>
-								<select id="container[${idx.index}]" name="items[${idx.index}].container" index="${idx.index}"
-										onchange="updateOnHand(this, ${idx.index});" next="container" class="combobox">
-								</select>
-								<a class="item-popup" onclick="openContainer(this, ${idx.index});" title="Container"></a>
-							</td>
-							<td>
-								<input id="note[${idx.index}]" type="text" size="60" name="items[${idx.index}].note"
-									   index="${idx.index}" next="note"/>
-							</td>
-						</tr>
-					</c:forEach>
-					</tbody>
-					<tfoot>
-						<tr class="end-table"><td colspan="10">&nbsp;</td></tr>
-					</tfoot>
+		    	<thead>
+			    	<tr>
+			    		<th width="1%" nowrap="nowrap">&nbsp;</th>
+						<th width="20%" nowrap="nowrap"><spring:message code="product"/></th>
+						<th width="5%" nowrap="nowrap"><spring:message code="product.onhand"/></th>
+						<th width="5%"><spring:message code="deliveryorder.reference.qty"/></th>
+						<th width="5%"><spring:message code="deliveryorder.quantity"/></th>
+						<th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
+						<th width="20%" nowrap="nowrap"><spring:message code="container"/></th>
+						<th width="60%" nowrap="nowrap"><spring:message code="deliveryorder.note"/></th>
+					</tr>
+				</thead>
+				<tbody id="lineItem">
+				<c:forEach items="${deliveryOrder_form.items}" var="item" varStatus="idx">
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<select id="product[${idx.index}]" class="combobox-ext input-disabled productInput" name="items[${idx.index}].product" index="${idx.index}" next="product" disabled>
+							<option value="${item.deliveryReferenceItem.product.id}">${item.deliveryReferenceItem.product.name}</option>
+						</select>
+					</td>
+					<td><input id="onhand[${idx.index}]" size="10" value="0.00" class="input-disabled input-decimal" name="items[${idx.index}].onhand" index="${idx.index}" next="onhand" disabled/></td>
+					<td><input id="soquantity[${idx.index}]" size="10" value="${item.deliveryReferenceItem.quantity}" class="input-disabled input-decimal" name="items[${idx.index}].soquantity" index="${idx.index}" next="soquantity" disabled/></td>
+					<td>
+						<c:if test="${!item.deliveryReferenceItem.product.serial}"><input id="delivered[${idx.index}]" size="10" value="0.00" class="input-number" name="items[${idx.index}].quantity" index="${idx.index}" next="delivered"/></c:if>
+						<c:if test="${item.deliveryReferenceItem.product.serial}">
+							<input id="qtySerial[${idx.index}]" size="10" value="0.00" class="input-number" index="${idx.index}" onChange="addBarcode(this)" reference="${item.deliveryReferenceItem.id}" next="qtySerial"/>
+							<input id="delivered[${idx.index}]" size="10" value="0.00" class="input-number" name="items[${idx.index}].quantity" index="${idx.index}" next="delivered" style="display: none;"/>
+						</c:if>
+					</td>
+					<td><input id="uom[${idx.index}]" size="6" value="${item.deliveryReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/></td>
+					<td><select id="container[${idx.index}]" name="items[${idx.index}].container" index="${idx.index}" onchange="updateOnHand(this, ${idx.index});" next="container" class="combobox"></select><a class="item-popup" onclick="openContainer(this, ${idx.index});" title="Container"></a></td>
+					<td><input id="note[${idx.index}]" type="text" size="35" name="items[${idx.index}].note" index="${idx.index}" next="note"/></td>
+				</tr>
+				</c:forEach>
+				</tbody>
+				<tfoot>
+					<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
+				</tfoot>
 				</table>
 			</div>
 		</div>
@@ -159,6 +148,8 @@ $(function(){
 			save();
 		}
 	});
+	
+	$('#customer').change();
 });
 
 function validateForm() {
@@ -297,51 +288,67 @@ function save() {
 	});
 }
 
-function updateDisplay() {
-	// Update Tax
-	var taxRate = Number.parse($('#tax option:selected').data('taxrate')) || 0;
-	$('#taxRate').val(taxRate ? taxRate.toFixed(2) : '');
+function updateShippingAddress(element) {
+	let customerId = $('#customer').val();
 
-	// Inisialisasi total
-	var totalSales = 0, totalDiscount = 0, totalBeforeTax = 0;
+	Party.load(customerId);
 
-	// Fungsi helper untuk mendapatkan nilai numerik
-	function getNumericValue($input) {
-		return $input.val().toNumber() || 0;
+	let _shippingAddress = $('#shippingAddress');
+	if (_shippingAddress.find('option').length > 0) { // Clear options if any
+		_shippingAddress.empty();
 	}
 
-	// Update setiap line item
-	$('#lineItem tr').each(function(){
-		var $row = $(this);
+	let addresses = Party.data.partyAddresses;
 
-		var qty = getNumericValue($row.find('input[id^="quantity["]'));
-		var price = getNumericValue($row.find('input[id^="amount["]'));
-		var disc = getNumericValue($row.find('input[id^="discount["]'));
+	addresses.forEach(address => {
+		// Periksa apakah postalTypes memiliki tipe 'SHIPPING' dengan enabled == true
+		let hasShippingEnabled = address.postalTypes.some(postalType =>
+				postalType.type === 'SHIPPING' && postalType.enabled === true
+		);
 
-		var amount = qty * price;
-		var totalDisc = amount * (disc / 100);
-		var totalAmount = amount - totalDisc;
+		if (hasShippingEnabled) {
+			let option = $('<option></option>')
+					.val(address.postalId)
+					.text(address.addressName);
 
-		totalSales += amount;
-		totalDiscount += totalDisc;
-		totalBeforeTax += totalAmount;
+			if (address.isDefault) { // Jika alamat ini adalah default, set sebagai selected
+				option.attr('selected', 'selected');
+			}
 
-		// Mengatur nilai terformat menggunakan numberFormat
-		$row.find('input[id^="amountInput["]').val(amount.numberFormat('#,##0.00'));
-		$row.find('input[id^="totalDisc["]').val(totalDisc.numberFormat('#,##0.00'));
-		$row.find('input[id^="totalAmount["]').val(totalAmount.numberFormat('#,##0.00'));
+			_shippingAddress.append(option); // Tambahkan opsi ke elemen _shippingAddress
+		}
 	});
 
-	// Menghitung totalTax dan totalTransaction
-	var totalTax = totalBeforeTax * (taxRate / 100);
-	var totalTransaction = totalBeforeTax + totalTax;
+	updatedShippingAddressDetail(_shippingAddress.val());
+}
 
-	// Memperbarui field recapitulation dengan nilai yang diformat
-	$('#totalSales').val(totalSales.numberFormat('#,##0.00'));
-	$('#totalDiscount').val(totalDiscount.numberFormat('#,##0.00'));
-	$('#totalBeforeTax').val(totalBeforeTax.numberFormat('#,##0.00'));
-	$('#totalTax').val(totalTax.numberFormat('#,##0.00'));
-	$('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
+function updatedShippingAddressDetail(selectedId) {
+	// Clear Detail Address
+	$('#addressDetail').val('');
+	$('#addressPostalCode').val('');
+	$('#addressCity').val('');
+
+	if (!selectedId || selectedId.trim() === "") { // Cancel if customer does not have shipping address
+		return;
+	}
+
+	PostalAddress.load(selectedId);
+
+	if (PostalAddress.data) {
+		var addressDetail = PostalAddress.data.postalAddress || '';
+		var postalCode = PostalAddress.data.postalCode || '';
+		var city = PostalAddress.data.postalCity ? PostalAddress.data.postalCity.name : '';
+
+		// Update fields in the form
+		$('#addressDetail').val(addressDetail);
+		$('#addressPostalCode').val(postalCode);
+		$('#addressCity').val(city);
+	} else {
+		// If no data is returned, clear the fields
+		$('#addressDetail').val('');
+		$('#addressPostalCode').val('');
+		$('#addressCity').val('');
+	}
 }
 
 function openContainer(element, idx) {
@@ -381,5 +388,63 @@ function updateOnHand(element, index) {
 			}
 		});
 	}
+}
+
+let maxIdx = 0;
+$('input[name^="details["][name$="[reference]"]').each(function(){
+    let nameAttr = $(this).attr("name");
+    let match = nameAttr.match(/details\[(\d+)\]/);
+    if(match){
+        let currentIdx = parseInt(match[1], 10);
+        if(currentIdx > maxIdx){
+            maxIdx = currentIdx;
+        }
+    }
+});
+let idx = maxIdx + 1;
+
+function addBarcode(element) {
+	let reference = $(element).data('reference');
+	let idxRef = $(element).data('index');
+
+	$('#lineItem' + idxRef + ' tr.barcode').remove();
+	
+	for (let i = 0; i < element.value; i++) { 
+		addLine(i);		
+		$('#lineItem' + idxRef + ' tr:last').addClass('barcode');
+	}
+	
+	addRow($('#lineItem' + idxRef), idx++,
+			'<select class="combobox-min barcodes" data-index="{{idx}}" name="details[{{idx}}][lot][id]"></select><a onclick="open_barcode(this, '+ idxRef +' )" data-index="{{idx}}" data-target="details[{{idx}}][lot]" class="item-popup item-tools"></a>',
+			'<input onchange="load_serial();" name="details[{{idx}}][lot][serial]" type="hidden" value="" readonly/>',
+			'&nbsp;',
+			'<input data-index="{{idx}}" name="details[{{idx}}][quantity]" class="number-disabled quantities' + idxRef + '" size="8" readonly/>',
+			'<input name="details[{{idx}}][reference]" type="hidden" value="' + reference + '" readonly/>',
+			'<input type="hidden" name="details[{{idx}}][itemIndex]" value="' + idxRef + '"/>',
+			'&nbsp;',
+			'&nbsp;',
+		)
+}
+
+function addLine($index) {
+	$tbody = $('#lineItem');
+    $tr = $('<tr/>');
+    
+	$product = List.get('<select class="combobox-ext productInput"/>','product['+$index+']');
+	$barcode = List.get('<select class="combobox barcodes"/>','serial['+$index+']');
+	
+	$qty = List.get('<input type="text" class="input-number" size="10" onchange="updateQuantity();"/>','quantity['+$index+']', '0.00');
+	$reference = List.get('<input type="text" size="30"/>','note['+$index+']');
+	
+	$tr.append(List.col([$barcode, $product]));
+	$tr.append(List.col([$qty]));
+	
+	$tbody.append($tr);
+	
+	$(".input-number").bind(inputFormat);
+}
+
+function updateQuantity() {
+	
 }
 </script>

@@ -1,10 +1,11 @@
 /**
- * File Name  : SalesOrderReferenceItem.java
+ * File Name  : DeliveryOrderReferenceItem.java
  * Created On : Feb 5, 2025
  * Email	  : iqbal@siriuserp.com
  */
 package com.siriuserp.sales.dm;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -25,6 +26,7 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
+import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.JSONSupport;
 import com.siriuserp.sdk.dm.Model;
@@ -46,20 +48,26 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "sales_order_reference_item")
+@Table(name = "delivery_order_reference_item")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class SalesOrderReferenceItem extends Model implements JSONSupport
+public class DeliveryOrderReferenceItem extends Model implements JSONSupport
 {
 	private static final long serialVersionUID = 4479431094475781734L;
 
-	@Column(name = "code")
+	@Column(name = "reference_id")
+	private Long referenceId;
+
+	@Column(name = "reference_code")
 	private String code;
 
-	@Column(name = "date")
+	@Column(name = "reference_date")
 	private Date date;
 
 	@Column(name = "note")
 	private String note;
+
+	@Column(name = "uri")
+	private String uri;
 
 	@Column(name = "term")
 	private Integer term = 1;
@@ -74,7 +82,7 @@ public abstract class SalesOrderReferenceItem extends Model implements JSONSuppo
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "reference_type")
-	private SalesOrderReferenceType referenceType;
+	private DeliveryOrderReferenceType referenceType;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_party_organization")
@@ -124,8 +132,30 @@ public abstract class SalesOrderReferenceItem extends Model implements JSONSuppo
 	@Fetch(FetchMode.SELECT)
 	private DeliveryPlanningSequenceItem sequenceItem;
 
-	@OneToOne(mappedBy = "salesReference", fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "deliveryReferenceItem", fetch = FetchType.LAZY)
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private DeliveryOrderItem deliveryOrderItem;
+
+	public Product getProduct()
+	{
+		if (getSequenceItem() != null)
+			return getSequenceItem().getProduct();
+
+		return getSalesOrderItem().getProduct();
+	}
+
+	public BigDecimal getQuantity()
+	{
+		if (getSequenceItem() != null)
+			return getSequenceItem().getQuantity();
+
+		return getSalesOrderItem().getQuantity();
+	}
+
+	@Override
+	public String getAuditCode()
+	{
+		return this.getCode().toString();
+	}
 }

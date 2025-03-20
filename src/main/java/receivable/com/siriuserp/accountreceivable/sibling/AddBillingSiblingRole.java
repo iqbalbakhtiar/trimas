@@ -87,10 +87,10 @@ public class AddBillingSiblingRole extends AbstractSiblingRole
 			referenceItem.setReferenceDate(dor.getDate());
 			referenceItem.setReferenceName(SiriusValidator.getEnumName(dor.getClass())); // Jadi DELIVERY_ORDER_REALIZATION
 			referenceItem.setQuantity(dorItem.getAccepted());
-			referenceItem.getMoney().setAmount(dorItem.getDeliveryOrderItem().getSalesReference().getSalesOrderItem().getMoney().getAmount());
-			referenceItem.getMoney().setRate(dorItem.getDeliveryOrderItem().getSalesReference().getSalesOrderItem().getMoney().getRate());
-			referenceItem.getMoney().setCurrency(dorItem.getDeliveryOrderItem().getSalesReference().getSalesOrderItem().getMoney().getCurrency());
-			referenceItem.setDiscount(dorItem.getDeliveryOrderItem().getSalesReference().getSalesOrderItem().getDiscount());
+			referenceItem.getMoney().setAmount(dorItem.getDeliveryOrderItem().getDeliveryReferenceItem().getSalesOrderItem().getMoney().getAmount());
+			referenceItem.getMoney().setRate(dorItem.getDeliveryOrderItem().getDeliveryReferenceItem().getSalesOrderItem().getMoney().getRate());
+			referenceItem.getMoney().setCurrency(dorItem.getDeliveryOrderItem().getDeliveryReferenceItem().getSalesOrderItem().getMoney().getCurrency());
+			referenceItem.setDiscount(dorItem.getDeliveryOrderItem().getDeliveryReferenceItem().getSalesOrderItem().getDiscount());
 			referenceItem.setReferenceUom(dorItem.getProduct().getUnitOfMeasure().getMeasureId());
 			referenceItem.setOrganization(dor.getOrganization());
 			referenceItem.setFacility(dor.getFacility());
@@ -98,7 +98,7 @@ public class AddBillingSiblingRole extends AbstractSiblingRole
 			referenceItem.setReferenceType(BillingReferenceType.DELIVERY_ORDER_REALIZATION);
 			referenceItem.setCreatedBy(dor.getCreatedBy());
 			referenceItem.setCreatedDate(dor.getCreatedDate());
-			referenceItem.setTax(dorItem.getDeliveryOrderItem().getSalesReference().getTax());
+			referenceItem.setTax(dorItem.getDeliveryOrderItem().getDeliveryReferenceItem().getTax());
 			referenceItem.setProduct(dorItem.getProduct());
 
 			/*
@@ -127,8 +127,8 @@ public class AddBillingSiblingRole extends AbstractSiblingRole
 							.subtract(referenceItem.getMoney().getAmount().multiply(referenceItem.getQuantity()).multiply(referenceItem.getDiscount()).divide(BigDecimal.valueOf(100))));
 
 			// Set Billing term,rate & tax
-			billing.setTerm(dorItem.getDeliveryOrderItem().getSalesReference().getTerm());
-			billing.getMoney().setRate(dorItem.getDeliveryOrderItem().getSalesReference().getSalesOrderItem().getMoney().getRate());
+			billing.setTerm(dorItem.getDeliveryOrderItem().getDeliveryReferenceItem().getTerm());
+			billing.getMoney().setRate(dorItem.getDeliveryOrderItem().getDeliveryReferenceItem().getSalesOrderItem().getMoney().getRate());
 			billing.setTax(dorItem.getTax());
 		}
 

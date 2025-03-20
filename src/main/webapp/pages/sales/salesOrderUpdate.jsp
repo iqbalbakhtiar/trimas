@@ -160,7 +160,6 @@
 				</tr>
   			</table>
 		</div>
-		
 		<div id="productLineItem" dojoType="ContentPane" label="<spring:message code='salesorder.lineitem'/>" class="tab-pages" refreshOnShow="true" selected="true">
   			<div class="toolbar-clean">
 		    	<table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">

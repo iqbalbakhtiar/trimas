@@ -191,7 +191,7 @@ public class DeliveryOrderRealization extends Model implements JSONSupport, Issu
 
 	public PostalAddress getShippingAddress()
 	{
-		return getItems().stream().filter(item -> item.getDeliveryOrderItem().getSalesReference().getShippingAddress() != null).findFirst().get().getDeliveryOrderItem().getSalesReference().getShippingAddress();
+		return getItems().stream().filter(item -> item.getDeliveryOrderItem().getDeliveryReferenceItem().getShippingAddress() != null).findFirst().get().getDeliveryOrderItem().getDeliveryReferenceItem().getShippingAddress();
 	}
 
 	public DeliveryOrder getDeliveryOrder()

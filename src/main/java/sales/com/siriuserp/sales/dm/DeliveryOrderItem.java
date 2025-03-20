@@ -1,12 +1,25 @@
+/**
+ * File Name  : DeliveryOrderItem.java
+ * Created On : Mar 18, 2025
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.sales.dm;
 
-import com.siriuserp.sdk.dm.Container;
-import com.siriuserp.sdk.dm.Model;
+import java.math.BigDecimal;
+import java.util.Set;
 
-import javolution.util.FastSet;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
@@ -17,17 +30,20 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
-import java.util.Set;
+import com.siriuserp.sdk.dm.Container;
+import com.siriuserp.sdk.dm.Lot;
+import com.siriuserp.sdk.dm.Model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javolution.util.FastSet;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
+ */
 
 @Getter
 @Setter
@@ -39,8 +55,18 @@ public class DeliveryOrderItem extends Model
 {
 	private static final long serialVersionUID = -4841672668391969021L;
 
+	@Column(name = "quantity")
+	protected BigDecimal quantity = BigDecimal.ZERO;
+
 	@Column(name = "note")
 	private String note;
+
+	@Embedded
+	private Lot lot = new Lot();
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "delivery_item_type")
+	private DeliveryOrderItemType deliveryItemType = DeliveryOrderItemType.BASE;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_delivery_order")
@@ -49,16 +75,22 @@ public class DeliveryOrderItem extends Model
 	private DeliveryOrder deliveryOrder;
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_delivery_order_item")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private DeliveryOrderItem itemParent;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_container")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private Container container;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "fk_sales_reference")
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_delivery_reference")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
-	private SalesOrderReferenceItem salesReference;
+	private DeliveryOrderReferenceItem deliveryReferenceItem;
 
 	@OneToMany(mappedBy = "deliveryOrderItem", fetch = FetchType.LAZY)
 	@LazyCollection(LazyCollectionOption.EXTRA)

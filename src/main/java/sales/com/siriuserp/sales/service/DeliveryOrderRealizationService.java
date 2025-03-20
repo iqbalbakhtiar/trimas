@@ -18,9 +18,9 @@ import com.siriuserp.sales.dm.DeliveryOrderItem;
 import com.siriuserp.sales.dm.DeliveryOrderRealization;
 import com.siriuserp.sales.dm.DeliveryOrderRealizationItem;
 import com.siriuserp.sales.dm.DeliveryOrderRealizationReserveBridge;
+import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
 import com.siriuserp.sales.dm.SOStatus;
-import com.siriuserp.sales.dm.SalesOrderReferenceItem;
-import com.siriuserp.sales.form.DeliveryOrderForm;
+import com.siriuserp.sales.form.SalesForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.AutomaticSibling;
@@ -76,12 +76,12 @@ public class DeliveryOrderRealizationService extends Service
 	{
 		DeliveryOrder deliveryOrder = genericDao.load(DeliveryOrder.class, id);
 		Hibernate.initialize(deliveryOrder);
-		DeliveryOrderForm form = new DeliveryOrderForm();
+		SalesForm form = new SalesForm();
 
 		for (DeliveryOrderItem doItem : deliveryOrder.getItems())
 		{
 			Item item = new Item();
-			item.setSalesReferenceItem(doItem.getSalesReference());
+			item.setDeliveryReferenceItem(doItem.getDeliveryReferenceItem());
 
 			form.getItems().add(item);
 		}
@@ -89,8 +89,8 @@ public class DeliveryOrderRealizationService extends Service
 		form.setDeliveryOrder(deliveryOrder);
 
 		// Get Currency and Tax from SalesReferenceItems
-		form.setCurrency(form.getDeliveryOrder().getItems().iterator().next().getSalesReference().getSalesOrderItem().getMoney().getCurrency());
-		form.setTax(form.getDeliveryOrder().getItems().iterator().next().getSalesReference().getTax());
+		form.setCurrency(form.getDeliveryOrder().getItems().iterator().next().getDeliveryReferenceItem().getSalesOrderItem().getMoney().getCurrency());
+		form.setTax(form.getDeliveryOrder().getItems().iterator().next().getDeliveryReferenceItem().getTax());
 
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("dor_form", form);
@@ -103,7 +103,7 @@ public class DeliveryOrderRealizationService extends Service
 	{ "DelInventorySiblingRole", "AddBillingSiblingRole" })
 	public void add(DeliveryOrderRealization dor) throws Exception
 	{
-		DeliveryOrderForm form = (DeliveryOrderForm) dor.getForm();
+		SalesForm form = (SalesForm) dor.getForm();
 
 		//load DO
 		DeliveryOrder delivery = genericDao.load(DeliveryOrder.class, form.getDeliveryOrder().getId());
@@ -117,7 +117,7 @@ public class DeliveryOrderRealizationService extends Service
 		for (Item item : form.getItems())
 		{
 			//Load to avoid no session
-			SalesOrderReferenceItem salesReferenceItem = genericDao.load(SalesOrderReferenceItem.class, item.getSalesReferenceItem().getId());
+			DeliveryOrderReferenceItem salesReferenceItem = genericDao.load(DeliveryOrderReferenceItem.class, item.getDeliveryReferenceItem().getId());
 			DeliveryOrderItem deliveryOrderItem = genericDao.load(DeliveryOrderItem.class, salesReferenceItem.getDeliveryOrderItem().getId());
 
 			// Set Accepted DOR Item
@@ -173,7 +173,7 @@ public class DeliveryOrderRealizationService extends Service
 	public FastMap<String, Object> preedit(Long id) throws Exception
 	{
 		DeliveryOrderRealization deliveryOrderRealization = genericDao.load(DeliveryOrderRealization.class, id);
-		DeliveryOrderForm form = FormHelper.bind(DeliveryOrderForm.class, deliveryOrderRealization);
+		SalesForm form = FormHelper.bind(SalesForm.class, deliveryOrderRealization);
 		form.setDeliveryOrderRealization(deliveryOrderRealization);
 
 		// Gabungkan DOR item yang ada shrinkage
@@ -200,7 +200,7 @@ public class DeliveryOrderRealizationService extends Service
 	}
 
 	@AuditTrails(className = DeliveryOrderRealization.class, actionType = AuditTrailsActionType.UPDATE)
-	public void edit(DeliveryOrderForm form) throws Exception
+	public void edit(SalesForm form) throws Exception
 	{
 		form.getDeliveryOrderRealization().setUpdatedBy(getPerson());
 		form.getDeliveryOrderRealization().setUpdatedDate(DateHelper.now());

@@ -76,7 +76,11 @@ public class SalesOrder extends Model implements JSONSupport, ApprovableBridge
 
 	@Column(name = "auto_dps")
 	@Type(type = "yes_no")
-	protected boolean autoDPS = false;
+	protected boolean autoDPS = Boolean.FALSE;
+
+	@Column(name = "deliverable")
+	@Type(type = "yes_no")
+	private boolean deliverable = Boolean.FALSE;
 
 	@Column(name = "status")
 	@Enumerated(EnumType.STRING)
@@ -109,6 +113,12 @@ public class SalesOrder extends Model implements JSONSupport, ApprovableBridge
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private Party customer;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_party_sales_person")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Party salesPerson;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_party_approver")

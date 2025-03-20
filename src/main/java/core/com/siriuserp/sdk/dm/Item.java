@@ -8,7 +8,7 @@ import java.util.Date;
 
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.production.dm.CostCenter;
-import com.siriuserp.sales.dm.SalesOrderReferenceItem;
+import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
 import com.siriuserp.sales.dm.SalesType;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -85,7 +85,7 @@ public class Item extends SiriusItem
 	private Currency currency;
 	private Tax tax;
 	private Product product;
-	private SalesOrderReferenceItem salesReferenceItem;
+	private DeliveryOrderReferenceItem deliveryReferenceItem;
 	private BillingReferenceItem billingReferenceItem;
 	private WarehouseTransactionItem warehouseTransactionItem;
 	private InvoiceVerificationItem invoiceVerificationItem;
@@ -101,6 +101,7 @@ public class Item extends SiriusItem
 	private String palletName;
 	private String legend;
 	private String referenceCode;
+	private String referenceType;
 
 	private boolean enabled;
 	private boolean actived;

@@ -1,5 +1,5 @@
 /**
- * File Name  : SalesOrderReferenceType.java
+ * File Name  : DeliveryOrderReferenceType.java
  * Created On : Mar 6, 2025
  * Email	  : iqbal@siriuserp.com
  */
@@ -13,7 +13,7 @@ import com.siriuserp.sdk.dm.SiriusEnum;
  * www.siriuserp.com
  */
 
-public enum SalesOrderReferenceType implements SiriusEnum
+public enum DeliveryOrderReferenceType implements SiriusEnum
 {
 	SALES_ORDER, DELIVERY_PLANNING;
 
