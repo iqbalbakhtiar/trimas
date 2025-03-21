@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.siriuserp.sales.dm.DeliveryOrder;
 import com.siriuserp.sales.dm.DeliveryOrderItem;
+import com.siriuserp.sales.dm.DeliveryOrderItemType;
 import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
 import com.siriuserp.sales.dm.SalesOrderItem;
 import com.siriuserp.sales.form.SalesForm;
@@ -106,9 +107,11 @@ public class DeliveryOrderService extends Service
 		SalesForm form = (SalesForm) deliveryOrder.getForm();
 		deliveryOrder.setCode(GeneratorHelper.instance().generate(TableType.DELIVERY_ORDER, codeSequenceDao));
 
+		DeliveryOrderItem itemParent = null;
+
 		for (Item item : form.getItems())
 		{
-			if (SiriusValidator.gz(item.getQuantity()))
+			if (item.getDeliveryItemType() != null && SiriusValidator.gz(item.getQuantity()))
 			{
 				DeliveryOrderItem deliveryOrderItem = new DeliveryOrderItem();
 				deliveryOrderItem.setDeliveryReferenceItem(item.getDeliveryReferenceItem());
@@ -117,19 +120,28 @@ public class DeliveryOrderService extends Service
 				deliveryOrderItem.setQuantity(item.getQuantity());
 				deliveryOrderItem.setNote(item.getNote());
 
+				if (item.getDeliveryItemType().equals(DeliveryOrderItemType.BASE))
+				{
+					itemParent = deliveryOrderItem;
+
+					DeliveryOrderReferenceItem deliveryReference = item.getDeliveryReferenceItem();
+					deliveryReference.setDeliverable(false);
+
+					genericDao.update(deliveryReference);
+
+					SalesOrderItem salesItem = genericDao.load(SalesOrderItem.class, deliveryReference.getSalesOrderItem().getId());
+					BigDecimal deliveredQty = salesItem.getDelivered();
+					deliveredQty = deliveredQty.add(item.getQuantity());
+					salesItem.setDelivered(deliveredQty);
+
+					genericDao.update(salesItem);
+				} else
+				{
+					if (item.getReference().equals(itemParent.getDeliveryReferenceItem().getId()))
+						deliveryOrderItem.setItemParent(itemParent);
+				}
+
 				deliveryOrder.getItems().add(deliveryOrderItem);
-
-				DeliveryOrderReferenceItem deliveryReference = item.getDeliveryReferenceItem();
-				deliveryReference.setDeliverable(false);
-
-				genericDao.update(deliveryReference);
-
-				SalesOrderItem salesItem = genericDao.load(SalesOrderItem.class, deliveryReference.getSalesOrderItem().getId());
-				BigDecimal deliveredQty = salesItem.getDelivered();
-				deliveredQty = deliveredQty.add(item.getQuantity());
-				salesItem.setDelivered(deliveredQty);
-
-				genericDao.update(salesItem);
 			}
 		}
 
@@ -139,24 +151,11 @@ public class DeliveryOrderService extends Service
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> preedit(Long id) throws Exception
 	{
+		SalesForm form = FormHelper.bind(SalesForm.class, load(id));
+
 		FastMap<String, Object> map = new FastMap<String, Object>();
-		DeliveryOrder deliveryOrder = genericDao.load(DeliveryOrder.class, id);
-		SalesForm form = FormHelper.bind(SalesForm.class, deliveryOrder);
-
-		form.setDeliveryOrder(deliveryOrder);
-
-		// Set Reference Code from one of the Sales Reference
-		for (DeliveryOrderItem item : deliveryOrder.getItems())
-		{
-			/*if (item.getDeliveryReferenceItem().getReferenceId() != null)
-			{
-				SalesOrder salesOrder = genericDao.load(SalesOrder.class, item.getDeliveryReferenceItem().getReferenceId());
-				map.put("referenceCode", salesOrder.getCode());
-				map.put("poCode", salesOrder.getPoCode());
-				break;
-			}*/
-		}
 		map.put("deliveryOrder_form", form);
+		map.put("deliveryOrder_edit", form.getDeliveryOrder());
 
 		return map;
 	}

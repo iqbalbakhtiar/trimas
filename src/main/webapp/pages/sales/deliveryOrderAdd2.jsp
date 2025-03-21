@@ -94,7 +94,7 @@
 		</div>
 		<div id="productLineItem" dojoType="ContentPane" label="<spring:message code='salesorder.lineitem'/>" class="tab-pages" refreshOnShow="true" selected="true">
   			<div class="toolbar-clean">
-		    	<table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">
+		    	<table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="2" align="center"  style="width:100%;">
 		    	<thead>
 			    	<tr>
 			    		<th width="1%" nowrap="nowrap">&nbsp;</th>
@@ -107,30 +107,38 @@
 						<th width="60%" nowrap="nowrap"><spring:message code="deliveryorder.note"/></th>
 					</tr>
 				</thead>
-				<tbody id="lineItem">
-				<c:forEach items="${deliveryOrder_form.items}" var="item" varStatus="idx">
+				<c:forEach items="${deliveryOrder_form.items}" var="item" varStatus="stat">
+				<tbody id="lineItem${stat.index}" class="lineItem">
 				<tr>
 					<td>&nbsp;</td>
 					<td>
-						<select id="product[${idx.index}]" class="combobox-ext input-disabled productInput" name="items[${idx.index}].product" index="${idx.index}" next="product" disabled>
+						<select id="product[${stat.index}]" class="combobox-ext input-disabled productInput" name="items[${stat.index}].product" index="${stat.index}" next="product" disabled>
 							<option value="${item.deliveryReferenceItem.product.id}">${item.deliveryReferenceItem.product.name}</option>
 						</select>
 					</td>
-					<td><input id="onhand[${idx.index}]" size="10" value="0.00" class="input-disabled input-decimal" name="items[${idx.index}].onhand" index="${idx.index}" next="onhand" disabled/></td>
-					<td><input id="soquantity[${idx.index}]" size="10" value="${item.deliveryReferenceItem.quantity}" class="input-disabled input-decimal" name="items[${idx.index}].soquantity" index="${idx.index}" next="soquantity" disabled/></td>
+					<td><input id="onhand[${stat.index}]" size="12" value="0.00" class="input-disabled input-decimal" name="items[${stat.index}].onhand" index="${stat.index}" next="onhand" disabled/></td>
+					<td><input id="referenceQuantity[${stat.index}]" size="11" value="<fmt:formatNumber value='${item.deliveryReferenceItem.quantity}' pattern=',##0.00'/>" class="input-disabled input-decimal" index="${stat.index}" next="referenceQuantity" disabled/></td>
+					<c:if test="${!item.deliveryReferenceItem.product.serial}">
+						<td><input id="delivered[${stat.index}]" size="10" value="0.00" class="input-number" name="items[${stat.index}].quantity" index="${stat.index}" next="delivered" onchange="checkQuantity(${stat.index})"/></td>
+						<td><input id="uom[${stat.index}]" size="6" value="${item.deliveryReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${stat.index}].uom" index="${stat.index}" next="uom" disabled/></td>
+						<td><select id="container[${stat.index}]" name="items[${stat.index}].container" index="${stat.index}" onchange="updateOnHand(this, ${stat.index});" next="container" class="combobox"></select><a class="item-popup" onclick="openContainer(${stat.index});" title="Container"></a></td>
+					</c:if>
+					<c:if test="${item.deliveryReferenceItem.product.serial}">
+						<td>
+							<input id="qtySerial[${stat.index}]" size="10" value="0.00" class="input-number" index="${stat.index}" onChange="addBarcode(this);" reference="${item.deliveryReferenceItem.id}" next="qtySerial"/>
+							<input id="delivered[${stat.index}]" size="10" value="0.00" class="input-number" name="items[${stat.index}].quantity" index="${stat.index}" next="delivered" style="display: none;"/>
+						</td>
+						<td><input id="uom[${stat.index}]" size="6" value="${item.deliveryReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${stat.index}].uom" index="${stat.index}" next="uom" disabled style="display: none;"/></td>
+						<td>&nbsp;</td>
+					</c:if>
 					<td>
-						<c:if test="${!item.deliveryReferenceItem.product.serial}"><input id="delivered[${idx.index}]" size="10" value="0.00" class="input-number" name="items[${idx.index}].quantity" index="${idx.index}" next="delivered"/></c:if>
-						<c:if test="${item.deliveryReferenceItem.product.serial}">
-							<input id="qtySerial[${idx.index}]" size="10" value="0.00" class="input-number" index="${idx.index}" onChange="addBarcode(this)" reference="${item.deliveryReferenceItem.id}" next="qtySerial"/>
-							<input id="delivered[${idx.index}]" size="10" value="0.00" class="input-number" name="items[${idx.index}].quantity" index="${idx.index}" next="delivered" style="display: none;"/>
-						</c:if>
+						<input id="note[${stat.index}]" type="text" size="35" name="items[${stat.index}].note" index="${stat.index}" next="note"/>
+						<input id="deliveryReferenceItem[${stat.index}]" type="text" size="5" name="items[${stat.index}].deliveryReferenceItem" value="${item.deliveryReferenceItem.id}" index="${stat.index}" style="display: none;" readonly="true"/>
+						<input id="deliveryItemType[${stat.index}]" type="text" size="5" name="items[${stat.index}].deliveryItemType" value="BASE" index="${stat.index}" style="display: none;" readonly="true"/>
 					</td>
-					<td><input id="uom[${idx.index}]" size="6" value="${item.deliveryReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/></td>
-					<td><select id="container[${idx.index}]" name="items[${idx.index}].container" index="${idx.index}" onchange="updateOnHand(this, ${idx.index});" next="container" class="combobox"></select><a class="item-popup" onclick="openContainer(this, ${idx.index});" title="Container"></a></td>
-					<td><input id="note[${idx.index}]" type="text" size="35" name="items[${idx.index}].note" index="${idx.index}" next="note"/></td>
 				</tr>
-				</c:forEach>
 				</tbody>
+				</c:forEach>
 				<tfoot>
 					<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
 				</tfoot>
@@ -176,75 +184,29 @@ function validateForm() {
 
 	// Validasi Line Items
 	var isValid = true;
-	$('#lineItem tr').each(function(index){
-		var $row = $(this);
-
-		// Ambil input product
+	$('.lineItem tr').each(function(index)
+	{
 		var $productInput = $row.find('select[id^="product["]');
-		var productName = $productInput.text();
-
-		// Ambil input quantity dan soquantity
-		var $quantityInput = $row.find('input[id^="delivered["]');
-		var $soQuantityInput = $row.find('input[id^="soquantity["]');
-
-		// Ambil nilai dari input
-		var quantityStr = $quantityInput.val();
-		var soQuantityStr = $soQuantityInput.val();
-
-		// Validasi bahwa quantity tidak kosong
-		if (quantityStr == null || quantityStr.trim() === '') {
-			alert('<strong>' + productName + '</strong> - <spring:message code="deliveryorder.doquantity"/> <spring:message code="notif.empty"/>');
-			isValid = false;
-			return false;
-		}
-
-		// Konversi nilai ke angka
-		var quantity = parseFloat(quantityStr.replace(/,/g, ''));
-		var soQuantity = parseFloat(soQuantityStr.replace(/,/g, ''));
-
-		// Validasi bahwa quantity adalah angka dan lebih besar dari 0
-		if (isNaN(quantity) || quantity <= 0) {
-			alert('<strong>' + productName + '</strong> - <spring:message code="deliveryorder.doquantity"/> <spring:message code="notif.greater.zero"/>');
-			isValid = false;
-			return false;
-		}
-
-		// Validasi bahwa doQuantity tidak lebih besar dari soQuantity
-		if (quantity > soQuantity) {
-			if (confirm('<spring:message code="deliveryorder.doquantity"/> <spring:message code="product"/> <spring:message code="notif.greater"/> <spring:message code="deliveryorder.soquantity"/>')) {
-			  	return true;
-			  	isValid = true;
-			} else {
-			 	isValid = false;
+		if($productInput) {
+			var productName = $productInput.text();
+			var quantity = $row.find('input[id^="delivered["]').val().toNumber();
+			var type = $row.find('input[id^="delivered["]').val();
+	
+			if (quantity <= 0) {
+				alert('<strong>' + productName + '</strong> - <spring:message code="deliveryorder.quantity"/> <spring:message code="notif.greater.zero"/>');
+				isValid = false;
 				return false;
 			}
-		}
-
-		// Cek Container
-		var $containerSelect = $row.find('select[id^="container["]');
-		var containerValue = $containerSelect.val();
-
-		// Validasi bahwa container tidak kosong
-		if (containerValue == null || containerValue.trim() === "") {
-			alert('<strong>' + productName + '</strong> - <spring:message code="container"/> <spring:message code="notif.empty"/>');
-			$containerSelect.focus();
-			isValid = false;
-			return false;
-		}
-
-
-		var $onhandInput = $row.find('input[id^="onhand["]');
-		var $doQuantityInput = $row.find('input[id^="delivered["]');
-
-		var onhandStr = $onhandInput.val().replace(/,/g, '');
-
-		var onhand = parseFloat(onhandStr) || 0;
-
-		if (quantity > onhand) {
-			alert('<spring:message code="deliveryorder.doquantity"/> <spring:message code="notif.greater"/> <spring:message code="product.onhand"/>');
-			$doQuantityInput.focus();
-			isValid = false;
-			return false;
+	
+			var $containerSelect = $row.find('select[id^="container["]');
+			var containerValue = $containerSelect.val();
+	
+			if (containerValue == null || containerValue.trim() === "") {
+				alert('<strong>' + productName + '</strong> - <spring:message code="container"/> <spring:message code="notif.empty"/>');
+				$containerSelect.focus();
+				isValid = false;
+				return false;
+			}
 		}
 	});
 
@@ -252,7 +214,6 @@ function validateForm() {
 		return false;
 	}
 
-	// Jika semua validasi lolos
 	return true;
 }
 
@@ -351,7 +312,7 @@ function updatedShippingAddressDetail(selectedId) {
 	}
 }
 
-function openContainer(element, idx) {
+function openContainer(idx) {
 	if (!$('#facility').val()) {
 		alert('<spring:message code="notif.select1"/> <spring:message code="facility"/> <spring:message code="notif.select2"/> !!!');
 		return;
@@ -390,61 +351,74 @@ function updateOnHand(element, index) {
 	}
 }
 
-let maxIdx = 0;
-$('input[name^="details["][name$="[reference]"]').each(function(){
-    let nameAttr = $(this).attr("name");
-    let match = nameAttr.match(/details\[(\d+)\]/);
-    if(match){
-        let currentIdx = parseInt(match[1], 10);
-        if(currentIdx > maxIdx){
-            maxIdx = currentIdx;
-        }
-    }
-});
-let idx = maxIdx + 1;
+var $index = '${fn:length(deliveryOrder_form.items)}';
 
 function addBarcode(element) {
-	let reference = $(element).data('reference');
-	let idxRef = $(element).data('index');
-
+	let reference = $(element).attr('reference');
+	let idxRef = $(element).attr('index');
+	
 	$('#lineItem' + idxRef + ' tr.barcode').remove();
 	
 	for (let i = 0; i < element.value; i++) { 
-		addLine(i);		
+		addLine(idxRef, $index);
+		$index++;
 		$('#lineItem' + idxRef + ' tr:last').addClass('barcode');
 	}
-	
-	addRow($('#lineItem' + idxRef), idx++,
-			'<select class="combobox-min barcodes" data-index="{{idx}}" name="details[{{idx}}][lot][id]"></select><a onclick="open_barcode(this, '+ idxRef +' )" data-index="{{idx}}" data-target="details[{{idx}}][lot]" class="item-popup item-tools"></a>',
-			'<input onchange="load_serial();" name="details[{{idx}}][lot][serial]" type="hidden" value="" readonly/>',
-			'&nbsp;',
-			'<input data-index="{{idx}}" name="details[{{idx}}][quantity]" class="number-disabled quantities' + idxRef + '" size="8" readonly/>',
-			'<input name="details[{{idx}}][reference]" type="hidden" value="' + reference + '" readonly/>',
-			'<input type="hidden" name="details[{{idx}}][itemIndex]" value="' + idxRef + '"/>',
-			'&nbsp;',
-			'&nbsp;',
-		)
 }
 
-function addLine($index) {
-	$tbody = $('#lineItem');
+function addLine($idxRef, $index) {
+	$uom = $('#uom\\['+$idxRef+'\\]').val();
+	$referenceId = $('#deliveryReferenceItem\\['+$idxRef+'\\]').val();
+	
+	$tbody = $('#lineItem'+$idxRef);
     $tr = $('<tr/>');
     
-	$product = List.get('<select class="combobox-ext productInput"/>','product['+$index+']');
 	$barcode = List.get('<select class="combobox barcodes"/>','serial['+$index+']');
+	$barcodeImg = List.img('<spring:message code="barcode"/>', $index, 'openBarcode("'+$index+'")');
 	
-	$qty = List.get('<input type="text" class="input-number" size="10" onchange="updateQuantity();"/>','quantity['+$index+']', '0.00');
-	$reference = List.get('<input type="text" size="30"/>','note['+$index+']');
+	$qty = List.get('<input type="text" class="input-number input-disabled qtyRef'+$referenceId+'" readonly="true" size="10" onchange="updateQuantity('+$referenceId+');"/>','quantity['+$index+']', '1');
+	$uom = List.get('<input type="text" class="input-disabled" disabled="true" size="6"/>','uom'+$index, $uom);
+
+	$container = List.get('<select class="combobox containers"/>','container['+$index+']');
+	$containerImg = List.img('<spring:message code="container"/>', $index, 'openContainer("'+$index+'")');
 	
-	$tr.append(List.col([$barcode, $product]));
+	$reference = List.get('<input type="text" class="input-disabled" readonly="true" size="10" style="display:none;"/>','reference['+$index+']', $referenceId);
+	$type = List.get('<input type="text" class="input-disabled" readonly="true" size="5" style="display:none;"/>','deliveryItemType['+$index+']', 'SERIAL');
+
+	$tr.append(List.col(''));
+	$tr.append(List.col(''));
+	$tr.append(List.col([$barcode, $barcodeImg], '', 'text-align: right;').attr('colspan','2'));
 	$tr.append(List.col([$qty]));
+	$tr.append(List.col([$uom]));
+	$tr.append(List.col([$container]));
+	$tr.append(List.col([$reference, $type]));
 	
 	$tbody.append($tr);
 	
+	console.log('>>> a '+$referenceId);
 	$(".input-number").bind(inputFormat);
+	updateQuantity($referenceId);
 }
 
-function updateQuantity() {
+function checkQuantity(index) {
+	var qtyRef = $('#referenceQuantity\\['+index+'\\]').val().toNumber();
+	var qty = $('#delivered\\['+index+'\\]').val().toNumber();
 	
+	if(qty > qtyRef) {
+		$('#delivered\\['+index+'\\]').val(qtyRef.numberFormat('#,##0.00'));
+		alert('<spring:message code="deliveryorder.delivered"/> <spring:message code="notif.greater"/> <spring:message code="deliveryorder.reference.qty"/> !');
+		return;
+	}
+}
+
+function updateQuantity(indexRef) {
+	var qty = 0;
+	$('.qtyRef'+indexRef).each(function(obj)
+	{
+		console.log('>>>> '+obj.value);
+		qty = qty + obj.value.toNumber();
+	});
+	
+	console.log('>>> '+qty+' '+indexRef);
 }
 </script>
