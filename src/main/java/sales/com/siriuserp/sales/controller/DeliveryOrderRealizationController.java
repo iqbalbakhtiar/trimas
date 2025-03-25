@@ -20,7 +20,7 @@ import com.siriuserp.sales.dm.DeliveryOrder;
 import com.siriuserp.sales.dm.DeliveryOrderItem;
 import com.siriuserp.sales.dm.DeliveryOrderRealization;
 import com.siriuserp.sales.dm.DeliveryOrderRealizationItem;
-import com.siriuserp.sales.form.DeliveryOrderForm;
+import com.siriuserp.sales.form.SalesForm;
 import com.siriuserp.sales.query.DeliveryOrderRealizationGridViewQuery;
 import com.siriuserp.sales.query.DeliveryOrderRealizationPreaddViewQuery;
 import com.siriuserp.sales.service.DeliveryOrderRealizationService;
@@ -34,59 +34,60 @@ import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.utility.FormHelper;
 
 @Controller
-@SessionAttributes(value = { "dor_form" }, types = DeliveryOrderForm.class)
+@SessionAttributes(value = "dor_form", types = SalesForm.class)
 @DefaultRedirect(url = "deliveryorderrealizationview.htm")
-public class DeliveryOrderRealizationController extends ControllerBase {
+public class DeliveryOrderRealizationController extends ControllerBase
+{
 
-    @Autowired
-    private DeliveryOrderRealizationService dorService;
+	@Autowired
+	private DeliveryOrderRealizationService dorService;
 
-    @Autowired
-    private  DeliveryOrderService deliveryOrderService;
+	@Autowired
+	private DeliveryOrderService deliveryOrderService;
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder, WebRequest request)
-    {
-        binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
-        binder.registerCustomEditor(Facility.class, modelEditor.forClass(Facility.class));
-        binder.registerCustomEditor(PostalAddress.class, modelEditor.forClass(PostalAddress.class));
+	@InitBinder
+	public void initBinder(WebDataBinder binder, WebRequest request)
+	{
+		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
+		binder.registerCustomEditor(Facility.class, modelEditor.forClass(Facility.class));
+		binder.registerCustomEditor(PostalAddress.class, modelEditor.forClass(PostalAddress.class));
 		binder.registerCustomEditor(DeliveryOrder.class, modelEditor.forClass(DeliveryOrder.class));
 		binder.registerCustomEditor(DeliveryOrderItem.class, modelEditor.forClass(DeliveryOrderItem.class));
 		binder.registerCustomEditor(DeliveryOrderRealization.class, modelEditor.forClass(DeliveryOrderRealization.class));
 		binder.registerCustomEditor(DeliveryOrderRealizationItem.class, modelEditor.forClass(DeliveryOrderRealizationItem.class));
-    }
+	}
 
-    @RequestMapping("/deliveryorderrealizationview.htm")
+	@RequestMapping("/deliveryorderrealizationview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/sales/deliveryOrderRealizationList",
-				dorService.view(criteriaFactory.create(request, DeliveryOrderRealizationFilterCriteria.class), DeliveryOrderRealizationGridViewQuery.class));
+		return new ModelAndView("/sales/deliveryOrderRealizationList", dorService.view(criteriaFactory.create(request, DeliveryOrderRealizationFilterCriteria.class), DeliveryOrderRealizationGridViewQuery.class));
 	}
 
-    @RequestMapping("/deliveryorderrealizationpreadd1.htm")
+	@RequestMapping("/deliveryorderrealizationpreadd1.htm")
 	public ModelAndView preadd1(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/sales/deliveryOrderRealizationAdd1",
-				deliveryOrderService.view(criteriaFactory.create(request, DeliveryOrderRealizationFilterCriteria.class), DeliveryOrderRealizationPreaddViewQuery.class));
+		return new ModelAndView("/sales/deliveryOrderRealizationAdd1", deliveryOrderService.view(criteriaFactory.create(request, DeliveryOrderRealizationFilterCriteria.class), DeliveryOrderRealizationPreaddViewQuery.class));
 	}
 
-    @RequestMapping("/deliveryorderrealizationpreadd2.htm")
+	@RequestMapping("/deliveryorderrealizationpreadd2.htm")
 	public ModelAndView preadd2(@RequestParam("DO") Long id) throws Exception
 	{
 		return new ModelAndView("/sales/deliveryOrderRealizationAdd2", dorService.preadd2(id));
 	}
 
-    @RequestMapping("/deliveryorderrealizationadd.htm")
-	public ModelAndView add(@ModelAttribute("dor_form") DeliveryOrderForm deliveryOrderForm, BindingResult result, SessionStatus status) throws Exception
+	@RequestMapping("/deliveryorderrealizationadd.htm")
+	public ModelAndView add(@ModelAttribute("dor_form") SalesForm deliveryOrderForm, BindingResult result, SessionStatus status) throws Exception
 	{
-        JSONResponse response = new JSONResponse();
+		JSONResponse response = new JSONResponse();
 
-		try {
+		try
+		{
 			dorService.add(FormHelper.create(DeliveryOrderRealization.class, deliveryOrderForm));
 			status.setComplete();
 
 			response.store("id", deliveryOrderForm.getDeliveryOrderRealization().getId());
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 			response.statusError();
 			response.setMessage(e.getLocalizedMessage());
@@ -96,21 +97,24 @@ public class DeliveryOrderRealizationController extends ControllerBase {
 	}
 
 	@RequestMapping("/deliveryorderrealizationpreedit.htm")
-	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception {
+	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
+	{
 		return new ModelAndView("/sales/deliveryOrderRealizationUpdate", dorService.preedit(id));
 	}
 
 	@RequestMapping("/deliveryorderrealizationedit.htm")
-	public ModelAndView edit(@ModelAttribute("dor_form") DeliveryOrderForm deliveryOrderForm, BindingResult result, SessionStatus status) throws Exception
+	public ModelAndView edit(@ModelAttribute("dor_form") SalesForm deliveryOrderForm, BindingResult result, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
-		try {
+		try
+		{
 			dorService.edit(deliveryOrderForm);
 			status.setComplete();
 
 			response.store("id", deliveryOrderForm.getDeliveryOrderRealization().getId());
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 			response.statusError();
 			response.setMessage(e.getLocalizedMessage());

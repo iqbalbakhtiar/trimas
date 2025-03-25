@@ -76,7 +76,7 @@
                     <form:option value="${purchase_edit.tax.id}" data-taxrate="${purchase_edit.tax.taxRate}">${purchase_edit.tax.taxName}</form:option>
                   </c:if>
                 </form:select>
-                <input size="5" id="taxRate" class="input-disabled" disabled value="<fmt:formatNumber value='${purchase_edit.tax.taxRate}' pattern=',##0.00'/>"/>
+                <input size="5" id="taxRate" class="number-disabled" disabled value="<fmt:formatNumber value='${purchase_edit.tax.taxRate}' pattern=',##0.00'/>"/>&nbsp;%
               </td>
             </tr>
             <c:if test="${not empty purchase_edit.approvable}">

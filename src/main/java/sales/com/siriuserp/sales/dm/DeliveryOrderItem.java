@@ -1,12 +1,27 @@
+/**
+ * File Name  : DeliveryOrderItem.java
+ * Created On : Mar 18, 2025
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.sales.dm;
 
-import com.siriuserp.sdk.dm.Container;
-import com.siriuserp.sdk.dm.Model;
+import java.math.BigDecimal;
+import java.util.Set;
 
-import javolution.util.FastSet;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
@@ -17,17 +32,21 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
-import java.util.Set;
+import com.siriuserp.inventory.dm.Product;
+import com.siriuserp.sdk.dm.Container;
+import com.siriuserp.sdk.dm.Lot;
+import com.siriuserp.sdk.dm.Model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javolution.util.FastSet;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
+ */
 
 @Getter
 @Setter
@@ -35,39 +54,71 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "delivery_order_item")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class DeliveryOrderItem extends Model {
+public class DeliveryOrderItem extends Model
+{
+	private static final long serialVersionUID = -4841672668391969021L;
 
-    private static final long serialVersionUID = -4841672668391969021L;
+	@Column(name = "quantity")
+	protected BigDecimal quantity = BigDecimal.ZERO;
 
-    @Column(name = "note")
-    private String note;
+	@Column(name = "note")
+	private String note;
 
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name="fk_delivery_order")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private DeliveryOrder deliveryOrder;
+	@Embedded
+	private Lot lot = new Lot();
 
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name="fk_container")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private Container container;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "delivery_item_type")
+	private DeliveryOrderItemType deliveryItemType = DeliveryOrderItemType.BASE;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_sales_reference")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private SalesReferenceItem salesReferenceItem;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_delivery_order")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private DeliveryOrder deliveryOrder;
 
-    @OneToMany(mappedBy = "deliveryOrderItem", fetch = FetchType.LAZY)
-   	@LazyCollection(LazyCollectionOption.EXTRA)
-   	@Fetch(FetchMode.SELECT)
-   	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
-    private Set<DeliveryOrderRealizationItem> realizationItems = new FastSet<DeliveryOrderRealizationItem>();
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_delivery_order_item")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private DeliveryOrderItem itemParent;
 
-    @Override
-    public String getAuditCode() {
-        return id + "," + salesReferenceItem.getReferenceCode();
-    }
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_container")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Container container;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_delivery_reference")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private DeliveryOrderReferenceItem deliveryReferenceItem;
+
+	@OneToMany(mappedBy = "itemParent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	@OrderBy("id")
+	private Set<DeliveryOrderItem> serials = new FastSet<DeliveryOrderItem>();
+
+	@OneToMany(mappedBy = "deliveryOrderItem", fetch = FetchType.LAZY)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	private Set<DeliveryOrderRealizationItem> realizationItems = new FastSet<DeliveryOrderRealizationItem>();
+
+	public Product getProduct()
+	{
+		if (getItemParent() != null)
+			return getItemParent().getDeliveryReferenceItem().getProduct();
+
+		return getDeliveryReferenceItem().getProduct();
+	}
+
+	@Override
+	public String getAuditCode()
+	{
+		return getId().toString();
+	}
 }

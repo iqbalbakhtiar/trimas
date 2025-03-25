@@ -4,8 +4,8 @@
 <div class="toolbar">
 	<a class="item-button-list" href="<c:url value='/page/salesorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
-	<a class="item-button-print"  href="<c:url value='/page/salesorderprint.htm?id=${salesOrder_form.salesOrder.id}'/>"><span><spring:message code="sirius.print"/></span></a>
-	<c:if test="${salesOrder_form.soStatus != 'CLOSE'}">
+	<a class="item-button-print"  href="<c:url value='/page/salesorderprint.htm?id=${salesOrder_edit.id}'/>"><span><spring:message code="sirius.print"/></span></a>
+	<c:if test="${salesOrder_edit.soStatus != 'CLOSE'}">
 		<a class="item-button-close"><span><spring:message code="sirius.close"/></span></a>
 	</c:if>
 </div>
@@ -27,8 +27,8 @@
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="org" path="organization" cssClass="combobox-ext input-disabled" disabled="true">
-							<c:if test='${not empty salesOrder_form.organization}'>
-								<form:option value='${salesOrder_form.organization.id}' label='${salesOrder_form.organization.fullName}'/>
+							<c:if test='${not empty salesOrder_edit.organization}'>
+								<form:option value='${salesOrder_edit.organization.id}' label='${salesOrder_edit.organization.fullName}'/>
 							</c:if>
 						</form:select>
 					</td>
@@ -36,20 +36,20 @@
 				<tr>
 					<td align="right"><spring:message code="sirius.date"/></td>
 					<td width="1%" align="center">:</td>
-					<td><input id="date" name="date" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${salesOrder_form.date}' pattern='dd-MM-yyyy'/>"/></td>
+					<td><input id="date" name="date" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${salesOrder_edit.date}' pattern='dd-MM-yyyy'/>"/></td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="salesorder.expired.date"/></td>
 					<td width="1%" align="center">:</td>
-					<td><input id="date" name="date" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${salesOrder_form.expDate}' pattern='dd-MM-yyyy'/>"/></td>
+					<td><input id="date" name="date" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${salesOrder_edit.expDate}' pattern='dd-MM-yyyy'/>"/></td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="customer"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="customer" path="customer" cssClass="combobox-ext input-disabled" disabled="true">
-							<c:if test='${not empty salesOrder_form.customer}'>
-								<form:option value="${salesOrder_form.customer.id}">${salesOrder_form.customer.code} ${salesOrder_form.customer.fullName}</form:option>
+							<c:if test='${not empty salesOrder_edit.customer}'>
+								<form:option value="${salesOrder_edit.customer.id}">${salesOrder_edit.customer.code} ${salesOrder_edit.customer.fullName}</form:option>
 							</c:if>
 						</form:select>
 					</td>
@@ -57,32 +57,33 @@
 				<tr>
 					<td align="right"><spring:message code="salesorder.shipping.date"/></td>
 					<td width="1%" align="center">:</td>
-					<td><input id="shippingDate" name="shippingDate" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${salesOrder_form.shippingDate}' pattern='dd-MM-yyyy'/>"/></td>
+					<td><input id="shippingDate" name="shippingDate" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${salesOrder_edit.shippingDate}' pattern='dd-MM-yyyy'/>"/></td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="salesorder.tax.type"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="tax" path="tax" onchange="updateDisplay();" cssClass="input-disabled" disabled="true">
-							<c:if test='${not empty salesOrder_form.tax}'>
-								<option value="${salesOrder_form.tax.id}" data-taxrate="${salesOrder_form.tax.taxRate}">${salesOrder_form.tax.taxName}</option>
+							<c:if test='${not empty salesOrder_edit.tax}'>
+								<option value="${salesOrder_edit.tax.id}" data-taxrate="${salesOrder_edit.tax.taxRate}">${salesOrder_edit.tax.taxName}</option>
 							</c:if>
 						</form:select>
-						<spring:message code="salesorder.tax.rate"/>
-						<input size="7" id="taxRate" class="input-disabled" disabled />
+						<input size="5" id="taxRate" class="number-disabled" disabled />&nbsp;%
 					</td>
 				</tr>
+            	<c:if test="${not empty salesOrder_edit.approvable}">
 				<tr>
 					<td align="right"><spring:message code="approver"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="approver" path="approver" cssClass="combobox-ext input-disabled" disabled="true">
-							<c:if test='${not empty salesOrder_form.approver}'>
+							<c:if test='${not empty salesOrder_edit.approver}'>
 								<form:option value="${approvalDecision.forwardTo.id}">${approvalDecision.forwardTo.code} ${approvalDecision.forwardTo.fullName}</form:option>
 							</c:if>
 						</form:select>
 					</td>
 				</tr>
+				</c:if>
 				<tr>
 					<td align="right"><spring:message code="sirius.note"/></td>
 					<td width="1%" align="center">:</td>
@@ -113,13 +114,18 @@
 									</tr>
 								</table>
 							</fieldset>
-							<%@ include file="/pages/sales/approval-history.jsp" %>
-							<%@ include file="/pages/sales/approval.jsp" %>
 						</td>
 					</tr>
+		            <tr>
+		            	<td>
+		                <c:if test="${not empty salesOrder_edit.approvable}">
+			                <%@ include file="/pages/sales/approval-history.jsp" %>
+			                <%@ include file="/pages/sales/approval.jsp" %>
+		                </c:if>
+		                </td>
+		            </tr>
 				</table>
 			</td>
-			
 		</tr>
 	</table>
 	<br/>
@@ -131,8 +137,8 @@
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="shippingAddress" path="shippingAddress" cssClass="combobox-ext input-disabled" disabled="true">
-							<c:if test='${not empty salesOrder_form.shippingAddress}'>
-								<form:option value="${salesOrder_form.shippingAddress.id}">${salesOrder_form.shippingAddress.addressName}</form:option>
+							<c:if test='${not empty salesOrder_edit.shippingAddress}'>
+								<form:option value="${salesOrder_edit.shippingAddress.id}">${salesOrder_edit.shippingAddress.addressName}</form:option>
 							</c:if>
 						</form:select>
 					</td>
@@ -140,63 +146,44 @@
 				<tr>
 					<td align="right"><spring:message code="postaladdress.detail"/></td>
 					<td width="1%" align="center">:</td>
-					<td><input id="addressDetail" class="inputbox input-disabled" disabled value="${salesOrder_form.shippingAddress.address}"/></td>
+					<td><input id="addressDetail" class="inputbox input-disabled" disabled value="${salesOrder_edit.shippingAddress.address}"/></td>
 				</tr>
   				<tr>
 					<td align="right"><spring:message code="postaladdress.postalcode"/></td>
 					<td width="1%" align="center">:</td>
-					<td><input id="addressPostalCode" class="inputbox input-disabled" disabled value="${salesOrder_form.shippingAddress.postalCode}"/></td>
+					<td><input id="addressPostalCode" class="inputbox input-disabled" disabled value="${salesOrder_edit.shippingAddress.postalCode}"/></td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="postaladdress.city"/></td>
 					<td width="1%" align="center">:</td>
-					<td><input id="addressCity" class="inputbox input-disabled" disabled value="${salesOrder_form.shippingAddress.city.name}"/></td>
+					<td><input id="addressCity" class="inputbox input-disabled" disabled value="${salesOrder_edit.shippingAddress.city.name}"/></td>
 				</tr>
   			</table>
 		</div>
-		
 		<div id="productLineItem" dojoType="ContentPane" label="<spring:message code='salesorder.lineitem'/>" class="tab-pages" refreshOnShow="true" selected="true">
   			<div class="toolbar-clean">
 		    	<table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">
 			    	<thead>
 				    	<tr>
-				    		<th width="1%" nowrap="nowrap"><input class="checkall" type="checkbox"/></th>
+              				<th width="1%" nowrap="nowrap">&nbsp;</th>
 							<th width="8%" nowrap="nowrap"><spring:message code="product"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
 							<th width="8%" nowrap="nowrap"><spring:message code="sirius.unitprice"/></th>
 							<th width="8%" nowrap="nowrap"><spring:message code="sirius.total"/> <spring:message code="sirius.amount"/></th>
-							<th width="8%" nowrap="nowrap"><spring:message code="salesorder.packing.note"/></th>
+							<th width="50%" nowrap="nowrap"><spring:message code="salesorder.packing.note"/></th>
 						</tr>
 					</thead>
 					<tbody id="lineItem">
-					<c:forEach items="${salesOrder_form.salesOrder.items}" var="item" varStatus="idx">
+					<c:forEach items="${adapter.items}" var="item" varStatus="idx">
 						<tr>
-							<td></td>
-							<td>
-								<input id="product[${idx.index}]" size="26" value="${item.product.name}" class="input-disabled productInput"
-									   name="items[${idx.index}].product" index="${idx.index}" next="product" disabled/>
-							</td>
-							<td>
-								<input id="quantity[${idx.index}]" size="6" value="${item.quantity}" class="input-disabled input-decimal"
-									   name="items[${idx.index}].quantity" index="${idx.index}" next="quantity" disabled/>
-							</td>
-							<td>
-								<input id="uom[${idx.index}]" size="6" value="${item.product.unitOfMeasure.measureId}" class="input-disabled"
-									   name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/>
-							</td>
-							<td>
-								<input id="amount[${idx.index}]" size="12" value="<fmt:formatNumber value='${item.money.amount}' pattern=',##0.00'/>"
-									   class="input-disabled input-decimal" name="items[${idx.index}].amount"
-									   index="${idx.index}" next="amount" disabled/>
-							</td>
-							<td>
-								<input id="totalAmount[${idx.index}]" size="12" type="text" class="input-disabled input-decimal" name="items[${idx.index}].totalAmount"
-									   index="${idx.index}" next="totalAmount" disabled/>
-							</td>
-							<td>
-								<input id="note[${idx.index}]" type="text" value="${item.note}" name="salesOrder.items[${idx.index}].note"
-									   index="${idx.index}" next="note"/>
+                			<td>&nbsp;</td>
+			                <td><input id="product[${idx.index}]" size="26" value="${item.product.name}" class="input-disabled" name="items[${idx.index}].product" index="${idx.index}" next="product" disabled/></td>
+			                <td><input id="quantity[${idx.index}]" size="6" value="${item.quantity}" class="input-disabled input-decimal" name="items[${idx.index}].quantity" index="${idx.index}" next="quantity" disabled/></td>
+			                <td><input id="uom[${idx.index}]" size="6" value="${item.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/></td>
+			                <td><input id="amount[${idx.index}]" size="12" value="<fmt:formatNumber value='${item.amount}' pattern=',##0.00'/>" class="input-disabled input-decimal" name="items[${idx.index}].amount" index="${idx.index}" next="amount" disabled/></td>
+			                <td><input id="totalAmount[${idx.index}]" size="12" class="input-number input-disabled" disabled value="<fmt:formatNumber value='${item.subTotal}' pattern=',##0.00'/>"/></td>
+			                <td><input id="note[${idx.index}]" type="text" value="${item.note}" name="purchaseOrder.items[${idx.index}].note"index="${idx.index}" next="note" size="40"/></td>
 							</td>
 						</tr>
 					</c:forEach>
@@ -210,7 +197,7 @@
  	</div>
 </sesform:form>
 </div>
-<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${salesOrder_form.createdBy.fullName}'/> (<fmt:formatDate value='${salesOrder_form.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${salesOrder_form.updatedBy.fullName}'/> (<fmt:formatDate value='${salesOrder_form.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
+<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${salesOrder_edit.createdBy.fullName}'/> (<fmt:formatDate value='${salesOrder_edit.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${salesOrder_edit.updatedBy.fullName}'/> (<fmt:formatDate value='${salesOrder_edit.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
 <%@ include file="/common/sirius-general-bottom.jsp"%>
 <script type="text/javascript">
 $(function(){
@@ -493,7 +480,7 @@ function openapprover() {
 
 function closeSo() {
 	$.ajax({
-		url:"<c:url value='/page/salesorderclose.htm?id=${salesOrder_form.salesOrder.id}'/>",
+		url:"<c:url value='/page/salesorderclose.htm?id=${salesOrder_edit.id}'/>",
 		// data:$('#addForm').serialize(),
 		type : 'POST',
 		dataType : 'json',

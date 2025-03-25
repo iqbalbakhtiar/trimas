@@ -19,7 +19,7 @@
 	<tr>
 		<td align="right"><spring:message code="productcategory"/>&nbsp;</td>
 		<td align="center">:</td>
-		<td ><input type="text" id="productCategory" name="productCategory" class="inputbox" value="${filterCriteria.productCategory}"/></td>
+		<td ><input type="text" id="categoryName" name="categoryName" class="inputbox" value="${filterCriteria.categoryName}"/></td>
 	</tr>
 	<tr>
 		<td align="right"><spring:message code="sirius.type"/>&nbsp;</td>

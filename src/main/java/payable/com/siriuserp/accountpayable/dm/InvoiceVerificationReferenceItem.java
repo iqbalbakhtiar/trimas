@@ -1,5 +1,5 @@
 /**
- * File Name  : InvoiceVerificationItemReference.java
+ * File Name  : InvoiceVerificationReferenceItem.java
  * Created On : Feb 26, 2025
  * Email	  : iqbal@siriuserp.com
  */
@@ -41,8 +41,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "invoice_verification_item_reference")
-public class InvoiceVerificationItemReference extends Model
+@Table(name = "invoice_verification_reference_item")
+public class InvoiceVerificationReferenceItem extends Model
 {
 	private static final long serialVersionUID = -8150505060906124238L;
 

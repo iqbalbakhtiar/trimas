@@ -40,55 +40,69 @@
 								<tr>
 									<td width="35%" height="30" align="left" valign="middle">
 									<div class="toolbar-clean">
-										<div dojoType="Toggler" targetId="filter">
-											<a class="item-button-list" href="<c:url value='/page/deliveryorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
-											<a class="item-button-search" href="javascript:return false;"><span><spring:message code="sirius.paging.filter"/></span></a>
-										</div>
+										<a class="item-button-list" href="<c:url value='/page/deliveryorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
+										<a class="item-button-next" ><span><spring:message code="sirius.next"/></span></a>
+										<%-- <a class="item-button-search" href="javascript:return false;"><span><spring:message code="sirius.paging.filter"/></span></a> --%>
 									</div>
 									</td>
 									<td width="65%" align="right" height="20"><%@ include file="/common/navigate.jsp"%></td>
 								</tr>
 							</table>
 					  	</div>
+  						<sesform:form id="addForm" name="addForm" method="post" modelAttribute="deliveryOrder_form">
 					  	<table class="table-list" cellspacing="0" cellpadding="0" width="100%">
-							<tr>
-								<th width="3%">&nbsp;</th>
-								<th width="5%"><spring:message code="salesorder"/></th>
-								<th width="5%"><spring:message code="deliveryorder.sodate"/></th>
-								<th width="5%"><spring:message code="deliveryorder.shipping.date"/></th>
-								<th width="20%"><spring:message code="deliveryorder.shippingaddress.lineitem"/></th>
-								<th width="5%"><spring:message code="deliveryorder.amount"/></th>
+						<thead>
+						<tr>
+							<th width="1%"><div style="width: 20px;">&nbsp;</div></th>
+							<th colspan="2"><spring:message code="deliveryorder.reference"/> / <spring:message code="sirius.item"/></th>
+							<th width="5%"><spring:message code="sirius.qty"/></th>
+							<th width="8%"><spring:message code="sirius.date"/></th>
+							<th width="12%"><spring:message code="facility"/></th>
+							<th width="8%"><spring:message code="sirius.tax"/></th>
+							<th width="12%"><spring:message code="customer"/></th>
+							<th width="14%"><spring:message code="sirius.reference.type"/></th>
+						</tr>
+						</thead>
+						<tbody>
+						<c:forEach items="${deliveryReferences}" var="item" varStatus="status">
+							<c:if test='${deliveryReferences[status.index-1].referenceId != item.referenceId}'>
+							<tr class="strong">	
+								<td class="tools">
+									<input type="checkbox" class="check" index="${item.referenceType.messageName}${item.referenceId}"/>
+								</td>
+								<td colspan="${adapter.reference.message == 'item' ? 0 : 3}">
+									<a href="<c:url value='/page/${item.uri}preedit.htm?id=${item.referenceId}'/>"><c:out value='${item.code}'/></a>
+								</td>
+								<td><fmt:formatDate value='${item.date}' pattern='dd-MM-yyyy'/></td>
+								<td><c:out value='${item.facility.name}'/></td>
+								<td><c:out value='${item.tax.taxName}'/></td>
+								<td><c:out value='${item.customer.fullName}'/></td>
+								<td><spring:message code='deliveryorder.reference.${item.referenceType.messageName}'/></td>
 							</tr>
-							<c:forEach items="${salesOrders}" var="sales">
-								<tr>
-									<td class="tools" valign="top">
-										<c:if test='${access.add}'>
-											<a class="item-button-edit" href="<c:url value='/page/deliveryorderpreadd2.htm?salesOrder=${sales.id}'/>" title="<spring:message code='sirius.edit'/>"><span><spring:message code="sirius.edit"/></span></a>
-										</c:if>
-									</td>
-									<td nowrap="nowrap" valign="top">${sales.code}</td>
-									<td nowrap="nowrap" valign="top"><fmt:formatDate value='${sales.date}' pattern='dd-MM-yyyy'/></td>
-									<td nowrap="nowrap" valign="top"><fmt:formatDate value='${sales.shippingDate}' pattern='dd-MM-yyyy'/></td>
-									<td nowrap="nowrap" valign="top">
-										${sales.shippingAddress.addressName}
-		<%--								Menggunakan "ul" untuk membuat tab (menjorok) ke kanan pada setiap line item--%>
-										<ul style="margin: 0; padding-left: 15px; list-style-type: none;">
-											<c:forEach items="${sales.items}" var="item">
-												<li>${item.product.name}</li>
-											</c:forEach>
-										</ul>
-									</td>
-									<td nowrap="nowrap" valign="top">
-										&nbsp;
-										<c:forEach items="${sales.items}" var="item">
-											<br/>
-											${item.quantity} ${item.product.unitOfMeasure.measureId}
-										</c:forEach>
-									</td>
-								</tr>
-							</c:forEach>
+							</c:if>
+							<tr>
+								<td>&nbsp;</td>
+								<td width="3%">&nbsp;</td>
+								<td width="20%"><c:out value='${item.product.name}'/></td> 
+								<td align="right">
+									<fmt:formatNumber value='${item.quantity}' pattern=',##0'/>
+									<c:out value='${item.product.unitOfMeasure.measureId}'/>
+								</td>
+								<td colspan="6">
+									<form:checkbox hidden="hidden" disabled="true" cssClass="${item.referenceType.messageName}${item.referenceId}" path='items[${status.index}].enabled'/>
+									<form:input hidden="hidden" disabled="true" cssClass="${item.referenceType.messageName}${item.referenceId}" path='items[${status.index}].deliveryReferenceItem' value="${item.id}"/>
+								</td>
+							</tr>
+							<c:if test='${deliveryReferences[status.index+1].referenceId != item.referenceId}'>			
+								<tr><td colspan="9">&nbsp;</td></tr>
+							</c:if>
+						</c:forEach>
+						</tbody>
+						<tfoot>
 							<tr class="end-table"><td colspan="10">&nbsp;</td></tr>
+						</tfoot>
 						</table>
+						</sesform:form>
 						<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
 							<tr>
 								<td width="65%" align="right" height="20"><%@ include file="/common/navigate.jsp"%></td>
@@ -99,13 +113,51 @@
 			</div>
 		</div>
 	</div>
-	
   	<%@ include file="/common/sirius-footer.jsp"%>
-
-<div style="display: none">
-	<%@ include file="/common/dialog.jsp"%>
-</div>
 </div>
 </body>
-<!-- END OF BODY -->
 </html>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		$(".item-button-next").click(function()
+		{
+			let total = $("[class='check']:checked").length;
+
+			if(total < 1)
+			{
+				alert('<spring:message code="notif.select1"/> <spring:message code="deliveryorder.reference"/> <spring:message code="notif.select2"/> !');
+				return;
+			}
+
+			let $dialog_confirm = $('<div title="${notif.confirmation}"></div>')
+			.html('<spring:message code="notif.selected1"/> '+total+' <spring:message code="notif.selected2"/>, <spring:message code="notif.selected3"/> ?');
+
+			$dialog_confirm.dialog({
+				resizable: false,
+				height:140,
+				modal: true,
+				buttons: {
+					"Yes": function()
+					{
+						$( this ).dialog( "close" );
+						submit("addForm","<c:url value='/page/deliveryorderpreadd2.htm'/>");
+					},
+					"No": function()
+					{
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+		});
+
+		$('.check').change(function () {
+			$('.'+$(this).attr('index')).prop("checked",this.checked);
+			
+			if(this.checked)
+				$('.'+$(this).attr('index')).removeAttr("disabled");
+			else
+				$('.'+$(this).attr('index')).attr("disabled",true);
+		});
+	});
+</script>

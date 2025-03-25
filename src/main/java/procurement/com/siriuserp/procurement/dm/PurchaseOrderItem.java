@@ -24,7 +24,7 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
-import com.siriuserp.accountpayable.dm.InvoiceVerificationItemReference;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceItem;
 import com.siriuserp.inventory.dm.WarehouseReferenceItem;
 import com.siriuserp.inventory.dm.WarehouseTransaction;
 import com.siriuserp.inventory.dm.WarehouseTransactionSource;
@@ -94,7 +94,7 @@ public class PurchaseOrderItem extends WarehouseReferenceItem implements JSONSup
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@OrderBy("id")
-	private Set<InvoiceVerificationItemReference> invoiceReferences = new FastSet<InvoiceVerificationItemReference>();
+	private Set<InvoiceVerificationReferenceItem> invoiceReferences = new FastSet<InvoiceVerificationReferenceItem>();
 
 	@OneToMany(mappedBy = "itemParent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)

@@ -8,7 +8,8 @@ import java.util.Date;
 
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.production.dm.CostCenter;
-import com.siriuserp.sales.dm.SalesReferenceItem;
+import com.siriuserp.sales.dm.DeliveryOrderItemType;
+import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
 import com.siriuserp.sales.dm.SalesType;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -69,30 +70,33 @@ public class Item extends SiriusItem
 	private BigDecimal onHand = BigDecimal.ZERO;
 	private BigDecimal writeOff = BigDecimal.ZERO;
 
+	private Long reference;
 	private Long referenceId;
 
 	private ExchangeType exchange;
 	private AddressType postalType;
 	private SalesType salesType = SalesType.STANDARD;
 	private WriteOffType writeOffType;
-	private UnitOfMeasure uom;
+	private DeliveryOrderItemType deliveryItemType;
 
 	private Facility facility;
 	private Grid grid;
 	private Container container;
 	private Container destination;
+
+	private Product product;
+	private UnitOfMeasure uom;
+
 	private Date date;
 	private Currency currency;
 	private Tax tax;
-	private Product product;
-	private SalesReferenceItem salesReferenceItem;
+
+	private DeliveryOrderReferenceItem deliveryReferenceItem;
 	private BillingReferenceItem billingReferenceItem;
 	private WarehouseTransactionItem warehouseTransactionItem;
 	private InvoiceVerificationItem invoiceVerificationItem;
 	private InvoiceVerification invoiceVerification;
 	private CostCenter costCenter;
-
-	private Long reference;
 
 	private String code;
 	private String serial;
@@ -101,6 +105,7 @@ public class Item extends SiriusItem
 	private String palletName;
 	private String legend;
 	private String referenceCode;
+	private String referenceType;
 
 	private boolean enabled;
 	private boolean actived;

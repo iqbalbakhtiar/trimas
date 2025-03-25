@@ -46,6 +46,7 @@ public class Form implements SiriusForm
 	private String url;
 	private String uri;
 
+	private Long id;
 	private Long no;
 	private Long syncId;
 	private Long referenceId;
@@ -58,6 +59,7 @@ public class Form implements SiriusForm
 	private Party party;
 	private Party owner;
 	private Party customer;
+	private Party salesPerson;
 	private Party supplier;
 	private Party requisitioner;
 	private Party approver;

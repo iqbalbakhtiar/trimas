@@ -16,4 +16,5 @@ import com.siriuserp.sdk.base.Filterable;
 public interface InventoryItemDao extends Dao<InventoryItem>, Filterable 
 {
 	public BigDecimal getOnHand(Long productId, Long containerId);
+	public InventoryItem getItemBySerial(String serial, boolean available);
 }

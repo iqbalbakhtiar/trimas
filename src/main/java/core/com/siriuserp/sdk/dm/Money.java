@@ -21,18 +21,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class Money implements Comparable<Money> {
-	
+public class Money implements Comparable<Money>
+{
 	@Column(name = "amount")
 	private BigDecimal amount = BigDecimal.ZERO;
-	
+
 	@Column(name = "rate")
 	private BigDecimal rate = BigDecimal.ONE;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "exchange_type")
 	private ExchangeType exchangeType = ExchangeType.SPOT;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_currency")
 	@LazyToOne(LazyToOneOption.PROXY)
@@ -40,11 +40,11 @@ public class Money implements Comparable<Money> {
 	private Currency currency;
 
 	@Override
-	public int compareTo(Money money) {
+	public int compareTo(Money money)
+	{
 		if (!this.getCurrency().getId().equals(money.getCurrency().getId()))
 			return -1;
 
 		return 0;
 	}
-
 }

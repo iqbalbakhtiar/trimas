@@ -95,11 +95,6 @@ public class InventoryItem extends Model implements Inventory, JSONSupport
 	private Grid grid;
 
 	@Override
-	public void setPosition(Container position)
-	{
-	}
-
-	@Override
 	public Map<String, Object> val()
 	{
 		Map<String, Object> map = new FastMap<String, Object>();
@@ -107,10 +102,10 @@ public class InventoryItem extends Model implements Inventory, JSONSupport
 		map.put("product", getProduct());
 		map.put("grid", getGrid());
 		map.put("container", getContainer());
-		map.put("onhand", getOnHand());
+		map.put("onHand", getOnHand());
 		map.put("available", getAvailableSale());
-		map.put("lot", getLot());
-		map.put("tag", getTag());
+		map.put("serial", getLot() == null ? "" : getLot().getSerial());
+		map.put("lotCode", getLot() == null ? "" : getLot().getCode());
 
 		return map;
 	}

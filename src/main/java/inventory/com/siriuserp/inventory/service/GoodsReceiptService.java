@@ -11,10 +11,10 @@ import org.springframework.util.Assert;
 
 import com.siriuserp.accountpayable.dm.InvoiceVerification;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationItem;
-import com.siriuserp.accountpayable.dm.InvoiceVerificationItemReference;
-import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceHelper;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceItem;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceType;
 import com.siriuserp.accountpayable.service.InvoiceVerificationService;
+import com.siriuserp.accountpayable.util.InvoiceVerificationReferenceUtil;
 import com.siriuserp.inventory.adapter.WarehouseItemAdapter;
 import com.siriuserp.inventory.criteria.GoodsReceiptFilterCriteria;
 import com.siriuserp.inventory.dm.GoodsIssue;
@@ -271,7 +271,7 @@ public class GoodsReceiptService extends Service
 				//Parent purchase order jika itemnya serial, jika non serial maka tidak ada parent
 				PurchaseOrderItem purchaseItem = genericDao.load(PurchaseOrderItem.class, goodsReceiptItem.getWarehouseTransactionItem().getReferenceItem().getId());
 
-				InvoiceVerificationItemReference invoiceReference = new InvoiceVerificationItemReference();
+				InvoiceVerificationReferenceItem invoiceReference = new InvoiceVerificationReferenceItem();
 				invoiceReference.setCode(goodsReceipt.getCode());
 				invoiceReference.setDate(goodsReceipt.getDate());
 				invoiceReference.setOrganization(goodsReceipt.getOrganization());
@@ -283,7 +283,7 @@ public class GoodsReceiptService extends Service
 				invoiceReference.setReferenceType(InvoiceVerificationReferenceType.GOODS_RECEIPT);
 				genericDao.add(invoiceReference);
 
-				InvoiceVerificationItem invoiceItem = InvoiceVerificationReferenceHelper.initItem(invoiceReference);
+				InvoiceVerificationItem invoiceItem = InvoiceVerificationReferenceUtil.initItem(invoiceReference);
 				invoiceItem.setInvoiceVerification(invoiceVerification);
 
 				// Set Invoice Supplier, Tax & Currency

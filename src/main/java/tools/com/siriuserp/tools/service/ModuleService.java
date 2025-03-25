@@ -120,7 +120,7 @@ public class ModuleService
 
         moduleDao.add(module);
         
-        Role role = genericDao.load(Role.class, Long.valueOf(20));
+        Role role = genericDao.load(Role.class, Long.valueOf(2));
         if(role != null)
         {
             AccessibleModule accessibleModule = new AccessibleModule();
