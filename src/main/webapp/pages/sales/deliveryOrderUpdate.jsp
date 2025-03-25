@@ -102,7 +102,7 @@
 		</div>
 		<div id="productLineItem" dojoType="ContentPane" label="<spring:message code='salesorder.lineitem'/>" class="tab-pages" refreshOnShow="true" selected="true">
   			<div class="toolbar-clean">
-		    	<table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">
+		    	<table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="1" align="center"  style="width:100%;">
 			    	<thead>
 				    	<tr>
 				    		<th width="1%" nowrap="nowrap">&nbsp;</th>
@@ -115,18 +115,35 @@
 					</thead>
 					<tbody id="lineItem">
 					<c:forEach items="${deliveryOrder_form.deliveryOrder.items}" var="item" varStatus="idx">
+						<c:if test="${item.deliveryItemType eq 'BASE'}">
 						<tr>
 							<td></td>
-							<td><input size="30" value="${item.deliveryReferenceItem.product.name}" class="input-disabled productInput" disabled/></td>
-							<td><input size="10" value="<fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
-							<td><input size="5" value="${item.deliveryReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
-							<td><input size="25" value="${item.container.name}" class="input-disabled" disabled/></td>
+							<td style="text-align: right;"><input size="30" value="${item.product.name}" class="input-disabled" disabled/></td>
+							<td><input size="8" value="<fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
+							<td><input size="5" value="${item.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
+							<c:if test="${!item.product.serial}">
+								<td><input size="25" value="${item.container.name}" class="input-disabled" disabled/></td>
+								<td><input type="text" size="35" value="${item.note}"/></td>
+							</c:if>
+							<c:if test="${item.product.serial}">
+								<td colspan="2">&nbsp;</td>
+							</c:if>
+						</tr>
+						</c:if>
+						<c:forEach items="${item.serials}" var="serial" varStatus="idxSerial">
+						<tr>
+							<td></td>
+							<td style="text-align: right;"><input size="15" value="${serial.lot.serial}" class="input-disabled" disabled/></td>
+							<td><input size="8" value="<fmt:formatNumber value='${serial.quantity}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
+							<td><input size="5" value="${serial.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
+							<td><input size="25" value="${serial.container.name}" class="input-disabled" disabled/></td>
 							<td><input type="text" size="35" value="${item.note}"/></td>
 						</tr>
+						</c:forEach>
 					</c:forEach>
 					</tbody>
 					<tfoot>
-						<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
+						<tr class="end-table"><td colspan="6">&nbsp;</td></tr>
 					</tfoot>
 				</table>
 			</div>
@@ -139,149 +156,33 @@
 <script type="text/javascript">
 $(function(){
 	$('.item-button-save').click(function(){
-		if(validateForm()) {
-			save();
-		}
-	});
-
-	$('.item-button-sent').click(function(){
-		sent();
+		$.ajax({
+			url:"<c:url value='/page/deliveryorderedit.htm'/>",
+			data:$('#addForm').serialize(),
+			type : 'POST',
+			dataType : 'json',
+			beforeSend:function()
+			{
+				$dialog.empty();
+				$dialog.html('<spring:message code="notif.saving"/>');
+				$dialog.dialog('open');
+			},
+			success : function(json) {
+				if(json)
+				{
+					if(json.status === 'OK')
+					{
+						$dialog.dialog('close');
+						window.location="<c:url value='/page/deliveryorderpreedit.htm?id='/>"+json.id;
+					}
+					else
+					{
+						$dialog.empty();
+						$dialog.html('<spring:message code="notif.profailed"/> :<br/>'+json.message);
+					}
+				}
+			}
+		});
 	});
 });
-
-function validateForm() {
-    // Validasi organisasi (sudah ada sebelumnya)
-    var organization = $('#org').val();
-    if (organization == null || organization === "") {
-        alert('<spring:message code="sirius.organization"/> <spring:message code="notif.empty"/> !');
-        return false;
-    }
-
-    // Validasi date
-    var date = $('#date').val();
-    if (date == null || date === "") {
-        alert('<spring:message code="salesorder.date"/> <spring:message code="notif.empty"/> !');
-        return false;
-    }
-
-    // Validasi facility
-    var facility = $('#facility').val();
-    if (facility == null || facility === "") {
-        alert('<spring:message code="facility"/> <spring:message code="notif.empty"/> !');
-        return false;
-    }
-
-    return true;
-}
-
-function save() {
-	$.ajax({
-		url:"<c:url value='/page/deliveryorderedit.htm'/>",
-		data:$('#addForm').serialize(),
-		type : 'POST',
-		dataType : 'json',
-		beforeSend:function()
-		{
-			$dialog.empty();
-			$dialog.html('<spring:message code="notif.saving"/>');
-			$dialog.dialog('open');
-		},
-		success : function(json) {
-			if(json)
-			{
-				if(json.status === 'OK')
-				{
-					$dialog.dialog('close');
-					<%--window.location="<c:url value='/page/deliveryorderview.htm'/>";--%>
-					// Or Can use This
-					window.location="<c:url value='/page/deliveryorderpreedit.htm?id='/>"+json.id;
-				}
-				else
-				{
-					$dialog.empty();
-					$dialog.html('<spring:message code="notif.profailed"/> :<br/>'+json.message);
-				}
-			}
-		}
-	});
-}
-
-function sent() {
-	$.ajax({
-		url:"<c:url value='/page/deliveryordersent.htm?id=${deliveryOrder_form.deliveryOrder.id}'/>",
-		// data:$('#addForm').serialize(),
-		type : 'POST',
-		dataType : 'json',
-		beforeSend:function()
-		{
-			$dialog.empty();
-			$dialog.html('<spring:message code="notif.saving"/>');
-			$dialog.dialog('open');
-		},
-		success : function(json) {
-			if(json)
-			{
-				if(json.status === 'OK')
-				{
-					$dialog.dialog('close');
-					<%--window.location="<c:url value='/page/deliveryorderview.htm'/>";--%>
-					// Or Can use This
-					window.location="<c:url value='/page/deliveryorderpreedit.htm?id='/>"+json.id;
-				}
-				else
-				{
-					$dialog.empty();
-					$dialog.html('<spring:message code="notif.profailed"/> :<br/>'+json.message);
-				}
-			}
-		}
-	});
-}
-
-function updateDisplay() {
-	// Update Tax
-	var taxRate = Number.parse($('#tax option:selected').data('taxrate')) || 0;
-	$('#taxRate').val(taxRate ? taxRate.toFixed(2) : '');
-
-	// Inisialisasi total
-	var totalSales = 0, totalDiscount = 0, totalBeforeTax = 0;
-
-	// Fungsi helper untuk mendapatkan nilai numerik
-	function getNumericValue($input) {
-		return $input.val().toNumber() || 0;
-	}
-
-	// Update setiap line item
-	$('#lineItem tr').each(function(){
-		var $row = $(this);
-
-		var qty = getNumericValue($row.find('input[id^="quantity["]'));
-		var price = getNumericValue($row.find('input[id^="amount["]'));
-		var disc = getNumericValue($row.find('input[id^="discount["]'));
-
-		var amount = qty * price;
-		var totalDisc = amount * (disc / 100);
-		var totalAmount = amount - totalDisc;
-
-		totalSales += amount;
-		totalDiscount += totalDisc;
-		totalBeforeTax += totalAmount;
-
-		// Mengatur nilai terformat menggunakan numberFormat
-		$row.find('input[id^="amountInput["]').val(amount.numberFormat('#,##0.00'));
-		$row.find('input[id^="totalDisc["]').val(totalDisc.numberFormat('#,##0.00'));
-		$row.find('input[id^="totalAmount["]').val(totalAmount.numberFormat('#,##0.00'));
-	});
-
-	// Menghitung totalTax dan totalTransaction
-	var totalTax = totalBeforeTax * (taxRate / 100);
-	var totalTransaction = totalBeforeTax + totalTax;
-
-	// Memperbarui field recapitulation dengan nilai yang diformat
-	$('#totalSales').val(totalSales.numberFormat('#,##0.00'));
-	$('#totalDiscount').val(totalDiscount.numberFormat('#,##0.00'));
-	$('#totalBeforeTax').val(totalBeforeTax.numberFormat('#,##0.00'));
-	$('#totalTax').val(totalTax.numberFormat('#,##0.00'));
-	$('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
-}
 </script>

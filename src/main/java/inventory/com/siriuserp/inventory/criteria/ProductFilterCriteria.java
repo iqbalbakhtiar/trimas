@@ -18,14 +18,21 @@ public class ProductFilterCriteria extends AbstractFilterCriteria
 	private String barcode;
 	private String packagingCode;
 	private String unitOfMeasure;
-	private String productCategory;
+	private String categoryName;
 	private String type;
 	private String uom;
+	private String serialNo;
 
 	private Boolean status;
 	private Boolean base;
 	private Boolean serial;
 
+	private boolean onHand = false;
+	private boolean availableSales = true;
+
+	private Long productId;
 	private Long categoryId;
+	private Long facility;
+	private Long grid;
 	private Long container;
 }

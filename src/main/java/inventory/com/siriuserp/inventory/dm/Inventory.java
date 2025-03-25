@@ -33,7 +33,6 @@ public interface Inventory
 	public void setOnTransfer(BigDecimal onTransfer);
 	public void setProduct(Product product);
 	public void setContainer(Container container);
-	public void setPosition(Container position);
 	public void setGrid(Grid grid);
 	public void setOrganization(Party organization);
 }

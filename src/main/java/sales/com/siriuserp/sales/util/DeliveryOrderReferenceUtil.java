@@ -32,7 +32,7 @@ public class DeliveryOrderReferenceUtil
 			DeliveryPlanning planning = seqItem.getDeliveryPlanningSequence().getDeliveryPlanning();
 			salesOrder = planning.getSalesOrder();
 
-			item.setReferenceId(seqItem.getDeliveryPlanningSequence().getDeliveryPlanning().getId());
+			item.setReferenceId(seqItem.getDeliveryPlanningSequence().getId());
 			item.setCode(planning.getCode() + "." + seqItem.getDeliveryPlanningSequence().getNo());
 			item.setDate(seqItem.getDeliveryPlanningSequence().getDate());
 			item.setReferenceType(DeliveryOrderReferenceType.DELIVERY_PLANNING);

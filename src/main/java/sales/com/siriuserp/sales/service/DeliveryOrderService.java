@@ -6,12 +6,15 @@
 package com.siriuserp.sales.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.siriuserp.inventory.dao.InventoryItemDao;
+import com.siriuserp.inventory.dm.InventoryItem;
 import com.siriuserp.sales.dm.DeliveryOrder;
 import com.siriuserp.sales.dm.DeliveryOrderItem;
 import com.siriuserp.sales.dm.DeliveryOrderItemType;
@@ -36,6 +39,7 @@ import com.siriuserp.sdk.utility.QueryFactory;
 import com.siriuserp.sdk.utility.SiriusValidator;
 import com.siriuserp.tools.service.ProfileService;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
 /**
@@ -53,6 +57,9 @@ public class DeliveryOrderService extends Service
 
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
+
+	@Autowired
+	private InventoryItemDao inventoryItemDao;
 
 	@Autowired
 	private ProfileService profileService;
@@ -107,41 +114,64 @@ public class DeliveryOrderService extends Service
 		SalesForm form = (SalesForm) deliveryOrder.getForm();
 		deliveryOrder.setCode(GeneratorHelper.instance().generate(TableType.DELIVERY_ORDER, codeSequenceDao));
 
-		DeliveryOrderItem itemParent = null;
+		List<Item> baseItems = new FastList<Item>();
+		List<Item> serialItems = new FastList<Item>();
 
 		for (Item item : form.getItems())
 		{
 			if (item.getDeliveryItemType() != null && SiriusValidator.gz(item.getQuantity()))
 			{
-				DeliveryOrderItem deliveryOrderItem = new DeliveryOrderItem();
-				deliveryOrderItem.setDeliveryReferenceItem(item.getDeliveryReferenceItem());
-				deliveryOrderItem.setDeliveryOrder(deliveryOrder);
-				deliveryOrderItem.setContainer(item.getContainer());
-				deliveryOrderItem.setQuantity(item.getQuantity());
-				deliveryOrderItem.setNote(item.getNote());
-
 				if (item.getDeliveryItemType().equals(DeliveryOrderItemType.BASE))
+					baseItems.add(item);
+				else
+					serialItems.add(item);
+			}
+		}
+
+		for (Item item : baseItems)
+		{
+			DeliveryOrderItem baseItem = new DeliveryOrderItem();
+			baseItem.setDeliveryReferenceItem(item.getDeliveryReferenceItem());
+			baseItem.setDeliveryOrder(deliveryOrder);
+			baseItem.setContainer(item.getContainer());
+			baseItem.setQuantity(item.getQuantity());
+			baseItem.setDeliveryItemType(item.getDeliveryItemType());
+			baseItem.setNote(item.getNote());
+
+			DeliveryOrderReferenceItem deliveryReference = item.getDeliveryReferenceItem();
+			deliveryReference.setDeliverable(false);
+
+			genericDao.update(deliveryReference);
+
+			SalesOrderItem salesItem = genericDao.load(SalesOrderItem.class, deliveryReference.getSalesOrderItem().getId());
+			BigDecimal deliveredQty = salesItem.getDelivered();
+			deliveredQty = deliveredQty.add(item.getQuantity());
+			salesItem.setDelivered(deliveredQty);
+
+			genericDao.update(salesItem);
+
+			deliveryOrder.getItems().add(baseItem);
+
+			for (Item sItem : serialItems)
+			{
+				if (sItem.getDeliveryReferenceItem().getId().equals(item.getDeliveryReferenceItem().getId()))
 				{
-					itemParent = deliveryOrderItem;
+					DeliveryOrderItem serialItem = new DeliveryOrderItem();
+					serialItem.setDeliveryOrder(deliveryOrder);
+					serialItem.setContainer(sItem.getContainer());
+					serialItem.setQuantity(sItem.getQuantity());
+					serialItem.setDeliveryItemType(sItem.getDeliveryItemType());
+					serialItem.setNote(sItem.getNote());
+					serialItem.getLot().setSerial(sItem.getSerial());
+					serialItem.setItemParent(baseItem);
 
-					DeliveryOrderReferenceItem deliveryReference = item.getDeliveryReferenceItem();
-					deliveryReference.setDeliverable(false);
+					InventoryItem inventoryItem = inventoryItemDao.getItemBySerial(serialItem.getLot().getSerial(), true);
+					inventoryItem.setReserved(inventoryItem.getOnHand());
 
-					genericDao.update(deliveryReference);
+					genericDao.update(inventoryItem);
 
-					SalesOrderItem salesItem = genericDao.load(SalesOrderItem.class, deliveryReference.getSalesOrderItem().getId());
-					BigDecimal deliveredQty = salesItem.getDelivered();
-					deliveredQty = deliveredQty.add(item.getQuantity());
-					salesItem.setDelivered(deliveredQty);
-
-					genericDao.update(salesItem);
-				} else
-				{
-					if (item.getReference().equals(itemParent.getDeliveryReferenceItem().getId()))
-						deliveryOrderItem.setItemParent(itemParent);
+					deliveryOrder.getItems().add(serialItem);
 				}
-
-				deliveryOrder.getItems().add(deliveryOrderItem);
 			}
 		}
 
@@ -185,17 +215,26 @@ public class DeliveryOrderService extends Service
 	{
 		for (DeliveryOrderItem item : deliveryOrder.getItems())
 		{
-			DeliveryOrderReferenceItem deliveryReference = item.getDeliveryReferenceItem();
-			deliveryReference.setDeliverable(true);
+			if (item.getDeliveryItemType().equals(DeliveryOrderItemType.BASE))
+			{
+				DeliveryOrderReferenceItem deliveryReference = item.getDeliveryReferenceItem();
+				deliveryReference.setDeliverable(true);
 
-			genericDao.update(deliveryReference);
+				genericDao.update(deliveryReference);
 
-			SalesOrderItem salesItem = genericDao.load(SalesOrderItem.class, deliveryReference.getSalesOrderItem().getId());
-			BigDecimal deliveredQty = salesItem.getDelivered();
-			deliveredQty = deliveredQty.subtract(item.getQuantity());
-			salesItem.setDelivered(deliveredQty);
+				SalesOrderItem salesItem = genericDao.load(SalesOrderItem.class, deliveryReference.getSalesOrderItem().getId());
+				BigDecimal deliveredQty = salesItem.getDelivered();
+				deliveredQty = deliveredQty.subtract(item.getQuantity());
+				salesItem.setDelivered(deliveredQty);
 
-			genericDao.update(salesItem);
+				genericDao.update(salesItem);
+			} else
+			{
+				InventoryItem inventoryItem = inventoryItemDao.getItemBySerial(item.getLot().getSerial(), true);
+				inventoryItem.setReserved(BigDecimal.ZERO);
+
+				genericDao.update(inventoryItem);
+			}
 		}
 
 		genericDao.delete(deliveryOrder);

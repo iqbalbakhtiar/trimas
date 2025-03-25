@@ -8,6 +8,7 @@ package com.siriuserp.sales.dm;
 import java.math.BigDecimal;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -30,6 +32,7 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
+import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Lot;
 import com.siriuserp.sdk.dm.Model;
@@ -92,11 +95,26 @@ public class DeliveryOrderItem extends Model
 	@Fetch(FetchMode.SELECT)
 	private DeliveryOrderReferenceItem deliveryReferenceItem;
 
+	@OneToMany(mappedBy = "itemParent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	@OrderBy("id")
+	private Set<DeliveryOrderItem> serials = new FastSet<DeliveryOrderItem>();
+
 	@OneToMany(mappedBy = "deliveryOrderItem", fetch = FetchType.LAZY)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	private Set<DeliveryOrderRealizationItem> realizationItems = new FastSet<DeliveryOrderRealizationItem>();
+
+	public Product getProduct()
+	{
+		if (getItemParent() != null)
+			return getItemParent().getDeliveryReferenceItem().getProduct();
+
+		return getDeliveryReferenceItem().getProduct();
+	}
 
 	@Override
 	public String getAuditCode()

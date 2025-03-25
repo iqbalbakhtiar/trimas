@@ -17,10 +17,10 @@ import com.siriuserp.sdk.db.DaoHelper;
  */
 
 @Component
-public class InventoryItemDaoImpl extends DaoHelper<InventoryItem> implements InventoryItemDao 
+public class InventoryItemDaoImpl extends DaoHelper<InventoryItem> implements InventoryItemDao
 {
 	@Override
-	public BigDecimal getOnHand(Long productId, Long containerId) 
+	public BigDecimal getOnHand(Long productId, Long containerId)
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT SUM(item.onHand) FROM InventoryItem item ");
@@ -39,5 +39,26 @@ public class InventoryItemDaoImpl extends DaoHelper<InventoryItem> implements In
 			return (BigDecimal) obj;
 
 		return BigDecimal.ZERO;
+	}
+
+	@Override
+	public InventoryItem getItemBySerial(String serial, boolean available)
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("FROM InventoryItem item ");
+		builder.append("WHERE item.lot.serial =:serial ");
+
+		if (available)
+			builder.append("AND item.onHand > 0 ");
+
+		Query query = getSession().createQuery(builder.toString());
+		query.setCacheable(true);
+		query.setParameter("serial", serial);
+
+		Object obj = query.uniqueResult();
+		if (obj != null)
+			return (InventoryItem) obj;
+
+		return null;
 	}
 }

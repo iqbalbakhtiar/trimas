@@ -119,14 +119,14 @@
 					<td><input id="onhand[${stat.index}]" size="12" value="0.00" class="input-disabled input-decimal" name="items[${stat.index}].onhand" index="${stat.index}" next="onhand" disabled/></td>
 					<td><input id="referenceQuantity[${stat.index}]" size="11" value="<fmt:formatNumber value='${item.deliveryReferenceItem.quantity}' pattern=',##0.00'/>" class="input-disabled input-decimal" index="${stat.index}" next="referenceQuantity" disabled/></td>
 					<c:if test="${!item.deliveryReferenceItem.product.serial}">
-						<td><input id="delivered[${stat.index}]" size="10" value="0.00" class="input-number" name="items[${stat.index}].quantity" index="${stat.index}" next="delivered" onchange="checkQuantity(${stat.index})"/></td>
+						<td><input id="delivered[${stat.index}]" size="10" value="0.00" class="input-number quantities" name="items[${stat.index}].quantity" index="${stat.index}" next="delivered" onchange="checkQuantity(${stat.index})" producttype="nonserial"/></td>
 						<td><input id="uom[${stat.index}]" size="6" value="${item.deliveryReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${stat.index}].uom" index="${stat.index}" next="uom" disabled/></td>
 						<td><select id="container[${stat.index}]" name="items[${stat.index}].container" index="${stat.index}" onchange="updateOnHand(this, ${stat.index});" next="container" class="combobox"></select><a class="item-popup" onclick="openContainer(${stat.index});" title="Container"></a></td>
 					</c:if>
 					<c:if test="${item.deliveryReferenceItem.product.serial}">
 						<td>
 							<input id="qtySerial[${stat.index}]" size="10" value="0.00" class="input-number" index="${stat.index}" onChange="addBarcode(this);" reference="${item.deliveryReferenceItem.id}" next="qtySerial"/>
-							<input id="delivered[${stat.index}]" size="10" value="0.00" class="input-number" name="items[${stat.index}].quantity" index="${stat.index}" next="delivered" style="display: none;"/>
+							<input id="delivered[${stat.index}]" size="10" value="0.00" class="input-number quantities" name="items[${stat.index}].quantity" index="${stat.index}" next="delivered" style="display: none;" producttype="serial"/>
 						</td>
 						<td><input id="uom[${stat.index}]" size="6" value="${item.deliveryReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${stat.index}].uom" index="${stat.index}" next="uom" disabled style="display: none;"/></td>
 						<td>&nbsp;</td>
@@ -184,29 +184,60 @@ function validateForm() {
 
 	// Validasi Line Items
 	var isValid = true;
-	$('.lineItem tr').each(function(index)
+	$('.quantities').each(function(i, obj)
 	{
-		var $productInput = $row.find('select[id^="product["]');
-		if($productInput) {
-			var productName = $productInput.text();
-			var quantity = $row.find('input[id^="delivered["]').val().toNumber();
-			var type = $row.find('input[id^="delivered["]').val();
+        var idx = obj.getAttribute('index');
+    	var product = $('#product\\['+idx+'\\]');
+    	var productType = obj.getAttribute('producttype');
+    	if(productType == 'serial') {
+			var productName = product.text();
+			var quantity =  $('#qtySerial\\['+idx+'\\]').val().toNumber();
 	
 			if (quantity <= 0) {
-				alert('<strong>' + productName + '</strong> - <spring:message code="deliveryorder.quantity"/> <spring:message code="notif.greater.zero"/>');
+				alert('<strong>' + productName + '</strong> - <spring:message code="deliveryorder.quantity"/> <spring:message code="notif.greater.zero"/> !');
 				isValid = false;
 				return false;
 			}
+    	} else {
+			var productName = product.text();
+			var quantity =  $('#delivered\\['+idx+'\\]').val().toNumber();
 	
-			var $containerSelect = $row.find('select[id^="container["]');
-			var containerValue = $containerSelect.val();
-	
-			if (containerValue == null || containerValue.trim() === "") {
-				alert('<strong>' + productName + '</strong> - <spring:message code="container"/> <spring:message code="notif.empty"/>');
-				$containerSelect.focus();
+			if (quantity <= 0) {
+				alert('<strong>' + productName + '</strong> - <spring:message code="deliveryorder.quantity"/> <spring:message code="notif.greater.zero"/> !');
 				isValid = false;
 				return false;
 			}
+
+			var container =  $('#container\\['+idx+'\\]').val();
+	
+			if (container == null || container.trim() === "") {
+				alert('<strong>' + productName + '</strong> - <spring:message code="container"/> <spring:message code="notif.empty"/> !');
+				$('#container\\['+idx+'\\]').focus();
+				isValid = false;
+				return false;
+			}
+		}
+	});
+	
+	$('.barcodes').each(function(i, obj)
+	{
+        var idx = obj.getAttribute('index');
+		var serial =  $('#serial\\['+idx+'\\]').val();
+		console.log('>>> '+idx);
+		
+		if (serial == null || serial.trim() === "") {
+			alert('<spring:message code="product.serial"/> <spring:message code="notif.empty"/> !');
+			isValid = false;
+			return false;
+		}
+
+		var container =  $('#container\\['+idx+'\\]').val();
+
+		if (container == null || container.trim() === "") {
+			alert('<strong>' + productName + '</strong> - <spring:message code="container"/> <spring:message code="notif.empty"/> !');
+			$('#container\\['+idx+'\\]').focus();
+			isValid = false;
+			return false;
 		}
 	});
 
@@ -235,8 +266,6 @@ function save() {
 				if(json.status === 'OK')
 				{
 					$dialog.dialog('close');
-					<%--window.location="<c:url value='/page/deliveryorderview.htm'/>";--%>
-					// Or Can use This
 					window.location="<c:url value='/page/deliveryorderpreedit.htm?id='/>"+json.id;
 				}
 				else
@@ -367,22 +396,23 @@ function addBarcode(element) {
 }
 
 function addLine($idxRef, $index) {
+	$productId = $('#product\\['+$idxRef+'\\]').val();
 	$uom = $('#uom\\['+$idxRef+'\\]').val();
 	$referenceId = $('#deliveryReferenceItem\\['+$idxRef+'\\]').val();
 	
 	$tbody = $('#lineItem'+$idxRef);
     $tr = $('<tr/>');
     
-	$barcode = List.get('<select class="combobox barcodes"/>','serial['+$index+']');
-	$barcodeImg = List.img('<spring:message code="barcode"/>', $index, 'openBarcode("'+$index+'")');
+	$barcode = List.get('<select class="combobox barcodes" onchange="updateQuantity('+$idxRef+','+$referenceId+');"/>','serial['+$index+']');
+	$barcodeImg = List.img('<spring:message code="barcode"/>', $index, 'openBarcode("'+$index+'","'+$productId+'")');
 	
-	$qty = List.get('<input type="text" class="input-number input-disabled qtyRef'+$referenceId+'" readonly="true" size="10" onchange="updateQuantity('+$referenceId+');"/>','quantity['+$index+']', '1');
+	$qty = List.get('<input type="text" class="input-number input-disabled qtyRef'+$referenceId+'" readonly="true" size="10" onchange="updateQuantity('+$idxRef+','+$referenceId+');"/>','quantity['+$index+']', '0.00');
 	$uom = List.get('<input type="text" class="input-disabled" disabled="true" size="6"/>','uom'+$index, $uom);
 
 	$container = List.get('<select class="combobox containers"/>','container['+$index+']');
 	$containerImg = List.img('<spring:message code="container"/>', $index, 'openContainer("'+$index+'")');
 	
-	$reference = List.get('<input type="text" class="input-disabled" readonly="true" size="10" style="display:none;"/>','reference['+$index+']', $referenceId);
+	$reference = List.get('<input type="text" class="input-disabled" readonly="true" size="10" style="display:none;"/>','deliveryReferenceItem['+$index+']', $referenceId);
 	$type = List.get('<input type="text" class="input-disabled" readonly="true" size="5" style="display:none;"/>','deliveryItemType['+$index+']', 'SERIAL');
 
 	$tr.append(List.col(''));
@@ -395,9 +425,7 @@ function addLine($idxRef, $index) {
 	
 	$tbody.append($tr);
 	
-	console.log('>>> a '+$referenceId);
 	$(".input-number").bind(inputFormat);
-	updateQuantity($referenceId);
 }
 
 function checkQuantity(index) {
@@ -411,14 +439,30 @@ function checkQuantity(index) {
 	}
 }
 
-function updateQuantity(indexRef) {
+function updateQuantity(indexRef, refId) {
 	var qty = 0;
-	$('.qtyRef'+indexRef).each(function(obj)
+	$('.qtyRef'+refId).each(function()
 	{
-		console.log('>>>> '+obj.value);
-		qty = qty + obj.value.toNumber();
+		qty = qty + $(this).val().toNumber();
 	});
 	
-	console.log('>>> '+qty+' '+indexRef);
+	$('#delivered\\['+indexRef+'\\]').val(qty);
+}
+
+var selectedBarcodes = [];
+function openBarcode(index, productId)
+{
+	selectedBarcodes = [];
+	$.each($(".barcodes"), function(i, obj)
+    {
+        var idx = obj.getAttribute('index');
+        if (obj.value != '')
+        	selectedBarcodes.push(obj.value);
+    });
+	
+	var facility = document.getElementById('facility').value;
+	var org = document.getElementById('org').value;
+	
+	openpopup("<c:url value='/page/popupinventoryitemview.htm?ref=4Serial&group=false&onHand=true&target=serial['/>"+index+"]&facility="+facility+"&index="+index+"&organization="+org+"&productId="+productId);
 }
 </script>
