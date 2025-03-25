@@ -32,7 +32,7 @@ import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
 import com.siriuserp.accountpayable.dm.InvoiceVerification;
-import com.siriuserp.accountpayable.dm.InvoiceVerificationItemReference;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceItem;
 import com.siriuserp.inventory.dm.GoodsReceipt;
 import com.siriuserp.inventory.dm.Receiptable;
 import com.siriuserp.sales.dm.ApprovableType;
@@ -216,7 +216,7 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 
 		for (PurchaseOrderItem item : getItems())
 		{
-			for (InvoiceVerificationItemReference invRef : item.getInvoiceReferences())
+			for (InvoiceVerificationReferenceItem invRef : item.getInvoiceReferences())
 				if (invRef.getInvoiceVerificationItem() != null)
 					invoiceVerifications.add(invRef.getInvoiceVerificationItem().getInvoiceVerification());
 		}
