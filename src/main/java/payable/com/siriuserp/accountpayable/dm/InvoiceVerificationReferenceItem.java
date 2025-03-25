@@ -41,7 +41,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "invoice_verification_reference_item")
+@Table(name = "invoice_verification_item_reference")
 public class InvoiceVerificationReferenceItem extends Model
 {
 	private static final long serialVersionUID = -8150505060906124238L;
