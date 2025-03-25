@@ -13,7 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
@@ -51,6 +50,9 @@ public class PurchaseOrderItem extends WarehouseReferenceItem implements JSONSup
 	@Column(name = "quantity")
 	private BigDecimal quantity = BigDecimal.ZERO;
 
+	@Column(name = "barcode_quantity")
+	private BigDecimal barcodeQuantity = BigDecimal.ZERO;
+
 	@Column(name = "discount")
 	private BigDecimal discount = BigDecimal.ZERO;
 
@@ -87,10 +89,12 @@ public class PurchaseOrderItem extends WarehouseReferenceItem implements JSONSup
 	@Fetch(FetchMode.SELECT)
 	private PurchaseRequisitionItem requisitionItem;
 
-	@OneToOne(mappedBy = "purchaseOrderItem", fetch = FetchType.LAZY)
-	@LazyToOne(LazyToOneOption.PROXY)
+	@OneToMany(mappedBy = "purchaseOrderItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
-	private InvoiceVerificationReferenceItem invoiceReference;
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	@OrderBy("id")
+	private Set<InvoiceVerificationReferenceItem> invoiceReferences = new FastSet<InvoiceVerificationReferenceItem>();
 
 	@OneToMany(mappedBy = "itemParent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)

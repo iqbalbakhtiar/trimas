@@ -25,7 +25,6 @@ import com.siriuserp.inventory.dm.InventoryConfiguration;
 import com.siriuserp.inventory.dm.InventoryItem;
 import com.siriuserp.inventory.dm.ProductCategoryType;
 import com.siriuserp.inventory.dm.ProductInOutTransaction;
-import com.siriuserp.inventory.dm.WarehouseReferenceItem;
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.inventory.dm.WarehouseTransactionSource;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
@@ -198,21 +197,24 @@ public class GoodsReceiptService extends Service
 		boolean createInvoice = false;
 		for (Item item : goodsReceipt.getForm().getItems())
 		{
-			GoodsReceiptItem receiptItem = new GoodsReceiptItem();
-			receiptItem.setGoodsReceipt(goodsReceipt);
-			receiptItem.setReceipted(item.getReceipted());
-			receiptItem.setContainer(item.getContainer());
-			receiptItem.setGrid(item.getGrid());
-			receiptItem.setWarehouseTransactionItem(item.getWarehouseTransactionItem());
-
-			goodsReceipt.getItems().add(receiptItem);
-
-			if (item.getWarehouseTransactionItem().getTransactionSource().equals(WarehouseTransactionSource.DIRECT_PURCHASE_ORDER)
-					|| item.getWarehouseTransactionItem().getTransactionSource().equals(WarehouseTransactionSource.STANDARD_PURCHASE_ORDER))
+			if (item.getReceipted().compareTo(BigDecimal.ZERO) > 0)
 			{
-				PurchaseOrderItem purchaseItem = genericDao.load(PurchaseOrderItem.class, item.getWarehouseTransactionItem().getReferenceItem().getId());
-				if (purchaseItem != null && !purchaseItem.getPurchaseOrder().isInvoiceBeforeReceipt())
-					createInvoice = true;
+				GoodsReceiptItem receiptItem = new GoodsReceiptItem();
+				receiptItem.setGoodsReceipt(goodsReceipt);
+				receiptItem.setReceipted(item.getReceipted());
+				receiptItem.setContainer(item.getContainer());
+				receiptItem.setGrid(item.getGrid());
+				receiptItem.setWarehouseTransactionItem(item.getWarehouseTransactionItem());
+
+				goodsReceipt.getItems().add(receiptItem);
+
+				if (item.getWarehouseTransactionItem().getTransactionSource().equals(WarehouseTransactionSource.DIRECT_PURCHASE_ORDER)
+						|| item.getWarehouseTransactionItem().getTransactionSource().equals(WarehouseTransactionSource.STANDARD_PURCHASE_ORDER))
+				{
+					PurchaseOrderItem purchaseItem = genericDao.load(PurchaseOrderItem.class, item.getWarehouseTransactionItem().getReferenceItem().getId());
+					if (purchaseItem != null && !purchaseItem.getPurchaseOrder().isInvoiceBeforeReceipt())
+						createInvoice = true;
+				}
 			}
 		}
 
@@ -264,40 +266,48 @@ public class GoodsReceiptService extends Service
 		// Looping through GR Item
 		for (GoodsReceiptItem goodsReceiptItem : goodsReceipt.getItems())
 		{
-			WarehouseReferenceItem wrReferenceItem = goodsReceiptItem.getWarehouseTransactionItem().getReferenceItem();
+			if (goodsReceiptItem.getReceipted().compareTo(BigDecimal.ZERO) > 0)
+			{
+				//Parent purchase order jika itemnya serial, jika non serial maka tidak ada parent
+				PurchaseOrderItem purchaseItem = genericDao.load(PurchaseOrderItem.class, goodsReceiptItem.getWarehouseTransactionItem().getReferenceItem().getId());
 
-			InvoiceVerificationReferenceItem invoiceReference = new InvoiceVerificationReferenceItem();
-			invoiceReference.setCode(goodsReceipt.getCode());
-			invoiceReference.setDate(goodsReceipt.getDate());
-			invoiceReference.setOrganization(goodsReceipt.getOrganization());
-			invoiceReference.setFacility(goodsReceipt.getFacility());
-			invoiceReference.setSupplier(goodsReceiptItem.getWarehouseTransactionItem().getReferenceItem().getParty());
-			invoiceReference.setGoodsReceiptItem(goodsReceiptItem);
-			invoiceReference.setPurchaseOrderItem(genericDao.load(PurchaseOrderItem.class, wrReferenceItem.getId()));
-			invoiceReference.setVerificated(true);
-			invoiceReference.setReferenceType(InvoiceVerificationReferenceType.GOODS_RECEIPT);
-			genericDao.add(invoiceReference);
+				InvoiceVerificationReferenceItem invoiceReference = new InvoiceVerificationReferenceItem();
+				invoiceReference.setCode(goodsReceipt.getCode());
+				invoiceReference.setDate(goodsReceipt.getDate());
+				invoiceReference.setOrganization(goodsReceipt.getOrganization());
+				invoiceReference.setFacility(goodsReceipt.getFacility());
+				invoiceReference.setSupplier(goodsReceiptItem.getWarehouseTransactionItem().getReferenceItem().getParty());
+				invoiceReference.setPurchaseOrderItem(purchaseItem);
+				invoiceReference.setGoodsReceiptItem(goodsReceiptItem);
+				invoiceReference.setVerificated(true);
+				invoiceReference.setReferenceType(InvoiceVerificationReferenceType.GOODS_RECEIPT);
+				genericDao.add(invoiceReference);
 
-			InvoiceVerificationItem invoiceItem = InvoiceVerificationReferenceUtil.initItem(invoiceReference);
-			invoiceItem.setInvoiceVerification(invoiceVerification);
+				InvoiceVerificationItem invoiceItem = InvoiceVerificationReferenceUtil.initItem(invoiceReference);
+				invoiceItem.setInvoiceVerification(invoiceVerification);
 
-			// Set Invoice Supplier, Tax & Currency
-			if (invoiceVerification.getSupplier() == null)
-				invoiceVerification.setSupplier(wrReferenceItem.getParty());
+				// Set Invoice Supplier, Tax & Currency
+				if (invoiceVerification.getSupplier() == null)
+					invoiceVerification.setSupplier(purchaseItem.getParty());
 
-			if (invoiceVerification.getTax() == null)
-				invoiceVerification.setTax(wrReferenceItem.getTax());
+				if (invoiceVerification.getTax() == null)
+					invoiceVerification.setTax(purchaseItem.getTax());
 
-			if (invoiceVerification.getMoney().getCurrency() == null)
-				invoiceVerification.getMoney().setCurrency(wrReferenceItem.getMoney().getCurrency());
+				if (invoiceVerification.getMoney().getCurrency() == null)
+					invoiceVerification.getMoney().setCurrency(purchaseItem.getMoney().getCurrency());
 
-			totalAmount = totalAmount.add(goodsReceiptItem.getReceipted().multiply(wrReferenceItem.getMoney().getAmount()));
+				//Untuk barang serial, Receipted Qty adalah Qty Timbang yg masuk ke stock, tp yg masuk invoice adalah Qty Awal (Qty Barcode Beli)
+				if (goodsReceiptItem.getProduct().isSerial())
+					totalAmount = totalAmount.add(purchaseItem.getBarcodeQuantity().multiply(purchaseItem.getMoney().getAmount()));
+				else
+					totalAmount = totalAmount.add(goodsReceiptItem.getReceipted().multiply(purchaseItem.getMoney().getAmount()));
 
-			Item item = new Item();
-			item.setInvoiceVerificationItem(invoiceItem);
-			form.getItems().add(item);
+				Item item = new Item();
+				item.setInvoiceVerificationItem(invoiceItem);
+				form.getItems().add(item);
 
-			invoiceVerification.getItems().add(invoiceItem);
+				invoiceVerification.getItems().add(invoiceItem);
+			}
 		}
 
 		// Set amount & unpaid after add tax
