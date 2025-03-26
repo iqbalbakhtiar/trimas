@@ -114,13 +114,16 @@ public class DeliveryPlanningSequenceService
 				genericDao.update(salesItem);
 
 				deliveryPlanningSequence.getSequenceItems().add(sequenceItem);
-
-				DeliveryOrderReferenceItem referenceItem = DeliveryOrderReferenceUtil.initItem(sequenceItem);
-				genericDao.add(referenceItem);
 			}
 		}
 
 		genericDao.add(deliveryPlanningSequence);
+
+		for (DeliveryPlanningSequenceItem sequenceItem : deliveryPlanningSequence.getSequenceItems())
+		{
+			DeliveryOrderReferenceItem referenceItem = DeliveryOrderReferenceUtil.initItem(sequenceItem);
+			genericDao.add(referenceItem);
+		}
 
 		DeliveryPlanning deliveryPlanning = genericDao.load(DeliveryPlanning.class, deliveryPlanningSequence.getDeliveryPlanning().getId());
 		deliveryPlanning.setSequenceCounter(deliveryPlanning.getSequenceCounter() + 1);
