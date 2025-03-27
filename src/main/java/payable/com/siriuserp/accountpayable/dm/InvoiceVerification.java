@@ -7,6 +7,7 @@ package com.siriuserp.accountpayable.dm;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -24,7 +25,9 @@ import org.hibernate.annotations.Type;
 import com.siriuserp.inventory.dm.GoodsReceipt;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.sdk.dm.datawarehouse.APLedgerView;
+import com.siriuserp.sdk.utility.DateHelper;
 
+import javolution.util.FastMap;
 import javolution.util.FastSet;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -112,4 +115,21 @@ public class InvoiceVerification extends Payable
 	{
 		return getDate().compareTo(o.getDate());
 	}
+	
+	@Override
+    public Map<String, Object> val()
+    {
+        FastMap<String, Object> map = new FastMap<String, Object>();
+        map.put("verId", getId());
+        map.put("verCode", getCode());
+
+        map.put("amount", money.getAmount());
+        map.put("unpaid", getUnpaid());
+        map.put("paid", money.getAmount().subtract(getUnpaid()));
+
+        map.put("date", DateHelper.format(getDate()));
+
+        return map;
+    }
+	
 }

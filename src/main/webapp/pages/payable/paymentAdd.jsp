@@ -135,15 +135,9 @@
 
             <div id="receiptApplication" dojoType="ContentPane" label="<spring:message code='payment.application'/>" class="tab-pages" refreshOnShow="true" selected="true">
                 <div class="toolbar-clean">
-                    <div class="toolbar-clean">
-                        <a class="item-button-new"><span><spring:message code="sirius.row.new"/></span></a>
-                        <a class="item-button-delete"><span><spring:message code="sirius.row.delete"/></span></a>
-                        <div class="item-navigator">&nbsp;</div>
-                    </div>
                     <table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center" width="100%">
                         <thead>
                         <tr>
-                            <th width="1%"><input class="checkall" type="checkbox"/></th>
                             <th width="20%"><spring:message code="invoiceverification"/></th>
                             <th width="10%"><spring:message code="invoiceverification.unpaid"/></th>
                             <th width="10%"><spring:message code="payment.writeoff.type"/></th>
@@ -154,7 +148,7 @@
                         <tbody id="lineItem">
                         </tbody>
                         <tfoot>
-                        <tr class="end-table"><td colspan="9">&nbsp;</td></tr>
+                        <tr class="end-table"><td colspan="8">&nbsp;</td></tr>
                         </tfoot>
                     </table>
                 </div>
@@ -348,36 +342,6 @@
         }
     }
 
-    function addLine($index) {
-        $tbody = $('#lineItem');
-        $tr = $('<tr/>');
-
-        $cbox = List.get('<input type="checkbox" class="check"/>','check'+$index);
-
-        $invoice = List.get('<select class="combobox-ext payables" onchange="checkDuplicate(this);updateDisplay();"/>','invoiceVerification['+$index+']');
-        $invoiceImg = List.img('<spring:message code="invoiceverification"/>', $index, 'openInvoice("'+$index+'")');
-
-        $unpaid = List.get('<input type="text" class="input-number input-disabled" disabled size="20"/>','unpaid['+$index+']', '0.00');
-
-        $writeofftype = List.get('<select class="comboboxt-ext"/>', 'writeOffType['+$index+']');
-        $('#wtype').find('option').clone().appendTo($writeofftype);
-
-        $writeoff = List.get('<input type="text" class="input-number" size="20" onchange="updateDisplay()"/>','writeOff['+$index+']', '0.00');
-
-        $paid = List.get('<input type="text" class="input-number paid" size="20" onchange="updateDisplay()"/>','paidAmount['+$index+']', '0.00');
-
-        $tr.append(List.col([$cbox]));
-        $tr.append(List.col([$invoice, $invoiceImg]));
-        $tr.append(List.col([$unpaid]));
-        $tr.append(List.col([$writeofftype]));
-        $tr.append(List.col([$writeoff]));
-        $tr.append(List.col([$paid]));
-
-        $tbody.append($tr);
-
-        $(".input-number").bind(inputFormat);
-    }
-
     function clearLineItem() {
         $('#lineItemBody').empty();
         index = 0;
@@ -437,4 +401,71 @@
             $(element).closest('tr').remove();
         }
     }
+    
+    $('#supplier').change(function(e)
+    {
+    	getVerifications();
+       
+    });
+    
+    function getVerifications()
+    {
+        clearLineItem(); // Clear the line item first before add & reset index to 0
+        $org = $('#org').val();
+        $supplier = $('#supplier').val();
+
+        $.get("<c:url value='/page/popupinvoiceverificationviewjson.htm'/>",{organization:$org, supplier:$supplier},function(json)
+        {
+            $.each(json.verifications,function(idx,val)
+            {
+                addLineItem();
+
+                 var _client = document.getElementById('invoiceVerification['+idx+']');
+                _client.remove(_client.selectedIndex);
+
+                var _opt = document.createElement('option');
+                _opt.value = val.verId;
+                _opt.text = val.verCode;
+
+                _client.appendChild(_opt);
+                _client.dispatchEvent(new Event('change'));
+
+                var _unpaid = document.getElementById('unpaid['+idx+']');
+                _unpaid.value = val.unpaid.numberFormat('#,##0.00');
+
+                updateDisplay(); 
+            });
+        });
+    }
+    
+    let index = 0; // For Line Item ID (Index)
+    function addLineItem()
+    {
+    	 $tbody = $('#lineItem');
+         $tr = $('<tr/>');
+
+         $invoice = List.get('<select class="combobox-ext payables" onchange="checkDuplicate(this);updateDisplay();"/>','invoiceVerification['+index+']');
+         $invoiceImg = List.img('<spring:message code="invoiceverification"/>', index, 'openInvoice("'+index+'")');
+
+         $unpaid = List.get('<input type="text" class="input-number input-disabled" disabled size="20"/>','unpaid['+index+']', '0.00');
+
+         $writeofftype = List.get('<select class="comboboxt-ext"/>', 'writeOffType['+index+']');
+         $('#wtype').find('option').clone().appendTo($writeofftype);
+
+         $writeoff = List.get('<input type="text" class="input-number" size="20" onchange="updateDisplay()"/>','writeOff['+index+']', '0.00');
+
+         $paid = List.get('<input type="text" class="input-number paid" size="20" onchange="updateDisplay()"/>','paidAmount['+index+']', '0.00');
+
+         $tr.append(List.col([$invoice, $invoiceImg]));
+         $tr.append(List.col([$unpaid]));
+         $tr.append(List.col([$writeofftype]));
+         $tr.append(List.col([$writeoff]));
+         $tr.append(List.col([$paid]));
+         index++;
+         
+         $tbody.append($tr);
+
+         $(".input-number").bind(inputFormat);
+    }
+
 </script>

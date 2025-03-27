@@ -109,4 +109,10 @@ public class InvoiceVerificationController extends ControllerBase
 	{
 		return new ModelAndView("/payable/invoiceVerificationPrint", service.preedit(id));
 	}
+	
+	@RequestMapping("/popupinvoiceverificationviewjson.htm")
+	public ModelAndView getpopupjson(HttpServletRequest request) throws Exception
+	{
+		return new JSONResponse(service.viewJson(criteriaFactory.create(request, InvoiceVerificationFilterCriteria.class), InvoiceVerificationGridViewQuery.class));
+	}
 }
