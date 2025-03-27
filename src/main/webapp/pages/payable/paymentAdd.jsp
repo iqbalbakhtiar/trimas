@@ -414,7 +414,7 @@
         $org = $('#org').val();
         $supplier = $('#supplier').val();
 
-        $.get("<c:url value='/page/popupinvoiceverificationviewjson.htm'/>",{organization:$org, supplier:$supplier},function(json)
+        $.get("<c:url value='/page/popupinvoiceverificationviewjson.htm'/>",{organization:$org, supplier:$supplier, financialStatus:'UNPAID'},function(json)
         {
             $.each(json.verifications,function(idx,val)
             {
