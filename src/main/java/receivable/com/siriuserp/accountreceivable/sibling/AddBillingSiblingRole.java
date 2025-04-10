@@ -12,6 +12,7 @@ import com.siriuserp.accountreceivable.dm.BillingReferenceType;
 import com.siriuserp.accountreceivable.dm.BillingType;
 import com.siriuserp.accountreceivable.service.BillingService;
 import com.siriuserp.inventory.dm.Issueable;
+import com.siriuserp.sales.dm.DeliveryOrderItemType;
 import com.siriuserp.sales.dm.DeliveryOrderRealization;
 import com.siriuserp.sales.dm.DeliveryOrderRealizationItem;
 import com.siriuserp.sdk.dao.PostalAddressDao;
@@ -35,7 +36,6 @@ import com.siriuserp.sdk.utility.SiriusValidator;
 @Component
 public class AddBillingSiblingRole extends AbstractSiblingRole
 {
-
 	@Autowired
 	private PostalAddressDao postalAddressDao;
 
@@ -49,99 +49,79 @@ public class AddBillingSiblingRole extends AbstractSiblingRole
 
 		Issueable warehouse = (Issueable) object;
 
-		DeliveryOrderRealization dor = genericDao.load(DeliveryOrderRealization.class, warehouse.getId());
+		DeliveryOrderRealization realization = genericDao.load(DeliveryOrderRealization.class, warehouse.getId());
 
 		Billing billing = FormHelper.create(Billing.class, new AccountingForm());
 		billing.setMoney(new Money());
-		billing.setDate(dor.getDate());
-		billing.setOrganization(dor.getOrganization());
-		billing.setFacility(dor.getFacility()); // Note: Untuk sekarang Akan selalu Null Karena di DOR belum diset Facilitynya
+		billing.setDate(realization.getDate());
+		billing.setOrganization(realization.getOrganization());
+		billing.setFacility(realization.getFacility()); // Note: Untuk sekarang Akan selalu Null Karena di DOR belum diset Facilitynya
 		billing.setBillingType(genericDao.load(BillingType.class, BillingType.DELIVERY_ORDER_REALIZATION));
-		billing.setNote("AUTO BILLING FROM DOR [" + dor.getCode() + "]");
-		billing.getMoney().setCurrency(dor.getCurrency());
+		billing.setNote("AUTO BILLING FROM DOR [" + realization.getCode() + "]");
+		billing.getMoney().setCurrency(realization.getCurrency());
 
-		Party customer = genericDao.load(Party.class, dor.getCustomer().getId()); // To Avoid LazyLoadingExecption no session
+		Party customer = genericDao.load(Party.class, realization.getCustomer().getId());
 
-		PostalAddress billingAddress = postalAddressDao.loadAddressByPartyAndType(dor.getCustomer().getId(), AddressType.OFFICE);
+		PostalAddress billingAddress = postalAddressDao.loadAddressByPartyAndType(realization.getCustomer().getId(), AddressType.OFFICE);
 		if (billingAddress == null)
-		{
 			throw new ServiceException("Customer doesn't have address type OFFICE, please set it first on customer page.");
-		} else
-		{
+		else
 			billing.setBillingAddress(billingAddress);
-		}
 
 		billing.setCustomer(customer);
-		billing.setShippingAddress(dor.getShippingAddress());
+		billing.setShippingAddress(realization.getShippingAddress());
 
-		/* Initialize totalAmount for billing.amount */
 		BigDecimal totalAmount = BigDecimal.ZERO;
-		/* Looping salesReference */
-		for (DeliveryOrderRealizationItem dorItem : dor.getItems())
+		for (DeliveryOrderRealizationItem realizationItem : realization.getItems())
 		{
-			// Buat BillingReferenceItem
-			BillingReferenceItem referenceItem = new BillingReferenceItem();
-			referenceItem.setMoney(new Money());
-			referenceItem.setReferenceId(dor.getId());
-			referenceItem.setReferenceCode(dor.getCode());
-			referenceItem.setReferenceDate(dor.getDate());
-			referenceItem.setReferenceName(SiriusValidator.getEnumName(dor.getClass())); // Jadi DELIVERY_ORDER_REALIZATION
-			referenceItem.setQuantity(dorItem.getAccepted());
-			referenceItem.getMoney().setAmount(dorItem.getDeliveryOrderItem().getDeliveryReferenceItem().getSalesOrderItem().getMoney().getAmount());
-			referenceItem.getMoney().setRate(dorItem.getDeliveryOrderItem().getDeliveryReferenceItem().getSalesOrderItem().getMoney().getRate());
-			referenceItem.getMoney().setCurrency(dorItem.getDeliveryOrderItem().getDeliveryReferenceItem().getSalesOrderItem().getMoney().getCurrency());
-			referenceItem.setDiscount(dorItem.getDeliveryOrderItem().getDeliveryReferenceItem().getSalesOrderItem().getDiscount());
-			referenceItem.setReferenceUom(dorItem.getProduct().getUnitOfMeasure().getMeasureId());
-			referenceItem.setOrganization(dor.getOrganization());
-			referenceItem.setFacility(dor.getFacility());
-			referenceItem.setCustomer(dor.getCustomer());
-			referenceItem.setReferenceType(BillingReferenceType.DELIVERY_ORDER_REALIZATION);
-			referenceItem.setCreatedBy(dor.getCreatedBy());
-			referenceItem.setCreatedDate(dor.getCreatedDate());
-			referenceItem.setTax(dorItem.getDeliveryOrderItem().getDeliveryReferenceItem().getTax());
-			referenceItem.setProduct(dorItem.getProduct());
+			if (realizationItem.getDeliveryOrderItem().getDeliveryItemType().equals(DeliveryOrderItemType.BASE))
+			{
+				// Buat BillingReferenceItem
+				BillingReferenceItem referenceItem = new BillingReferenceItem();
+				referenceItem.setMoney(new Money());
+				referenceItem.setReferenceId(realization.getId());
+				referenceItem.setReferenceCode(realization.getCode());
+				referenceItem.setReferenceDate(realization.getDate());
+				referenceItem.setReferenceName(SiriusValidator.getEnumName(realization.getClass())); // Jadi DELIVERY_ORDER_REALIZATION
+				referenceItem.setQuantity(realizationItem.getAccepted());
+				referenceItem.getMoney().setAmount(realizationItem.getMoney().getAmount());
+				referenceItem.getMoney().setRate(realizationItem.getMoney().getRate());
+				referenceItem.getMoney().setCurrency(realizationItem.getMoney().getCurrency());
+				referenceItem.setDiscount(realizationItem.getDeliveryOrderItem().getDiscount());
+				referenceItem.setReferenceUom(realizationItem.getProduct().getUnitOfMeasure().getMeasureId());
+				referenceItem.setOrganization(realization.getOrganization());
+				referenceItem.setFacility(realization.getFacility());
+				referenceItem.setCustomer(realization.getCustomer());
+				referenceItem.setReferenceType(BillingReferenceType.DELIVERY_ORDER_REALIZATION);
+				referenceItem.setCreatedBy(realization.getCreatedBy());
+				referenceItem.setCreatedDate(realization.getCreatedDate());
+				referenceItem.setTax(realizationItem.getTax());
+				referenceItem.setProduct(realizationItem.getProduct());
 
-			/*
-			 Data yang belum diset pada billing reference:
-			 referenceIdExt (null)
-			 referenceCodeExt (null)
-			 referenceUri (null)
-			*/
+				genericDao.add(referenceItem);
 
-			genericDao.add(referenceItem);
+				Item item = new Item();
+				item.setBillingReferenceItem(referenceItem);
 
-			Item item = new Item();
-			item.setBillingReferenceItem(referenceItem);
+				billing.getForm().getItems().add(item);
 
-			billing.getForm().getItems().add(item);
+				totalAmount = totalAmount.add(referenceItem.getMoney().getAmount().multiply(referenceItem.getQuantity())
+						.subtract(referenceItem.getMoney().getAmount().multiply(referenceItem.getQuantity()).multiply(referenceItem.getDiscount()).divide(BigDecimal.valueOf(100))));
 
-			/*
-			 Kalkulasi totalAmount dengan perhitungan quantity, diskon, dan pajak
-			 sebagai nilai total billing amount dan unpaidnya
-			 tatotalAmount += (Price * Qty) - Discount
-			*/
-			totalAmount = totalAmount.add(
-					// Kalikan harga dengan quantity
-					referenceItem.getMoney().getAmount().multiply(referenceItem.getQuantity())
-							// Kurangi diskon
-							.subtract(referenceItem.getMoney().getAmount().multiply(referenceItem.getQuantity()).multiply(referenceItem.getDiscount()).divide(BigDecimal.valueOf(100))));
-
-			// Set Billing term,rate & tax
-			billing.setTerm(dorItem.getDeliveryOrderItem().getDeliveryReferenceItem().getTerm());
-			billing.getMoney().setRate(dorItem.getDeliveryOrderItem().getDeliveryReferenceItem().getSalesOrderItem().getMoney().getRate());
-			billing.setTax(dorItem.getTax());
+				// Set Billing term,rate & tax
+				billing.setTerm(realizationItem.getDeliveryOrderItem().getDeliveryReferenceItem().getTerm());
+				billing.getMoney().setRate(realizationItem.getMoney().getRate());
+				billing.setTax(realizationItem.getTax());
+			}
 		}
 
 		// Check address type Tax (Selected Priorty) if tax rate 0 taxAddress can be NULL
-		PostalAddress taxAddress = postalAddressDao.loadAddressByPartyAndType(dor.getCustomer().getId(), AddressType.TAX);
+		PostalAddress taxAddress = postalAddressDao.loadAddressByPartyAndType(realization.getCustomer().getId(), AddressType.TAX);
 		assert billing.getTax() != null;
 		if (billing.getTax().getTaxRate().compareTo(BigDecimal.ZERO) > 0 && taxAddress == null)
-		{
 			throw new ServiceException("Customer doesn't have address type TAX, please set it first on customer page.");
-		} else
-		{
+		else
 			billing.setTaxAddress(taxAddress);
-		}
 
 		// Calculate Tax Amount after get Total Line Item Price / Amount and Add it to totalAmount
 		BigDecimal taxAmount = totalAmount.multiply(billing.getTax().getTaxRate()).divide(BigDecimal.valueOf(100));

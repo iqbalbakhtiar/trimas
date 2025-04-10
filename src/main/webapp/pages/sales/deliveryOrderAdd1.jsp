@@ -50,6 +50,8 @@
 							</table>
 					  	</div>
   						<sesform:form id="addForm" name="addForm" method="post" modelAttribute="deliveryOrder_form">
+						<input type="hidden" value="0" id="customerId"/>
+						<input type="hidden" value="0" id="taxId"/>
 					  	<table class="table-list" cellspacing="0" cellpadding="0" width="100%">
 						<thead>
 						<tr>
@@ -68,9 +70,9 @@
 							<c:if test='${deliveryReferences[status.index-1].referenceId != item.referenceId}'>
 							<tr class="strong">	
 								<td class="tools">
-									<input type="checkbox" class="check" index="${item.referenceType.messageName}${item.referenceId}"/>
+									<input id="check[${status.index}]" type="checkbox" class="check" index="${status.index}" indexClass="${item.referenceType.messageName}${item.referenceId}" onclick="checkValidation('${status.index}','${item.tax.id}','${item.customer.id}')"/>
 								</td>
-								<td colspan="${adapter.reference.message == 'item' ? 0 : 3}">
+								<td colspan="3">
 									<a href="<c:url value='/page/${item.uri}preedit.htm?id=${item.referenceId}'/>"><c:out value='${item.code}'/></a>
 								</td>
 								<td><fmt:formatDate value='${item.date}' pattern='dd-MM-yyyy'/></td>
@@ -152,12 +154,70 @@
 		});
 
 		$('.check').change(function () {
-			$('.'+$(this).attr('index')).prop("checked",this.checked);
+			$('.'+$(this).attr('indexClass')).prop("checked",this.checked);
 			
 			if(this.checked)
-				$('.'+$(this).attr('index')).removeAttr("disabled");
+				$('.'+$(this).attr('indexClass')).removeAttr("disabled");
 			else
-				$('.'+$(this).attr('index')).attr("disabled",true);
+				$('.'+$(this).attr('indexClass')).attr("disabled",true);
 		});
 	});
+	
+	function checkValidation(index, taxId, customerId)
+	{
+		var customer = document.getElementById('customerId');
+		var tax = document.getElementById('taxId');
+
+		if(document.getElementById("check["+index+"]").checked == true)
+		{
+			if(customer.value == '0')
+				customer.value = customerId;
+			else
+			{
+				if(customerId != customer.value)
+				{
+					alert('<spring:message code="notif.selected.different1"/> <spring:message code="customer"/> <spring:message code="notif.selected.different2"/> !!!');
+					$.each(function(idx,elem)
+					{
+						var i=elem.attr('index');
+						$("#check\\["+i+"\\]").removeAttr("checked");
+					});
+					
+					clearValidation();
+					return;
+				}
+			}
+
+			if(tax.value == '0')
+				tax.value = taxId;
+			else {
+				if(taxId != tax.value) {
+					alert('<spring:message code="notif.selected.different1"/> <spring:message code="sirius.tax"/> <spring:message code="notif.selected.different2"/> !!!');
+					$('.check').each(function()
+					{
+			            if(this.checked)
+			                this.checked = false;
+			        });
+					
+					clearValidation();
+					return;
+				}
+			}
+		} else {
+			var countCheck = 0;
+			$('.check').each(function(){
+	            if(this.checked)
+	                countCheck++;
+	        });
+			
+			if(countCheck == 0)
+				clearValidation();
+		}
+	}
+
+	function clearValidation() {
+		$('#customerId').val(0);
+		$('#taxId').val(0);
+		$('.check').change();
+	}
 </script>

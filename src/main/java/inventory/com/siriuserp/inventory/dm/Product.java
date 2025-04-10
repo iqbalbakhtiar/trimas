@@ -75,6 +75,10 @@ public class Product extends Model
 	@Type(type = "yes_no")
 	private boolean serial = false;
 
+	@Column(name = "saleable", length = 1)
+	@Type(type = "yes_no")
+	private boolean saleable = false;
+
 	@Column(name = "note", length = 255)
 	private String note;
 

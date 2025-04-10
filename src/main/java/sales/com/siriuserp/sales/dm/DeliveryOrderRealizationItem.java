@@ -1,3 +1,8 @@
+/**
+ * File Name  : DeliveryOrderRealizationItem.java
+ * Created On : Mar 18, 2025
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.sales.dm;
 
 import java.math.BigDecimal;
@@ -26,12 +31,17 @@ import com.siriuserp.inventory.dm.WarehouseTransaction;
 import com.siriuserp.inventory.dm.WarehouseTransactionSource;
 import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Grid;
-import com.siriuserp.sdk.dm.Money;
 import com.siriuserp.sdk.dm.Tag;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+/**
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
+ */
 
 @Getter
 @Setter
@@ -79,18 +89,6 @@ public class DeliveryOrderRealizationItem extends WarehouseReferenceItem impleme
 	public Tag getOriginTag()
 	{
 		return Tag.stock();
-	}
-
-	@Override
-	public Money getMoney()
-	{
-		Money money = new Money();
-		money.setAmount(getDeliveryOrderItem().getDeliveryReferenceItem().getSalesOrderItem().getMoney().getAmount());
-		money.setCurrency(getDeliveryOrderItem().getDeliveryReferenceItem().getSalesOrderItem().getMoney().getCurrency());
-		money.setExchangeType(getDeliveryOrderItem().getDeliveryReferenceItem().getSalesOrderItem().getMoney().getExchangeType());
-		money.setRate(getDeliveryOrderItem().getDeliveryReferenceItem().getSalesOrderItem().getMoney().getRate());
-
-		return money;
 	}
 
 	@Override

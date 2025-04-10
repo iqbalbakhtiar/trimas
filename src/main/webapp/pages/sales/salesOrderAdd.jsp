@@ -390,8 +390,6 @@ function save() {
 				if(json.status === 'OK')
 				{
 					$dialog.dialog('close');
-					<%--window.location="<c:url value='/page/deliveryorderview.htm'/>";--%>
-					// Or Can use This
 					window.location="<c:url value='/page/salesorderpreedit.htm?id='/>"+json.id;
 				}
 				else
@@ -482,6 +480,7 @@ function openProduct(index) {
 	const params = {
 		target: 'product[' + index + ']', // Id Dropdown (Select) element
 		index: index,
+		saleable: true,
 		status: true // Filter Only Active Products
 	};
 	openpopup(buildUrl(baseUrl, params));

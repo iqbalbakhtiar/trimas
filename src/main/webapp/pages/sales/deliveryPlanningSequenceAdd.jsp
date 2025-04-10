@@ -32,7 +32,7 @@
 				<tr>
 					<td nowrap="nowrap" align="right"><spring:message code="customer"/> :</td>
 					<td>
-						<select class="combobox-ext" disabled='true' id="customer">
+						<select class="combobox-ext" disabled='true' id="customer" onchange="updateShippingAddress(this)">
 							<option value="${planning_form.deliveryPlanning.salesOrder.customer.id}"><c:out value='${planning_form.deliveryPlanning.salesOrder.customer.fullName}'/></option>
 						</select>
 					</td>
@@ -59,13 +59,16 @@
 				<tr>
 					<td width="14%" align="right"><spring:message code="deliverysequence.shippingaddress"/> : </td>
 					<td width="35%">
-							<form:select id="postalAddress" path="postalAddress" cssClass="combobox-ext">
+							<form:select id="shippingAddress" path="postalAddress" cssClass="combobox-ext" onchange="updatedShippingAddressDetail(this.value)">
 							<c:if test='${not empty planning_form.postalAddress}'>
 								<form:option value='${planning_form.postalAddress.id}' label='${planning_form.postalAddress.address}' />
 							</c:if>
 						</form:select>
-						<img src="assets/icons/list_extensions.gif" onclick="javascript:openpopup('<c:url value='/page/popuppostaladdressview.htm?target=postalAddress&party=${planning_form.deliveryPlanning.salesOrder.customer.id}'/>');" style="CURSOR:pointer;" title="Address" />
 					</td>
+				</tr>
+				<tr>
+					<td align="right"><spring:message code="postaladdress.detail"/> : </td>
+					<td><input id="addressDetail" size="45" class="input-disabled" disabled/></td>
 				</tr>
 				</table>
 			</td>
@@ -145,6 +148,8 @@
 <script type="text/javascript">
 $(document).ready(function()
 {
+    $('#customer').change();
+    
 	$(".item-button-save").click(function(){
 		if(validation()) {
 			$.ajax({
@@ -192,7 +197,7 @@ function validation()
 		return false;
 	}
 
-	if(document.getElementById('postalAddress').value == null || document.getElementById('postalAddress').value == '')
+	if(document.getElementById('shippingAddress').value == null || document.getElementById('shippingAddress').value == '')
 	{
         alert('<spring:message code="deliverysequence.shippingaddress"/> <spring:message code="notif.empty"/> !');
 		return false;
@@ -211,6 +216,60 @@ function validation()
 	}
 	
 	return true;
+}
+
+function updateShippingAddress(element) {
+	let customerId = $('#customer').val();
+	let addressId = "${planning_form.postalAddress.id}";
+	
+	Party.load(customerId);
+
+	let _shippingAddress = $('#shippingAddress');
+	if (_shippingAddress.find('option').length > 0) {
+		_shippingAddress.empty();
+	}
+
+	let addresses = Party.data.partyAddresses;
+
+	addresses.forEach(address => {
+		let hasShippingEnabled = address.postalTypes.some(postalType =>
+				postalType.type === 'SHIPPING' && postalType.enabled === true
+		);
+
+		if (hasShippingEnabled) {
+			let option = $('<option></option>')
+					.val(address.postalId)
+					.text(address.addressName);
+
+			if (address.postalId == addressId) {
+				option.attr('selected', 'selected');
+			}
+
+			_shippingAddress.append(option);
+		}
+	});
+
+	updatedShippingAddressDetail(_shippingAddress.val());
+}
+
+function updatedShippingAddressDetail(selectedId) {
+	$('#addressDetail').val('');
+
+	if (!selectedId || selectedId.trim() === "") {
+		return;
+	}
+
+	PostalAddress.load(selectedId);
+
+	if (PostalAddress.data) {
+		var addressDetail = PostalAddress.data.postalAddress || '';
+		var postalCode = PostalAddress.data.postalCode || '';
+		var city = PostalAddress.data.postalCity ? PostalAddress.data.postalCity.name : '';
+
+		$('#addressDetail').val(addressDetail);
+	} else {
+		$('#addressDetail').val('');
+	}
 }
 
 function checkQuantity(index) {

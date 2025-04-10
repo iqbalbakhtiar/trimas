@@ -10,7 +10,6 @@
 <head>
 	<title>${title}</title>
 	<%@ include file="/common/sirius-header.jsp"%>
-	<%--<%@ include file="/filter/sales/deliveryOrderFilter.jsp"%>--%>
 </head>
 <body>
 
@@ -54,33 +53,34 @@
 							<tr>
 								<th width="3%">&nbsp;</th>
 								<th width="5%"><spring:message code="deliveryorder"/></th>
-								<th width="5%"><spring:message code="deliveryorder.sodate"/></th>
+								<th width="5%"><spring:message code="deliveryorder.do.date"/></th>
 								<th width="20%"><spring:message code="deliveryorder.shippingaddress.lineitem"/></th>
 								<th width="5%"><spring:message code="deliveryorder.amount"/></th>
 							</tr>
-							<c:forEach items="${deliveryOrders}" var="deliveryOrder">
+							<c:forEach items="${deliveryOrders}" var="delivery">
 								<tr>
 									<td class="tools" valign="top">
 										<c:if test='${access.add}'>
-											<a class="item-button-edit" href="<c:url value='/page/deliveryorderrealizationpreadd2.htm?DO=${deliveryOrder.id}'/>" title="<spring:message code='sirius.edit'/>"><span><spring:message code="sirius.edit"/></span></a>
+											<a class="item-button-edit" href="<c:url value='/page/deliveryorderrealizationpreadd2.htm?deliveryId=${delivery.id}'/>" title="<spring:message code='sirius.edit'/>"><span><spring:message code="sirius.edit"/></span></a>
 										</c:if>
 									</td>
-									<td nowrap="nowrap" valign="top">${deliveryOrder.code}</td>
-									<td nowrap="nowrap" valign="top"><fmt:formatDate value='${deliveryOrder.date}' pattern='dd-MM-yyyy'/></td>
+									<td nowrap="nowrap" valign="top"><a href="<c:url value='/page/deliveryorderpreedit.htm?id=${delivery.id}'/>"><c:out value="${delivery.code}"></c:out></a></td>
+									<td nowrap="nowrap" valign="top"><fmt:formatDate value='${delivery.date}' pattern='dd-MM-yyyy'/></td>
 									<td nowrap="nowrap" valign="top">
-										${deliveryOrder.shippingAddress.addressName}
-		<%--								Menggunakan "ul" untuk membuat tab (menjorok) ke kanan pada setiap line item--%>
+										${delivery.shippingAddress.addressName}
 										<ul style="margin: 0; padding-left: 15px; list-style-type: none;">
-											<c:forEach items="${deliveryOrder.items}" var="item">
-												<li>${item.salesReferenceItem.product.name}</li>
+											<c:forEach items="${delivery.items}" var="item">
+												<li>${item.deliveryReferenceItem.product.name}</li>
 											</c:forEach>
 										</ul>
 									</td>
 									<td nowrap="nowrap" valign="top">
 										&nbsp;
-										<c:forEach items="${deliveryOrder.items}" var="item">
+										<c:forEach items="${delivery.items}" var="item">
+										<c:if test="${item.deliveryItemType eq 'BASE'}">
 											<br/>
-											${item.salesReferenceItem.quantity} ${item.salesReferenceItem.product.unitOfMeasure.measureId}
+											<fmt:formatNumber value='${item.deliveryReferenceItem.quantity}' pattern=',##0.00'/> ${item.deliveryReferenceItem.product.unitOfMeasure.measureId}
+										</c:if>
 										</c:forEach>
 									</td>
 								</tr>

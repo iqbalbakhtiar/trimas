@@ -1,3 +1,8 @@
+/**
+ * File Name  : DeliveryOrderRealizationController.java
+ * Created On : Mar 18, 2025
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.sales.controller;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,10 +26,9 @@ import com.siriuserp.sales.dm.DeliveryOrderItem;
 import com.siriuserp.sales.dm.DeliveryOrderRealization;
 import com.siriuserp.sales.dm.DeliveryOrderRealizationItem;
 import com.siriuserp.sales.form.SalesForm;
+import com.siriuserp.sales.query.DeliveryOrderRealizationAddViewQuery;
 import com.siriuserp.sales.query.DeliveryOrderRealizationGridViewQuery;
-import com.siriuserp.sales.query.DeliveryOrderRealizationPreaddViewQuery;
 import com.siriuserp.sales.service.DeliveryOrderRealizationService;
-import com.siriuserp.sales.service.DeliveryOrderService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.Facility;
@@ -33,17 +37,19 @@ import com.siriuserp.sdk.dm.PostalAddress;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.utility.FormHelper;
 
+/**
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
+ */
+
 @Controller
-@SessionAttributes(value = "dor_form", types = SalesForm.class)
+@SessionAttributes(value = "realization_form", types = SalesForm.class)
 @DefaultRedirect(url = "deliveryorderrealizationview.htm")
 public class DeliveryOrderRealizationController extends ControllerBase
 {
-
 	@Autowired
-	private DeliveryOrderRealizationService dorService;
-
-	@Autowired
-	private DeliveryOrderService deliveryOrderService;
+	private DeliveryOrderRealizationService service;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
@@ -60,29 +66,29 @@ public class DeliveryOrderRealizationController extends ControllerBase
 	@RequestMapping("/deliveryorderrealizationview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/sales/deliveryOrderRealizationList", dorService.view(criteriaFactory.create(request, DeliveryOrderRealizationFilterCriteria.class), DeliveryOrderRealizationGridViewQuery.class));
+		return new ModelAndView("/sales/deliveryOrderRealizationList", service.view(criteriaFactory.create(request, DeliveryOrderRealizationFilterCriteria.class), DeliveryOrderRealizationGridViewQuery.class));
 	}
 
 	@RequestMapping("/deliveryorderrealizationpreadd1.htm")
 	public ModelAndView preadd1(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/sales/deliveryOrderRealizationAdd1", deliveryOrderService.view(criteriaFactory.create(request, DeliveryOrderRealizationFilterCriteria.class), DeliveryOrderRealizationPreaddViewQuery.class));
+		return new ModelAndView("/sales/deliveryOrderRealizationAdd1", service.preadd1(criteriaFactory.create(request, DeliveryOrderRealizationFilterCriteria.class), DeliveryOrderRealizationAddViewQuery.class));
 	}
 
 	@RequestMapping("/deliveryorderrealizationpreadd2.htm")
-	public ModelAndView preadd2(@RequestParam("DO") Long id) throws Exception
+	public ModelAndView preadd2(@RequestParam("deliveryId") Long id) throws Exception
 	{
-		return new ModelAndView("/sales/deliveryOrderRealizationAdd2", dorService.preadd2(id));
+		return new ModelAndView("/sales/deliveryOrderRealizationAdd2", service.preadd2(id));
 	}
 
 	@RequestMapping("/deliveryorderrealizationadd.htm")
-	public ModelAndView add(@ModelAttribute("dor_form") SalesForm deliveryOrderForm, BindingResult result, SessionStatus status) throws Exception
+	public ModelAndView add(@ModelAttribute("realization_form") SalesForm deliveryOrderForm, BindingResult result, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
 		try
 		{
-			dorService.add(FormHelper.create(DeliveryOrderRealization.class, deliveryOrderForm));
+			service.add(FormHelper.create(DeliveryOrderRealization.class, deliveryOrderForm));
 			status.setComplete();
 
 			response.store("id", deliveryOrderForm.getDeliveryOrderRealization().getId());
@@ -99,17 +105,17 @@ public class DeliveryOrderRealizationController extends ControllerBase
 	@RequestMapping("/deliveryorderrealizationpreedit.htm")
 	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
 	{
-		return new ModelAndView("/sales/deliveryOrderRealizationUpdate", dorService.preedit(id));
+		return new ModelAndView("/sales/deliveryOrderRealizationUpdate", service.preedit(id));
 	}
 
 	@RequestMapping("/deliveryorderrealizationedit.htm")
-	public ModelAndView edit(@ModelAttribute("dor_form") SalesForm deliveryOrderForm, BindingResult result, SessionStatus status) throws Exception
+	public ModelAndView edit(@ModelAttribute("realization_form") SalesForm deliveryOrderForm, BindingResult result, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
 		try
 		{
-			dorService.edit(deliveryOrderForm);
+			service.edit(deliveryOrderForm);
 			status.setComplete();
 
 			response.store("id", deliveryOrderForm.getDeliveryOrderRealization().getId());

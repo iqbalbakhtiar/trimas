@@ -1,4 +1,3 @@
-<%--suppress ALL --%>
 <%@ include file="/common/sirius-general-top.jsp"%>
 
 <div class="toolbar">
@@ -14,7 +13,7 @@
 			<td width="60%" valign="top">
 				<table style="border:none" width="100%">
 				<tr>
-					<td width="34%" align="right">Sales Order ID</td>
+					<td width="34%" align="right"><spring:message code="sirius.id"/></td>
 					<td width="1%" align="center">:</td>
 					<td width="64%"><form:input class="inputbox input-disabled" path="code" disabled="true"/></td>
 					<td width="1%"><form:errors path="code"/></td>
@@ -186,7 +185,6 @@
 					</tr>
 				</table>
 			</td>
-			
 		</tr>
 	</table>
 	<br/>
@@ -220,7 +218,7 @@
 					<td><input id="billingAddressCity" class="inputbox input-disabled" disabled value="${billing_form.billingAddress.city.name}"/></td>
 				</tr>
   			</table>
-		</div><%--	End of Billing Address Panel--%>
+		</div>
 
 		<div id="productLineItem" dojoType="ContentPane" label="<spring:message code='salesorder.lineitem'/>" class="tab-pages" refreshOnShow="true" selected="true">
   			<div class="toolbar-clean">
@@ -228,14 +226,14 @@
 			    	<thead>
 				    	<tr>
 				    		<th width="1%" nowrap="nowrap"></th>
-							<th width="8%" nowrap="nowrap"><spring:message code="product"/></th>
+							<th width="12%" nowrap="nowrap"><spring:message code="product"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="deliveryorder.accepted.qty"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
-							<th width="8%" nowrap="nowrap"><spring:message code="sirius.unitprice"/></th>
+							<th width="5%" nowrap="nowrap"><spring:message code="sirius.unitprice"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="salesorder.disc"/></th>
-							<th width="8%" nowrap="nowrap"><spring:message code="sirius.amount"/></th>
-							<th width="8%" nowrap="nowrap"><spring:message code="salesorder.total.disc"/></th>
-							<th width="8%" nowrap="nowrap"><spring:message code="sirius.total"/> <spring:message code="sirius.amount"/></th>
+							<th width="5%" nowrap="nowrap"><spring:message code="sirius.amount"/></th>
+							<th width="5%" nowrap="nowrap"><spring:message code="salesorder.total.disc"/></th>
+							<th width="30%" nowrap="nowrap"><spring:message code="sirius.total"/> <spring:message code="sirius.amount"/></th>
 						</tr>
 					</thead>
 					<tbody id="lineItem">
@@ -243,59 +241,24 @@
 						<c:if test="${item.billingReferenceItem.quantity > 0}">
 						<tr>
 							<td></td>
-							<td>
-								<input id="product[${idx.index}]" size="26" value="${item.billingReferenceItem.product.name}" class="input-disabled productInput"
-									   name="items[${idx.index}].product" index="${idx.index}" next="product" disabled/>
-							</td>
-							<td>
-								<input id="quantity[${idx.index}]" size="6" value="${item.billingReferenceItem.quantity}" class="input-disabled input-decimal"
-									   name="items[${idx.index}].quantity" index="${idx.index}" next="quantity" disabled/>
-							</td>
-							<td>
-								<input id="uom[${idx.index}]" size="6" value="${item.billingReferenceItem.referenceUom}" class="input-disabled"
-									   name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/>
-							</td>
-							<td>
-								<input id="amount[${idx.index}]" size="12" value="<fmt:formatNumber
-										value='${item.billingReferenceItem.money.amount}' pattern=',##0.00'/>"
-									   class="input-disabled input-decimal" name="items[${idx.index}].amount"
-									   index="${idx.index}" next="amount" disabled/>
-							</td>
-							<td>
-								<input id="discount[${idx.index}]" size="6"
-									   value="${item.billingReferenceItem.discount}" class="input-disabled input-decimal"
-									   name="items[${idx.index}].count" index="${idx.index}" next="discount" disabled/>
-							</td>
-							<td>
-								<input id="amountInput[${idx.index}]" size="12" type="text"
-									   value="<fmt:formatNumber value='${item.billingReferenceItem.subtotal}' pattern=',##0.00'/>"
-									   class="input-disabled input-decimal"
-									   name="items[${idx.index}].amountInput"
-									   index="${idx.index}" next="amountInput" disabled/>
-							</td>
-							<td>
-								<input id="totalDisc[${idx.index}]" size="12" type="text"
-									   value="<fmt:formatNumber value='${item.billingReferenceItem.discountAmount}' pattern=',##0.00'/>"
-									   class="input-disabled input-decimal" name="items[${idx.index}].totalDisc"
-									   index="${idx.index}" next="totalDisc" disabled/>
-							</td>
-							<td>
-								<input id="totalAmount[${idx.index}]" size="12" type="text"
-									   value="<fmt:formatNumber value='${item.billingReferenceItem.totalAmount}' pattern=',##0.00'/>"
-									   class="input-disabled input-decimal" name="items[${idx.index}].totalAmount"
-									   index="${idx.index}" next="totalAmount" disabled/>
-							</td>
+							<td><input size="30" value="${item.billingReferenceItem.product.name}" class="input-disabled productInput" disabled/></td>
+							<td><input size="10" value="${item.billingReferenceItem.quantity}" class="input-disabled input-decimal" disabled/></td>
+							<td><input size="5" value="${item.billingReferenceItem.referenceUom}" class="input-disabled" disabled/></td>
+							<td><input size="12" value="<fmt:formatNumber value='${item.billingReferenceItem.money.amount}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
+							<td><input size="10" value="${item.billingReferenceItem.discount}" class="input-disabled input-decimal" disabled/></td>
+							<td><input size="15" type="text" value="<fmt:formatNumber value='${item.billingReferenceItem.subtotal}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
+							<td><input size="15" type="text" value="<fmt:formatNumber value='${item.billingReferenceItem.discountAmount}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
+							<td><input size="15" type="text" value="<fmt:formatNumber value='${item.billingReferenceItem.totalAmount}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
 						</tr>
 						</c:if>
 					</c:forEach>
 					</tbody>
 					<tfoot>
-						<tr class="end-table"><td colspan="10">&nbsp;</td></tr>
+						<tr class="end-table"><td colspan="9">&nbsp;</td></tr>
 					</tfoot>
 				</table>
 			</div>
-		</div><%--	End of Line Item Panel--%>
-
+		</div>
 		<div id="collectingStatusPane" dojoType="ContentPane" label="<spring:message code='billing.collectingstatus'/>" class="tab-pages" refreshOnShow="true" selected="true">
 			<table width="100%">
 				<tr>
@@ -333,9 +296,8 @@
 					<td width="59%"><input id="acceptanceDate" name="billing.collectingStatus.acceptanceDate" value="<fmt:formatDate value='${billing_form.billing.collectingStatus.acceptanceDate}' pattern='dd-MM-yyyy'/>" size="10" class="datepicker"/></td>
 				</tr>
 			</table>
-		</div><%--	End of Collection Panel--%>
-
- 	</div><%--	End of Main Tab--%>
+		</div>
+ 	</div>
 </sesform:form>
 </div>
 <div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${billing_form.createdBy.fullName}'/> (<fmt:formatDate value='${billing_form.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${billing_form.updatedBy.fullName}'/> (<fmt:formatDate value='${billing_form.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
@@ -398,8 +360,6 @@ function save() {
 				if(json.status === 'OK')
 				{
 					$dialog.dialog('close');
-					<%--window.location="<c:url value='/page/deliveryorderview.htm'/>";--%>
-					// Or Can use This
 					window.location="<c:url value='/page/billingpreedit.htm?id='/>"+json.id;
 				}
 				else

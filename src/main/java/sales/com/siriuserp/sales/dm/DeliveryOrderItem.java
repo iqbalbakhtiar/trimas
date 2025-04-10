@@ -36,6 +36,8 @@ import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Lot;
 import com.siriuserp.sdk.dm.Model;
+import com.siriuserp.sdk.dm.Money;
+import com.siriuserp.sdk.dm.Tax;
 
 import javolution.util.FastSet;
 import lombok.Getter;
@@ -114,6 +116,30 @@ public class DeliveryOrderItem extends Model
 			return getItemParent().getDeliveryReferenceItem().getProduct();
 
 		return getDeliveryReferenceItem().getProduct();
+	}
+
+	public Money getMoney()
+	{
+		if (getDeliveryReferenceItem() != null)
+			return getDeliveryReferenceItem().getSalesOrderItem().getMoney();
+		else
+			return getItemParent().getDeliveryReferenceItem().getSalesOrderItem().getMoney();
+	}
+
+	public BigDecimal getDiscount()
+	{
+		if (getDeliveryReferenceItem() != null)
+			return getDeliveryReferenceItem().getSalesOrderItem().getDiscount();
+		else
+			return getItemParent().getDeliveryReferenceItem().getSalesOrderItem().getDiscount();
+	}
+
+	public Tax getTax()
+	{
+		if (getDeliveryReferenceItem() != null)
+			return getDeliveryReferenceItem().getSalesOrderItem().getSalesOrder().getTax();
+		else
+			return getItemParent().getDeliveryReferenceItem().getSalesOrderItem().getSalesOrder().getTax();
 	}
 
 	@Override

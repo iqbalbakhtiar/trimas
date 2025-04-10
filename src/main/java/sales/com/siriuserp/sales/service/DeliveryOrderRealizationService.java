@@ -1,24 +1,24 @@
+/**
+ * File Name  : DeliveryOrderRealizationService.java
+ * Created On : Mar 18, 2025
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.sales.service;
 
 import java.math.BigDecimal;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.siriuserp.inventory.dm.InventoryItem;
+import com.siriuserp.accountreceivable.dao.BillingDao;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
-import com.siriuserp.inventory.util.InventoryItemTagUtil;
 import com.siriuserp.sales.dm.DeliveryOrder;
 import com.siriuserp.sales.dm.DeliveryOrderItem;
+import com.siriuserp.sales.dm.DeliveryOrderItemType;
 import com.siriuserp.sales.dm.DeliveryOrderRealization;
 import com.siriuserp.sales.dm.DeliveryOrderRealizationItem;
-import com.siriuserp.sales.dm.DeliveryOrderRealizationReserveBridge;
-import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
 import com.siriuserp.sales.dm.SOStatus;
 import com.siriuserp.sales.form.SalesForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
@@ -29,8 +29,8 @@ import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.dm.Item;
+import com.siriuserp.sdk.dm.Money;
 import com.siriuserp.sdk.dm.TableType;
-import com.siriuserp.sdk.dm.Tag;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.DateHelper;
@@ -39,19 +39,18 @@ import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
 import com.siriuserp.sdk.utility.ReferenceItemHelper;
 
-import javolution.util.FastList;
 import javolution.util.FastMap;
 
 /**
- * @author Rama Almer Felix
+ * @author Iqbal Bakhtiar
  * PT. Sirius Indonesia
  * www.siriuserp.com
  */
+
 @Component
 @Transactional(rollbackFor = Exception.class)
 public class DeliveryOrderRealizationService extends Service
 {
-
 	@Autowired
 	private GenericDao genericDao;
 
@@ -59,7 +58,7 @@ public class DeliveryOrderRealizationService extends Service
 	private CodeSequenceDao codeSequenceDao;
 
 	@Autowired
-	private InventoryItemTagUtil inventoryItemUtil;
+	private BillingDao billingDao;
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws Exception
@@ -72,28 +71,26 @@ public class DeliveryOrderRealizationService extends Service
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> preadd1(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws Exception
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("deliveryOrders", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
+		map.put("filterCriteria", filterCriteria);
+
+		return map;
+	}
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> preadd2(Long id)
 	{
 		DeliveryOrder deliveryOrder = genericDao.load(DeliveryOrder.class, id);
-		Hibernate.initialize(deliveryOrder);
 		SalesForm form = new SalesForm();
-
-		for (DeliveryOrderItem doItem : deliveryOrder.getItems())
-		{
-			Item item = new Item();
-			item.setDeliveryReferenceItem(doItem.getDeliveryReferenceItem());
-
-			form.getItems().add(item);
-		}
-
 		form.setDeliveryOrder(deliveryOrder);
-
-		// Get Currency and Tax from SalesReferenceItems
-		form.setCurrency(form.getDeliveryOrder().getItems().iterator().next().getDeliveryReferenceItem().getSalesOrderItem().getMoney().getCurrency());
-		form.setTax(form.getDeliveryOrder().getItems().iterator().next().getDeliveryReferenceItem().getTax());
+		form.setCurrency(form.getDeliveryOrder().getItems().iterator().next().getMoney().getCurrency());
+		form.setTax(form.getDeliveryOrder().getItems().iterator().next().getTax());
 
 		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("dor_form", form);
+		map.put("realization_form", form);
 
 		return map;
 	}
@@ -101,67 +98,49 @@ public class DeliveryOrderRealizationService extends Service
 	@AuditTrails(className = DeliveryOrderRealization.class, actionType = AuditTrailsActionType.CREATE)
 	@AutomaticSibling(roles =
 	{ "DelInventorySiblingRole", "AddBillingSiblingRole" })
-	public void add(DeliveryOrderRealization dor) throws Exception
+	public void add(DeliveryOrderRealization realization) throws Exception
 	{
-		SalesForm form = (SalesForm) dor.getForm();
-
-		//load DO
+		SalesForm form = (SalesForm) realization.getForm();
 		DeliveryOrder delivery = genericDao.load(DeliveryOrder.class, form.getDeliveryOrder().getId());
 
-		// Set DOR Value
-		dor.setCode(GeneratorHelper.instance().generate(TableType.DELIVERY_ORDER_REALIZATION, codeSequenceDao));
-		dor.setOrganization(delivery.getOrganization());
-		dor.setFacility(delivery.getFacility());
-		dor.setCustomer(delivery.getCustomer());
+		realization.setCode(GeneratorHelper.instance().generate(TableType.DELIVERY_ORDER_REALIZATION, codeSequenceDao));
+		realization.setOrganization(delivery.getOrganization());
+		realization.setFacility(delivery.getFacility());
+		realization.setCustomer(delivery.getCustomer());
 
 		for (Item item : form.getItems())
 		{
-			//Load to avoid no session
-			DeliveryOrderReferenceItem salesReferenceItem = genericDao.load(DeliveryOrderReferenceItem.class, item.getDeliveryReferenceItem().getId());
-			DeliveryOrderItem deliveryOrderItem = genericDao.load(DeliveryOrderItem.class, salesReferenceItem.getDeliveryOrderItem().getId());
+			DeliveryOrderItem deliveryOrderItem = genericDao.load(DeliveryOrderItem.class, item.getReference());
 
-			// Set Accepted DOR Item
 			if (item.getAccepted().compareTo(BigDecimal.ZERO) > 0)
 			{
-				DeliveryOrderRealizationItem dorItem = new DeliveryOrderRealizationItem();
-				dorItem.setAccepted(item.getAccepted());
-				dorItem.setReturned(item.getReturned());
-				dorItem.setDeliveryOrderRealization(dor);
-				dorItem.setDeliveryOrderItem(deliveryOrderItem);
-				dorItem.setProduct(salesReferenceItem.getSalesOrderItem().getProduct());
-				dorItem.setSourceContainer(deliveryOrderItem.getContainer());
-				dorItem.setNote(item.getNote());
+				Money money = new Money();
+				money.setAmount(deliveryOrderItem.getMoney().getAmount());
+				money.setCurrency(deliveryOrderItem.getMoney().getCurrency());
+				money.setExchangeType(deliveryOrderItem.getMoney().getExchangeType());
+				money.setRate(deliveryOrderItem.getMoney().getRate());
 
-				dorItem.setTransactionItem(ReferenceItemHelper.init(genericDao, dorItem.getAccepted(), WarehouseTransactionType.OUT, dorItem));
+				DeliveryOrderRealizationItem realizationItem = new DeliveryOrderRealizationItem();
+				realizationItem.setAccepted(item.getAccepted());
+				realizationItem.setReturned(item.getReturned());
+				realizationItem.setDeliveryOrderRealization(realization);
+				realizationItem.setDeliveryOrderItem(deliveryOrderItem);
+				realizationItem.setProduct(deliveryOrderItem.getProduct());
+				realizationItem.setSourceContainer(deliveryOrderItem.getContainer());
+				realizationItem.setMoney(money);
+				realizationItem.setNote(item.getNote());
+				realizationItem.getLot().setSerial(item.getSerial());
+				realizationItem.setTax(deliveryOrderItem.getTax());
 
-				dor.getAccepteds().add(dorItem);
-			}
+				if (!realizationItem.getProduct().isSerial() || deliveryOrderItem.getDeliveryItemType().equals(DeliveryOrderItemType.SERIAL))
+					realizationItem.setTransactionItem(ReferenceItemHelper.init(genericDao, realizationItem.getAccepted(), WarehouseTransactionType.OUT, realizationItem));
 
-			// Set Shrink DOR Item
-			if (item.getShrinkage().compareTo(BigDecimal.ZERO) > 0)
-			{
-				DeliveryOrderRealizationItem shinkItem = new DeliveryOrderRealizationItem();
-				shinkItem.setTag(Tag.shrink());
-				shinkItem.setShrinkage(item.getShrinkage());
-				shinkItem.setDeliveryOrderRealization(dor);
-				shinkItem.setDeliveryOrderItem(deliveryOrderItem);
-				shinkItem.setProduct(salesReferenceItem.getSalesOrderItem().getProduct());
-				shinkItem.setSourceContainer(deliveryOrderItem.getContainer());
-
-				shinkItem.setTransactionItem(ReferenceItemHelper.init(genericDao, shinkItem.getShrinkage(), WarehouseTransactionType.OUT, shinkItem));
-
-				shinkItem.setReserveBridge(inventoryItemUtil.init(DeliveryOrderRealizationReserveBridge.class));
-				shinkItem.getReserveBridge().setRealizationItem(shinkItem);
-
-				inventoryItemUtil.reserve(InventoryItem.class, shinkItem);
-
-				dor.getShrinks().add(shinkItem);
+				realization.getAccepteds().add(realizationItem);
 			}
 		}
 
-		genericDao.add(dor);
+		genericDao.add(realization);
 
-		// Update DO Status
 		delivery.setStatus(SOStatus.DELIVERED);
 		delivery.setUpdatedBy(getPerson());
 		delivery.setUpdatedDate(DateHelper.now());
@@ -172,29 +151,12 @@ public class DeliveryOrderRealizationService extends Service
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> preedit(Long id) throws Exception
 	{
-		DeliveryOrderRealization deliveryOrderRealization = genericDao.load(DeliveryOrderRealization.class, id);
-		SalesForm form = FormHelper.bind(SalesForm.class, deliveryOrderRealization);
-		form.setDeliveryOrderRealization(deliveryOrderRealization);
-
-		// Gabungkan DOR item yang ada shrinkage
-		Map<Long, DeliveryOrderRealizationItem> aggregatedItems = deliveryOrderRealization.getItems().stream().collect(Collectors.toMap(item -> item.getDeliveryOrderItem().getId(), item -> {
-			DeliveryOrderRealizationItem newItem = new DeliveryOrderRealizationItem();
-			newItem.setDeliveryOrderItem(item.getDeliveryOrderItem());
-			newItem.setAccepted(item.getAccepted());
-			newItem.setReturned(item.getReturned());
-			newItem.setShrinkage(item.getShrinkage());
-			newItem.setNote(item.getNote());
-			return newItem;
-		}, (existing, incoming) -> {
-			existing.setAccepted(existing.getAccepted().add(incoming.getAccepted()));
-			existing.setReturned(existing.getReturned().add(incoming.getReturned()));
-			existing.setShrinkage(existing.getShrinkage().add(incoming.getShrinkage()));
-			return existing;
-		}));
+		SalesForm form = FormHelper.bind(SalesForm.class, load(id));
 
 		FastMap<String, Object> map = new FastMap<>();
-		map.put("dor_form", form);
-		map.put("dorItems", new FastList<>(aggregatedItems.values()));
+		map.put("realization_form", form);
+		map.put("realization_edit", form.getDeliveryOrderRealization());
+		map.put("billing", billingDao.getBillingByReference(id));
 
 		return map;
 	}
@@ -205,6 +167,12 @@ public class DeliveryOrderRealizationService extends Service
 		form.getDeliveryOrderRealization().setUpdatedBy(getPerson());
 		form.getDeliveryOrderRealization().setUpdatedDate(DateHelper.now());
 
-		genericDao.update(form.getDeliveryOrderRealization()); // Update DOR Directly from JSP
+		genericDao.update(form.getDeliveryOrderRealization());
+	}
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public DeliveryOrderRealization load(Long id)
+	{
+		return genericDao.load(DeliveryOrderRealization.class, id);
 	}
 }

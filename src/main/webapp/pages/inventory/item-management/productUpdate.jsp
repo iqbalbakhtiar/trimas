@@ -49,6 +49,13 @@
 		</td>
 	</tr>
 	<tr>
+		<td align="right"><spring:message code="product.saleable"/> :</td>
+		<td>
+			<form:radiobutton path="saleable" value="true"/><spring:message code="sirius.yes"/>
+			<form:radiobutton path="saleable" value="false"/><spring:message code="sirius.no"/>	
+		</td>
+	</tr>
+	<tr>
 		<td align="right"><spring:message code="sirius.status"/> :</td>
 		<td>
 			<form:radiobutton path="enabled" value="true"/><spring:message code="sirius.active"/>

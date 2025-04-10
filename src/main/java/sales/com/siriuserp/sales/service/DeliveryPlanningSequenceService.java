@@ -152,17 +152,20 @@ public class DeliveryPlanningSequenceService
 	@AuditTrails(className = DeliveryPlanningSequence.class, actionType = AuditTrailsActionType.DELETE)
 	public void delete(DeliveryPlanningSequence sequence) throws Exception
 	{
-		for (DeliveryPlanningSequenceItem item : sequence.getSequenceItems())
+		if (sequence.getDeliveryOrders().isEmpty())
 		{
-			SalesOrderItem salesItem = genericDao.load(SalesOrderItem.class, item.getSalesOrderItem().getId());
-			BigDecimal unassignedQty = item.getQuantity();
-			salesItem.setAssigned(salesItem.getAssigned().subtract(unassignedQty));
-			salesItem.setLockStatus(SOStatus.OPEN);
+			for (DeliveryPlanningSequenceItem item : sequence.getSequenceItems())
+			{
+				SalesOrderItem salesItem = genericDao.load(SalesOrderItem.class, item.getSalesOrderItem().getId());
+				BigDecimal unassignedQty = item.getQuantity();
+				salesItem.setAssigned(salesItem.getAssigned().subtract(unassignedQty));
+				salesItem.setLockStatus(SOStatus.OPEN);
 
-			genericDao.update(salesItem);
+				genericDao.update(salesItem);
+			}
+
+			genericDao.delete(sequence);
 		}
-
-		genericDao.delete(sequence);
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
