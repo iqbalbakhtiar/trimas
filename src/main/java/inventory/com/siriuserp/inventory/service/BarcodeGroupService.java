@@ -26,7 +26,6 @@ import com.siriuserp.sdk.db.GridViewQuery;
 import com.siriuserp.sdk.dm.Barcode;
 import com.siriuserp.sdk.dm.BarcodeGroup;
 import com.siriuserp.sdk.dm.BarcodeGroupType;
-import com.siriuserp.sdk.dm.BarcodeStatus;
 import com.siriuserp.sdk.dm.Item;
 import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
@@ -322,15 +321,5 @@ public class BarcodeGroupService
 		map.put("products", products);
 
 		return map;
-	}
-
-	@AuditTrails(className = BarcodeGroup.class, actionType = AuditTrailsActionType.UPDATE)
-	public void updateStatus(Long id, BarcodeStatus available) throws Exception
-	{
-		BarcodeGroup barcodeGroup = load(id);
-
-		barcodeGroup.setStatus(available);
-
-		genericDao.update(barcodeGroup);
 	}
 }

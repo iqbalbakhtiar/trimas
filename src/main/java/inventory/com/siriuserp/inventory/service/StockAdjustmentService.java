@@ -4,18 +4,9 @@
 package com.siriuserp.inventory.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.siriuserp.sdk.dm.Barcode;
-import com.siriuserp.sdk.dm.BarcodeGroup;
-import com.siriuserp.sdk.dm.Currency;
-import com.siriuserp.sdk.dm.ExchangeType;
-import com.siriuserp.sdk.dm.Facility;
-import com.siriuserp.sdk.dm.Item;
-import com.siriuserp.sdk.dm.Party;
-import com.siriuserp.sdk.dm.TableType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import com.siriuserp.inventory.criteria.BarcodeGroupFilterCriteria;
 import com.siriuserp.inventory.criteria.StockAdjustmentFilterCriteria;
 import com.siriuserp.inventory.dm.DWInventoryItemBalance;
 import com.siriuserp.inventory.dm.DWInventoryItemBalanceDetail;
@@ -48,6 +40,15 @@ import com.siriuserp.sdk.dao.CurrencyDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.dao.ProductInOutTransactionDao;
 import com.siriuserp.sdk.db.GridViewQuery;
+import com.siriuserp.sdk.dm.Barcode;
+import com.siriuserp.sdk.dm.BarcodeGroup;
+import com.siriuserp.sdk.dm.BarcodeStatus;
+import com.siriuserp.sdk.dm.Currency;
+import com.siriuserp.sdk.dm.ExchangeType;
+import com.siriuserp.sdk.dm.Facility;
+import com.siriuserp.sdk.dm.Item;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
@@ -56,6 +57,7 @@ import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
 import com.siriuserp.sdk.utility.SiriusValidator;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
 /**
@@ -105,6 +107,18 @@ public class StockAdjustmentService
 		return map;
 	}
 
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public Map<String, Object> preaddBarcodes(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		BarcodeGroupFilterCriteria criteria = (BarcodeGroupFilterCriteria) filterCriteria;
+
+		map.put("filterCriteria", criteria);
+		map.put("barcodes", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
+
+		return map;
+	}
+
 	@Transactional(propagation = Propagation.NOT_SUPPORTED)
 	@InjectParty(keyName = "adjustment_add")
 	public Map<String, Object> preadd() throws ServiceException
@@ -117,31 +131,41 @@ public class StockAdjustmentService
 		return map;
 	}
 
-	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> preedit(Long id) throws ServiceException
+	@Transactional(propagation = Propagation.NOT_SUPPORTED)
+	@InjectParty(keyName = "adjustment_add")
+	public Map<String, Object> barcodePreadd2(Long id)
 	{
+		InventoryForm form = new InventoryForm();
+		form.setBarcodeGroup(genericDao.load(BarcodeGroup.class, id));
+
+		List<Item> items = new FastList<Item>();
+
+		for (Barcode barcode : form.getBarcodeGroup().getBarcodes())
+		{
+			Item item = new Item();
+			BeanUtils.copyProperties(barcode, item);
+			item.setSerial(barcode.getCode());
+
+			ProductInOutTransaction inOut = loadInOut(barcode.getProduct().getId());
+			if (inOut != null)
+				item.setPrice(inOut.getPrice());
+
+			items.add(item);
+		}
+
 		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("adjustment_edit", load(id));
+		map.put("items", items);
+		map.put("adjustment_add", form);
+		map.put("barcodeGroup", form.getBarcodeGroup());
 
 		return map;
-	}
-
-	@Transactional(propagation = Propagation.NOT_SUPPORTED)
-	public StockAdjustment load(Long id)
-	{
-		return genericDao.load(StockAdjustment.class, id);
-	}
-
-	@Transactional(propagation = Propagation.NOT_SUPPORTED)
-	public ProductInOutTransaction loadInOut(Long productId)
-	{
-		return productInOutTransactionDaoImpl.loadByProduct(productId);
 	}
 
 	@AuditTrails(className = StockAdjustment.class, actionType = AuditTrailsActionType.CREATE)
 	//	@AutomaticPosting(roleClasses = StockAdjustmentPostingRole.class)
 	public void add(StockAdjustment stockAdjustment) throws Exception
 	{
+		InventoryForm form = (InventoryForm) stockAdjustment.getForm();
 		Assert.notEmpty(stockAdjustment.getForm().getItems(), "Empty item transaction, please recheck !");
 
 		InventoryConfiguration configuration = genericDao.load(InventoryConfiguration.class, Long.valueOf(1));
@@ -150,6 +174,7 @@ public class StockAdjustmentService
 		stockAdjustment.setCode(GeneratorHelper.instance().generate(TableType.STOCK_ADJUSTMENT, codeSequenceDao));
 
 		for (Item item : stockAdjustment.getForm().getItems())
+		{
 			if (SiriusValidator.nz(item.getQuantity()))
 			{
 				StockAdjustmentItem adjustmentItem = new StockAdjustmentItem();
@@ -159,14 +184,26 @@ public class StockAdjustmentService
 				adjustmentItem.setGrid(item.getGrid());
 				adjustmentItem.setQuantity(item.getQuantity());
 
+				if (SiriusValidator.validateParam(item.getSerial()))
+					adjustmentItem.getLot().setSerial(item.getSerial());
+
 				adjustmentItem.getMoney().setExchangeType(ExchangeType.SPOT);
 				adjustmentItem.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
 				adjustmentItem.getMoney().setAmount(item.getPrice());
 
 				stockAdjustment.getItems().add(adjustmentItem);
 			}
+		}
 
 		genericDao.add(stockAdjustment);
+
+		if (form.getBarcodeGroup() != null)
+		{
+			BarcodeGroup barcodeGroup = genericDao.load(BarcodeGroup.class, form.getBarcodeGroup().getId());
+			barcodeGroup.setStatus(BarcodeStatus.AVAILABLE);
+
+			genericDao.update(barcodeGroup);
+		}
 
 		for (StockAdjustmentItem item : stockAdjustment.getItems())
 		{
@@ -218,6 +255,15 @@ public class StockAdjustmentService
 		genericDao.merge(stockAdjustment);
 	}
 
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public Map<String, Object> preedit(Long id) throws ServiceException
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("adjustment_edit", load(id));
+
+		return map;
+	}
+
 	@AuditTrails(className = StockAdjustment.class, actionType = AuditTrailsActionType.UPDATE)
 	public void edit(StockAdjustment stockAdjustment) throws ServiceException
 	{
@@ -225,54 +271,14 @@ public class StockAdjustmentService
 	}
 
 	@Transactional(propagation = Propagation.NOT_SUPPORTED)
-	@InjectParty(keyName = "adjustment_add")
-	public Map<String, Object> barcodePreadd2(Long id)
+	public StockAdjustment load(Long id)
 	{
-		BarcodeGroup barcodeGroup = genericDao.load(BarcodeGroup.class, id);
-		FastMap<String, Object> map = new FastMap<>();
-
-		List<Item> items = new ArrayList<>();
-
-		for (Barcode barcode : barcodeGroup.getBarcodes())
-		{
-			Item item = new Item();
-			BeanUtils.copyProperties(barcode, item);
-
-			ProductInOutTransaction inOut = loadInOut(barcode.getProduct().getId());
-			if (inOut != null)
-			{
-				item.setPrice(inOut.getPrice());
-			}
-			items.add(item);
-		}
-
-		map.put("items", items);
-		map.put("adjustment_add", new InventoryForm());
-		map.put("barcodeGroup", barcodeGroup);
-		return map;
+		return genericDao.load(StockAdjustment.class, id);
 	}
 
-	//	@AuditTrails(className = StockAdjustment.class, actionType = AuditTrailsActionType.DELETE)
-	//	public void delete(StockAdjustment stockAdjustment) throws Exception
-	//	{
-	//		for (StockAdjustmentItem item : stockAdjustment.getItems())
-	//		{
-	//			if (item.getQuantity().compareTo(BigDecimal.ZERO) > 0)
-	//			{
-	//				inventoryUtil.out(InventoryItem.class, item.getControllableBridge());
-	//				balanceUtil.in(DWInventoryItemBalance.class, item.getControllableBridge(), DecimalHelper.negative(item.getQuantity()));
-	//				balanceDetailUtil.in(DWInventoryItemBalanceDetail.class, item.getControllableBridge(), item, stockAdjustment, DecimalHelper.negative(item.getQuantity()), 
-	//						item.getControllableBridge().getUnitPrice(), stockAdjustment.getReason());
-	//			} 
-	//			else
-	//			{
-	//				inventoryUtil.in(InventoryItem.class, item.getControllableBridge());
-	//				balanceUtil.out(DWInventoryItemBalance.class, item.getControllableBridge(), DecimalHelper.negative(item.getQuantity()));
-	//				balanceDetailUtil.out(DWInventoryItemBalanceDetail.class, item.getControllableBridge(), item, stockAdjustment, item.getQuantity(), 
-	//						item.getControllableBridge().getUnitPrice(), stockAdjustment.getReason());
-	//			}
-	//		}
-	//
-	//		genericDao.delete(stockAdjustment);
-	//	}
+	@Transactional(propagation = Propagation.NOT_SUPPORTED)
+	public ProductInOutTransaction loadInOut(Long productId)
+	{
+		return productInOutTransactionDaoImpl.loadByProduct(productId);
+	}
 }

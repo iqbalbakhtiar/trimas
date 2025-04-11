@@ -37,6 +37,16 @@
                 </td>
             </tr>
             <tr>
+                <td nowrap="nowrap" align="right"><spring:message code="barcode"/> :</td>
+                <td>
+                    <form:select id="barcodeGroup" path="barcodeGroup" cssClass="combobox-ext input-disabled">
+                        <c:if test='${not empty barcodeGroup}'>
+                            <form:option value='${barcodeGroup.id}' label='${barcodeGroup.code}' />
+                        </c:if>
+                    </form:select>
+                </td>
+            </tr>
+            <tr>
                 <td nowrap="nowrap" align="right"><spring:message code="sirius.reason"/> :</td>
                 <td><form:textarea path="reason" cols="55" rows="7"/></td>
             </tr>
@@ -53,6 +63,7 @@
                 <th ><spring:message code="product.name"/></th>
                 <th width="12%"><spring:message code="product.category"/></th>
                 <th width="8%"><spring:message code="product.uom"/></th>
+                <th width="8%"><spring:message code="barcode"/></th>
                 <th width="12%"><spring:message code="product.onhand"/></th>
                 <th width="12%"><spring:message code="product.quantity"/></th>
                 <th width="14%"><spring:message code="sirius.price"/></th>
@@ -62,36 +73,25 @@
             <c:forEach items='${items}' var='item' varStatus="status">
                 <tr>
                     <td nowrap="nowrap">
-                        <select class="combobox-min" onchange="changeGrid(${status.index});" id="grid[${status.index}]" name="items[${status.index}].grid" index="${status.index}" next="grid"></select>
+                        <select class="combobox-min2" onchange="changeGrid(${status.index});" id="grid[${status.index}]" name="items[${status.index}].grid" index="${status.index}" next="grid"></select>
                         <a class="item-popup" title="Grid" index="${status.index}" onclick="opengridpopup(${status.index})"></a>
                     </td>
                     <td nowrap="nowrap">
-                        <select class="combobox-min" onchange="checkOnHand(${status.index});" id="container[${status.index}]" name="items[${status.index}].container" index="${status.index}" next="container"></select>
+                        <select class="combobox-min2" onchange="checkOnHand(${status.index});" id="container[${status.index}]" name="items[${status.index}].container" index="${status.index}" next="container"></select>
                         <a class="item-popup" title="Container" index="${status.index}" onclick="opencontainerpopup(${status.index})"></a>
                     </td>
-                    <td nowrap="nowrap">
-                        <input class="input-disabled" disabled size="13" id="codeprod[${status.index}]" index="${status.index}" next="codeprod" value="${item.product.code}">
-                    </td>
+                    <td nowrap="nowrap"><input class="input-disabled" disabled size="13" value="${item.product.code}"></td>
                     <td nowrap="nowrap">
                         <select class="combobox-ext product input-disabled" onchange="checkOnHand(${status.index});" id="product[${status.index}]" name="items[${status.index}].product" index="${status.index}" next="product" readonly="">
                             <option value="${item.product.id}">${item.product.name}</option>
                         </select>
                     </td>
-                    <td nowrap="nowrap">
-                        <input class="input-disabled" disabled size="10" id="category[${status.index}]" index="${status.index}" next="category" value="${item.product.productCategory.name}">
-                    </td>
-                    <td nowrap="nowrap">
-                        <input class="input-disabled" disabled size="5" id="uom[${status.index}]" index="${status.index}" next="uom" value="${item.product.unitOfMeasure.measureId}">
-                    </td>
-                    <td nowrap="nowrap">
-                        <input class="number-disabled" disabled size="12" id="onhand[${status.index}]" index="${status.index}" next="onhand" value="0.00">
-                    </td>
-                    <td nowrap="nowrap">
-                        <input class="input-number negative" onchange="checkQuantity(${status.index});" size="12" id="quantity[${status.index}]" name="items[${status.index}].quantity" index="${status.index}" next="quantity" value="${item.quantity}">
-                    </td>
-                    <td nowrap="nowrap">
-                        <input class="input-number" size="12" id="price[${status.index}]" name="items[${status.index}].price" index="${status.index}" next="price" value="<fmt:formatNumber value='${item.price}' pattern=',##0.00'/>">
-                    </td>
+                    <td nowrap="nowrap"><input class="input-disabled" disabled size="10" value="${item.product.productCategory.name}"></td>
+                    <td nowrap="nowrap"><input class="input-disabled" disabled size="5" value="${item.product.unitOfMeasure.measureId}"></td>
+                    <td nowrap="nowrap"><input class="input-disabled" readonly="true" size="13" name="items[${status.index}].serial" index="${status.index}" next="serial" value="${item.serial}"></td>
+                    <td nowrap="nowrap"><input class="number-disabled" disabled size="12" id="onhand[${status.index}]" index="${status.index}" next="onhand" value="0.00"></td>
+                    <td nowrap="nowrap"><input class="input-number negative" onchange="checkQuantity(${status.index});" size="12" id="quantity[${status.index}]" name="items[${status.index}].quantity" index="${status.index}" next="quantity" value="${item.quantity}"></td>
+                    <td nowrap="nowrap"><input class="input-number" size="12" id="price[${status.index}]" name="items[${status.index}].price" index="${status.index}" next="price" value="<fmt:formatNumber value='${item.price}' pattern=',##0.00'/>"></td>
                 </tr>
             </c:forEach>
             </tbody>
@@ -116,14 +116,14 @@
             }
 
             $.ajax({
-                url:"<c:url value='/page/stockadjustmentbarcodeadd.htm?id=${barcodeGroup.id}'/>",
+                url:"<c:url value='/page/stockadjustmentbarcodeadd.htm'/>",
                 data:$('#addForm').serialize(),
                 type : 'POST',
                 dataType : 'json',
                 beforeSend:function()
                 {
                     $dialog.empty();
-                    $dialog.html('Saving Stock Adjustment data......');
+        			$dialog.html('<spring:message code="notif.saving"/>');
                     $dialog.dialog('open');
                 },
                 success : function(json) {
@@ -137,7 +137,7 @@
                         else
                         {
                             $dialog.empty();
-                            $dialog.html('Proccess fail,reason :<br/>'+json.message);
+        					$dialog.html('<spring:message code="notif.profailed"/> :<br/>'+json.message);
                         }
                     }
                 }
