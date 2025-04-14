@@ -84,7 +84,7 @@
                         <thead>
                         <tr>
                             <th width="1%" nowrap="nowrap"><input class="checkall" type="checkbox"/></th>
-                            <th width="12%" nowrap="nowrap"><spring:message code="product.code"/></th>
+                            <%-- <th width="12%" nowrap="nowrap"><spring:message code="product.code"/></th> --%>
                             <th width="15%" nowrap="nowrap"><spring:message code="product"/></th>
                             <c:if test="${not empty items}">
                             	<th width="5%" nowrap="nowrap"><spring:message code="product.quantity"/></th>
@@ -97,7 +97,7 @@
                         <c:forEach items="${items}" var="item" varStatus="stat">
                         <tr>
                         	<td>&nbsp;</td>
-                        	<td><input value="${item.product.code}" type="text" disabled class="input-disabled" size="30"/></td>
+                        	<%-- <td><input value="${item.product.code}" type="text" disabled class="input-disabled" size="30"/></td> --%>
                         	<td>
                         		<select class="combobox-ext input-disabled" name="items[${stat.index}].product" readonly="true">
                         			<option value="${item.product.id}">${item.product.name}</option>
@@ -115,7 +115,7 @@
                         </c:forEach>
                         </tbody>
                         <tfoot>
-                        <tr class="end-table"><td colspan="6">&nbsp;</td></tr>
+                        <tr class="end-table"><td colspan="5">&nbsp;</td></tr>
                         </tfoot>
                     </table>
                 </div>
@@ -182,7 +182,7 @@
 
             $cbox = List.get('<input type="checkbox" class="check"/>','check'+$index);
 
-            $productCode = List.get('<input type="text" disabled class="input-disabled" size="30"/>','productCode['+$index+']');
+            //$productCode = List.get('<input type="text" disabled class="input-disabled" size="30"/>','productCode['+$index+']');
             $product = List.get('<select class="combobox-ext products"/>','product['+$index+']');
             $img = List.img('<spring:message code="product"/>', $index, 'openproduct("product['+$index+']","'+$index+'")');
             $uom = List.get('<input type="text" disabled class="input-disabled" size="5"/>','uom['+$index+']');
@@ -193,7 +193,7 @@
             });
 
             $tr.append(List.col([$cbox]));
-            $tr.append(List.col([$productCode]));
+            //$tr.append(List.col([$productCode]));
             $tr.append(List.col([$product, $img]));
             $tr.append(List.col([$uom]));
             $tr.append(List.col([$roll]));

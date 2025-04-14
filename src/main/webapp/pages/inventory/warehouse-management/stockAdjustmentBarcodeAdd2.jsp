@@ -50,6 +50,16 @@
                 <td nowrap="nowrap" align="right"><spring:message code="sirius.reason"/> :</td>
                 <td><form:textarea path="reason" cols="55" rows="7"/></td>
             </tr>
+			<tr>
+				<td nowrap="nowrap" align="right"><spring:message code="grid"/> & <spring:message code="container"/> :</td>
+				<td>
+					<select id="grid[-1]" class="combobox allgrid input-disabled" style="display: none;">
+					</select>
+					<select id="container[-1]" class="combobox allcontainer">
+					</select>
+					<a class="item-popup" onclick="opencontainerpopup('-1');" title='<spring:message code="container"/>'/>
+				</td>
+			</tr>
             <tr>
                 <td>&nbsp;</td>
             </tr>
@@ -73,11 +83,10 @@
             <c:forEach items='${items}' var='item' varStatus="status">
                 <tr>
                     <td nowrap="nowrap">
-                        <select class="combobox-min2" onchange="changeGrid(${status.index});" id="grid[${status.index}]" name="items[${status.index}].grid" index="${status.index}" next="grid"></select>
-                        <a class="item-popup" title="Grid" index="${status.index}" onclick="opengridpopup(${status.index})"></a>
+                        <select class="combobox-min2 grids" id="grid[${status.index}]" name="items[${status.index}].grid" index="${status.index}" next="grid"></select>
                     </td>
                     <td nowrap="nowrap">
-                        <select class="combobox-min2" onchange="checkOnHand(${status.index});" id="container[${status.index}]" name="items[${status.index}].container" index="${status.index}" next="container"></select>
+                        <select class="combobox-min2 containers" onchange="checkOnHand(${status.index});" id="container[${status.index}]" name="items[${status.index}].container" index="${status.index}" next="container"></select>
                         <a class="item-popup" title="Container" index="${status.index}" onclick="opencontainerpopup(${status.index})"></a>
                     </td>
                     <td nowrap="nowrap"><input class="input-disabled" disabled size="13" value="${item.product.code}"></td>
@@ -90,7 +99,7 @@
                     <td nowrap="nowrap"><input class="input-disabled" disabled size="5" value="${item.product.unitOfMeasure.measureId}"></td>
                     <td nowrap="nowrap"><input class="input-disabled" readonly="true" size="13" name="items[${status.index}].serial" index="${status.index}" next="serial" value="${item.serial}"></td>
                     <td nowrap="nowrap"><input class="number-disabled" disabled size="12" id="onhand[${status.index}]" index="${status.index}" next="onhand" value="0.00"></td>
-                    <td nowrap="nowrap"><input class="input-number negative" onchange="checkQuantity(${status.index});" size="12" id="quantity[${status.index}]" name="items[${status.index}].quantity" index="${status.index}" next="quantity" value="${item.quantity}"></td>
+                    <td nowrap="nowrap"><input class="input-number negative" onchange="checkQuantity(${status.index});" size="12" id="quantity[${status.index}]" name="items[${status.index}].quantity" index="${status.index}" next="quantity" value="${item.quantityReal}"></td>
                     <td nowrap="nowrap"><input class="input-number" size="12" id="price[${status.index}]" name="items[${status.index}].price" index="${status.index}" next="price" value="<fmt:formatNumber value='${item.price}' pattern=',##0.00'/>"></td>
                 </tr>
             </c:forEach>
@@ -148,6 +157,24 @@
             $('.check').prop("checked", true);
             $('.item-button-delete').click();
         });
+
+        $('.allcontainer').change(function(){
+        	$opt = $(this).find("option");
+            $cont = $(".containers");
+            $cont.empty();
+            
+            $opt.clone().appendTo($cont);
+            
+            $('.allgrid').change();
+        });
+
+        $('.allgrid').change(function(){
+        	$opt = $(this).find("option");
+            $grid = $(".grids");
+            $grid.empty();
+
+            $opt.clone().appendTo($grid);
+        });
     });
 
     function opengridpopup(index)
@@ -165,14 +192,15 @@
 
     function opencontainerpopup(index)
     {
-        var grid = document.getElementById('grid['+index+']');
+        /* var grid = document.getElementById('grid['+index+']');
         if(grid.value == null || grid.value == '')
         {
             alert('<spring:message code="grid"/> <spring:message code="notif.empty"/> !');
             return;
-        }
+        } */
 
-        openpopup("<c:url value='/page/popupcontainerview.htm?target=container['/>"+index+"]&grid="+grid.value);
+        //openpopup("<c:url value='/page/popupcontainerview.htm?target=container['/>"+index+"]&grid="+grid.value);
+        openpopup("<c:url value='/page/popupcontainerview.htm?target=container['/>"+index+"]&index="+index);
     }
 
     function changeGrid(index) {
