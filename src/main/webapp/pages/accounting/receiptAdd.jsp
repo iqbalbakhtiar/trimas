@@ -1,4 +1,3 @@
-<%--This Page Copied From salesOrderAdd.jsp(COCINA) and receiptAdd.jsp (MML)--%>
 <%@ include file="/common/sirius-general-top.jsp"%>
 
 <div class="toolbar">
@@ -74,15 +73,15 @@
                                         </tr>
                                         <tr>
                                             <td width="80%" align="right"><spring:message code="receipt.applied.amount"/></td>
-                                            <td width="20%">:&nbsp;&nbsp;<input id="applied" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
+                                            <td width="20%">:&nbsp;&nbsp;<input id="totalApplied" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
                                         </tr>
                                         <tr>
                                             <td width="80%" align="right"><spring:message code="payment.writeoff"/></td>
-                                            <td width="20%">:&nbsp;&nbsp;<input id="writeOff" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
+                                            <td width="20%">:&nbsp;&nbsp;<input id="totalWriteOff" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
                                         </tr>
                                         <tr>
                                             <td width="80%" align="right"><spring:message code="receipt.total.remaining"/></td>
-                                            <td width="20%">:&nbsp;&nbsp;<input id="unapplied" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
+                                            <td width="20%">:&nbsp;&nbsp;<input id="totalUnapplied" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
                                         </tr>
                                     </table>
                                 </fieldset>
@@ -139,7 +138,7 @@
                             <td><input id='accountNo' disabled class='input-disabled' size="30"/></td>
                         </tr>
                         </table>
-                    </td><%--Panel Receipt Information Bagian Kiri--%>
+                    </td>
 
                     <td width="50%" align="left" valign="top">
                         <table width="100%">
@@ -150,14 +149,14 @@
                         <tr>
                             <td nowrap="nowrap" align="right"><spring:message code="receipt.amount"/> : </td>
                             <td>
-                                <form:input id='amount' path='receiptInformation.amount' value="0.00" cssClass='applied input-number'/>
+                                <form:input id='amount' path='receiptInformation.amount' value="0.00" cssClass='applied input-number' onchange="updateDisplay()"/>
                                 <input type="hidden" id="amountdef" value="0"/>
                             </td>
                         </tr>
                         <tr>
                             <td nowrap="nowrap" align="right"><spring:message code="receipt.charge"/> : </td>
                             <td>
-                                <form:input id='bankCharges' path='receiptInformation.bankCharges' value="0.00"  cssClass='applied input-number'/>
+                                <form:input id='bankCharges' path='receiptInformation.bankCharges' value="0.00" cssClass='applied input-number' onchange="updateDisplay()"/>
                             </td>
                         </tr>
                         <tr>
@@ -165,7 +164,7 @@
                             <td><form:textarea path='receiptInformation.note' cols='40' rows='6'/></td>
                         </tr>
                         </table>
-                    </td><%--Panel Receipt Information Bagian Kanan--%>
+                    </td>
                 </tr>
                 </table>
             </div>
@@ -175,10 +174,6 @@
                     <table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center" width="100%">
                         <thead>
                             <tr>
-<%--                                Uncomment bellow if using checkbox--%>
-<%--                                <th width="1%">--%>
-<%--                                    <div style="width: 30px"><input type="checkbox" id="checkMaster" class="checkall"/></div>--%>
-<%--                                </th>--%>
                                 <th width="10%"><spring:message code="billing"/></th>
                                 <th width="5%"><spring:message code="billing.date"/></th>
                                 <th width="10%"><spring:message code="billing.total"/></th>
@@ -191,8 +186,6 @@
                         </tbody>
                         <tfoot>
                             <tr>
-<%--                                Uncomment bellow if using checkbox--%>
-<%--                                <td>&nbsp;</td>--%>
                                 <td colspan="2"><div style="text-align: right;font-weight: bold;"><spring:message code="sirius.total"/></div></td>
                                 <td><input size="20" id='totalBilling' class="number-disabled" readonly value="0.00"/></td>
                                 <td colspan="2">&nbsp;</td>
@@ -214,27 +207,10 @@
                 save();
             }
         });
-
-        // $('.checkall').click(function () {
-        //     $('.check').prop("checked", this.checked);
-        // });
-
-        // Trigger OnChange Customer Field
+        
         $('#customer').change(function(e)
         {
             getBillings();
-            updateDisplay();
-        });
-
-        // Trigger OnChange "Receipt Amount" field
-        $('.applied').change(function(e)
-        {
-            var amount = document.getElementById('amount');
-            var unapplied = document.getElementById('unapplied');
-            // var rate = $("#trxrate").val().toNumber(); // Unused
-
-            unapplied.value = amount.value.toNumber().numberFormat('#,##0.00');
-
             updateDisplay();
         });
 
@@ -279,6 +255,25 @@
         $("#bankBranch").val("");
         $("#accountNo").val("");
         $("#bankCharges").val("0.00");
+    }
+
+    function openCustomer() {
+        if (!$('#org').val()) {
+            alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
+            return;
+        }
+
+        const orgId = $('#org').val();
+        const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
+        const params = {
+            target: 'customer', // Id Dropdown (Select) element
+            organization: orgId, // Org (PartyTo)
+            fromRoleType: 4, // Customer
+            toRoleType: 5, // Supplier
+            relationshipType: 3, // Customer Relationship
+        };
+
+        openpopup(buildUrl(baseUrl, params));
     }
 
     function openBankAccount() {
@@ -326,12 +321,12 @@
             return false;
         }
 
-        if($('#unapplied').val().toNumber() != 0) {
+        if($('#totalUnapplied').val().toNumber() != 0) {
             alert('<spring:message code="receipt.applied.amount"/> <spring:message code="notif.invalid"/> !!!');
             return false;
         }
 
-        if($('#applied').val().toNumber() <= 0)
+        if($('#totalApplied').val().toNumber() <= 0)
         {
             alert('<spring:message code="receipt.applied.amount"/> <spring:message code="notif.empty"/> !!!');
             return false;
@@ -359,9 +354,7 @@
                     if(json.status === 'OK')
                     {
                         $dialog.dialog('close');
-                        window.location="<c:url value='/page/receiptview.htm'/>";
-                        // Or Can use This
-                        <%--window.location="<c:url value='/page/receiptpreedit.htm?id='/>"+json.data.id;--%>
+                        window.location="<c:url value='/page/receiptpreedit.htm?id='/>"+json.id;
                     }
                     else
                     {
@@ -374,98 +367,63 @@
     }
 
     function updateDisplay() {
-        // Unused
-        // var _rate = document.getElementById('trxrate').value.replace(/,/g,'').toNumber();
-
         var tbl = document.getElementById("lineItemTable");
         if(tbl)
         {
             var amount = document.getElementById('amount');
             var billing = 0.00;
-            var unapplied = document.getElementById('unapplied');
-            var applied = document.getElementById('applied');
-            var writeOff = document.getElementById('writeOff');
+        	var totalUnapplied = document.getElementById('totalUnapplied');
+        	var totalApplied = document.getElementById('totalApplied');
+        	var totalWriteOff = document.getElementById('totalWriteOff');
 
             document.getElementById('totalAmount').value = parseFloat(amount.value.toNumber()-$('#bankCharges').val().toNumber()).numberFormat('#,##0.00');
 
-            unapplied.value = parseFloat(amount.value.toNumber()-$('#bankCharges').val().toNumber()).numberFormat('#,##0.00');
-            applied.value = 0.0.numberFormat('#,##0.00');
-            writeOff.value = 0.0.numberFormat('#,##0.00');
+            var $unapplied = parseFloat($('#amount').val().toNumber());
+    		var $applied = 0.0;
+    		var $writeoff = 0.0;
 
-            $('.paid').each(function () {
-                idx = $(this).attr('index');
+            $('.payables').each(function () {
+                let $idx = $(this).attr('index');
+                let $value = $(this).text();
 
-                $unpaid = parseFloat($('#unpaid\\['+idx+'\\]').val().toNumber());
-                $paid = parseFloat($('#price\\['+idx+'\\]').val().toNumber());
-                $writeOff = parseFloat($('#writeOff\\['+idx+'\\]').val().toNumber());
+                let _unpaid = $('#unpaid\\['+$idx+'\\]');
+                let _writeoff = $('#writeOff\\['+$idx+'\\]');
+                let _paid = $('#price\\['+$idx+'\\]');
+                
+    			if(parseFloat(_writeoff.val().toNumber() + _unpaid.val().toNumber()) < 0)
+    			{
+    				alert("<spring:message code='payment.writeoff'/> ["+$value+"] <spring:message code='notif.greater'/> "+ _unpaid.val());
+    				_writeoff.value = "0";
+    			}
+    			
+    			if(_paid.val().toNumber() > _unpaid.val().toNumber()) {
+    				_writeoff.val(_paid.val().toNumber() - _unpaid.val().toNumber());
+    				_writeoff.readOnly = true;
+    			}
+    			else
+    				_writeoff.readOnly = false;
 
-                if($paid > $unpaid) {
-                    $paid = $unpaid;
-                    $('#price\\['+idx+'\\]').val($paid.numberFormat('#,##0'));
-                }
+    			if(_writeoff.val().toNumber() < 0 && (_writeoff.val().toNumber() + _unpaid.val().toNumber() < _paid.val().toNumber()))
+    			{	
+    				alert("<spring:message code='payment.paid.amount'/> + <spring:message code='payment.writeoff'/> ["+$value+"] <spring:message code='notif.greater'/> "+_unpaid.val());
+    				_paid.val(_writeoff.val().toNumber() + _unpaid.val().toNumber());
+    			}
+    			
+                $unapplied -= _paid.val().toNumber();
+    			$writeoff += _writeoff.val().toNumber();
+    			$applied += _paid.val().toNumber();
 
-                billing = billing + $unpaid;
-
-                unapplied.value = parseFloat(unapplied.value.toNumber()-$paid-$writeOff).numberFormat('#,##0.00');
-                writeOff.value = parseFloat(writeOff.value.toNumber()+$writeOff).numberFormat('#,##0.00');
-                applied.value = parseFloat(applied.value.toNumber()+$paid).numberFormat('#,##0.00');
+                billing = billing + _unpaid.val().toNumber();
             });
 
             document.getElementById('billing').value = parseFloat(billing).numberFormat('#,##0.00');
             document.getElementById('totalBilling').value = parseFloat(billing).numberFormat('#,##0.00');
-            document.getElementById('totalPaid').value = parseFloat(applied.value.toNumber()).numberFormat('#,##0.00');
+            document.getElementById('totalPaid').value = parseFloat($applied).numberFormat('#,##0.00');
+            
+            totalUnapplied.value = $unapplied.numberFormat('#,##0.00');
+    		totalApplied.value =  $applied.numberFormat('#,##0.00');
+    		totalWriteOff.value =  $writeoff.numberFormat('#,##0.00');
         }
-    }
-
-    let index = 0; // For Line Item ID (Index)
-    function addLineItem()
-    {
-        $tbody = $('#lineItemBody');
-        $tr = $('<tr/>');
-
-        // Uncomment bellow if using checkbox
-        // $cbox = List.get('<input type="checkbox" class="check"/>','check'+index);
-
-        $invoice = List.get('<select class="input-disabled combobox payables"/>', 'reference['+index+']');
-        $invoice.change(function() {
-            updateDisplay();
-        });
-
-        $date = List.get('<input size="8" class="input-disabled" disabled/>', 'date['+index+']');
-        $unpaid = List.get('<input size="20" class="number-disabled" disabled/>', 'unpaid['+index+']', '0.00');
-        $paid = List.get('<input size="20" class="input-number paid"/>', 'price['+index+']', '0.00');
-
-        $writeoffType = List.get('<select/>', 'writeOffType['+index+']');
-        $option = List.get('<option>ADJUSTMENT</option>', '', 'ADJUSTMENT');
-        $option.appendTo($writeoffType);
-        $option = List.get('<option>BANKCHARGE</option>', '', 'BANKCHARGE');
-        $option.appendTo($writeoffType);
-        $option = List.get('<option>UNDERTABLE</option>', '', 'UNDERTABLE');
-        $option.appendTo($writeoffType);
-
-        $writeOff = List.get('<input size="10" class="input-number negative"/>', 'writeOff['+index+']', '0.00');
-
-        $paid.change(function() {
-            updateDisplay();
-        });
-
-        $writeOff.change(function() {
-            updateDisplay();
-        });
-
-        // Uncomment bellow if using checkbox
-        // $tr.append(List.col([$cbox]));
-        $tr.append(List.col([$invoice]));
-        $tr.append(List.col([$date]));
-        $tr.append(List.col([$unpaid]));
-        $tr.append(List.col([$writeoffType]));
-        $tr.append(List.col([$writeOff]));
-        $tr.append(List.col([$paid]));
-
-        $tbody.append($tr);
-        index++;
-
-        $(".input-number").bind(inputFormat);
     }
 
     function clearLineItem() {
@@ -507,22 +465,50 @@
         });
     }
 
-    function openCustomer() {
-        if (!$('#org').val()) {
-            alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
-            return;
-        }
+    let index = 0; // For Line Item ID (Index)
+    function addLineItem()
+    {
+        $tbody = $('#lineItemBody');
+        $tr = $('<tr/>');
 
-        const orgId = $('#org').val();
-        const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
-        const params = {
-            target: 'customer', // Id Dropdown (Select) element
-            organization: orgId, // Org (PartyTo)
-            fromRoleType: 4, // Customer
-            toRoleType: 5, // Supplier
-            relationshipType: 3, // Customer Relationship
-        };
+        $invoice = List.get('<select class="input-disabled combobox payables"/>', 'reference['+index+']');
+        $invoice.change(function() {
+            updateDisplay();
+        });
 
-        openpopup(buildUrl(baseUrl, params));
+        $date = List.get('<input size="8" class="input-disabled" disabled/>', 'date['+index+']');
+        $unpaid = List.get('<input size="20" class="number-disabled" disabled/>', 'unpaid['+index+']', '0.00');
+        
+        $paid = List.get('<input size="20" class="input-number paid"/>', 'price['+index+']', '0.00');
+        $paid.change(function() {
+            updateDisplay();
+        });
+
+        $writeoffType = List.get('<select/>', 'writeOffType['+index+']');
+        $option = List.get('<option>ADJUSTMENT</option>', '', 'ADJUSTMENT');
+        $option.appendTo($writeoffType);
+        $option = List.get('<option>BANKCHARGE</option>', '', 'BANKCHARGE');
+        $option.appendTo($writeoffType);
+        $option = List.get('<option>UNDERTABLE</option>', '', 'UNDERTABLE');
+        $option.appendTo($writeoffType);
+
+        $writeOff = List.get('<input size="10" class="input-number negative"/>', 'writeOff['+index+']', '0.00');
+        $writeOff.change(function() {
+            updateDisplay();
+        });
+
+        // Uncomment bellow if using checkbox
+        // $tr.append(List.col([$cbox]));
+        $tr.append(List.col([$invoice]));
+        $tr.append(List.col([$date]));
+        $tr.append(List.col([$unpaid]));
+        $tr.append(List.col([$writeoffType]));
+        $tr.append(List.col([$writeOff]));
+        $tr.append(List.col([$paid]));
+
+        $tbody.append($tr);
+        index++;
+
+        $(".input-number").bind(inputFormat);
     }
 </script>

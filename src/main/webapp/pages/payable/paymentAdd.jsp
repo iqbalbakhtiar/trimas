@@ -1,8 +1,7 @@
-<%--This Page Copied From receipt.add--%>
 <%@ include file="/common/sirius-general-top.jsp"%>
 
 <div class="toolbar">
-    <a class="item-button-list" href="<c:url value='/page/receiptview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
+    <a class="item-button-list" href="<c:url value='/page/paymentview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
     <a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
 </div>
 
@@ -277,9 +276,7 @@
                     if(json.status === 'OK')
                     {
                         $dialog.dialog('close');
-                        window.location="<c:url value='/page/paymentview.htm'/>";
-                        // Or Can use This
-                        <%--window.location="<c:url value='/page/receiptpreedit.htm?id='/>"+json.data.id;--%>
+                        window.location="<c:url value='/page/paymentpreedit.htm?id='/>"+json.id;
                     }
                     else
                     {
@@ -461,9 +458,9 @@
          $tr.append(List.col([$writeofftype]));
          $tr.append(List.col([$writeoff]));
          $tr.append(List.col([$paid]));
-         index++;
          
          $tbody.append($tr);
+         index++;
 
          $(".input-number").bind(inputFormat);
     }

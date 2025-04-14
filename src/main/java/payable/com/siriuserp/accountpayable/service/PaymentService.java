@@ -36,6 +36,7 @@ import com.siriuserp.sdk.utility.DateHelper;
 import com.siriuserp.sdk.utility.EnglishNumber;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
+import com.siriuserp.sdk.utility.SiriusValidator;
 
 import javolution.util.FastMap;
 
@@ -93,11 +94,9 @@ public class PaymentService
 
 		Facility facility = null;
 
-		//		FastList<PostingType> types = new FastList<PostingType>();
-		//		types.add(PostingType.NONE);
-
 		for (Item item : payment.getForm().getItems())
-			if (item.getInvoiceVerification() != null)
+		{
+			if (item.getInvoiceVerification() != null && (SiriusValidator.gz(item.getPaidAmount()) || SiriusValidator.nz(item.getWriteOff())))
 			{
 				PaymentApplication application = new PaymentApplication();
 				application.setPayable(item.getInvoiceVerification());
@@ -153,6 +152,7 @@ public class PaymentService
 				//				if (application.getPayable().getExchange().getRate().compareTo(payment.getExchange().getRate()) != 0)
 				//					types.add(PostingType.GAIN_LOSS);
 			}
+		}
 
 		//		for (PostingType type : types)
 		//		{

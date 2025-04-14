@@ -32,45 +32,45 @@ import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.ResponseStatus;
 import com.siriuserp.sdk.utility.FormHelper;
 
-import javolution.util.FastMap;
-
 @Controller
 @SessionAttributes(value = "receipt_form", types = AccountingForm.class)
 @DefaultRedirect(url = "receiptview.htm")
-public class ReceiptController extends ControllerBase {
+public class ReceiptController extends ControllerBase
+{
+	@Autowired
+	private ReceiptService service;
 
-    @Autowired
-    private ReceiptService service;
+	@InitBinder
+	public void initBinder(WebDataBinder binder, WebRequest request)
+	{
+		initBinderFactory.initBinder(binder, Party.class, Date.class, Facility.class, Currency.class, BankAccount.class);
+	}
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder, WebRequest request)
-    {
-        initBinderFactory.initBinder(binder, Party.class, Date.class, Facility.class, Currency.class, BankAccount.class);
-    }
-
-    @RequestMapping("/receiptview.htm")
+	@RequestMapping("/receiptview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
 		return new ModelAndView("/accounting/receiptList", service.view(criteriaFactory.create(request, ReceiptFilterCriteria.class), ReceiptViewQuery.class));
 	}
 
-    @RequestMapping("/receiptpreadd.htm")
+	@RequestMapping("/receiptpreadd.htm")
 	public ModelAndView preadd(HttpServletRequest request) throws Exception
 	{
 		return new ModelAndView("/accounting/receiptAdd", service.preadd());
 	}
 
-    @RequestMapping("/receiptadd.htm")
+	@RequestMapping("/receiptadd.htm")
 	public ModelAndView add(@ModelAttribute("receipt_form") AccountingForm accountingForm, BindingResult result, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
-		try {
-			FastMap<String, Object> map = service.add(FormHelper.create(Receipt.class, accountingForm));
+		try
+		{
+			service.add(FormHelper.create(Receipt.class, accountingForm));
 			status.setComplete();
 
-			response.store("data", map);
-		} catch (Exception e) {
+			response.store("id", accountingForm.getReceipt().getId());
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 			response.statusError();
 			response.setMessage(e.getLocalizedMessage());
