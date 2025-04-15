@@ -97,7 +97,7 @@ public class DeliveryOrderService extends Service
 				form.setOrganization(referenceItem.getOrganization());
 				form.setCustomer(referenceItem.getCustomer());
 				form.setShippingAddress(referenceItem.getShippingAddress());
-				form.setFacility(profileService.loadProfile().getFacility());
+				form.setFacility(referenceItem.getFacility());
 			} else
 				form.getItems().remove(item);
 		}
