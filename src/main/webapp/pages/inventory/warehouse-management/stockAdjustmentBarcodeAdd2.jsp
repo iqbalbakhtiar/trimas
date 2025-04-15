@@ -192,6 +192,13 @@
 
     function opencontainerpopup(index)
     {
+    	var facility = document.getElementById('facility')
+    	if(facility.value == null || facility.value == '')
+        {
+            alert('<spring:message code="facility"/> <spring:message code="notif.empty"/> !');
+            return;
+        }
+    	
         /* var grid = document.getElementById('grid['+index+']');
         if(grid.value == null || grid.value == '')
         {
@@ -200,7 +207,7 @@
         } */
 
         //openpopup("<c:url value='/page/popupcontainerview.htm?target=container['/>"+index+"]&grid="+grid.value);
-        openpopup("<c:url value='/page/popupcontainerview.htm?target=container['/>"+index+"]&index="+index);
+        openpopup("<c:url value='/page/popupcontainerview.htm?target=container['/>"+index+"]&index="+index+"&facility="+facility.value);
     }
 
     function changeGrid(index) {
