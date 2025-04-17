@@ -452,13 +452,13 @@ function addLine($index) {
 	$product = List.get('<select class="combobox-ext productInput" onchange="checkDuplicate(this);updateDisplay();"/>','product['+$index+']');
 	$productImg = List.img('<spring:message code="product"/>', $index, 'openProduct("'+$index+'")');
 	
-	$qty = List.get('<input type="text" class="input-number" size="6" onchange="updateDisplay();"/>','quantity['+$index+']', '0.00');
+	$qty = List.get('<input type="text" class="input-decimal" size="6" onchange="updateDisplay();"/>','quantity['+$index+']', '0.00');
 	
 	$uom = List.get('<input type="text" class="input-disabled" disabled size="6" />','uom['+$index+']');
 	
-	$price = List.get('<input type="text" class="input-number" size="12" onchange="updateDisplay()"/>','amount['+$index+']', '0.00');
+	$price = List.get('<input type="text" class="input-decimal" size="12" onchange="updateDisplay()"/>','amount['+$index+']', '0.00');
 
-	$totalAmount = List.get('<input type="text" class="input-number input-disabled" disabled size="12"/>','totalAmount['+$index+']', '0.00');
+	$totalAmount = List.get('<input type="text" class="input-decimal input-disabled" disabled size="12"/>','totalAmount['+$index+']', '0.00');
 	
 	$packNote = List.get('<input type="text" size="30"/>','note['+$index+']');
 	
@@ -472,7 +472,7 @@ function addLine($index) {
 	
 	$tbody.append($tr);
 	
-	$(".input-number").bind(inputFormat);
+	$(".input-decimal").bind(inputFormat);
 }
 
 function openProduct(index) {

@@ -37,7 +37,6 @@ import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
 import com.siriuserp.sdk.utility.SiriusValidator;
-import com.siriuserp.tools.service.ProfileService;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -60,9 +59,6 @@ public class DeliveryOrderService extends Service
 
 	@Autowired
 	private InventoryItemDao inventoryItemDao;
-
-	@Autowired
-	private ProfileService profileService;
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends AbstractGridViewQuery> queryclass) throws Exception

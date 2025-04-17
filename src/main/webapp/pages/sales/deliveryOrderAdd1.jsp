@@ -87,7 +87,7 @@
 								<td width="3%">&nbsp;</td>
 								<td width="20%"><c:out value='${item.product.name}'/></td> 
 								<td align="right">
-									<fmt:formatNumber value='${item.quantity}' pattern=',##0'/>
+									<fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/>
 									<c:out value='${item.product.unitOfMeasure.measureId}'/>
 								</td>
 								<td colspan="6">
