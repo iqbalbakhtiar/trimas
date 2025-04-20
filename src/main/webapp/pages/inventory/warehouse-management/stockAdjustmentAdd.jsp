@@ -90,7 +90,7 @@
 				beforeSend:function()
 				{
 					$dialog.empty();
-					$dialog.html('Saving Stock Adjustment data......');
+        			$dialog.html('<spring:message code="notif.saving"/>');
 					$dialog.dialog('open');
 				},
 				success : function(json) {
@@ -104,7 +104,7 @@
 						else
 						{
 							$dialog.empty();
-							$dialog.html('Proccess fail,reason :<br/>'+json.message);
+        					$dialog.html('<spring:message code="notif.profailed"/> :<br/>'+json.message);
 						}
 					}
 				}
@@ -235,7 +235,7 @@
 			return;
 		}
 		
-		openpopup("<c:url value='/page/popupproductforadjustmentview.htm?target=product['/>"+index+"]&index="+index+"&container="+con.value+"&organization="+org.value);
+		openpopup("<c:url value='/page/popupproductforadjustmentview.htm?target=product['/>"+index+"]&serial=false&index="+index+"&container="+con.value+"&organization="+org.value);
 	}
 	
 	function changeGrid(index) {

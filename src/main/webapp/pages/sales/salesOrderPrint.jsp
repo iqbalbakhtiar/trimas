@@ -39,7 +39,7 @@
 						<td width="15%" valign="top">Pelanggan</td>
 						<td width="1%" valign="top">:</td>
 						<td width="84%">
-							<c:out value='${salesOrder_form.customer.salutation} ${salesOrder_form.customer.fullName}'/><br/>
+							<c:out value='${salesOrder_form.customer.fullName} ${salesOrder_form.customer.salutation}'/><br/>
 							<c:out value="${salesOrder_form.shippingAddress.addressName}"/><br/>
 							<c:out value="${salesOrder_form.shippingAddress.address}"/><br/>
 							<c:out value="${salesOrder_form.shippingAddress.city.name}"/> - <c:out value="${salesOrder_form.shippingAddress.postalCode}"/><br/>
@@ -60,12 +60,6 @@
 						<td>Tanggal Order</td>
 						<td>:</td>
 						<td><fmt:formatDate value='${salesOrder_form.date}' pattern='dd - MM - yyyy'/></td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>PO Pelanggan No</td>
-						<td>:</td>
-						<td><c:out value='${salesOrder_form.poCode}'/></td>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>

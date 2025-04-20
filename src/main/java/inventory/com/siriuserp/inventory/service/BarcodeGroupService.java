@@ -179,7 +179,12 @@ public class BarcodeGroupService
 				barcode.setCode(code);
 				barcode.setProduct(item.getProduct());
 				barcode.setQuantity(item.getQuantity());
-				barcode.setQuantityReal(item.getQuantityReal());
+
+				if (SiriusValidator.gz(item.getQuantityReal()))
+					barcode.setQuantityReal(item.getQuantityReal());
+				else
+					barcode.setQuantityReal(barcode.getQuantity());
+
 				barcode.setBarcodeGroup(barcodeGroup);
 				item.setSerial(barcode.getCode());
 

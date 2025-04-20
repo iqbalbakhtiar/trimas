@@ -81,13 +81,15 @@
 	                        <tr style="font-weight: bold;">
 	                        	<td width="30%;">&nbsp;</td>
 	                        	<td width="10%;"><spring:message code="sirius.total"/></td>
-	                        	<td width="60%;"><spring:message code="sirius.total.real"/></td>
+	                        	<c:if test="${barcode_form.barcodeGroupType ne 'STOCK_ADJUSTMENT'}">
+	                        		<td width="60%;"><spring:message code="sirius.total.real"/></td>
+	                        	</c:if>
 	                        </tr>
                             <c:forEach items="${itemReferences}" var="item" varStatus="status">
                             <tr>
                                 <td align="right" nowrap="nowrap"><div id="productRef${item.reference}">${item.product.name}</div></td>
                                 <td>: <input id="gTotalRef${item.reference}" value="<fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/>" class="number-disabled references" disabled size="15" reference="${item.reference}"/></td>
-                                <td><input id="gTotalReal${item.reference}" value="0.00" class="number-disabled" disabled size="15" reference="${item.reference}"/></td>
+                                <td style="${barcode_form.barcodeGroupType eq 'STOCK_ADJUSTMENT' ? 'display:none;':''}"><input id="gTotalReal${item.reference}" value="0.00" class="number-disabled" disabled size="15" reference="${item.reference}"/></td>
                             </tr>
                             </c:forEach>
                         </table>
@@ -107,7 +109,7 @@
                             <th width="4%" nowrap="nowrap"><spring:message code="product.uom"/></th>
                             <th width="10%" nowrap="nowrap"><spring:message code="barcode"/></th>
                             <th width="5%" nowrap="nowrap"><spring:message code="barcode.quantity.base"/></th>
-                            <th width="55%" nowrap="nowrap"><spring:message code="barcode.quantity.real"/></th>
+                           	<th width="55%" nowrap="nowrap"><c:if test="${barcode_form.barcodeGroupType ne 'STOCK_ADJUSTMENT'}"><spring:message code="barcode.quantity.real"/></c:if></th>
                         </tr>
                         </thead>
                         <tbody id="lineItem">
@@ -126,7 +128,7 @@
                             <td><input id="code[${status.index}]" value="" name="items[${status.index}].code" index="${status.index}" class="inputbox barcodes" size="15" next="barcode"/></td>
                             <td><input id="quantity[${status.index}]" value="0.00" name="items[${status.index}].quantity" index="${status.index}" class="input-decimal quantities ref${barcode.referenceId}" size="10" onchange="countQuantities(${status.index})" next="quan" group="${barcode.referenceId}"/></td>
                             <td>
-                            	<input id="quantityReal[${status.index}]" value="0.00" name="items[${status.index}].quantityReal" index="${status.index}" class="input-decimal realQuantities refReal${barcode.referenceId}" size="10" onchange="countRealQuantities(${status.index})" next="realQuan" group="${barcode.referenceId}"/>
+                            	<input style="${barcode_form.barcodeGroupType eq 'STOCK_ADJUSTMENT' ? 'display:none;':''}" id="quantityReal[${status.index}]" value="0.00" name="items[${status.index}].quantityReal" index="${status.index}" class="input-decimal realQuantities refReal${barcode.referenceId}" size="10" onchange="countRealQuantities(${status.index})" next="realQuan" group="${barcode.referenceId}"/>
                             	<c:if test="${not empty barcode.referenceId}">
                             		<input style="display: none;" value="${barcode.referenceId}" name="items[${status.index}].reference" index="${status.index}" readonly="true"/>
                             	</c:if>
@@ -171,17 +173,21 @@
             }
         });
 
-        $.each($(".realQuantities"), function(i, obj)
-        {
-            var idx = obj.getAttribute('index');
-            var quantity = parseFloat($("#quantityReal\\["+idx+"\\]").val().toNumber());
-
-            if(quantity == '' || quantity == '0')
-            {
-                alert('<spring:message code="barcode.quantity.real"/> <spring:message code="notif.empty"/> !!!');
-                return $status = false;
-            }
-        });
+        var barType = '${barcode_form.barcodeGroupType}';
+        if(barType != 'STOCK_ADJUSTMENT') {
+	        $.each($(".realQuantities"), function(i, obj)
+	        {
+	        	alert(barType);
+	            var idx = obj.getAttribute('index');
+	            var quantity = parseFloat($("#quantityReal\\["+idx+"\\]").val().toNumber());
+	
+	            if(quantity == '' || quantity == '0')
+	            {
+	                alert('<spring:message code="barcode.quantity.real"/> <spring:message code="notif.empty"/> !!!');
+	                return $status = false;
+	            }
+	        });
+        }
         
         /* $.each($(".totals"), function(i, obj)
         {

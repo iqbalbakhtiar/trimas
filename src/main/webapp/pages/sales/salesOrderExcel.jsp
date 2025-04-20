@@ -1,6 +1,6 @@
 <table border="0" width="100%" cellpadding="0" cellspacing="0" id="size" style="display: none">
   <tr>
-    <td colspan="2"><strong><c:out value='${salesOrder_form.organization.salutation} ${salesOrder_form.organization.fullName}'/></strong></td>
+    <td colspan="2"><strong><c:out value='${salesOrder_form.organization.fullName} ${salesOrder_form.organization.salutation}'/></strong></td>
     <td></td>
     <td></td>
     <td></td>
@@ -31,15 +31,6 @@
     <td></td>
     <td colspan="2">Tanggal Order</td>
     <td colspan="2">:&nbsp;<fmt:formatDate value='${salesOrder_form.date}' pattern='dd - MM - yyyy'/></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td colspan="2"><c:out value="${salesOrder_form.shippingAddress.address}"/></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td colspan="2">PO Pelanggan No</td>
-    <td colspan="2">:&nbsp;<c:out value='${salesOrder_form.poCode}'/></td>
   </tr>
   <tr>
     <td></td>

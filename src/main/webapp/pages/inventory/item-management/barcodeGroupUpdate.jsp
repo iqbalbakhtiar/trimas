@@ -73,7 +73,7 @@
                     <table width="100%" style="border:none">
                         <tr>
                             <td align="right"><spring:message code="barcode.quantity"/> : </td>
-                            <td><input id="totalRoll" value="<fmt:formatNumber value='${barcode_edit.barcodes.size()}' pattern=',##0'/>" class="number-disabled" disabled size="10"/></td>
+                            <td><input id="totalRoll" value="<fmt:formatNumber value='${barcode_edit.barcodes.size()}' pattern=',##0'/>" class="number-disabled" disabled size="5"/></td>
                         </tr>
                         <tr style="font-weight: bold;">
                         	<td width="30%;">&nbsp;</td>
@@ -89,8 +89,8 @@
                             </c:forEach>
                             <tr>
 	                            <td align="right">${prod.key.name} : </td>
-	                            <td><input id="totalQuantity" value="<fmt:formatNumber value='${totalQuantity}' pattern=',##0'/> ${prod.key.unitOfMeasure.measureId}" class="number-disabled" disabled size="10"/></td>
-	                            <td><input id="totalQuantityReal" value="<fmt:formatNumber value='${totalQuantityReal}' pattern=',##0'/> ${prod.key.unitOfMeasure.measureId}" class="number-disabled" disabled size="10"/></td>
+	                            <td><input id="totalQuantity" value="<fmt:formatNumber value='${totalQuantity}' pattern=',##0.00'/> ${prod.key.unitOfMeasure.measureId}" class="number-disabled" disabled size="15"/></td>
+	                            <td><input id="totalQuantityReal" value="<fmt:formatNumber value='${totalQuantityReal}' pattern=',##0.00'/> ${prod.key.unitOfMeasure.measureId}" class="number-disabled" disabled size="15"/></td>
 	                        </tr>
                         </c:forEach>
                     </table>

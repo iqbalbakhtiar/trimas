@@ -312,11 +312,11 @@
     			if(parseFloat(_writeoff.val().toNumber() + _unpaid.val().toNumber()) < 0)
     			{
     				alert("<spring:message code='payment.writeoff'/> ["+$value+"] <spring:message code='notif.greater'/> "+ _unpaid.val());
-    				_writeoff.value = "0";
+    				_writeoff.value = "0.00";
     			}
     			
     			if(_paid.val().toNumber() > _unpaid.val().toNumber()) {
-    				_writeoff.val(_paid.val().toNumber() - _unpaid.val().toNumber());
+    				_writeoff.val((_paid.val().toNumber() - _unpaid.val().toNumber()).numberFormat('#,##0.00'));
     				_writeoff.readOnly = true;
     			}
     			else
@@ -325,7 +325,7 @@
     			if(_writeoff.val().toNumber() < 0 && (_writeoff.val().toNumber() + _unpaid.val().toNumber() < _paid.val().toNumber()))
     			{	
     				alert("<spring:message code='payment.paid.amount'/> + <spring:message code='payment.writeoff'/> ["+$value+"] <spring:message code='notif.greater'/> "+_unpaid.val());
-    				_paid.val(_writeoff.val().toNumber() + _unpaid.val().toNumber());
+    				_paid.val((_writeoff.val().toNumber() + _unpaid.val().toNumber()).numberFormat('#,##0.00'));
     			}
     			
                 $unapplied -= _paid.val().toNumber();
@@ -444,14 +444,14 @@
          $invoice = List.get('<select class="combobox-ext payables" onchange="checkDuplicate(this);updateDisplay();"/>','invoiceVerification['+index+']');
          $invoiceImg = List.img('<spring:message code="invoiceverification"/>', index, 'openInvoice("'+index+'")');
 
-         $unpaid = List.get('<input type="text" class="input-number input-disabled" disabled size="20"/>','unpaid['+index+']', '0.00');
+         $unpaid = List.get('<input type="text" class="input-decimal input-disabled" disabled size="20"/>','unpaid['+index+']', '0.00');
 
          $writeofftype = List.get('<select class="comboboxt-ext"/>', 'writeOffType['+index+']');
          $('#wtype').find('option').clone().appendTo($writeofftype);
 
-         $writeoff = List.get('<input type="text" class="input-number" size="20" onchange="updateDisplay()"/>','writeOff['+index+']', '0.00');
+         $writeoff = List.get('<input type="text" class="input-decimal" size="20" onchange="updateDisplay()"/>','writeOff['+index+']', '0.00');
 
-         $paid = List.get('<input type="text" class="input-number paid" size="20" onchange="updateDisplay()"/>','paidAmount['+index+']', '0.00');
+         $paid = List.get('<input type="text" class="input-decimal paid" size="20" onchange="updateDisplay()"/>','paidAmount['+index+']', '0.00');
 
          $tr.append(List.col([$invoice, $invoiceImg]));
          $tr.append(List.col([$unpaid]));

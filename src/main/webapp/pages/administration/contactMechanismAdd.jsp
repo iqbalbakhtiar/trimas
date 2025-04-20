@@ -89,10 +89,10 @@ function validateForm() {
 		return false;
 	}
 
-	if (department == null || department.trim() === "") {
+	/* if (department == null || department.trim() === "") {
 		alert('<spring:message code="contactmechanism.department"/> <spring:message code="notif.empty"/> !');
 		return false;
-	}
+	} */
 
 	if (contactMechanismType == null || contactMechanismType === "") {
 		alert('<spring:message code="contactmechanism.type"/> <spring:message code="notif.empty"/> !');

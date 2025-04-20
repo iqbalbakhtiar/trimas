@@ -393,11 +393,11 @@
     			if(parseFloat(_writeoff.val().toNumber() + _unpaid.val().toNumber()) < 0)
     			{
     				alert("<spring:message code='payment.writeoff'/> ["+$value+"] <spring:message code='notif.greater'/> "+ _unpaid.val());
-    				_writeoff.value = "0";
+    				_writeoff.value = "0.00";
     			}
     			
     			if(_paid.val().toNumber() > _unpaid.val().toNumber()) {
-    				_writeoff.val(_paid.val().toNumber() - _unpaid.val().toNumber());
+    				_writeoff.val((_paid.val().toNumber() - _unpaid.val().toNumber()).numberFormat('#,##0.00'));
     				_writeoff.readOnly = true;
     			}
     			else
@@ -406,7 +406,7 @@
     			if(_writeoff.val().toNumber() < 0 && (_writeoff.val().toNumber() + _unpaid.val().toNumber() < _paid.val().toNumber()))
     			{	
     				alert("<spring:message code='payment.paid.amount'/> + <spring:message code='payment.writeoff'/> ["+$value+"] <spring:message code='notif.greater'/> "+_unpaid.val());
-    				_paid.val(_writeoff.val().toNumber() + _unpaid.val().toNumber());
+    				_paid.val((_writeoff.val().toNumber() + _unpaid.val().toNumber()).numberFormat('#,##0.00'));
     			}
     			
                 $unapplied -= _paid.val().toNumber();
@@ -479,7 +479,7 @@
         $date = List.get('<input size="8" class="input-disabled" disabled/>', 'date['+index+']');
         $unpaid = List.get('<input size="20" class="number-disabled" disabled/>', 'unpaid['+index+']', '0.00');
         
-        $paid = List.get('<input size="20" class="input-number paid"/>', 'price['+index+']', '0.00');
+        $paid = List.get('<input size="20" class="input-decimal paid"/>', 'price['+index+']', '0.00');
         $paid.change(function() {
             updateDisplay();
         });
@@ -492,7 +492,7 @@
         $option = List.get('<option>UNDERTABLE</option>', '', 'UNDERTABLE');
         $option.appendTo($writeoffType);
 
-        $writeOff = List.get('<input size="10" class="input-number negative"/>', 'writeOff['+index+']', '0.00');
+        $writeOff = List.get('<input size="10" class="input-decimal negative"/>', 'writeOff['+index+']', '0.00');
         $writeOff.change(function() {
             updateDisplay();
         });
@@ -509,6 +509,6 @@
         $tbody.append($tr);
         index++;
 
-        $(".input-number").bind(inputFormat);
+        $(".input-decimal").bind(inputFormat);
     }
 </script>
