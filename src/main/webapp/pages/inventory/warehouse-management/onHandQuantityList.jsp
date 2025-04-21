@@ -16,12 +16,12 @@
 	</table>
 </div>
 <div style="overflow-x: auto;">
-	<table style="width:110%;" cellpadding="0" cellspacing="0" class="table-list">
+	<table style="width:100%;" cellpadding="0" cellspacing="0" class="table-list">
 	<tr>
-		<th width="5%">&nbsp;</th>
-		<th width="10%"><spring:message code="product.code"/></th>
-		<th width="25%" nowrap="nowrap"><spring:message code="product.name"/></th>
-		<th width="22%" nowrap="nowrap"><spring:message code="product.category"/></th>
+		<th width="1%">&nbsp;</th>
+		<th width="8%"><spring:message code="product.code"/></th>
+		<th width="15%" nowrap="nowrap"><spring:message code="product.name"/></th>
+		<th width="10%" nowrap="nowrap"><spring:message code="product.category"/></th>
 		<th width="10%" nowrap="nowrap"><spring:message code="product.onhand"/></th>
 		<th width="10%" nowrap="nowrap"><spring:message code="product.available"/></th>
 		<th width="10%" nowrap="nowrap"><spring:message code="product.reserved"/></th>

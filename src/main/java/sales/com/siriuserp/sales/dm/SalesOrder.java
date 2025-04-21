@@ -181,7 +181,7 @@ public class SalesOrder extends Model implements JSONSupport, ApprovableBridge
 	@Override
 	public String getUri()
 	{
-		return "";
+		return "salesorderpreedit.htm";
 	}
 
 	@Override

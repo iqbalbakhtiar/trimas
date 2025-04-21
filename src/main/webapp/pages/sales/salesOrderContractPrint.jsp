@@ -73,14 +73,6 @@
 									    </c:forEach>
 					  				</td>
 					  			</tr>
-					  			<!-- <tr>
-					  				<td align="center">
-					  					<font size="2">
-					  					Factory: Jln. Cisirung no. 38, Dayeuhkolot, Bandung 40256 - Indonesia <br/>
-					  					Telephone: (022) 5220022 - 52221122 - 5220077 - 5221177 Fax: 62-22-5220011
-					  					</font>
-					  				</td>
-					  			</tr> -->
 					  			<tr>
 					  				<td></td>
 					  			</tr>
@@ -114,31 +106,40 @@
 				  				<td align="left">: </td>
 				  				<td></td>
 				  			</tr>
-				  			<tr>
+				  			<tr valign="top">
 				  				<td nowrap="nowrap"><spring:message code="customer"/></td>
-				  				<td align="left">:
-				  					<c:out value='${salesOrder_edit.customer.fullName}'/> <c:out value='${salesOrder_edit.customer.salutation}'/>
-				  					<c:forEach items='${order_edit.customer.postalAddresses}' var='address'>
+				  				<td align="left" style="text-transform: uppercase;">:
+				  					<c:out value='${salesOrder_edit.customer.salutation}'/> <c:out value='${salesOrder_edit.customer.fullName}'/>
+				  					</br>
+				  					<c:forEach items='${salesOrder_edit.customer.postalAddresses}' var='address'>
 									<c:if test='${address.selected}'>
-										<c:out value='${address.address}'/></br>
-									    <c:forEach items='${address.geographics}' var='geo'>
-										<c:if test='${geo.geographic.geographicType.id == 3}'>
-											,<c:out value='${geo.geographic.name}'/>
-										</c:if>
-									    </c:forEach>
+										&nbsp;&nbsp;<c:out value='${address.address}'/></br>
+										&nbsp;&nbsp;<c:out value='${address.city.name}'/>
 									</c:if>
 								    </c:forEach>
 				  				</td>
 				  				<td>&nbsp;</td>
 				  			</tr>
+				  			<c:set var="phone" value=""/>
+				  			<c:set var="fax" value=""/>
+				  			<c:forEach items='${salesOrder_edit.customer.contactMechanisms}' var='cont'>
+				  			<c:if test="${cont.active}">
+								<c:if test='${cont.contactMechanismType eq "PHONE"}'>
+						  			<c:set var="phone" value="${cont.contact}"/>
+								</c:if>
+								<c:if test='${cont.contactMechanismType eq "FAX"}'>
+						  			<c:set var="fax" value="${cont.contact}"/>
+								</c:if>
+							</c:if>
+						    </c:forEach>
 				  			<tr>
 				  				<td><spring:message code="contactmechanism.phone"/></td>
-				  				<td align="left">: </td>
+				  				<td align="left">: ${phone}</td>
 				  				<td align="left"></td>
 				  			</tr>
 				  			<tr>
 				  				<td><spring:message code="contactmechanism.fax"/></td>
-				  				<td align="left">: </td>
+				  				<td align="left">: ${fax}</td>
 				  				<td align="left"></td>
 				  			</tr>
 				  			<tr>
@@ -148,7 +149,7 @@
 				  			</tr>
 					  		</table>
 					  		<br/>
-					  		<table border="0" cellpadding="1" cellspacing="0" width="90%" align="center" style="border-width: 1px medium medium; border-style: solid none none; border-color: black -moz-use-text-color -moz-use-text-color;">
+					  		<table border="0" cellpadding="1" cellspacing="1" width="90%" align="center" style="border-width: 1px medium medium; border-style: solid none none; border-color: black -moz-use-text-color -moz-use-text-color;">
 					  			<tr>
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 30%"><spring:message code="product"/></th>
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.qty"/></th>
@@ -160,32 +161,32 @@
 					  			<tr>
                                		<c:set var="pattern" value=",##0.00" />
 					  				<td style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.name}</td>
-					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.quantity}' pattern=',##0.0'/></td>
+					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
 					  				<td align="center" style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.unitOfMeasure.measureId}</td>
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.amount}' pattern='${pattern}'/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.subTotal}' pattern='${pattern}'/></td>
 					  			</tr>
 					  			</c:forEach>
-					  			<tr>
+					  			<tr style="font-weight: bold;">
 					  				<td align="right" colspan="3">&nbsp;</td>
-					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><spring:message code="salesorder.total"/></td>
-					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.subTotal}' pattern='${pattern}'/></td>
+					  				<td align="right"><spring:message code="salesorder.total"/></td>
+					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalItemAmount}' pattern='${pattern}'/></td>
 					  			</tr>
-					  			<tr>
+					  			<tr style="font-weight: bold;">
 					  				<td align="right" colspan="3">&nbsp;</td>
-					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><spring:message code="salesorder.tax.amount"/></td>
-					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.subTotal}' pattern='${pattern}'/></td>
+					  				<td align="right"><spring:message code="salesorder.tax.amount"/></td>
+					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.taxAmount}' pattern='${pattern}'/></td>
 					  			</tr>
-					  			<tr>
+					  			<tr style="font-weight: bold;">
 					  				<td align="right" colspan="3">&nbsp;</td>
-					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><spring:message code="salesorder.total.transaction"/></td>
-					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.subTotal}' pattern='${pattern}'/></td>
+					  				<td align="right"><spring:message code="salesorder.total.transaction"/></td>
+					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalTransaction}' pattern='${pattern}'/></td>
 					  			</tr>
 					  		</table>
 					  		<br/>
 					  		<table border="0" cellpadding="1" cellspacing="0" width="90%" align="center" style="table-layout: fixed; width: 90%">
 				  			<tr>
-				  				<td colspan="3"><spring:message code="salesorder.contract.term"/></td>
+				  				<td colspan="3"><spring:message code="salesorder.contract.term"/> :</td>
 				  			</tr>
 				  			<tr>	
 				  				<td align="left" colspan="3" style="word-wrap: break-word">
@@ -197,19 +198,32 @@
 				  						<li>Penjual berhak membebankan denda bunga kepada Pembeli atas pembayaran yang di lakukan melebihi tanggal
 				  							</br>jatuh tempo.
 				  						</li>
-				  						<li>Pengembalian atau claim atas mutu produk yang di beli harus di sampaikan secara tertulis dan tidak melebihi 30 hari.
-				  							</br>Masa berlaku order ini sesuai dengan tanggal valid yang tercantum di dalamnya atau selambat-lambatnya 2(dua) bulan 
+				  						<li>Pengembalian atau claim atas mutu produk yang di beli harus di sampaikan secara tertulis dan tidak melebihi 30 hari.</li>
+				  						<li>Masa berlaku order ini sesuai dengan tanggal valid yang tercantum di dalamnya atau selambat-lambatnya 2(dua) bulan 
 				  							</br>dari tanggal di terbitkan, kecuali ada persetujuan dan selisih harga akan kami bebankan. Atau penjual dapat
-											</br>memilih untuk membataJkan penjualan.
+											</br>memilih untuk membatalkan penjualan.
 				  						</li>
-				  						<li>Jika ada perselisihan yang timbul, akan tunduk pada yurisdiksi ekskJusif pengadilan indonesia.</li>
-				  						<li><spring:message code="salesorder.contract.payment"/></li>
+				  						<li>Jika ada perselisihan yang timbul, akan tunduk pada yurisdiksi eksklusif pengadilan Indonesia.</li>
+				  						<li><spring:message code="salesorder.contract.payment"/>
+				  							<div>&nbsp;</div>
+					  						<table border="0" cellpadding="1" cellspacing="0" style="table-layout: fixed; width: 30%">
+					  						<tr style="font-weight: bold;">
+					  							<td style="width: 50px">&nbsp;</td>
+					  							<td>
+					  							PT SAN STAR MANUNGGAL</br>
+					  							OCBC NISP</br>
+					  							ASIA AFRIKA - BANDUNG</br>
+					  							060800006227
+					  							</td>
+				  							</tr>
+				  							</table>
+				  						</li>
 				  					</ul>
 				  				</td>
 				  			</tr>
 				  			<tr>
-				  				<td width=" 20%" align="center" valign="top"></td>
-					  			<td width=" 20%" align="center" valign="top">
+				  				<td width="20%" align="center" valign="top"></td>
+					  			<td width="20%" align="center" valign="top">
 					  				<table border="0" cellpadding="0" cellspacing="0" width="100%">
 				  					<tr>
 				  						<td align="center"><spring:message code="salesorder.contract.buyer"/></td>
@@ -217,13 +231,13 @@
 				  					<tr style="height: 100px">
 				  						<td align="center">&nbsp;</td>
 				  					</tr>
-									<tr>
-										<td align="center">(&nbsp;${salesOrder_edit.customer.fullName}&nbsp;)</td>
+									<tr style="text-transform: uppercase;font-weight: bold;">
+										<td align="center">(&nbsp;${salesOrder_edit.customer.salutation}&nbsp;${salesOrder_edit.customer.fullName}&nbsp;)</td>
 									</tr>
 									</table>
 								</td>
-				  				<td width=" 20%" align="center" valign="top"></td>
-					  			<td width=" 20%" align="center" valign="top">
+				  				<td width="20%" align="center" valign="top"></td>
+					  			<td width="20%" align="center" valign="top">
 					  				<table border="0" cellpadding="0" cellspacing="0" width="100%">
 				  					<tr>
 				  						<td align="center"><spring:message code="salesorder.contract.seller"/></td>
@@ -231,20 +245,20 @@
 				  					<tr style="height: 100px">
 				  						<td align="center">&nbsp;</td>
 				  					</tr>
-									<tr>
-										<td align="center">(&nbsp;${salesOrder_edit.organization.fullName}&nbsp;)</td>
+									<tr style="text-transform: uppercase;font-weight: bold;">
+										<td align="center">(&nbsp;${salesOrder_edit.organization.salutation}&nbsp;${salesOrder_edit.organization.fullName}&nbsp;)</td>
 									</tr>
 									</table>
 								</td>
 				  				<td width=" 20%" align="center" valign="top"></td>
 							</tr>
-								<td>&nbsp;</td>
 				  			<tr>
+								<td>&nbsp;</td>
 							</tr>
 				  			<tr>
 				  				<td colspan="3">
 					  				Harap segera kirim kembali kontrak penjualan yang sudah di tandatangani dan di cap perusahaan melalui email atau
-					  				</br>Faks ke kantor perwakilan kami sebagai bukti persetujuan. Jika hat di atas tidak terpenuhi maka penjual dapat memilih
+					  				</br>Faks ke kantor perwakilan kami sebagai bukti persetujuan. Jika hal di atas tidak terpenuhi maka penjual dapat memilih
 					  				</br>untuk membatalkan penjualan.
 				  				</td>
 				  			</tr>

@@ -152,7 +152,7 @@ public class SalesOrderController extends ControllerBase
 
 		try
 		{
-			response.store("product", service.load(productId));
+			response.store("item", service.load(productId));
 		} catch (Exception e)
 		{
 			response.statusError();

@@ -145,7 +145,8 @@
 					  	<tr>
 					  		<th width="1%">&nbsp;</th>
 					  		<th width="10%"><spring:message code="barcode"/></th>
-                          	<th width="20%"><spring:message code="product.name"/></th>
+                          	<th width="5%"><spring:message code="product.lot"/></th>
+                          	<th width="15%"><spring:message code="product.name"/></th>
                           	<th style="text-align: right;" width="15%"><spring:message code="product.quantity"/></th>
                           	<th style="text-align: center;" width="15%"><spring:message code="product.uom"/></th>
                           	<th width="10%"><spring:message code="container"/></th>
@@ -156,13 +157,14 @@
 					  			<a class="item-button-add-row" href="javascript:setclient('${com.id}')"  title="Edit"><span>Edit</span></a>
 					  		</td>
 					  		<td nowrap="nowrap"><c:out value='${com.lot.serial}'/></td>
+					  		<td nowrap="nowrap"><c:out value='${com.lot.code}'/></td>
                             <td nowrap="nowrap"><c:out value='${com.product.name}'/></td>
                             <td style="text-align: right;" nowrap="nowrap"><fmt:formatNumber value='${com.onHand}' pattern=',##0.00'/></td>
                             <td style="text-align: center;" nowrap="nowrap"><c:out value='${com.product.unitOfMeasure.measureId}'/></td>
                             <td nowrap="nowrap"><c:out value='${com.container.name}'/></td>
                         </tr>
 						</c:forEach>
-					  	<tr class="end-table"><td colspan="6">&nbsp;</td></tr>
+					  	<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
 					  	</table>
 
 						<table border="0" cellpadding="0" cellspacing="0" width="99%" align="center" height="20">

@@ -1,199 +1,216 @@
-<%@ include file="/common/sirius-general-top.jsp"%>
-
-<div class="toolbar">
-  <a class="item-button-back" href="<c:url value='/page/deliveryorderpreedit.htm?id=${deliveryOrder_form.deliveryOrder.id}'/>"><span><spring:message code="sirius.back"/></span></a>
-  <a class="item-button-print" href="javascript:window.print();"><span><spring:message code="sirius.print"/></span></a>
-  <a class="item-button-export-xls" download="deliveryorder.xls" href="#" onclick="return ExcellentExport.excel(this, 'size', 'Delivery Order');"><span>Export</span></a>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<%@ include file="/common/tld-common.jsp"%>
+<%@ include file="/common/tld-spring.jsp"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://"+ request.getServerName() + ":" +request.getServerPort()+ path + "/";
+%>
+<base href="<%=basePath%>">
+<html>
+<head>
+	<title><spring:message code="salesorder.contract"/></title>
+	<link rel="icon" type="image/png" href="<c:url value='/assets/images/title-logo.png'/>">
+	<style type="text/css" media="screen">
+		@import url("assets/sirius.css");
+		@import url("assets/sirius-print.css");
+	</style>
+	<style type="text/css" media="print">
+		@import url("assets/sirius-print.css");
+	</style>
+</head>
+<body>
+<div class="area" dojoType="Container" id="quick_link_container">
+	<%@ include file="/common/sirius-header.jsp" %>
 </div>
-
-<div class="main-box">
-
-  <table border="0" width="100%" cellpadding="0" cellspacing="0" class="in">
-    <tr>
-      <td style="background: black" width="1%">&nbsp;</td>
-      <td width="1%">&nbsp;</td>
-      <td width="96%">&nbsp;</td>
-      <td width="1%">&nbsp;</td>
-      <td style="background: black" width="1%">&nbsp;</td>
-    <tr>
-  </table>
-  <table border="0" width="100%" cellpadding="0" cellspacing="0">
-    <tr>
-      <td width="2%" colspan="2">&nbsp;</td>
-      <td width="52%" colspan="3" class="CSS3" align="left">
-        <strong><c:out value='${deliveryOrder_form.organization.salutation} ${deliveryOrder_form.organization.fullName}'/></strong>
-      </td>
-      <td width="44%" colspan="3" align="right" class="CSS3" valign="top"><strong>DELIVERY ORDER</strong></td>
-      <td width="2%" colspan="2">&nbsp;</td>
-    </tr>
-    <tr>
-      <td colspan="10" height="15">&nbsp;</td>
-    </tr>
-  </table>
-  <table border="0" width="100%" cellpadding="0" cellspacing="0">
-    <tr>
-      <td width="2%" colspan="2">&nbsp;</td>
-      <td width="48%" colspan="3" valign="top">
-        <table width="100%" cellpadding="0" cellspacing="0" align="left">
-          <tr>
-            <td width="15%" valign="top">Pelanggan</td>
-            <td width="1%" valign="top">:</td>
-            <td width="84%">
-              <c:out value='${deliveryOrder_form.customer.salutation} ${deliveryOrder_form.customer.fullName}'/><br/>
-              <c:out value="${deliveryOrder_form.shippingAddress.addressName}"/><br/>
-              <c:out value="${deliveryOrder_form.shippingAddress.address}"/><br/>
-              <c:out value="${deliveryOrder_form.shippingAddress.city.name}"/> - <c:out value="${deliveryOrder_form.shippingAddress.postalCode}"/><br/>
-            </td>
-          </tr>
-        </table>
-      </td>
-      <td width="48%" colspan="3" valign="top">
-        <table width="100%" cellpadding="0" cellspacing="0" align="left">
-          <tr>
-            <td width="40%">&nbsp;</td>
-            <td width="20%">Delivery Order No</td>
-            <td width="1%">:</td>
-            <td width="30%"><c:out value='${deliveryOrder_form.code}'/></td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
-            <td>Tanggal Delivery Order</td>
-            <td>:</td>
-            <td><fmt:formatDate value='${deliveryOrder_form.date}' pattern='dd - MM - yyyy'/></td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
-            <td>Sales Order No</td>
-            <td>:</td>
-            <td><c:out value='${referenceCode}'/></td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
-            <td>PO Pelanggan No</td>
-            <td>:</td>
-            <td><c:out value='${poCode}'/></td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
-            <td>Note</td>
-            <td>:</td>
-            <td><c:out value='${deliveryOrder_form.note}'/></td>
-          </tr>
-        </table>
-      </td>
-      <td width="2%" colspan="2">&nbsp;</td>
-    </tr>
-    <tr>
-      <td colspan="10">&nbsp;</td>
-    </tr>
-    <tr>
-      <td colspan="2">&nbsp;</td>
-      <td colspan="6">
-        <table width="100%"  border="0" cellpadding="0" cellspacing="0">
-          <thead>
-          <tr>
-            <th align="left" class="border-top border-bottom">No.</th>
-            <th align="left" class="border-top border-bottom">Nama Barang</th>
-            <th align="right" class="border-top border-bottom">Jumlah</th>
-            <th align="center" class="border-top border-bottom">Satuan</th>
-          </tr>
-          </thead>
-          <tbody>
-          <c:forEach items='${deliveryOrder_form.deliveryOrder.items}' var='item' varStatus='status'>
-            <tr>
-              <td align="center" width="3%" align="center"><c:out value="${status.index+1}"/></td>
-              <td align="left" width="60%" nowrap="nowrap">&nbsp;${item.salesReferenceItem.product.name}</td>
-              <td align="right" width="10%" style="padding-right:5px;"><fmt:formatNumber value='${item.salesReferenceItem.quantity}' pattern=',##0.00'/></td>
-              <td align="center" width="20%">${item.salesReferenceItem.product.unitOfMeasure.measureId}</td>
-            </tr>
-          </c:forEach>
-          </tbody>
-        </table>
-      </td>
-      <td colspan="2">&nbsp;</td>
-    </tr>
-    <tr>
-      <td colspan="10">&nbsp;</td>
-    </tr>
-
-    <tr id="test">
-      <td width="2%" colspan="2">&nbsp;</td>
-      <td width="96%" colspan="6">
-        <table width="100%" border="0" cellpadding="0" cellspacing="0">
-          <tr><%--            Text Line--%>
-            <td width="33%" align="center" valign="top">Barang Diterima Oleh:</td>
-            <td width="33%" align="center" valign="top">Countersigned By:</td>
-            <td width="33%" align="center">
-              <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td width="40%">&nbsp;</td>
-                  <td align="left" width="60%">Sopir:</td>
-                </tr>
-                <tr>
-                  <td width="40%">&nbsp;</td>
-                  <td align="left" width="60%">No Mobil:</td>
-                </tr>
-              </table>
-            </td>
-          </tr><%--            Text Line--%>
-          <tr><%--            Empty Line--%>
-            <td colspan="4">&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="4">&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="4">&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="4">&nbsp;</td>
-          </tr><%--            Empty Line--%>
-          <tr>
-            <td align="center">
-              <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="right">(</td>
-                  <td width="30%">&nbsp;</td>
-                  <td align="left">)</td>
-                </tr>
-              </table>
-            </td>
-            <td align="center">
-              <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="right">(</td>
-                  <td align="center" width="30%">Sales Supervisor</td>
-                  <td align="left">)</td>
-                </tr>
-              </table>
-            </td>
-            <td align="center">
-              <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="right">(</td>
-                  <td width="30%">&nbsp;</td>
-                  <td align="left">)</td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-      <td colspan="2" width="2%">&nbsp;</td>
-    </tr>
-
-  </table>
-
-  <br>
-  <table border="0" width="100%" cellpadding="0" cellspacing="0" class="out">
-    <tr>
-      <td style="background: black" width="1%">&nbsp;</td>
-      <td width="1%">&nbsp;</td>
-      <td width="96%">&nbsp;</td>
-      <td width="1%">&nbsp;</td>
-      <td style="background: black" width="1%">&nbsp;</td>
-    </tr>
-  </table>
-  <%@include file="deliveryOrderExcel.jsp"%>
+<div id="se-r00">
+	<div id="se-r01">&nbsp;</div>
+	<div id="se-r02">&nbsp;</div>
 </div>
-<%@ include file="/common/sirius-general-bottom.jsp"%>
+<div id="se-containers">
+	<div class="area" dojoType="Container" id="quick_link_container">
+		<%@ include file="/common/sirius-menu.jsp"%>
+		<div id="se-navigator">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td width="60%">${breadcrumb}</td>
+					<td width="40%" align="right"><%@ include file="/common/welcome.jsp"%></td>
+				</tr>
+			</table>	
+		</div>
+	</div>
+
+	<div id="r11">
+		<div id="r12">
+			<div id="r13">
+				<div id="r14">
+					<div id="se-contents">
+						<div class="area" dojoType="Container" id="quick_link_container">
+							<h1 class="page-title"></h1>
+							<h1 class="page-title"><spring:message code="salesorder.contract"/></h1>
+							<div class="clears">&nbsp;</div>
+							<div class="toolbar">
+								<a class="item-button-back" href="<c:url value="/page/salesorderpreedit.htm?id=${deliveryOrder_edit.id}"/>"><span><spring:message code="sirius.back"/></span></a>
+								<a class="item-button-print" href="javascript: window.print();"><span><spring:message code="sirius.print"/></span></a>
+						  	</div>
+					  	</div>
+					  	<div class="main-box">
+					  		<table border="0" width="90%" align="center">
+					  			<tr>
+					  				<td>
+					  				<img src="assets/images/ssm-logo.png"  width="250" height="40"/>
+					  				</br><font size="2"></font>
+					  				</td>
+					  			</tr>
+					  			<tr>
+					  				<td></td>
+					  			</tr>
+					  		</table>
+					  		<table cellpadding="1" cellspacing="1" width="90%" align="center">
+							<tr>
+								<td valign="top" align="center" colspan="2"><h2>SURAT JALAN</h2></td>
+							</tr>
+							<tr>
+								<td>
+									<table>
+										<tr style="font-weight: bold;font-size: large;">
+											<td valign="top" nowrap="nowrap">No </td>
+											<td nowrap="nowrap" colspan="2">: <c:out value="${deliveryOrder_edit.code}" /></td>
+										</tr>
+										<tr>
+											<td valign="top" nowrap="nowrap" colspan="3">
+											Bersama ini kendaraan No ${plate}</br>
+											Kami kirimkan barang tersebut dibawah ini</br>
+											Harap diterima dengan baik.
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td>
+									<table cellpadding="1" cellspacing="1" width="100%">
+										<tr>
+											<td valign="top" colspan="2">Sumedang, <fmt:formatDate value='${deliveryOrder_edit.date}' pattern='dd-MM-yyyy'/></td>
+										</tr>
+										<tr>
+											<td valign="top" colspan="2">Kepada Yth.</td>
+										</tr>
+										<tr>
+											<td style="width: 50px;">&nbsp;</td>
+											<td>
+												<strong><c:out value='${deliveryOrder_edit.customer.salutation}'/> <c:out value='${deliveryOrder_edit.customer.fullName}' /></strong>
+												</br>
+												<c:out value='${deliveryOrder_edit.shippingAddress.address}'/></br>
+												<c:out value='${deliveryOrder_edit.shippingAddress.city.name}'/>
+								    		</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							</table>
+					  		<br/>
+					  		<table border="0" cellpadding="1" cellspacing="1" width="90%" align="center" style="border-width: 1px medium medium; border-style: solid none none; border-color: black -moz-use-text-color -moz-use-text-color;">
+					  			<tr>
+					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.qty"/></th>
+					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 30%"><spring:message code="product"/></th>
+					  				<th style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.note2"/></th>
+					  			</tr>
+								<c:forEach items="${deliveryOrder_edit.items}" var="item" varStatus="idx">
+									<c:if test="${item.deliveryItemType eq 'BASE'}">
+						  			<tr>
+	                               		<c:set var="pattern" value=",##0.00" />
+						  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
+						  				<td style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.name}</td>
+						  				<td style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;">${item.note}</td>
+						  			</tr>
+						  			</c:if>
+					  			</c:forEach>
+					  		</table>
+					  		<br/>
+					  		<table border="0" cellpadding="1" cellspacing="0" width="90%" align="center" style="table-layout: fixed; width: 90%">
+				  			<tr>
+				  				<td width="20%" align="center" valign="top">
+					  				<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				  					<tr>
+				  						<td align="center" colspan="3">Penerima,</td>
+				  					</tr>
+				  					<tr colspan="3" style="height: 100px">
+				  						<td align="center" colspan="3">&nbsp;</td>
+				  					</tr>
+									<tr style="text-transform: uppercase;font-weight: bold;">
+										<td style="width: 1px;">(</td>
+										<td align="center">${deliveryOrder_edit.customer.salutation}&nbsp;${deliveryOrder_edit.customer.fullName}</td>
+										<td style="width: 1px;">)</td>
+									</tr>
+									</table>
+				  				</td>
+					  			<td width="20%" align="center" valign="top">
+					  				<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				  					<tr>
+				  						<td align="center" colspan="3">Gudang,</td>
+				  					</tr>
+				  					<tr style="height: 100px">
+				  						<td align="center" colspan="3">&nbsp;</td>
+				  					</tr>
+									<tr style="text-transform: uppercase;font-weight: bold;">
+										<td style="width: 1px;">(</td>
+										<td align="center">&nbsp;</td>
+										<td style="width: 1px;">)</td>
+									</tr>
+									</table>
+								</td>
+				  				<td width="20%" align="center" valign="top">
+					  				<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				  					<tr>
+				  						<td align="center" colspan="3">Produksi,</td>
+				  					</tr>
+				  					<tr style="height: 100px">
+				  						<td align="center" colspan="3">&nbsp;</td>
+				  					</tr>
+									<tr style="text-transform: uppercase;font-weight: bold;">
+										<td style="width: 1px;">(</td>
+										<td align="center">&nbsp;</td>
+										<td style="width: 1px;">)</td>
+									</tr>
+									</table>
+				  				</td>
+					  			<td width="20%" align="center" valign="top">
+					  				<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				  					<tr>
+				  						<td align="center" colspan="3">Penjualan,</td>
+				  					</tr>
+				  					<tr style="height: 100px">
+				  						<td align="center" colspan="3">&nbsp;</td>
+				  					</tr>
+									<tr style="text-transform: uppercase;font-weight: bold;">
+										<td style="width: 1px;">(</td>
+										<td align="center">&nbsp;</td>
+										<td style="width: 1px;">)</td>
+									</tr>
+									</table>
+								</td>
+				  				<td width=" 20%" align="center" valign="top">
+					  				<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				  					<tr>
+				  						<td align="center" colspan="3">Mengetahui,</td>
+				  					</tr>
+				  					<tr style="height: 100px">
+				  						<td align="center" colspan="3">&nbsp;</td>
+				  					</tr>
+									<tr style="text-transform: uppercase;font-weight: bold;">
+										<td style="width: 1px;">(</td>
+										<td align="center">&nbsp;</td>
+										<td style="width: 1px;">)</td>
+									</tr>
+									</table>
+								</td>
+							</tr>
+					  		</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <%@ include file="/common/sirius-footer.jsp"%>
+</div>
+</body>
+</html>

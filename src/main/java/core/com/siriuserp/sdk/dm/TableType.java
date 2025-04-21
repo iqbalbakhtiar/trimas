@@ -69,7 +69,7 @@ public enum TableType
     DUNNING("DU"),
     DEBIT_MEMO("DM"),
     DEAL_ORDER("DLO"),
-    DELIVERY_ORDER("DO"),
+    DELIVERY_ORDER("SJ", 3),
     DELIVERY_PLANNING("DP"),
     DELIVERY_ROUTE_LK("LK"),
     DELIVERY_ROUTE_DK("DK"),
@@ -262,7 +262,7 @@ public enum TableType
     SO_COST_COMPONENT_VERIFICATION("SVO"),
     STOCK_ADJUSTMENT_RESPONSIBILITY("SAR"),
     STOCK_DEPRECIATION("SDP"),
-    SALES_ORDER("SO"),
+    SALES_ORDER("SO", 3),
     
     //T
     TAX("TAX"),

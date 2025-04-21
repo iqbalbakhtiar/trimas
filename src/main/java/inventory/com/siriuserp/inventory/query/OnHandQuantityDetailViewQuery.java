@@ -35,7 +35,7 @@ public class OnHandQuantityDetailViewQuery extends AbstractGridViewQuery
 		builder.append("SELECT NEW com.siriuserp.inventory.adapter.OnhandQuantityUIAdapter(inv.container, inv.lot, inv.product, SUM(inv.onHand), SUM(inv.onTransfer), SUM(inv.reserved), inv.organization) ");
 		builder.append("FROM InventoryItem inv WHERE inv.id IS NOT NULL AND inv.product.id =:product ");
 		builder.append("GROUP BY inv.lot.serial, inv.container.id, inv.organization.id HAVING SUM(inv.onHand + inv.onTransfer + inv.reserved) > 0 ");
-		builder.append("ORDER BY inv.container.grid.facility.id ASC, inv.container.grid.id ASC, inv.container.id ASC");
+		builder.append("ORDER BY inv.container.grid.facility.id ASC, inv.container.grid.id ASC, inv.container.id ASC, inv.lot.serial ASC, inv.lot.code ASC");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setParameter("product", criteria.getProduct());

@@ -44,6 +44,7 @@
             <th width="10%"><spring:message code="grid"/></th>
             <th width="10%"><spring:message code="container"/></th>
             <th width="8%"><spring:message code="barcode"/></th>
+            <th width="8%"><spring:message code="product.lot"/></th>
             <th width="8%"><spring:message code="product.onhand"/></th>
             <th width="8%"><spring:message code="product.reserved"/></th>
             <th width="8%"><spring:message code="product.ontransfer"/></th>
@@ -74,6 +75,7 @@
                     </c:if>
                 </td>
                 <td><c:out value='${detail.lot.serial}'/></td>
+                <td><c:out value='${detail.lot.code}'/></td>
                 <td id="onHand${status.index}"><fmt:formatNumber value='${detail.onHand}' pattern=',##0.00'/></td>
                 <td id="reserved${status.index}"><fmt:formatNumber value='${detail.reserved}' pattern=',##0.00'/></td>
                 <td><fmt:formatNumber value='${detail.onTransfer}' pattern=',##0.00'/></td>

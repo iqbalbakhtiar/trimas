@@ -108,7 +108,7 @@ public class DeliveryOrderService extends Service
 	public void add(DeliveryOrder deliveryOrder) throws Exception
 	{
 		SalesForm form = (SalesForm) deliveryOrder.getForm();
-		deliveryOrder.setCode(GeneratorHelper.instance().generate(TableType.DELIVERY_ORDER, codeSequenceDao));
+		deliveryOrder.setCode(GeneratorHelper.instance().generate(TableType.DELIVERY_ORDER, codeSequenceDao, deliveryOrder.getDate()));
 
 		List<Item> baseItems = new FastList<Item>();
 		List<Item> serialItems = new FastList<Item>();

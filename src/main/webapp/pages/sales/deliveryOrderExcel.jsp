@@ -65,9 +65,9 @@
   <c:forEach items='${deliveryOrder_form.deliveryOrder.items}' var='item' varStatus='status'>
     <tr>
       <td align="center" width="3%" align="center"><c:out value="${status.index+1}"/></td>
-      <td colspan="6" align="left" width="30%" nowrap="nowrap">&nbsp;${item.salesReferenceItem.product.name}</td>
-      <td align="right" width="5%" style="padding-right:5px;"><fmt:formatNumber value='${item.salesReferenceItem.quantity}' pattern=',##0.00'/></td>
-      <td align="center" width="5%">${item.salesReferenceItem.product.unitOfMeasure.measureId}</td>
+      <td colspan="6" align="left" width="30%" nowrap="nowrap">&nbsp;${item.product.name}</td>
+      <td align="right" width="5%" style="padding-right:5px;"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
+      <td align="center" width="5%">${item.product.unitOfMeasure.measureId}</td>
     </tr>
   </c:forEach>
   <tr>

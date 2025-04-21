@@ -1,6 +1,7 @@
 package com.siriuserp.sales.dm;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -24,6 +25,7 @@ import com.siriuserp.sdk.dm.Lot;
 import com.siriuserp.sdk.dm.Model;
 import com.siriuserp.sdk.dm.Money;
 
+import javolution.util.FastMap;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -93,6 +95,18 @@ public class SalesOrderItem extends Model implements DeliveryOrderReferenceable
 	public DeliveryOrderReferenceType getReferenceType()
 	{
 		return DeliveryOrderReferenceType.SALES_ORDER;
+	}
+
+	@Override
+	public Map<String, Object> val()
+	{
+		Map<String, Object> map = new FastMap<String, Object>();
+		map.put("id", getId());
+		map.put("self", this.getClass().getSimpleName());
+		map.put("product", getProduct());
+		map.put("price", getMoney().getAmount());
+
+		return map;
 	}
 
 	@Override

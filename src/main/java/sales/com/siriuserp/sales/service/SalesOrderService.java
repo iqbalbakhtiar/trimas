@@ -12,7 +12,6 @@ import com.siriuserp.sales.dm.SOStatus;
 import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sales.dm.SalesOrderApprovableBridge;
 import com.siriuserp.sales.dm.SalesOrderItem;
-import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
 import com.siriuserp.sales.dm.SalesType;
 import com.siriuserp.sales.form.SalesForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
@@ -22,7 +21,7 @@ import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.base.Service;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.GenericDao;
-import com.siriuserp.sdk.dao.SalesReferenceItemDao;
+import com.siriuserp.sdk.dao.SalesOrderItemDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
 import com.siriuserp.sdk.dm.Currency;
@@ -49,7 +48,7 @@ public class SalesOrderService extends Service
 	private GenericDao genericDao;
 
 	@Autowired
-	private SalesReferenceItemDao salesReferenceItemDao;
+	private SalesOrderItemDao salesOrderItemDao;
 
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
@@ -93,7 +92,7 @@ public class SalesOrderService extends Service
 		money.setCurrency(currency);
 		money.setAmount(form.getAmount());
 
-		salesOrder.setCode(GeneratorHelper.instance().generate(TableType.SALES_ORDER, codeSequenceDao));
+		salesOrder.setCode(GeneratorHelper.instance().generate(TableType.SALES_ORDER, codeSequenceDao, salesOrder.getDate(), salesOrder.getTax()));
 		salesOrder.setMoney(money);
 		salesOrder.setSalesType(SalesType.STANDARD);
 
@@ -162,9 +161,9 @@ public class SalesOrderService extends Service
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public DeliveryOrderReferenceItem load(Long productId)
+	public SalesOrderItem load(Long productId)
 	{
-		return salesReferenceItemDao.loadByProduct(productId);
+		return salesOrderItemDao.loadByProduct(productId);
 	}
 
 	@AuditTrails(className = SalesOrder.class, actionType = AuditTrailsActionType.UPDATE)

@@ -61,9 +61,7 @@ public abstract class Model extends SiriusModel implements JSONSupport
 	@Override
 	public Map<String, Object> val()
 	{
-
 		Map<String, Object> map = new FastMap<String, Object>();
-
 		map.put("id", getId());
 		map.put("self", this.getClass().getSimpleName());
 

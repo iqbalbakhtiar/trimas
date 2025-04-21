@@ -1,16 +1,17 @@
 package com.siriuserp.sales.adapter;
 
+import java.math.BigDecimal;
+
 import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sales.dm.SalesOrderItem;
 import com.siriuserp.sdk.adapter.AbstractUIAdapter;
+
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -61,5 +62,25 @@ public class SalesOrderAdapter extends AbstractUIAdapter
 	public BigDecimal getTotalAmount()
 	{
 		return salesOrder.getItems().stream().map(this::getSubTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	public BigDecimal getTotalItemAmount()
+	{
+		BigDecimal total = BigDecimal.ZERO;
+
+		for (SalesOrderItem item : getSalesOrder().getItems())
+			total = total.add(getSubTotal(item));
+
+		return total;
+	}
+
+	public BigDecimal getTaxAmount()
+	{
+		return getTotalItemAmount().multiply(getSalesOrder().getTax().getTaxRate().divide(BigDecimal.valueOf(100)));
+	}
+
+	public BigDecimal getTotalTransaction()
+	{
+		return getTotalItemAmount().add(getTaxAmount());
 	}
 }

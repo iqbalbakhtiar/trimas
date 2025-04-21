@@ -508,8 +508,8 @@ function checkDuplicate(element) {
 				{
 					if(json.status == 'OK'){
 						let amount = document.getElementsByName('items['+index+'].amount')[0];
-						if(amount && json.product != null) {
-							amount.value = parseFloat(json.product.price).numberFormat('#,##0.00');
+						if(amount && json.item != null) {
+							amount.value = parseFloat(json.item.price).numberFormat('#,##0.00');
 						}
 					}
 				}

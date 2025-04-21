@@ -6,12 +6,14 @@
 package com.siriuserp.sdk.utility;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dm.CodeSequence;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.TableType;
+import com.siriuserp.sdk.dm.Tax;
 import com.siriuserp.sdk.exceptions.ServiceException;
 
 /**
@@ -67,30 +69,40 @@ public class GeneratorHelper
 
 	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao) throws ServiceException
 	{
-		return generate(tableType, codeSequenceDao, "", null, CodeSequence.YEAR);
+		return generate(tableType, codeSequenceDao, "", null, CodeSequence.YEAR, null);
 	}
 
 	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, String code) throws ServiceException
 	{
-		return generate(tableType, codeSequenceDao, code, null, CodeSequence.YEAR);
+		return generate(tableType, codeSequenceDao, code, null, CodeSequence.YEAR, null);
 	}
 
 	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, Party organization) throws ServiceException
 	{
-		return generate(tableType, codeSequenceDao, organization.getCode(), null, CodeSequence.YEAR);
+		return generate(tableType, codeSequenceDao, organization.getCode(), null, CodeSequence.YEAR, null);
 	}
 
 	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, Party organization, Date date) throws ServiceException
 	{
-		return generate(tableType, codeSequenceDao, organization.getCode(), date, CodeSequence.YEAR);
+		return generate(tableType, codeSequenceDao, organization.getCode(), date, CodeSequence.YEAR, null);
 	}
 
 	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, Date date, Long sequence) throws ServiceException
 	{
-		return generate(tableType, codeSequenceDao, null, date, sequence);
+		return generate(tableType, codeSequenceDao, null, date, sequence, null);
 	}
 
-	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, String code, Date date, Long sequence) throws ServiceException
+	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, Date date) throws ServiceException
+	{
+		return generate(tableType, codeSequenceDao, null, date, CodeSequence.MONTH, null);
+	}
+
+	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, Date date, Tax tax) throws ServiceException
+	{
+		return generate(tableType, codeSequenceDao, null, date, CodeSequence.MONTH, tax);
+	}
+
+	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, String code, Date date, Long sequence, Tax tax) throws ServiceException
 	{
 		if (date == null)
 			date = DateHelper.today();
@@ -141,6 +153,10 @@ public class GeneratorHelper
 		case GOODS_ISSUE_SEQUENCE:
 		case MOVING_CONTAINER_ISSUE_SEQUENCE:
 			return sequence(codeSequence, index);
+		case SALES_ORDER:
+			return sales(codeSequence, index, date, tax);
+		case DELIVERY_ORDER:
+			return delivery(tableType, codeSequence, index, date);
 		default:
 			return format(codeSequence, index);
 		}
@@ -221,5 +237,43 @@ public class GeneratorHelper
 		barcode.append(index);
 
 		return barcode.toString();
+	}
+
+	private String sales(CodeSequence codeSequence, Integer index, Date date, Tax tax)
+	{
+		StringBuffer sb = new StringBuffer();
+		String sCode = "" + index;
+
+		for (int idx = 0; idx < (codeSequence.getType().getLength() - sCode.trim().length()); idx++)
+			sb.append("0");
+
+		sb.append(index);
+		sb.append(" / BNG");
+
+		if (tax != null && tax.getTaxRate().compareTo(BigDecimal.ZERO) > 0)
+			sb.append(" / SSM");
+
+		sb.append(" / " + DateHelper.getMonth(date));
+		sb.append(" / " + DateHelper.getYear(date));
+
+		return sb.toString();
+	}
+
+	private String delivery(TableType tableType, CodeSequence codeSequence, Integer index, Date date)
+	{
+		StringBuffer sb = new StringBuffer();
+		String sCode = "" + index;
+		String year = DateHelper.getYear(date) + "";
+
+		sb.append(tableType.getCode());
+		sb.append(year.substring(year.length() - 2, year.length()));
+		sb.append(DateHelper.getMonth(date));
+
+		for (int idx = 0; idx < (codeSequence.getType().getLength() - sCode.trim().length()); idx++)
+			sb.append("0");
+
+		sb.append(index);
+
+		return sb.toString();
 	}
 }

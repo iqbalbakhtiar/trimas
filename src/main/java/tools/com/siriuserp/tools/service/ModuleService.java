@@ -42,137 +42,142 @@ import javolution.util.FastMap;
  * www.siriuserp.com
  */
 @Component
-@Transactional(rollbackFor=Exception.class)
+@Transactional(rollbackFor = Exception.class)
 public class ModuleService
 {
-    @Autowired
-    private ModuleDao moduleDao;
+	@Autowired
+	private ModuleDao moduleDao;
 
-    @Autowired
-    private AccessibleModuleDao accessibleModuleDao;
-    
-    @Autowired
-    private CodeSequenceDao codeSequenceDao;
-    
-    @Autowired
-    private GenericDao genericDao;
-    
-    @Transactional(readOnly=true,propagation=Propagation.NOT_SUPPORTED)
-    public FastMap<String,Object> preadd(Long id)
-    {
-        FastMap<String,Object> map = new FastMap<String, Object>();
-        
-        Module module = new Module();
-        module.setModuleGroup(genericDao.load(ModuleGroup.class, id));
-        
-        map.put("module",module);
-        
-        return map;
-    }
-    
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	@Autowired
+	private AccessibleModuleDao accessibleModuleDao;
+
+	@Autowired
+	private CodeSequenceDao codeSequenceDao;
+
+	@Autowired
+	private GenericDao genericDao;
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> preadd(Long id)
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+
+		Module module = new Module();
+		module.setModuleGroup(genericDao.load(ModuleGroup.class, id));
+
+		map.put("module", module);
+
+		return map;
+	}
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> precopy(Long id, Long module)
 	{
 		Module source = load(module);
-		
+
 		FastMap<String, Object> map = new FastMap<String, Object>();
 
 		Module target = new Module();
 		BeanUtils.copyProperties(source, target, "details");
 		target.setOldKey(source.getDefaultUri().replace("/page/", "").replace("view.htm", ""));
-		
-		for(ModuleDetail moduleDetail : source.getDetails()) {
+
+		for (ModuleDetail moduleDetail : source.getDetails())
+		{
 			ModuleDetail detail = new ModuleDetail();
 			detail.setModule(target);
 			detail.setUri(moduleDetail.getUri());
 			detail.setDetailType(moduleDetail.getDetailType());
-			
+
 			target.getDetails().add(detail);
 		}
-		
+
 		map.put("module", target);
 
 		return map;
 	}
-    
-    @Transactional(readOnly=true,propagation=Propagation.NOT_SUPPORTED)
-    public FastMap<String,Object> preedit(Long id)
-    {
-        FastMap<String,Object> map = new FastMap<String, Object>();
-        map.put("module",load(id));
-        
-        return map;
-    }
-    
-    @AuditTrails(className=Module.class,actionType=AuditTrailsActionType.CREATE)
-    public void add(Module module) throws Exception {
-    	module.setCode(GeneratorHelper.instance().generate(TableType.MODULE, codeSequenceDao, module.getModuleGroup().getCode(), DateHelper.toStartDate(Month.JANUARY, 2001), CodeSequence.YEAR));
-    	
-    	if (module.getAlias() == null || module.getAlias().trim().length() == 0)
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> preedit(Long id)
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("module", load(id));
+
+		return map;
+	}
+
+	@AuditTrails(className = Module.class, actionType = AuditTrailsActionType.CREATE)
+	public void add(Module module) throws Exception
+	{
+		module.setCode(GeneratorHelper.instance().generate(TableType.MODULE, codeSequenceDao, module.getModuleGroup().getCode(), DateHelper.toStartDate(Month.JANUARY, 2001), CodeSequence.YEAR, null));
+
+		if (module.getAlias() == null || module.getAlias().trim().length() == 0)
 			module.setAlias(module.getName());
-		
+
 		module.setNewKey(module.getDefaultUri().replace("/page/", "").replace("view.htm", ""));
-		
-		for(ModuleDetail moduleDetail : module.getDetails()) {
+
+		for (ModuleDetail moduleDetail : module.getDetails())
+		{
 			moduleDetail.setModule(module);
 			moduleDetail.setUri(moduleDetail.getUri().replace(module.getOldKey(), module.getNewKey()));
 		}
 
-        moduleDao.add(module);
-        
-        Role role = genericDao.load(Role.class, Long.valueOf(2));
-        if(role != null)
-        {
-            AccessibleModule accessibleModule = new AccessibleModule();
-            accessibleModule.setRole(role);
-            accessibleModule.setAccessType(genericDao.load(AccessType.class, Long.valueOf(6)));
-            accessibleModule.setEnabled(true);
-            accessibleModule.setModule(module);
-            
-            accessibleModuleDao.add(accessibleModule);
-        }
-    }
-    
-    @AuditTrails(className=Module.class,actionType=AuditTrailsActionType.UPDATE)
-    public void edit(Module module) throws Exception {
-        moduleDao.update(module);
-    }
-    
-    @AuditTrails(className=Module.class,actionType=AuditTrailsActionType.DELETE)
-    public void delete(Module module) throws Exception {
-        moduleDao.delete(module);
-    }
-    
-    @Transactional(readOnly=true,propagation=Propagation.NOT_SUPPORTED)
-    public Module load(Long id)
-    {
-        return genericDao.load(Module.class, id);
-    }
-    
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+		moduleDao.add(module);
+
+		Role role = genericDao.load(Role.class, Long.valueOf(2));
+		if (role != null)
+		{
+			AccessibleModule accessibleModule = new AccessibleModule();
+			accessibleModule.setRole(role);
+			accessibleModule.setAccessType(genericDao.load(AccessType.class, Long.valueOf(6)));
+			accessibleModule.setEnabled(true);
+			accessibleModule.setModule(module);
+
+			accessibleModuleDao.add(accessibleModule);
+		}
+	}
+
+	@AuditTrails(className = Module.class, actionType = AuditTrailsActionType.UPDATE)
+	public void edit(Module module) throws Exception
+	{
+		moduleDao.update(module);
+	}
+
+	@AuditTrails(className = Module.class, actionType = AuditTrailsActionType.DELETE)
+	public void delete(Module module) throws Exception
+	{
+		moduleDao.delete(module);
+	}
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public Module load(Long id)
+	{
+		return genericDao.load(Module.class, id);
+	}
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public boolean check(ModuleFilterCriteria criteria) throws Exception, UnsupportedEncodingException
 	{
-    	if(SiriusValidator.validateParam(criteria.getCode()))
-    	{
-    		Module module = genericDao.getUniqeField(Module.class, "code", criteria.getCode());
-    		if(module != null)
-    			return true;
-    	}
+		if (SiriusValidator.validateParam(criteria.getCode()))
+		{
+			Module module = genericDao.getUniqeField(Module.class, "code", criteria.getCode());
+			if (module != null)
+				return true;
+		}
 
-    	if(SiriusValidator.validateParam(criteria.getName()))
-    	{
-    		Module module = genericDao.getUniqeField(Module.class, "name", URLDecoder.decode(criteria.getName(), "UTF-8"));
-    		if(module != null)
-    			return true;
-    	}
-    	
-    	if(SiriusValidator.validateParam(criteria.getUri()))
-    	{
-    		Module module = genericDao.getUniqeField(Module.class, "defaultUri", URLDecoder.decode(criteria.getUri(), "UTF-8"));
-    		if(module != null)
-    			return true;
-    	}
+		if (SiriusValidator.validateParam(criteria.getName()))
+		{
+			Module module = genericDao.getUniqeField(Module.class, "name", URLDecoder.decode(criteria.getName(), "UTF-8"));
+			if (module != null)
+				return true;
+		}
 
-    	return false;
+		if (SiriusValidator.validateParam(criteria.getUri()))
+		{
+			Module module = genericDao.getUniqeField(Module.class, "defaultUri", URLDecoder.decode(criteria.getUri(), "UTF-8"));
+			if (module != null)
+				return true;
+		}
+
+		return false;
 	}
 }

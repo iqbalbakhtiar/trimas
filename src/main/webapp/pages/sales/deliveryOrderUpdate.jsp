@@ -123,10 +123,11 @@
 							<td><input size="5" value="${item.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
 							<c:if test="${!item.product.serial}">
 								<td><input size="25" value="${item.container.name}" class="input-disabled" disabled/></td>
-								<td><input type="text" size="35" value="${item.note}"/></td>
+								<td><input type="text" size="45" name="deliveryOrder.items[${idx.index}].note" value="${item.note}"/></td>
 							</c:if>
 							<c:if test="${item.product.serial}">
-								<td colspan="2">&nbsp;</td>
+								<td>&nbsp;</td>
+								<td><input type="text" size="45" name="deliveryOrder.items[${idx.index}].note" value="${item.note}"/></td>
 							</c:if>
 						</tr>
 						</c:if>
@@ -137,7 +138,7 @@
 							<td><input size="8" value="<fmt:formatNumber value='${serial.quantity}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
 							<td><input size="5" value="${serial.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
 							<td><input size="25" value="${serial.container.name}" class="input-disabled" disabled/></td>
-							<td><input type="text" size="35" value="${item.note}"/></td>
+							<td>&nbsp;</td>
 						</tr>
 						</c:forEach>
 					</c:forEach>
