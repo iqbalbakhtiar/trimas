@@ -54,7 +54,7 @@
 						  	</div>
 					  	</div>
 					  	<div class="main-box">
-					  		<table border="0" width="90%" align="center">
+					  		<table border="0" width="100%" align="center">
 					  			<tr>
 					  				<td>
 					  				<img src="assets/images/ssm-logo.png"  width="250" height="40"/>
@@ -73,11 +73,8 @@
 									    </c:forEach>
 					  				</td>
 					  			</tr>
-					  			<tr>
-					  				<td></td>
-					  			</tr>
 					  		</table>
-					  		<table border="0" width="90%" align="center">
+					  		<table border="0" width="100%" align="center">
 				  			<tr>
 				  				<td colspan="3" align="center"><h2>KONTRAK PENJUALAN</h2></td>
 				  			</tr>
@@ -149,7 +146,7 @@
 				  			</tr>
 					  		</table>
 					  		<br/>
-					  		<table border="0" cellpadding="1" cellspacing="1" width="90%" align="center" style="border-width: 1px medium medium; border-style: solid none none; border-color: black -moz-use-text-color -moz-use-text-color;">
+					  		<table border="0" cellpadding="1" cellspacing="1" width="100%" align="center" style="border-width: 1px medium medium; border-style: solid none none; border-color: black -moz-use-text-color -moz-use-text-color;">
 					  			<tr>
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 30%"><spring:message code="product"/></th>
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.qty"/></th>
@@ -158,7 +155,7 @@
 					  				<th style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.total"/></th>
 					  			</tr>
 								<c:forEach items="${adapter.items}" var="item" varStatus="idx">
-					  			<tr>
+					  			<tr style="height: 25px;">
                                		<c:set var="pattern" value=",##0.00" />
 					  				<td style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.name}</td>
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
@@ -184,12 +181,12 @@
 					  			</tr>
 					  		</table>
 					  		<br/>
-					  		<table border="0" cellpadding="1" cellspacing="0" width="90%" align="center" style="table-layout: fixed; width: 90%">
+					  		<table border="0" cellpadding="1" cellspacing="2" width="100%" align="center" style="table-layout: fixed;">
 				  			<tr>
-				  				<td colspan="3"><spring:message code="salesorder.contract.term"/> :</td>
+				  				<td colspan="5"><spring:message code="salesorder.contract.term"/> :</td>
 				  			</tr>
 				  			<tr>	
-				  				<td align="left" colspan="3" style="word-wrap: break-word">
+				  				<td align="left" colspan="5">
 				  					<ul>
 				  						<li>Toleransi penyerahan barang (+/-) 5% dari quantity yang tertera dalam order.</li>
 				  						<li>Pembayaran dengan check,  Bilyet Giro, L/C atau Transfer dianggap terlaksana setelah dana masuk ke rekening
@@ -206,7 +203,7 @@
 				  						<li>Jika ada perselisihan yang timbul, akan tunduk pada yurisdiksi eksklusif pengadilan Indonesia.</li>
 				  						<li><spring:message code="salesorder.contract.payment"/>
 				  							<div>&nbsp;</div>
-					  						<table border="0" cellpadding="1" cellspacing="0" style="table-layout: fixed; width: 30%">
+					  						<table border="0" cellpadding="1" cellspacing="0">
 					  						<tr style="font-weight: bold;">
 					  							<td style="width: 50px">&nbsp;</td>
 					  							<td>
@@ -226,13 +223,15 @@
 					  			<td width="20%" align="center" valign="top">
 					  				<table border="0" cellpadding="0" cellspacing="0" width="100%">
 				  					<tr>
-				  						<td align="center"><spring:message code="salesorder.contract.buyer"/></td>
+				  						<td align="center" colspan="3"><spring:message code="salesorder.contract.buyer"/></td>
 				  					</tr>
-				  					<tr style="height: 100px">
-				  						<td align="center">&nbsp;</td>
+				  					<tr colspan="3" style="height: 100px">
+				  						<td align="center" colspan="3">&nbsp;</td>
 				  					</tr>
 									<tr style="text-transform: uppercase;font-weight: bold;">
-										<td align="center">(&nbsp;${salesOrder_edit.customer.salutation}&nbsp;${salesOrder_edit.customer.fullName}&nbsp;)</td>
+										<td style="width: 1px;">(</td>
+										<td align="center">${salesOrder_edit.customer.salutation}&nbsp;${salesOrder_edit.customer.fullName}</td>
+										<td style="width: 1px;">)</td>
 									</tr>
 									</table>
 								</td>
@@ -240,23 +239,25 @@
 					  			<td width="20%" align="center" valign="top">
 					  				<table border="0" cellpadding="0" cellspacing="0" width="100%">
 				  					<tr>
-				  						<td align="center"><spring:message code="salesorder.contract.seller"/></td>
+				  						<td align="center" colspan="3"><spring:message code="salesorder.contract.seller"/></td>
 				  					</tr>
-				  					<tr style="height: 100px">
-				  						<td align="center">&nbsp;</td>
+				  					<tr colspan="3" style="height: 100px">
+				  						<td align="center" colspan="3">&nbsp;</td>
 				  					</tr>
 									<tr style="text-transform: uppercase;font-weight: bold;">
-										<td align="center">(&nbsp;${salesOrder_edit.organization.salutation}&nbsp;${salesOrder_edit.organization.fullName}&nbsp;)</td>
+										<td style="width: 1px;">(</td>
+										<td align="center">&nbsp;${salesOrder_edit.organization.salutation}&nbsp;${salesOrder_edit.organization.fullName}&nbsp;</td>
+										<td style="width: 1px;">)</td>
 									</tr>
 									</table>
 								</td>
 				  				<td width=" 20%" align="center" valign="top"></td>
 							</tr>
 				  			<tr>
-								<td>&nbsp;</td>
+								<td colspan="5">&nbsp;</td>
 							</tr>
 				  			<tr>
-				  				<td colspan="3">
+				  				<td colspan="5">
 					  				Harap segera kirim kembali kontrak penjualan yang sudah di tandatangani dan di cap perusahaan melalui email atau
 					  				</br>Faks ke kantor perwakilan kami sebagai bukti persetujuan. Jika hal di atas tidak terpenuhi maka penjual dapat memilih
 					  				</br>untuk membatalkan penjualan.

@@ -1741,3 +1741,10 @@ input[type='number']::-webkit-inner-spin-button,input.number::-webkit-outer-spin
 	font-family:Verdana, Arial, Helvetica, sans-serif; 
 	font-size:10px;
 }
+
+.word-wrap
+{
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	white-space: normal;
+}

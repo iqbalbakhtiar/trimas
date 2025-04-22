@@ -53,6 +53,18 @@
 					</td>
 				</tr>
 				<tr>
+					<td align="right"><spring:message code="deliveryorder.driver"/></td>
+					<td width="1%" align="center">:</td>
+					<td><form:input path="driverName" cssClass="input-box"/></td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td align="right"><spring:message code="deliveryorder.plate"/></td>
+					<td width="1%" align="center">:</td>
+					<td><form:input path="plateNumber" cssClass="input-box"/></td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
 					<td align="right"><spring:message code="sirius.note"/></td>
 					<td width="1%" align="center">:</td>
 					<td><form:textarea path="note" rows="6" cols="45"/></td>

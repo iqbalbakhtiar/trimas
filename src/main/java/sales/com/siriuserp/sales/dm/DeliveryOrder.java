@@ -5,24 +5,11 @@
  */
 package com.siriuserp.sales.dm;
 
-import com.siriuserp.sdk.dm.Facility;
-import com.siriuserp.sdk.dm.JSONSupport;
-import com.siriuserp.sdk.dm.Model;
-import com.siriuserp.sdk.dm.Party;
-import com.siriuserp.sdk.dm.PostalAddress;
-import javolution.util.FastSet;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
-import org.hibernate.annotations.Type;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,9 +22,27 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Set;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.Type;
+
+import com.siriuserp.sdk.dm.Facility;
+import com.siriuserp.sdk.dm.JSONSupport;
+import com.siriuserp.sdk.dm.Model;
+import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.dm.PostalAddress;
+
+import javolution.util.FastSet;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author Iqbal Bakhtiar
@@ -67,6 +72,12 @@ public class DeliveryOrder extends Model implements JSONSupport
 	@Column(name = "realization")
 	@Type(type = "yes_no")
 	private boolean realization = Boolean.FALSE;
+
+	@Column(name = "driver_name")
+	private String driverName;
+
+	@Column(name = "plate_number")
+	private String plateNumber;
 
 	@Column(name = "note")
 	private String note;
@@ -105,6 +116,14 @@ public class DeliveryOrder extends Model implements JSONSupport
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@OrderBy("id")
 	private Set<DeliveryOrderItem> items = new FastSet<DeliveryOrderItem>();
+
+	public String getReferenceCode()
+	{
+		HashSet<String> references = new HashSet<String>();
+		references.addAll(getItems().stream().map(item -> item.getSaleOrderCode()).collect(Collectors.toSet()));
+
+		return String.join(" ", references);
+	}
 
 	@Override
 	public String getAuditCode()

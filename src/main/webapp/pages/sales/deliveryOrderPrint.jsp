@@ -8,7 +8,7 @@
 <base href="<%=basePath%>">
 <html>
 <head>
-	<title><spring:message code="salesorder.contract"/></title>
+	<title><spring:message code="deliveryorder"/></title>
 	<link rel="icon" type="image/png" href="<c:url value='/assets/images/title-logo.png'/>">
 	<style type="text/css" media="screen">
 		@import url("assets/sirius.css");
@@ -49,23 +49,20 @@
 							<h1 class="page-title"><spring:message code="salesorder.contract"/></h1>
 							<div class="clears">&nbsp;</div>
 							<div class="toolbar">
-								<a class="item-button-back" href="<c:url value="/page/salesorderpreedit.htm?id=${deliveryOrder_edit.id}"/>"><span><spring:message code="sirius.back"/></span></a>
+								<a class="item-button-back" href="<c:url value="/page/deliveryorderpreedit.htm?id=${deliveryOrder_edit.id}"/>"><span><spring:message code="sirius.back"/></span></a>
 								<a class="item-button-print" href="javascript: window.print();"><span><spring:message code="sirius.print"/></span></a>
 						  	</div>
 					  	</div>
 					  	<div class="main-box">
-					  		<table border="0" width="90%" align="center">
+					  		<table border="0" width="100%" align="center">
 					  			<tr>
 					  				<td>
 					  				<img src="assets/images/ssm-logo.png"  width="250" height="40"/>
 					  				</br><font size="2"></font>
 					  				</td>
 					  			</tr>
-					  			<tr>
-					  				<td></td>
-					  			</tr>
 					  		</table>
-					  		<table cellpadding="1" cellspacing="1" width="90%" align="center">
+					  		<table cellpadding="1" cellspacing="1" width="100%" align="center">
 							<tr>
 								<td valign="top" align="center" colspan="2"><h2>SURAT JALAN</h2></td>
 							</tr>
@@ -78,7 +75,7 @@
 										</tr>
 										<tr>
 											<td valign="top" nowrap="nowrap" colspan="3">
-											Bersama ini kendaraan No ${plate}</br>
+											Bersama ini kendaraan No <strong>${deliveryOrder_edit.plateNumber}</strong></br>
 											Kami kirimkan barang tersebut dibawah ini</br>
 											Harap diterima dengan baik.
 											</td>
@@ -107,25 +104,59 @@
 							</tr>
 							</table>
 					  		<br/>
-					  		<table border="0" cellpadding="1" cellspacing="1" width="90%" align="center" style="border-width: 1px medium medium; border-style: solid none none; border-color: black -moz-use-text-color -moz-use-text-color;">
+					  		<table border="0" cellpadding="1" cellspacing="1" width="100%" align="center" style="table-layout:fixed;border-width: 1px medium medium; border-style: solid none none; border-color: black -moz-use-text-color -moz-use-text-color;">
 					  			<tr>
-					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.qty"/></th>
+					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.qty"/></th>
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 30%"><spring:message code="product"/></th>
-					  				<th style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.note2"/></th>
+					  				<th style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;width: 30%"><spring:message code="sirius.note2"/></th>
 					  			</tr>
 								<c:forEach items="${deliveryOrder_edit.items}" var="item" varStatus="idx">
 									<c:if test="${item.deliveryItemType eq 'BASE'}">
+									<c:set var="bale" value="${item.quantity / 181.44}"/>
+									<c:set var="count" value="${fn:length(item.serials)}"/>
 						  			<tr>
 	                               		<c:set var="pattern" value=",##0.00" />
-						  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
-						  				<td style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.name}</td>
-						  				<td style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;">${item.note}</td>
+						  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;text-transform: uppercase;" valign="top">
+							  				<table border="0" cellpadding="1" cellspacing="5" width="100%">
+							  				<tr>
+							  					<td align="right" style="width: 50%"><fmt:formatNumber value='${count}' pattern=',##0.00'/></td>
+							  					<td style="width: 50%">Karung</td>
+						  					</tr>
+						  					<tr>
+							  					<td align="right"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
+							  					<td>${item.product.unitOfMeasure.measureId}</td>
+						  					</tr>
+						  					<tr>
+							  					<td align="right"><fmt:formatNumber value='${bale}' pattern=',##0.00'/></td>
+							  					<td>Bale</td>
+						  					</tr>
+							  				</table>
+						  				</td>
+						  				<td style="border-bottom:1px solid black;border-left:1px solid black;text-transform: uppercase;" valign="top">
+						  					<table border="0" cellpadding="1" cellspacing="5" width="100%">
+							  				<tr>
+							  					<td align="right" style="width: 20%;" nowrap="nowrap"><spring:message code="salesorder.contract.no"/></td>
+							  					<td style="width: 80%"nowrap="nowrap">: ${deliveryOrder_edit.referenceCode}</td>
+						  					</tr>
+						  					<tr>
+							  					<td align="right"><spring:message code="product"/></td>
+							  					<td>: ${item.product.name}</td>
+						  					</tr>
+							  				</table>
+						  				</td>
+						  				<td style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;text-transform: uppercase;" valign="top">
+						  					<table border="0" cellpadding="1" cellspacing="5" width="100%">
+						  					<tr>
+							  					<td class="word-wrap">${item.note}</td>
+						  					</tr>
+							  				</table>
+						  				</td>
 						  			</tr>
 						  			</c:if>
 					  			</c:forEach>
 					  		</table>
 					  		<br/>
-					  		<table border="0" cellpadding="1" cellspacing="0" width="90%" align="center" style="table-layout: fixed; width: 90%">
+					  		<table border="0" cellpadding="1" cellspacing="0" width="100%" align="center" style="table-layout: fixed; width: 100%">
 				  			<tr>
 				  				<td width="20%" align="center" valign="top">
 					  				<table border="0" cellpadding="0" cellspacing="0" width="100%">

@@ -24,7 +24,8 @@ public class SalesForm extends Form
 	private static final long serialVersionUID = -1116229667455960263L;
 
 	private String vehicle;
-	private String driver;
+	private String driverName;
+	private String plateNumber;
 	private String noteExt;
 
 	private BigDecimal amount = BigDecimal.ZERO;

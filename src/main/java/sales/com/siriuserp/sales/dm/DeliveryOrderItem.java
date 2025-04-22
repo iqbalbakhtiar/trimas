@@ -110,6 +110,14 @@ public class DeliveryOrderItem extends Model
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	private Set<DeliveryOrderRealizationItem> realizationItems = new FastSet<DeliveryOrderRealizationItem>();
 
+	public String getSaleOrderCode()
+	{
+		if (getDeliveryReferenceItem() != null)
+			return getDeliveryReferenceItem().getSalesOrderItem().getSalesOrder().getCode();
+
+		return "";
+	}
+
 	public Product getProduct()
 	{
 		if (getItemParent() != null)
