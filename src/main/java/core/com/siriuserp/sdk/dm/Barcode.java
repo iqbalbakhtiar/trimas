@@ -43,6 +43,9 @@ public class Barcode extends Model implements JSONSupport
 	@Column(name = "code")
 	private String code;
 
+	@Column(name = "lot_code")
+	private String lotCode;
+
 	@Column(name = "quantity")
 	private BigDecimal quantity = BigDecimal.ZERO;
 

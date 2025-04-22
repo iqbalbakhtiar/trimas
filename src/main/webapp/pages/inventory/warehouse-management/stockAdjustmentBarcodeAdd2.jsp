@@ -74,6 +74,7 @@
                 <th width="12%"><spring:message code="product.category"/></th>
                 <th width="8%"><spring:message code="product.uom"/></th>
                 <th width="8%"><spring:message code="barcode"/></th>
+                <th width="5%"><spring:message code="product.lot"/></th>
                 <th width="12%"><spring:message code="product.onhand"/></th>
                 <th width="12%"><spring:message code="product.quantity"/></th>
                 <th width="14%"><spring:message code="sirius.price"/></th>
@@ -98,6 +99,7 @@
                     <td nowrap="nowrap"><input class="input-disabled" disabled size="10" value="${item.product.productCategory.name}"></td>
                     <td nowrap="nowrap"><input class="input-disabled" disabled size="5" value="${item.product.unitOfMeasure.measureId}"></td>
                     <td nowrap="nowrap"><input class="input-disabled" readonly="true" size="13" name="items[${status.index}].serial" index="${status.index}" next="serial" value="${item.serial}"></td>
+                    <td nowrap="nowrap"><input class="input-disabled" readonly="true" size="5" name="items[${status.index}].lotCode" index="${status.index}" next="lotCode" value="${item.lotCode}"></td>
                     <td nowrap="nowrap"><input class="number-disabled" disabled size="12" id="onhand[${status.index}]" index="${status.index}" next="onhand" value="0.00"></td>
                     <td nowrap="nowrap"><input class="input-number negative" onchange="checkQuantity(${status.index});" size="12" id="quantity[${status.index}]" name="items[${status.index}].quantity" index="${status.index}" next="quantity" value="${item.quantityReal}"></td>
                     <td nowrap="nowrap"><input class="input-number" size="12" id="price[${status.index}]" name="items[${status.index}].price" index="${status.index}" next="price" value="<fmt:formatNumber value='${item.price}' pattern=',##0.00'/>"></td>
@@ -105,7 +107,7 @@
             </c:forEach>
             </tbody>
             <tfoot>
-            <tr class="end-table"><td colspan="16">&nbsp;</td></tr>
+            <tr class="end-table"><td colspan="11">&nbsp;</td></tr>
             </tfoot>
         </table>
     </sesform:form>

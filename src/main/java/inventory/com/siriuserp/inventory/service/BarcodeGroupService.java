@@ -170,13 +170,14 @@ public class BarcodeGroupService
 			{
 				String code = "";
 
-				if (SiriusValidator.validateParam(item.getCode()))
-					code = item.getCode();
+				if (SiriusValidator.validateParam(item.getSerial()))
+					code = item.getSerial();
 				else
-					code = GeneratorHelper.instance().generate(TableType.BARCODE_PRODUCT, codeSequenceDao);
+					code = GeneratorHelper.instance().generate(TableType.BARCODE_PRODUCT, codeSequenceDao, barcodeGroup.getDate());
 
 				Barcode barcode = new Barcode();
 				barcode.setCode(code);
+				barcode.setLotCode(item.getLotCode());
 				barcode.setProduct(item.getProduct());
 				barcode.setQuantity(item.getQuantity());
 

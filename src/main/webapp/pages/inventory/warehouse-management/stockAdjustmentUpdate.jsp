@@ -59,6 +59,8 @@
 			<th width="20%" nowrap="nowrap"><spring:message code="product.name"/></th>
 			<th width="15%" nowrap="nowrap"><spring:message code="product.category"/></th>
 			<th width="5%" nowrap="nowrap"><spring:message code="product.uom"/></th>
+			<th width="8%" nowrap="nowrap"><spring:message code="barcode"/></th>
+			<th width="5%" nowrap="nowrap"><spring:message code="product.lot"/></th>
 			<th width="10%" nowrap="nowrap"><spring:message code="product.quantity"/></th>
 			<th width="15%" nowrap="nowrap"><spring:message code="sirius.price"/></th>
 		</tr>
@@ -72,13 +74,15 @@
 			<td nowrap="nowrap"><c:out value='${item.product.name}'/></td>
 			<td nowrap="nowrap"><c:out value='${item.product.productCategory.name}'/></td>
 			<td nowrap="nowrap"><c:out value='${item.product.unitOfMeasure.measureId}'/></td>
+			<td nowrap="nowrap"><c:out value='${item.lot.serial}'/></td>
+			<td nowrap="nowrap"><c:out value='${item.lot.code}'/></td>
 			<td nowrap="nowrap"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
 			<td nowrap="nowrap"><fmt:formatNumber value='${item.money.amount}' pattern=',##0.00'/></td>
 		</tr>
 	</c:forEach>
 	</tbody>
 	<tfoot>
-	<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
+	<tr class="end-table"><td colspan="10">&nbsp;</td></tr>
 	</tfoot>
 	</table>
 	</sesform:form>

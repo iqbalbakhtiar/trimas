@@ -146,7 +146,7 @@ public class GeneratorHelper
 		{
 		case BARCODE_PRODUCT:
 		case BARCODE_MOVING:
-			return barcode(codeSequence, index);
+			return barcode(codeSequence, index, date);
 		case RECEIVABLES_CONTRA_BON:
 		case RECEIVABLES_DEDUCTION:
 			return print(codeSequence, index);
@@ -220,7 +220,7 @@ public class GeneratorHelper
 		return sb.toString();
 	}
 
-	private String barcode(CodeSequence codeSequence, Integer index)
+	private String barcode(CodeSequence codeSequence, Integer index, Date date)
 	{
 		StringBuilder barcode = new StringBuilder();
 
@@ -228,6 +228,7 @@ public class GeneratorHelper
 			barcode.append(codeSequence.getCompany());
 
 		barcode.append(codeSequence.getYear());
+		barcode.append(DateHelper.getMonth(date));
 
 		String sCode = "" + index;
 

@@ -27,6 +27,8 @@ function setInputDynamic(){
 	
 	$(".input-number").bind(inputFormat);
 	$(".input-decimal").bind(inputFormat);
+	$(".inputbox").bind(inputBoxNext);
+	$(".inputbox-small").bind(inputBoxNext);
 }
 
 function getFormat(obj) {
@@ -38,6 +40,16 @@ function getFormat(obj) {
 
 	return format['number'];
 }
+
+var inputBoxNext = {
+	keyup : function(event) {
+		if(event.keyCode==13){
+			$nextrow = $(this).parents("tr").next().find($('[next='+$(this).attr("next")+']'));
+			$nextrow.focus();
+			$nextrow.select();
+		}
+	}
+};
 
 var inputFormat = {
 	keydown : function(event) {

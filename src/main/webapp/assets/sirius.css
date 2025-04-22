@@ -589,6 +589,16 @@ padding					: 10px 10px 10px 10px;
 	font-size	: 11px;
 	border      : 1px inset #BCBFCE;
 	padding     : 5px;
+	width       : 50px;
+	background  : #FFFFE7;
+}
+
+.inputbox-x-small {
+	font-family	: verdana, arial, sans;
+	color       : #033F6F;
+	font-size	: 11px;
+	border      : 1px inset #BCBFCE;
+	padding     : 5px;
 	width       : 30px;
 	background  : #FFFFE7;
 }

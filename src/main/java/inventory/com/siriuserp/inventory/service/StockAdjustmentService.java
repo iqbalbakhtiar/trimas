@@ -187,6 +187,9 @@ public class StockAdjustmentService
 				if (SiriusValidator.validateParam(item.getSerial()))
 					adjustmentItem.getLot().setSerial(item.getSerial());
 
+				if (SiriusValidator.validateParam(item.getLotCode()))
+					adjustmentItem.getLot().setCode(item.getLotCode());
+
 				adjustmentItem.getMoney().setExchangeType(ExchangeType.SPOT);
 				adjustmentItem.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
 				adjustmentItem.getMoney().setAmount(item.getPrice());

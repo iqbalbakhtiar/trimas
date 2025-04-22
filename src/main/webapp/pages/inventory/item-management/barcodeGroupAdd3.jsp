@@ -108,6 +108,7 @@
                             <th width="15%" nowrap="nowrap"><spring:message code="product"/></th>
                             <th width="4%" nowrap="nowrap"><spring:message code="product.uom"/></th>
                             <th width="10%" nowrap="nowrap"><spring:message code="barcode"/></th>
+                            <th width="5%" nowrap="nowrap"><spring:message code="product.lot"/></th>
                             <th width="5%" nowrap="nowrap"><spring:message code="barcode.quantity.base"/></th>
                            	<th width="55%" nowrap="nowrap"><c:if test="${barcode_form.barcodeGroupType ne 'STOCK_ADJUSTMENT'}"><spring:message code="barcode.quantity.real"/></c:if></th>
                         </tr>
@@ -125,7 +126,8 @@
                                 </select>
                             </td>
                             <td><input value="${barcode.product.unitOfMeasure.measureId}" class="input-disabled" size="5" disabled/></td>
-                            <td><input id="code[${status.index}]" value="" name="items[${status.index}].code" index="${status.index}" class="inputbox barcodes" size="15" next="barcode"/></td>
+                            <td><input id="code[${status.index}]" value="" name="items[${status.index}].serial" index="${status.index}" class="inputbox barcodes" size="15" next="barcode"/></td>
+                            <td><input id="lotCode[${status.index}]" value="" name="items[${status.index}].lotCode" index="${status.index}" class="inputbox-small" size="5" next="lotCode"/></td>
                             <td><input id="quantity[${status.index}]" value="0.00" name="items[${status.index}].quantity" index="${status.index}" class="input-decimal quantities ref${barcode.referenceId}" size="10" onchange="countQuantities(${status.index})" next="quan" group="${barcode.referenceId}"/></td>
                             <td>
                             	<input style="${barcode_form.barcodeGroupType eq 'STOCK_ADJUSTMENT' ? 'display:none;':''}" id="quantityReal[${status.index}]" value="0.00" name="items[${status.index}].quantityReal" index="${status.index}" class="input-decimal realQuantities refReal${barcode.referenceId}" size="10" onchange="countRealQuantities(${status.index})" next="realQuan" group="${barcode.referenceId}"/>
@@ -136,7 +138,7 @@
                         	<c:set var="number" value="${number+1}"/>
                         </c:if>
                         <c:if test="${empty barcode.product}">
-                        	<td colspan="5"></td>
+                        	<td colspan="6"></td>
                         	<td><input id="total${barcode.referenceId}" value="0.00" class="number-disabled totals" size="10" disabled="true" group="${barcode.referenceId}"/></td>
                         	<td><input id="totalReal${barcode.referenceId}" value="0.00" class="number-disabled" size="10" disabled="true" group="${barcode.referenceId}"/></td>
                         </c:if>
@@ -144,7 +146,7 @@
                         </c:forEach>
                         </tbody>
                         <tfoot>
-                        <tr class="end-table"><td colspan="7">&nbsp;</td></tr>
+                        <tr class="end-table"><td colspan="8">&nbsp;</td></tr>
                         </tfoot>
                     </table>
                 </div>
@@ -158,6 +160,7 @@
 <script type="text/javascript">
     var $dialog = $('<div></div>').dialog({autoOpen: false,title: '${title}',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
 
+    setInputDynamic();
     $('.b_entry').click(function(e){
         $status = true;
 
@@ -247,8 +250,13 @@
             
             total = total + quantity;
         });
-
-        document.getElementById('total'+qty.attr('group')).value = total.numberFormat('#,###.##');
+        
+        var barType = '${barcode_form.barcodeGroupType}';
+        if(barType == 'STOCK_ADJUSTMENT')
+        	document.getElementById('gTotalRef'+qty.attr('group')).value = total.numberFormat('#,###.##');
+        
+        if(document.getElementById('total'+qty.attr('group')))
+       		document.getElementById('total'+qty.attr('group')).value = total.numberFormat('#,###.##');
     }
 
     function countRealQuantities(index)

@@ -108,6 +108,7 @@
                     <th width="15%" nowrap="nowrap"><spring:message code="product"/></th>
                     <th width="4%" nowrap="nowrap"><spring:message code="product.uom"/></th>
                     <th width="8%" nowrap="nowrap"><spring:message code="barcode"/></th>
+                    <th width="5%" nowrap="nowrap"><spring:message code="product.lot"/></th>
                     <th width="5%" nowrap="nowrap"><spring:message code="barcode.quantity.base"/></th>
                     <th width="55%" nowrap="nowrap"><spring:message code="barcode.quantity.real"/></th>
                 </tr>
@@ -134,6 +135,7 @@
                         </td>
                         <td><input class="input-disabled" value="${barcode.product.unitOfMeasure.measureId}" disabled size="5"/></td>
                         <td><input class="input-disabled" value="${barcode.code}" disabled size="12"/></td>
+                        <td><input class="input-disabled" value="${barcode.lotCode}" disabled size="5"/></td>
                         <td><input class="number-disabled quan" disabled value="<fmt:formatNumber value='${barcode.quantity}' pattern=',##0.00'/>" size="10"/></td>
                         <td>
                         	<input class="number-disabled quanReal" disabled value="<fmt:formatNumber value='${barcode.quantityReal}' pattern=',##0.00'/>" size="10"/>
@@ -150,7 +152,7 @@
                 </tr> --%>
                 </tbody>
                 <tfoot>
-                <tr class="end-table"><td colspan="13">&nbsp;</td></tr>
+                <tr class="end-table"><td colspan="8">&nbsp;</td></tr>
                 </tfoot>
             </table>
         </div>
