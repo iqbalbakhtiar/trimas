@@ -50,12 +50,12 @@
 						</form:select>
 					</td>
 				</tr>
-				<tr>
+				<%-- <tr>
 					<td align="right"><spring:message code="deliveryorder.driver"/></td>
 					<td width="1%" align="center">:</td>
 					<td><form:input path="driverName" cssClass="input-box"/></td>
 					<td>&nbsp;</td>
-				</tr>
+				</tr> --%>
 				<tr>
 					<td align="right"><spring:message code="deliveryorder.plate"/></td>
 					<td width="1%" align="center">:</td>

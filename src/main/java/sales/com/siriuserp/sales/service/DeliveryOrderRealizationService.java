@@ -130,6 +130,7 @@ public class DeliveryOrderRealizationService extends Service
 				realizationItem.setMoney(money);
 				realizationItem.setNote(item.getNote());
 				realizationItem.getLot().setSerial(item.getSerial());
+				realizationItem.getLot().setCode(item.getLotCode());
 				realizationItem.setTax(deliveryOrderItem.getTax());
 
 				if (!realizationItem.getProduct().isSerial() || deliveryOrderItem.getDeliveryItemType().equals(DeliveryOrderItemType.SERIAL))

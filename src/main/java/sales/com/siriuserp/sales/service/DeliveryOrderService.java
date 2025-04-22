@@ -159,6 +159,7 @@ public class DeliveryOrderService extends Service
 					serialItem.setDeliveryItemType(sItem.getDeliveryItemType());
 					serialItem.setNote(sItem.getNote());
 					serialItem.getLot().setSerial(sItem.getSerial());
+					serialItem.getLot().setCode(sItem.getLotCode());
 					serialItem.setItemParent(baseItem);
 
 					InventoryItem inventoryItem = inventoryItemDao.getItemBySerial(serialItem.getLot().getSerial(), true);

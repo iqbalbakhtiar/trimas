@@ -76,9 +76,11 @@
 					_container.appendChild(_opt);
 				}
 
-				var _lot = self.opener.document.getElementById('lot[${param.index}]');
+				var _lot = self.opener.document.getElementById('lotCode[${param.index}]');
 				if(_lot)
 					_lot.value = inventory.lotCode;
+				
+				console.log('>>> '+_lot.value+' '+inventory.lotCode);
 				
 				var _productId = self.opener.document.getElementById('productId[${param.index}]');
 				if(_productId)

@@ -45,8 +45,6 @@
 				<div id="r14">
 					<div id="se-contents">
 						<div class="area" dojoType="Container" id="quick_link_container">
-							<h1 class="page-title"></h1>
-							<h1 class="page-title"><spring:message code="salesorder.contract"/></h1>
 							<div class="clears">&nbsp;</div>
 							<div class="toolbar">
 								<a class="item-button-back" href="<c:url value="/page/deliveryorderpreedit.htm?id=${deliveryOrder_edit.id}"/>"><span><spring:message code="sirius.back"/></span></a>

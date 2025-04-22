@@ -52,12 +52,12 @@
 						</form:select>
 					</td>
 				</tr>
-				<tr>
+				<%-- <tr>
 					<td align="right"><spring:message code="deliveryorder.driver"/></td>
 					<td width="1%" align="center">:</td>
 					<td><form:input path="driverName" cssClass="input-box"/></td>
 					<td>&nbsp;</td>
-				</tr>
+				</tr> --%>
 				<tr>
 					<td align="right"><spring:message code="deliveryorder.plate"/></td>
 					<td width="1%" align="center">:</td>
@@ -416,6 +416,7 @@ function addLine($idxRef, $index) {
     $tr = $('<tr/>');
     
 	$barcode = List.get('<select class="combobox barcodes" onchange="updateQuantity('+$idxRef+','+$referenceId+');"/>','serial['+$index+']');
+	$lotCode = List.get('<input type="text" class="input-disabled" readonly="true" size="10" style="display:none;"/>','lotCode['+$index+']');
 	$barcodeImg = List.img('<spring:message code="barcode"/>', $index, 'openBarcode("'+$index+'","'+$productId+'")');
 	
 	$qty = List.get('<input type="text" class="input-number input-disabled qtyRef'+$referenceId+'" readonly="true" size="10" onchange="updateQuantity('+$idxRef+','+$referenceId+');"/>','quantity['+$index+']', '0.00');
@@ -429,7 +430,7 @@ function addLine($idxRef, $index) {
 
 	$tr.append(List.col(''));
 	$tr.append(List.col(''));
-	$tr.append(List.col([$barcode, $barcodeImg], '', 'text-align: right;').attr('colspan','2'));
+	$tr.append(List.col([$barcode, $lotCode, $barcodeImg], '', 'text-align: right;').attr('colspan','2'));
 	$tr.append(List.col([$qty]));
 	$tr.append(List.col([$uom]));
 	$tr.append(List.col([$container]));
