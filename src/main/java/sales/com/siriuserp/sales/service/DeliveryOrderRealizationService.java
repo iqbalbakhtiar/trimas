@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.siriuserp.accountreceivable.dao.BillingDao;
+import com.siriuserp.inventory.dao.InventoryItemDao;
+import com.siriuserp.inventory.dm.InventoryItem;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
 import com.siriuserp.sales.dm.DeliveryOrder;
 import com.siriuserp.sales.dm.DeliveryOrderItem;
@@ -38,6 +40,7 @@ import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
 import com.siriuserp.sdk.utility.ReferenceItemHelper;
+import com.siriuserp.sdk.utility.SiriusValidator;
 
 import javolution.util.FastMap;
 
@@ -56,6 +59,9 @@ public class DeliveryOrderRealizationService extends Service
 
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
+
+	@Autowired
+	private InventoryItemDao inventoryItemDao;
 
 	@Autowired
 	private BillingDao billingDao;
@@ -132,6 +138,14 @@ public class DeliveryOrderRealizationService extends Service
 				realizationItem.getLot().setSerial(item.getSerial());
 				realizationItem.getLot().setCode(item.getLotCode());
 				realizationItem.setTax(deliveryOrderItem.getTax());
+
+				if (SiriusValidator.validateParam(realizationItem.getLot().getSerial()))
+				{
+					InventoryItem inventoryItem = inventoryItemDao.getItemBySerial(realizationItem.getLot().getSerial(), true);
+					inventoryItem.setReserved(BigDecimal.ZERO);
+
+					genericDao.update(inventoryItem);
+				}
 
 				if (!realizationItem.getProduct().isSerial() || deliveryOrderItem.getDeliveryItemType().equals(DeliveryOrderItemType.SERIAL))
 					realizationItem.setTransactionItem(ReferenceItemHelper.init(genericDao, realizationItem.getAccepted(), WarehouseTransactionType.OUT, realizationItem));
