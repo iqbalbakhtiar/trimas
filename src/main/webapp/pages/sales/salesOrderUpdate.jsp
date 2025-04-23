@@ -55,6 +55,13 @@
 					</td>
 				</tr>
 				<tr>
+					<td width="19%" align="right"><spring:message code="creditterm.term"/> :</td>
+					<td width="1%" align="center">:</td>
+					<td>
+						<form:input id='term' path='term' cssClass='number-disabled' size="5" disabled="true"/>
+					</td>
+				</tr>
+				<tr>
 					<td align="right"><spring:message code="salesorder.shipping.date"/></td>
 					<td width="1%" align="center">:</td>
 					<td><input id="shippingDate" name="shippingDate" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${salesOrder_edit.shippingDate}' pattern='dd-MM-yyyy'/>"/></td>

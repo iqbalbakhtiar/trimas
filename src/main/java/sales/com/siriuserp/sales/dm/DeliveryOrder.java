@@ -125,6 +125,14 @@ public class DeliveryOrder extends Model implements JSONSupport
 		return String.join(" ", references);
 	}
 
+	public String getReferenceLot()
+	{
+		HashSet<String> references = new HashSet<String>();
+		references.addAll(getItems().stream().map(item -> item.getLot() != null ? "LOT " + item.getLot().getCode() : "").collect(Collectors.toSet()));
+
+		return String.join(" ", references);
+	}
+
 	@Override
 	public String getAuditCode()
 	{

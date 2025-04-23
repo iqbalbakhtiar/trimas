@@ -249,13 +249,13 @@ public class GeneratorHelper
 			sb.append("0");
 
 		sb.append(index);
-		sb.append(" / BNG");
+		sb.append("/BNG");
 
 		if (tax != null && tax.getTaxRate().compareTo(BigDecimal.ZERO) > 0)
-			sb.append(" / SSM");
+			sb.append("/SSM");
 
-		sb.append(" / " + DateHelper.getMonth(date));
-		sb.append(" / " + DateHelper.getYear(date));
+		sb.append("/" + DateHelper.getMonth(date));
+		sb.append("/" + DateHelper.getYear(date));
 
 		return sb.toString();
 	}

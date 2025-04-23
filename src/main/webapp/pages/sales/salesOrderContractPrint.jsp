@@ -87,11 +87,6 @@
 				  				<td></td>
 				  			</tr>
 				  			<tr>
-				  				<td width="10%">No PO</td>
-				  				<td align="left">: </td>
-				  				<td></td>
-				  			</tr>
-				  			<tr>
 				  				<td><spring:message code="salesorder.contract.no"/></td>
 				  				<td align="left">: ${salesOrder_edit.code}</td>
 				  				<td align="left"></td>
@@ -139,7 +134,7 @@
 				  			</tr>
 				  			<tr>
 				  				<td><spring:message code="salesorder.contract.payment"/></td>
-				  				<td align="left">: 30 hari setelah barang diterima</td>
+				  				<td align="left">: ${salesOrder_edit.term} hari setelah barang diterima</td>
 				  				<td align="left"></td>
 				  			</tr>
 					  		</table>
@@ -208,7 +203,14 @@
 					  							PT SAN STAR MANUNGGAL</br>
 					  							OCBC NISP</br>
 					  							ASIA AFRIKA - BANDUNG</br>
-					  							060800006227
+					  							<strong style="font-size: 11px;">060800006227</strong>
+					  							</td>
+					  							<td style="width: 50px" align="center"><spring:message code="notif.or"/></td>
+					  							<td>
+					  							PT SAN STAR MANUNGGAL</br>
+					  							BANK CENTRAL ASIA</br>
+					  							ASIA AFRIKA - BANDUNG</br>
+					  							<strong style="font-size: 11px;">0089908088</strong>
 					  							</td>
 				  							</tr>
 				  							</table>
@@ -254,8 +256,8 @@
 				  			<tr>
 								<td colspan="5">&nbsp;</td>
 							</tr>
-				  			<tr>
-				  				<td colspan="5">
+				  			<tr style="overflow: hidden;">
+				  				<td colspan="5" nowrap="nowrap">
 					  				Harap segera kirim kembali kontrak penjualan yang sudah di tandatangani dan di cap perusahaan melalui email atau
 					  				</br>Faks ke kantor perwakilan kami sebagai bukti persetujuan. Jika hal di atas tidak terpenuhi maka penjual dapat memilih
 					  				</br>untuk membatalkan penjualan.

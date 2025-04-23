@@ -65,32 +65,32 @@
 								<td valign="top" align="center" colspan="2"><h2>SURAT JALAN</h2></td>
 							</tr>
 							<tr>
-								<td>
+								<td style="width: 50%;">
 									<table>
 										<tr style="font-weight: bold;font-size: large;">
-											<td valign="top" nowrap="nowrap">No </td>
-											<td nowrap="nowrap" colspan="2">: <c:out value="${deliveryOrder_edit.code}" /></td>
+											<td valign="top" nowrap="nowrap" style="width: 15px;">No </td>
+											<td nowrap="nowrap" colspan="2">: <c:out value="${fn:replace(deliveryOrder_edit.code, 'SJ', '')}" /></td>
 										</tr>
 										<tr>
 											<td valign="top" nowrap="nowrap" colspan="3">
-											Bersama ini kendaraan No <strong>${deliveryOrder_edit.plateNumber}</strong></br>
+											Bersama ini kendaraan No <strong style="text-transform: uppercase;">${deliveryOrder_edit.plateNumber}</strong></br>
 											Kami kirimkan barang tersebut dibawah ini</br>
 											Harap diterima dengan baik.
 											</td>
 										</tr>
 									</table>
 								</td>
-								<td>
+								<td style="width: 50%;">
 									<table cellpadding="1" cellspacing="1" width="100%">
 										<tr>
-											<td valign="top" colspan="2">Sumedang, <fmt:formatDate value='${deliveryOrder_edit.date}' pattern='dd-MM-yyyy'/></td>
+											<td valign="top" colspan="2">Sumedang, <fmt:formatDate value='${deliveryOrder_edit.date}' pattern='dd MMMM yyyy'/></td>
 										</tr>
 										<tr>
 											<td valign="top" colspan="2">Kepada Yth.</td>
 										</tr>
 										<tr>
 											<td style="width: 50px;">&nbsp;</td>
-											<td>
+											<td class="word-wrap">
 												<strong><c:out value='${deliveryOrder_edit.customer.salutation}'/> <c:out value='${deliveryOrder_edit.customer.fullName}' /></strong>
 												</br>
 												<c:out value='${deliveryOrder_edit.shippingAddress.address}'/></br>
@@ -105,7 +105,7 @@
 					  		<table border="0" cellpadding="1" cellspacing="1" width="100%" align="center" style="table-layout:fixed;border-width: 1px medium medium; border-style: solid none none; border-color: black -moz-use-text-color -moz-use-text-color;">
 					  			<tr>
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.qty"/></th>
-					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 30%"><spring:message code="product"/></th>
+					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 35%"><spring:message code="product"/></th>
 					  				<th style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;width: 30%"><spring:message code="sirius.note2"/></th>
 					  			</tr>
 								<c:forEach items="${deliveryOrder_edit.items}" var="item" varStatus="idx">
@@ -130,7 +130,7 @@
 						  					</tr>
 							  				</table>
 						  				</td>
-						  				<td style="border-bottom:1px solid black;border-left:1px solid black;text-transform: uppercase;" valign="top">
+						  				<td style="border-bottom:1px solid black;border-left:1px solid black;text-transform: uppercase;" valign="top" nowrap="nowrap">
 						  					<table border="0" cellpadding="1" cellspacing="5" width="100%">
 							  				<tr>
 							  					<td align="right" style="width: 20%;" nowrap="nowrap"><spring:message code="salesorder.contract.no"/></td>
@@ -138,12 +138,12 @@
 						  					</tr>
 						  					<tr>
 							  					<td align="right"><spring:message code="product"/></td>
-							  					<td>: ${item.product.name}</td>
+							  					<td>: ${item.product.name} ${deliveryOrder_edit.referenceLot}</td>
 						  					</tr>
 							  				</table>
 						  				</td>
 						  				<td style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;text-transform: uppercase;" valign="top">
-						  					<table border="0" cellpadding="1" cellspacing="5" width="100%">
+						  					<table border="0" cellpadding="1" cellspacing="5" width="100%" style="table-layout: fixed;">
 						  					<tr>
 							  					<td class="word-wrap">${item.note}</td>
 						  					</tr>

@@ -35,9 +35,6 @@
 		page-break-after: always !important;
 		page-break-inside: avoid;
 	}
-	div#footer_part {
-
-	}
 	.main_scroll {
 		width: 100%;
 		overflow-x: scroll;
@@ -168,6 +165,8 @@
 		letter-spacing: normal;
 		width: 100%;
 		height: 100%;
+		overflow-x: hidden;
+		overflow-y: hidden;
 	}
 	div#main_container {
 		position: relative;
