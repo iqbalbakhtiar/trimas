@@ -72,7 +72,7 @@
 						<input size="7" id="taxRate" class="input-disabled" disabled />
 					</td>
 				</tr>
-				<tr style="display: none;">
+				<tr>
 					<td align="right"><spring:message code="approver"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
