@@ -320,11 +320,11 @@ function validateForm() {
     }
 
     // Validasi approver
-    /* var approver = $('#approver').val();
+    var approver = $('#approver').val();
     if (approver == null || approver === "") {
         alert('<spring:message code="approver"/> <spring:message code="notif.empty"/> !');
         return false;
-    } */
+    }
     
  	// **Tambahkan validasi untuk memastikan setidaknya ada satu line item**
     if ($('#lineItem tr').length === 0) {
