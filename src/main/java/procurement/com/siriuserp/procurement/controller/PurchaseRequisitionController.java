@@ -132,4 +132,10 @@ public class PurchaseRequisitionController extends ControllerBase
 
 		return ViewHelper.redirectTo("purchaserequisitionview.htm");
 	}
+
+	@RequestMapping("/purchaserequisitionprint.htm")
+	public ModelAndView print(@RequestParam("id") Long id) throws Exception
+	{
+		return new ModelAndView("/procurement/purchaseRequisitionPrint", service.preedit(id));
+	}
 }
