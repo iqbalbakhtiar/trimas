@@ -68,7 +68,7 @@
 							  			</tr>
 							  			<tr>
 							  				<td style="width: 1%;"><spring:message code="sirius.date"/></td>
-							  				<td align="left" colspan="3">: <fmt:formatDate value='${purchase_edit.date}' pattern='dd-MM-yyyy'/></td>
+							  				<td align="left" colspan="3">: <fmt:formatDate value='${purchase_edit.date}' pattern='dd MMMM yyyy'/></td>
 							  			</tr>
 							  			</table>
 					  				</td>

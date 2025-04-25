@@ -34,4 +34,23 @@ public enum PurchaseType
 			return null;
 		}
 	}
+
+	public String getCode()
+	{
+		switch (this)
+		{
+		case STANDARD:
+			return "STD";
+		case DIRECT:
+			return "DIR";
+		case SERVICE:
+			return "SERV";
+		case ASSET:
+			return "ASET";
+		case INVENTARIS:
+			return "INV";
+		default:
+			return null;
+		}
+	}
 }

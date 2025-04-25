@@ -109,7 +109,7 @@ public class PurchaseOrderService extends Service
 		purchaseOrder.setMoney(new Money());
 		purchaseOrder.getMoney().setAmount(form.getAmount());
 		purchaseOrder.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
-		purchaseOrder.setCode(GeneratorHelper.instance().generate(TableType.PURCHASE_ORDER, codeSequenceDao));
+		purchaseOrder.setCode(GeneratorHelper.instance().generate(TableType.PURCHASE_ORDER, codeSequenceDao, purchaseOrder.getPurchaseType().getCode(), purchaseOrder.getDate(), null));
 		purchaseOrder.setShippingDate(form.getDeliveryDate());
 		purchaseOrder.setStatus(POStatus.OPEN);
 

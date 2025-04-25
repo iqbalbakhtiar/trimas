@@ -157,6 +157,8 @@ public class GeneratorHelper
 			return sales(codeSequence, index, date, tax);
 		case DELIVERY_ORDER:
 			return delivery(tableType, codeSequence, index, date);
+		case PURCHASE_ORDER:
+			return purchase(codeSequence, index, date);
 		default:
 			return format(codeSequence, index);
 		}
@@ -274,6 +276,26 @@ public class GeneratorHelper
 			sb.append("0");
 
 		sb.append(index);
+
+		return sb.toString();
+	}
+
+	private String purchase(CodeSequence codeSequence, Integer index, Date date)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("PO/");
+		String sCode = "" + index;
+
+		for (int idx = 0; idx < (codeSequence.getType().getLength() - sCode.trim().length()); idx++)
+			sb.append("0");
+
+		sb.append(index);
+
+		if (codeSequence.getCompany() != null)
+			sb.append("/" + codeSequence.getCompany());
+
+		sb.append("/" + DateHelper.toMonthRome(Integer.valueOf(DateHelper.getMonth(date))));
+		sb.append("/" + DateHelper.getYear(date));
 
 		return sb.toString();
 	}
