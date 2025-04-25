@@ -140,8 +140,11 @@ public class SalesOrderController extends ControllerBase
 	}
 
 	@RequestMapping("/salesorderprint.htm")
-	public ModelAndView print(@RequestParam("id") Long id) throws Exception
+	public ModelAndView print(@RequestParam("id") Long id, @RequestParam("printType") int printType) throws Exception
 	{
+		if (printType == 1)
+			return new ModelAndView("/sales/salesOrderContractPrintTax", service.preedit(id));
+
 		return new ModelAndView("/sales/salesOrderContractPrint", service.preedit(id));
 	}
 

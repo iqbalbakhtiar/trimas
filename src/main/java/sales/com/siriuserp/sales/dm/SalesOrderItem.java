@@ -97,6 +97,12 @@ public class SalesOrderItem extends Model implements DeliveryOrderReferenceable
 		return DeliveryOrderReferenceType.SALES_ORDER;
 	}
 
+	// (Qty * Amount)
+	public BigDecimal getTotalAmount()
+	{
+		return getQuantity().multiply(getMoney().getAmount());
+	}
+
 	@Override
 	public Map<String, Object> val()
 	{

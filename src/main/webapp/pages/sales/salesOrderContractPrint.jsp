@@ -53,26 +53,6 @@
 					  	</div>
 					  	<div class="main-box">
 					  		<table border="0" width="100%" align="center">
-					  			<tr>
-					  				<td>
-					  				<img src="assets/images/ssm-logo.png"  width="250" height="40"/>
-					  				</br><font size="2"></font>
-					  				</td>
-					  			</tr>
-					  			<tr>
-					  				<td>
-					  					<c:forEach items='${salesOrder_edit.organization.postalAddresses}' var='address'>
-										<c:if test='${address.selected}'>
-											JL. RAYA RANCAEKEK KM 27</br>
-											SUMEDANG</br>
-											Tlp. (022) 7798320</br>
-											Fax. (022) 7790185</br>
-										</c:if>
-									    </c:forEach>
-					  				</td>
-					  			</tr>
-					  		</table>
-					  		<table border="0" width="100%" align="center">
 				  			<tr>
 				  				<td colspan="3" align="center"><h2>KONTRAK PENJUALAN</h2></td>
 				  			</tr>
@@ -134,7 +114,12 @@
 				  			</tr>
 				  			<tr>
 				  				<td><spring:message code="salesorder.contract.payment"/></td>
-				  				<td align="left">: ${salesOrder_edit.term} hari setelah barang diterima</td>
+				  				<c:if test="${salesOrder_edit.term gt 0}">
+				  					<td align="left">: ${salesOrder_edit.term} hari setelah barang diterima</td>
+				  				</c:if>
+				  				<c:if test="${salesOrder_edit.term eq 0}">
+				  					<td align="left">: CASH</td>
+				  				</c:if>
 				  				<td align="left"></td>
 				  			</tr>
 					  		</table>
@@ -162,16 +147,6 @@
 					  				<td align="right"><spring:message code="salesorder.total"/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalItemAmount}' pattern='${pattern}'/></td>
 					  			</tr>
-					  			<tr style="font-weight: bold;">
-					  				<td align="right" colspan="3">&nbsp;</td>
-					  				<td align="right"><spring:message code="salesorder.tax.amount"/></td>
-					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.taxAmount}' pattern='${pattern}'/></td>
-					  			</tr>
-					  			<tr style="font-weight: bold;">
-					  				<td align="right" colspan="3">&nbsp;</td>
-					  				<td align="right"><spring:message code="salesorder.total.transaction"/></td>
-					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalTransaction}' pattern='${pattern}'/></td>
-					  			</tr>
 					  		</table>
 					  		<br/>
 					  		<table border="0" cellpadding="1" cellspacing="2" width="100%" align="center" style="table-layout: fixed;">
@@ -194,27 +169,6 @@
 											</br>memilih untuk membatalkan penjualan.
 				  						</li>
 				  						<li>Jika ada perselisihan yang timbul, akan tunduk pada yurisdiksi eksklusif pengadilan Indonesia.</li>
-				  						<li><spring:message code="salesorder.contract.payment"/>
-				  							<div>&nbsp;</div>
-					  						<table border="0" cellpadding="1" cellspacing="0">
-					  						<tr style="font-weight: bold;">
-					  							<td style="width: 50px">&nbsp;</td>
-					  							<td>
-					  							PT SAN STAR MANUNGGAL</br>
-					  							OCBC NISP</br>
-					  							ASIA AFRIKA - BANDUNG</br>
-					  							<strong style="font-size: 11px;">060800006227</strong>
-					  							</td>
-					  							<td style="width: 50px" align="center"><spring:message code="notif.or"/></td>
-					  							<td>
-					  							PT SAN STAR MANUNGGAL</br>
-					  							BANK CENTRAL ASIA</br>
-					  							ASIA AFRIKA - BANDUNG</br>
-					  							<strong style="font-size: 11px;">0089908088</strong>
-					  							</td>
-				  							</tr>
-				  							</table>
-				  						</li>
 				  					</ul>
 				  				</td>
 				  			</tr>
@@ -258,9 +212,8 @@
 							</tr>
 				  			<tr style="overflow: hidden;">
 				  				<td colspan="5" nowrap="nowrap">
-					  				Harap segera kirim kembali kontrak penjualan yang sudah di tandatangani dan di cap perusahaan melalui email atau
-					  				</br>Faks ke kantor perwakilan kami sebagai bukti persetujuan. Jika hal di atas tidak terpenuhi maka penjual dapat memilih
-					  				</br>untuk membatalkan penjualan.
+					  				Harap segera kirim kembali kontrak penjualan yang sudah di tandatangani melalui email atau faks ke kantor perwakilan kami
+					  				</br>sebagai bukti persetujuan. Jika hal di atas tidak terpenuhi maka penjual dapat memilih untuk membatalkan penjualan.
 				  				</td>
 				  			</tr>
 					  		</table>

@@ -4,7 +4,7 @@
 <div class="toolbar">
 	<a class="item-button-list" href="<c:url value='/page/salesorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
-	<a class="item-button-print"  href="<c:url value='/page/salesorderprint.htm?id=${salesOrder_edit.id}'/>"><span><spring:message code="sirius.print"/></span></a>
+	<a class="item-button-print"><span><spring:message code="sirius.print"/></span></a>
 	<c:if test="${salesOrder_edit.soStatus != 'CLOSE'}">
 		<a class="item-button-close"><span><spring:message code="sirius.close"/></span></a>
 	</c:if>
@@ -169,6 +169,7 @@
 		</div>
 		<div id="productLineItem" dojoType="ContentPane" label="<spring:message code='salesorder.lineitem'/>" class="tab-pages" refreshOnShow="true" selected="true">
   			<div class="toolbar-clean">
+          		<c:set var="isApprover" value="${not empty person and person.id == approvalDecision.forwardTo.id and approvalDecision.approvalDecisionStatus != 'APPROVE_AND_FINISH' and approvalDecision.approvalDecisionStatus != 'REJECTED'}" />
 		    	<table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">
 			    	<thead>
 				    	<tr>
@@ -182,15 +183,35 @@
 						</tr>
 					</thead>
 					<tbody id="lineItem">
-					<c:forEach items="${adapter.items}" var="item" varStatus="idx">
+					<c:forEach items="${salesOrder_edit.items}" var="item" varStatus="idx">
 						<tr>
                 			<td>&nbsp;</td>
 			                <td><input id="product[${idx.index}]" size="26" value="${item.product.name}" class="input-disabled" name="items[${idx.index}].product" index="${idx.index}" next="product" disabled/></td>
-			                <td><input id="quantity[${idx.index}]" size="6" value="${item.quantity}" class="input-disabled input-decimal" name="items[${idx.index}].quantity" index="${idx.index}" next="quantity" disabled/></td>
+			                <td>
+			                	<input id="quantity[${idx.index}]"
+			                	size="6"
+	                          	value="${item.quantity}"
+	                          	name="salesOrder.items[${idx.index}].quantity"
+	                          	index="${idx.index}"
+	                          	next="quantity"
+	                          	onchange="updateDisplay();"
+	                          	class="${isApprover ? 'input-decimal' : 'input-disabled input-decimal'}"
+	                    		${isApprover ? '' : 'disabled="disabled"'} />
+			                </td>
 			                <td><input id="uom[${idx.index}]" size="6" value="${item.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/></td>
-			                <td><input id="amount[${idx.index}]" size="12" value="<fmt:formatNumber value='${item.amount}' pattern=',##0.00'/>" class="input-disabled input-decimal" name="items[${idx.index}].amount" index="${idx.index}" next="amount" disabled/></td>
-			                <td><input id="totalAmount[${idx.index}]" size="12" class="input-number input-disabled" disabled value="<fmt:formatNumber value='${item.subTotal}' pattern=',##0.00'/>"/></td>
-			                <td><input id="note[${idx.index}]" type="text" value="${item.note}" name="purchaseOrder.items[${idx.index}].note"index="${idx.index}" next="note" size="40"/></td>
+			                <td>
+			                	<input id="amount[${idx.index}]"
+			                	size="12"
+	                          	value="${item.money.amount}"
+	                          	name="salesOrder.items[${idx.index}].money.amount"
+	                          	index="${idx.index}"
+	                          	next="amount"
+	                          	onchange="updateDisplay();"
+	                          	class="${isApprover ? 'input-decimal' : 'input-disabled input-decimal'}"
+	                    		${isApprover ? '' : 'disabled="disabled"'} />
+			                </td>
+			                <td><input id="totalAmount[${idx.index}]" size="12" class="input-number input-disabled" disabled value="<fmt:formatNumber value='${item.totalAmount}' pattern=',##0.00'/>"/></td>
+			                <td><input id="note[${idx.index}]" type="text" value="${item.note}" name="salesOrder.items[${idx.index}].note"index="${idx.index}" next="note" size="40"/></td>
 							</td>
 						</tr>
 					</c:forEach>
@@ -238,68 +259,16 @@ $(function(){
         $('.checkall').prop("checked", false);
     });
 
+	$('.item-button-print').click(function(){
+		printSO();
+	});
+
 	$('.item-button-close').click(function(){
-		closeSo();
+		closeSO();
 	});
 });
 
 function validateForm() {
-    // Validasi organisasi (sudah ada sebelumnya)
-    var organization = $('#org').val();
-    if (organization == null || organization === "") {
-        alert('<spring:message code="sirius.organization"/> <spring:message code="notif.empty"/> !');
-        return false;
-    }
-
-    // Validasi date
-    var date = $('#date').val();
-    if (date == null || date === "") {
-        alert('<spring:message code="salesorder.date"/> <spring:message code="notif.empty"/> !');
-        return false;
-    }
-
-	// Validasi exp date
-	var date = $('#expDate').val();
-	if (date == null || date === "") {
-		alert('<spring:message code="salesorder.date"/> <spring:message code="notif.empty"/> !');
-		return false;
-	}
-
-    // Validasi customer
-    var customer = $('#customer').val();
-    if (customer == null || customer === "") {
-        alert('<spring:message code="customer"/> <spring:message code="notif.empty"/> !');
-        return false;
-    }
-
-    // Validasi shippingDate
-    var shippingDate = $('#shippingDate').val();
-    if (shippingDate == null || shippingDate === "") {
-        alert('<spring:message code="salesorder.shipping.date"/> <spring:message code="notif.empty"/> !');
-        return false;
-    }
-
-    // Validasi tax
-    var tax = $('#tax').val();
-    if (tax == null || tax === "") {
-        alert('<spring:message code="salesorder.tax.type"/> <spring:message code="notif.empty"/> !');
-        return false;
-    }
-
-    // Validasi approver
-    var approver = $('#approver').val();
-    if (approver == null || approver === "") {
-        alert('<spring:message code="approver"/> <spring:message code="notif.empty"/> !');
-        return false;
-    }
-
-    // Validasi shippingAddress
-    var shippingAddress = $('#shippingAddress').val();
-    if (shippingAddress == null || shippingAddress === "") {
-        alert('<spring:message code="salesorder.shipping.name"/> <spring:message code="notif.empty"/> !');
-        return false;
-    }
-    
  	// **Tambahkan validasi untuk memastikan setidaknya ada satu line item**
     if ($('#lineItem tr').length === 0) {
         alert('<spring:message code="notif.add"/> <spring:message code="salesorder.lineitem"/> <spring:message code="notif.select2"/> !');
@@ -333,15 +302,6 @@ function validateForm() {
         var price = parseFloat(priceStr);
         if (isNaN(price) || price <= 0) {
             alert('<spring:message code="sirius.unitprice"/> <spring:message code="notif.empty"/> ! (<spring:message code="salesorder.lineitem"/> ' + (index + 1) + ')');
-            isValid = false;
-            return false;
-        }
-
-        // Validasi discount (opsional jika perlu)
-        var discStr = $row.find('input[id^="discount["]').val().replace(/,/g, '');
-        var disc = parseFloat(discStr);
-        if (isNaN(disc) || disc < 0 || disc > 100) {
-            alert('<spring:message code="salesorder.disc"/> <spring:message code="notif.invalid"/> ! (<spring:message code="salesorder.lineitem"/> ' + (index + 1) + ')');
             isValid = false;
             return false;
         }
@@ -485,7 +445,15 @@ function openapprover() {
 	openpopup(buildUrl(baseUrl, params));
 }
 
-function closeSo() {
+function printSO() {
+	var taxRate = parseFloat($('#taxRate').val().toNumber());
+	if(taxRate > 0)
+		window.location="<c:url value='/page/salesorderprint.htm?id=${salesOrder_edit.id}&printType=1'/>";
+	else
+		window.location="<c:url value='/page/salesorderprint.htm?id=${salesOrder_edit.id}&printType=2'/>";
+}
+
+function closeSO() {
 	$.ajax({
 		url:"<c:url value='/page/salesorderclose.htm?id=${salesOrder_edit.id}'/>",
 		// data:$('#addForm').serialize(),

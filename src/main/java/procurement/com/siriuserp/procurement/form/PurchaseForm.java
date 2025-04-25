@@ -22,6 +22,9 @@ public class PurchaseForm extends Form
 {
 	private static final long serialVersionUID = -3975750510372614700L;
 
+	private String accountNo;
+	private String accountName;
+
 	private PostalAddress supplierAddress;
 	private PostalAddress billTo;
 	private Facility shipTo;

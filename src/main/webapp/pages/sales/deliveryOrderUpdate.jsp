@@ -3,7 +3,7 @@
 <div class="toolbar">
 	<a class="item-button-list" href="<c:url value='/page/deliveryorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
-	<a class="item-button-print"  href="<c:url value='/page/deliveryorderprint.htm?id=${deliveryOrder_form.deliveryOrder.id}'/>"><span><spring:message code="sirius.print"/></span></a>
+	<a class="item-button-print"><span><spring:message code="sirius.print"/></span></a>
 </div>
 
 <div class="main-box">
@@ -37,7 +37,10 @@
 				<tr>
 					<td align="right"><spring:message code="customer"/></td>
 					<td width="1%" align="center">:</td>
-					<td width="64%"><input id="customerName" name="customerName" class="inputbox input-disabled" value="${deliveryOrder_form.customer.fullName}" disabled/></td>
+					<td width="64%">
+						<input id="customerName" name="customerName" class="inputbox input-disabled" value="${deliveryOrder_form.customer.fullName}" disabled/>
+						<input style="display: none;" size="5" id="taxRate" value="${deliveryOrder_edit.tax.taxRate}" class="number-disabled" disabled />
+					</td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="deliveryorder.issue.facility"/></td>
@@ -197,5 +200,17 @@ $(function(){
 			}
 		});
 	});
+
+	$('.item-button-print').click(function(){
+		printDO();
+	});
 });
+
+function printDO() {
+	var taxRate = parseFloat($('#taxRate').val().toNumber());
+	if(taxRate > 0)
+		window.location="<c:url value='/page/deliveryorderprint.htm?id=${deliveryOrder_form.deliveryOrder.id}&printType=1'/>";
+	else
+		window.location="<c:url value='/page//page/deliveryorderprint.htm?id=${deliveryOrder_form.deliveryOrder.id}&printType=2'/>";
+}
 </script>

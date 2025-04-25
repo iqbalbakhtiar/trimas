@@ -97,9 +97,9 @@ public class GeneratorHelper
 		return generate(tableType, codeSequenceDao, null, date, CodeSequence.MONTH, null);
 	}
 
-	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, Date date, Tax tax) throws ServiceException
+	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, String code, Date date, Tax tax) throws ServiceException
 	{
-		return generate(tableType, codeSequenceDao, null, date, CodeSequence.MONTH, tax);
+		return generate(tableType, codeSequenceDao, code, date, CodeSequence.MONTH, tax);
 	}
 
 	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, String code, Date date, Long sequence, Tax tax) throws ServiceException

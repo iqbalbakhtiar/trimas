@@ -1,5 +1,7 @@
 package com.siriuserp.sales.service;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -92,7 +94,11 @@ public class SalesOrderService extends Service
 		money.setCurrency(currency);
 		money.setAmount(form.getAmount());
 
-		salesOrder.setCode(GeneratorHelper.instance().generate(TableType.SALES_ORDER, codeSequenceDao, salesOrder.getDate(), salesOrder.getTax()));
+		if (salesOrder.getTax() != null && salesOrder.getTax().getTaxRate().compareTo(BigDecimal.ZERO) > 0)
+			salesOrder.setCode(GeneratorHelper.instance().generate(TableType.SALES_ORDER, codeSequenceDao, "SSM", salesOrder.getDate(), salesOrder.getTax()));
+		else
+			salesOrder.setCode(GeneratorHelper.instance().generate(TableType.SALES_ORDER, codeSequenceDao, null, salesOrder.getDate(), salesOrder.getTax()));
+
 		salesOrder.setMoney(money);
 		salesOrder.setSalesType(SalesType.STANDARD);
 

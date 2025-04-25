@@ -38,6 +38,7 @@ import com.siriuserp.sdk.dm.JSONSupport;
 import com.siriuserp.sdk.dm.Model;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.PostalAddress;
+import com.siriuserp.sdk.dm.Tax;
 
 import javolution.util.FastSet;
 import lombok.Getter;
@@ -131,6 +132,14 @@ public class DeliveryOrder extends Model implements JSONSupport
 		references.addAll(getItems().stream().map(item -> item.getLot() != null ? "LOT " + item.getLot().getCode() : "").collect(Collectors.toSet()));
 
 		return String.join(" ", references);
+	}
+
+	public Tax getTax()
+	{
+		for (DeliveryOrderItem item : getItems())
+			return item.getTax();
+
+		return null;
 	}
 
 	@Override

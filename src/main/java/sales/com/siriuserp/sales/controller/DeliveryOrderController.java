@@ -136,8 +136,11 @@ public class DeliveryOrderController extends ControllerBase
 	}
 
 	@RequestMapping("/deliveryorderprint.htm")
-	public ModelAndView print(@RequestParam("id") Long id) throws Exception
+	public ModelAndView print(@RequestParam("id") Long id, @RequestParam("printType") int printType) throws Exception
 	{
+		if (printType == 1)
+			return new ModelAndView("/sales/deliveryOrderPrintTax", service.preedit(id));
+
 		return new ModelAndView("/sales/deliveryOrderPrint", service.preedit(id));
 	}
 

@@ -52,6 +52,14 @@
 						  	</div>
 					  	</div>
 					  	<div class="main-box">
+					  		<table border="0" width="100%" align="center">
+					  			<tr>
+					  				<td>
+					  				<img src="assets/images/ssm-logo.png"  width="250" height="40"/>
+					  				</br><font size="2"></font>
+					  				</td>
+					  			</tr>
+					  		</table>
 					  		<table cellpadding="1" cellspacing="1" width="100%" align="center">
 							<tr>
 								<td valign="top" align="center" colspan="2"><h2>SURAT JALAN</h2></td>
