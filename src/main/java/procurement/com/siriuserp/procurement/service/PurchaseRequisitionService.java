@@ -19,6 +19,7 @@ import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
+import com.siriuserp.sdk.dm.Department;
 import com.siriuserp.sdk.dm.Item;
 import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.exceptions.ServiceException;
@@ -66,6 +67,7 @@ public class PurchaseRequisitionService
 
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("requisition_form", form);
+		map.put("departments", genericDao.loadAll(Department.class));
 
 		return map;
 	}

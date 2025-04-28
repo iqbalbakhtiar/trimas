@@ -40,6 +40,15 @@
               </td>
             </tr>
             <tr>
+              <td align="right"><spring:message code="contactmechanism.department"/></td>
+              <td width="1%" align="center">:</td>
+              <td>
+                <form:select id="department" path="department" cssClass="combobox input-disabled" readonly="true">
+                	<form:option value="${requisition_edit.department.id}" label="${requisition_edit.department.name}"/>
+                </form:select>
+              </td>
+            </tr>
+            <tr>
               <td align="right"><spring:message code="purchaserequisition.reason"/></td>
               <td width="1%" align="center">:</td>
               <td><form:textarea path="reason" rows="6" cols="45"/></td>

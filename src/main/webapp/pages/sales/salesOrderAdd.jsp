@@ -49,6 +49,13 @@
 					</td>
 				</tr>
 				<tr>
+					<td width="19%" align="right">PO No :</td>
+					<td width="1%" align="center">:</td>
+					<td>
+						<form:input id='poCode' path='poCode' cssClass='inputbox' size="15"/>
+					</td>
+				</tr>
+				<tr>
 					<td width="19%" align="right"><spring:message code="creditterm.term"/> :</td>
 					<td width="1%" align="center">:</td>
 					<td>
@@ -559,9 +566,15 @@ function openApprover() {
 
 function updateExpDate() {
 	var dateStr = $('#date').val();
-	if (dateStr) {
-		var newDate = DateHelper.plusDays(dateStr, 60);
-		$('#expDate').val(newDate);
+    var date = new Date(dateStr.split('-').reverse().join('-'));
+	if (date) {
+		var newDate = new Date();
+		newDate.setDate(date.getDate() + 60);
+		var dt = newDate.getDate();
+		var mt = newDate.getMonth() + 1;
+		var yr = newDate.getFullYear();
+		var formattedDate = (dt < 10 ? '0'+dt:dt)+'-'+(mt < 10 ? '0'+mt:mt)+'-'+yr;
+		$('#expDate').val(formattedDate);
 	}
 }
 

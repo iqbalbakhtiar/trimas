@@ -23,6 +23,7 @@ public class SalesForm extends Form
 {
 	private static final long serialVersionUID = -1116229667455960263L;
 
+	private String poCode;
 	private String vehicle;
 	private String driverName;
 	private String plateNumber;

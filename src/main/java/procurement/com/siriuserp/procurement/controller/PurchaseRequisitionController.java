@@ -29,6 +29,7 @@ import com.siriuserp.procurement.query.PurchaseRequisitionViewQuery;
 import com.siriuserp.procurement.service.PurchaseRequisitionService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
+import com.siriuserp.sdk.dm.Department;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
@@ -54,6 +55,7 @@ public class PurchaseRequisitionController extends ControllerBase
 	{
 		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
 		binder.registerCustomEditor(Product.class, modelEditor.forClass(Product.class));
+		binder.registerCustomEditor(Department.class, modelEditor.forClass(Department.class));
 	}
 
 	@RequestMapping("/purchaserequisitionview.htm")

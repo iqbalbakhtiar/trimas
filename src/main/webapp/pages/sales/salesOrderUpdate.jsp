@@ -55,6 +55,13 @@
 					</td>
 				</tr>
 				<tr>
+					<td width="19%" align="right">PO No :</td>
+					<td width="1%" align="center">:</td>
+					<td>
+						<form:input id='poCode' path='poCode' cssClass='inputbox' size="15"/>
+					</td>
+				</tr>
+				<tr>
 					<td width="19%" align="right"><spring:message code="creditterm.term"/> :</td>
 					<td width="1%" align="center">:</td>
 					<td>

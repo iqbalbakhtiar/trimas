@@ -64,7 +64,7 @@
 				  			</tr>
 				  			<tr>
 				  				<td><spring:message code="contactmechanism.department"/></td>
-				  				<td align="left">: </td>
+				  				<td align="left">: ${requisition_edit.department.name}</td>
 				  				<td width="10%"><spring:message code="sirius.date"/></td>
 				  				<td align="left">: <fmt:formatDate value='${requisition_edit.date}' pattern='dd-MM-yyyy'/></td>
 				  			</tr>

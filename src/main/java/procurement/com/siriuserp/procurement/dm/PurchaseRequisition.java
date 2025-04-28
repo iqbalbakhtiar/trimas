@@ -26,6 +26,7 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
+import com.siriuserp.sdk.dm.Department;
 import com.siriuserp.sdk.dm.Model;
 import com.siriuserp.sdk.dm.Party;
 
@@ -55,6 +56,12 @@ public class PurchaseRequisition extends Model
 
 	@Column(name = "reason")
 	private String reason;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_department")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Department department;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_organization")

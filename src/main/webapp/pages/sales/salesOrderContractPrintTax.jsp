@@ -93,7 +93,7 @@
 				  			</tr>
 				  			<tr>
 				  				<td width="10%">No PO</td>
-				  				<td align="left">: </td>
+				  				<td align="left">: ${salesOrder_edit.poCode}</td>
 				  				<td></td>
 				  			</tr>
 				  			<tr valign="top">
