@@ -89,7 +89,7 @@ function validateForm() {
 	var organization = $('#org').val();
 	var salutation = $('input[name="salutation"]').val();
 	var fullName = $('input[name="fullName"]').val();
-	var taxCode = $('input[name="taxCode"]').val();
+	var taxCode = $('input[name="taxCode"]').val().trim();
 	var permitCode = $('input[name="permitCode"]').val();
 	var active = $('input[name="active"]:checked').val();
 
@@ -107,6 +107,11 @@ function validateForm() {
 		alert('<spring:message code="customer.name"/> <spring:message code="notif.empty"/> !');
 		return false;
 	}
+
+	if (taxCode.length < 15) {
+	    alert('NPWP <spring:message code="notif.lower"/> 15 <spring:message code="invoice.digit"/> !');
+		return false
+	} 
 
 	if (active == null || active === undefined) {
 		alert('<spring:message code="notif.select1"/> <spring:message code="sirius.status"/> <spring:message code="notif.select2"/>');
