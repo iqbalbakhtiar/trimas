@@ -22,8 +22,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.procurement.criteria.PurchaseOrderFilterCriteria;
+import com.siriuserp.procurement.dm.PurchaseDocumentType;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.procurement.dm.PurchaseOrderItem;
+import com.siriuserp.procurement.dm.PurchaseType;
 import com.siriuserp.procurement.form.PurchaseForm;
 import com.siriuserp.procurement.query.PurchaseOrderViewQuery;
 import com.siriuserp.procurement.service.PurchaseOrderService;
@@ -66,6 +68,8 @@ public class PurchaseOrderController extends ControllerBase
 		binder.registerCustomEditor(PostalAddress.class, modelEditor.forClass(PostalAddress.class));
 		binder.registerCustomEditor(ContactMechanism.class, modelEditor.forClass(ContactMechanism.class));
 		binder.registerCustomEditor(ApprovalDecisionStatus.class, enumEditor.forClass(ApprovalDecisionStatus.class));
+		binder.registerCustomEditor(PurchaseType.class, enumEditor.forClass(PurchaseType.class));
+		binder.registerCustomEditor(PurchaseDocumentType.class, enumEditor.forClass(PurchaseDocumentType.class));
 	}
 
 	@RequestMapping("/purchaseorderview.htm")

@@ -31,9 +31,20 @@
               <td align="right"><spring:message code="purchaseorder.type"/></td>
               <td width="1%" align="center">:</td>
               <td>
-                <form:select id="purchaseType" path="purchaseType">
+                <form:select id="purchaseType" path="purchaseType" cssClass="combobox-min">
 	                <c:forEach var="type" items="${purchaseTypes}">
-	                    <form:option value="${type}"><spring:message code='purchaseorder.type.${type.normalizedName.toLowerCase()}'/></form:option>
+	                    <form:option value="${type}"><spring:message code='purchaseorder.type.${type.messageName}'/></form:option>
+	                </c:forEach>
+                </form:select>
+              </td>
+            </tr>
+            <tr>
+              <td align="right"><spring:message code="sirius.document.type"/></td>
+              <td width="1%" align="center">:</td>
+              <td>
+                <form:select id="purchaseDocumentType" path="purchaseDocumentType" cssClass="combobox-min">
+	                <c:forEach var="type" items="${documentTypes}">
+	                    <form:option value="${type}">${type.normalizedName}</form:option>
 	                </c:forEach>
                 </form:select>
               </td>

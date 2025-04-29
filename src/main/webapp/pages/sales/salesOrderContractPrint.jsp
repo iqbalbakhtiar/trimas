@@ -200,7 +200,7 @@
 				  					</tr>
 									<tr style="text-transform: uppercase;font-weight: bold;">
 										<td style="width: 1px;">(</td>
-										<td align="center">&nbsp;${salesOrder_edit.organization.salutation}&nbsp;${salesOrder_edit.organization.fullName}&nbsp;</td>
+										<td align="center">&nbsp;</td>
 										<td style="width: 1px;">)</td>
 									</tr>
 									</table>

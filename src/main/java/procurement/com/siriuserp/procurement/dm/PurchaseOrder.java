@@ -82,6 +82,10 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 	@Enumerated(EnumType.STRING)
 	protected PurchaseType purchaseType = PurchaseType.DIRECT;
 
+	@Column(name = "document_type")
+	@Enumerated(EnumType.STRING)
+	protected PurchaseDocumentType purchaseDocumentType = PurchaseDocumentType.SPAREPART;
+
 	@Column(name = "invoice_before_receipt")
 	@Type(type = "yes_no")
 	private boolean invoiceBeforeReceipt = Boolean.FALSE;

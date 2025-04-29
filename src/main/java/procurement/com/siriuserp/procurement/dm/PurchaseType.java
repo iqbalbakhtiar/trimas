@@ -4,7 +4,7 @@ import com.siriuserp.inventory.dm.WarehouseTransactionSource;
 
 public enum PurchaseType
 {
-	STANDARD, DIRECT, SERVICE, ASSET, INVENTARIS;
+	STANDARD, DIRECT;
 
 	public String getNormalizedName()
 	{
@@ -24,31 +24,6 @@ public enum PurchaseType
 			return WarehouseTransactionSource.STANDARD_PURCHASE_ORDER;
 		case DIRECT:
 			return WarehouseTransactionSource.DIRECT_PURCHASE_ORDER;
-		case SERVICE:
-			return WarehouseTransactionSource.SERVICE_PURCHASE_ORDER;
-		case ASSET:
-			return WarehouseTransactionSource.ASSET_PURCHASE_ORDER;
-		case INVENTARIS:
-			return WarehouseTransactionSource.INVENTARIS_PURCHASE_ORDER;
-		default:
-			return null;
-		}
-	}
-
-	public String getCode()
-	{
-		switch (this)
-		{
-		case STANDARD:
-			return "STD";
-		case DIRECT:
-			return "DIR";
-		case SERVICE:
-			return "SERV";
-		case ASSET:
-			return "ASET";
-		case INVENTARIS:
-			return "INV";
 		default:
 			return null;
 		}

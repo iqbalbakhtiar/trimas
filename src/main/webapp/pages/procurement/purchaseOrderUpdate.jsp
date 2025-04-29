@@ -36,6 +36,24 @@
               </td>
             </tr>
             <tr>
+              <td align="right"><spring:message code="purchaseorder.type"/></td>
+              <td width="1%" align="center">:</td>
+              <td>
+                <form:select id="purchaseType" path="purchaseType" readonly="true" cssClass="input-disabled combobox-min">
+                    <form:option value="${purchase_edit.purchaseType}"><spring:message code='purchaseorder.type.${purchase_edit.purchaseType.messageName}'/></form:option>
+                </form:select>
+              </td>
+            </tr>
+            <tr>
+              <td align="right"><spring:message code="sirius.document.type"/></td>
+              <td width="1%" align="center">:</td>
+              <td>
+                <form:select id="purchaseDocumentType" path="purchaseDocumentType" readonly="true" cssClass="input-disabled combobox-min">
+                    <form:option value="${purchase_edit.purchaseDocumentType}">${purchase_edit.purchaseDocumentType.normalizedName}</form:option>
+                </form:select>
+              </td>
+            </tr>
+            <tr>
               <td align="right"><spring:message code="sirius.date"/></td>
               <td width="1%" align="center">:</td>
               <td><input id="date" name="date" size="10" class="input-disabled" value="<fmt:formatDate value='${purchase_edit.date}' pattern='dd-MM-yyyy'/>"/></td>
