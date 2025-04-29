@@ -43,7 +43,7 @@
 								<div class="toolbar-clean">
 									<c:if test='${access.add}'>
 										<a class="item-button-new" href="<c:url value='/page/customerpreadd.htm' />"><span>Customer</span></a>
-										<a class="item-button-new" href="<c:url value='/page/customergrouppreadd.htm' />"><span>Customer Group</span></a>
+										<%-- <a class="item-button-new" href="<c:url value='/page/customergrouppreadd.htm' />"><span>Customer Group</span></a> --%>
 							   		</c:if>
 							   		<div dojoType="Toggler" targetId="filter">
 										<a class="item-button-search" href="javascript:return false;"><span><spring:message code="sirius.paging.filter"/></span></a>
@@ -63,7 +63,7 @@
 					  	  	<th width="5%"><spring:message code="sirius.organization"/></th>
 					  	  	<th width="5%"><spring:message code="sirius.status"/></th>
 							<th width="5%"><spring:message code="sirius.type"/></th>
-							<th width="5%"><spring:message code="customer.group"/></th>
+							<%-- <th width="5%"><spring:message code="customer.group"/></th> --%>
 					  	  	<th width="10%"><spring:message code="sirius.note"/></th>
 						</tr>
 						<c:forEach items="${customers}" var="customer">
@@ -99,7 +99,7 @@
 							<td nowrap="nowrap">${customer.partyTo.fullName}</td>
 							<td nowrap="nowrap"><spring:message code="sirius.${customer.active ? 'active' : 'inactive'}"/></td>
 							<td nowrap="nowrap"><spring:message code="${customer.partyFrom.base ? 'sirius.group' : 'customer'}"/></td>
-							<td nowrap="nowrap">${customer.partyFrom.partyGroup.fullName}</td>
+							<%-- <td nowrap="nowrap">${customer.partyFrom.partyGroup.fullName}</td> --%>
 							<td nowrap="nowrap">${customer.partyFrom.note}</td>
 						</tr>
 						</c:forEach>

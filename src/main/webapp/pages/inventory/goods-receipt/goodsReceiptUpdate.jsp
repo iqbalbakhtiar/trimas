@@ -4,6 +4,7 @@
     <c:if test='${access.edit}'>
         <a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
     </c:if>
+  <a class="item-button-print"  href="<c:url value='/page/goodsreceiptprint.htm?id=${goodsReceipt_edit.id}'/>"><span><spring:message code="sirius.print"/></span></a>
 </div>
 
 <div class="main-box">

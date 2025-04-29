@@ -31,17 +31,6 @@
 				<td><form:input path="salutation" size="10" class="input-disabled" disabled='true'/></td>
 			</tr>
 			<tr>
-				<td align="right"><spring:message code="customer.group"/></td>
-				<td width="1%" align="center">:</td>
-				<td>
-					<form:select id="partyGroup" path="partyGroup" cssClass="combobox-ext input-disabled" disabled='true'>
-						<c:if test='${not empty customer_edit.partyGroup.id}'>
-							<form:option value='${customer_edit.partyGroup.id}' label='${customer_edit.partyGroup.fullName}'/>
-			    		</c:if>
-					</form:select>
-				</td>
-			</tr>
-			<tr>
 				<td align="right"><spring:message code="customer.name"/></td>
 				<td width="1%" align="center">:</td>
 				<td><form:input path="fullName" cssClass="inputbox input-disabled" disabled='true'/></td>

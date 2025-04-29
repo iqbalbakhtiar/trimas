@@ -1,5 +1,19 @@
 package com.siriuserp.inventory.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.siriuserp.inventory.adapter.WarehouseItemAdapter;
 import com.siriuserp.inventory.criteria.GoodsReceiptFilterCriteria;
 import com.siriuserp.inventory.dm.GoodsReceipt;
@@ -17,22 +31,10 @@ import com.siriuserp.sdk.dm.Grid;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.utility.FormHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@SessionAttributes(value = { "goodsReceipt_add", "goodsReceipt_edit", "adapter" }, types = { GoodsReceipt.class, WarehouseItemAdapter.class, InventoryForm.class })
+@SessionAttributes(value = { "goodsReceipt_add", "goodsReceipt_edit", "adapter" }, types =
+{ GoodsReceipt.class, WarehouseItemAdapter.class, InventoryForm.class })
 @DefaultRedirect(url = "goodsreceiptview.htm")
 public class GoodsReceiptController extends ControllerBase
 {
@@ -113,5 +115,11 @@ public class GoodsReceiptController extends ControllerBase
 		}
 
 		return response;
+	}
+
+	@RequestMapping("/goodsreceiptprint.htm")
+	public ModelAndView print(@RequestParam("id") Long id) throws Exception
+	{
+		return new ModelAndView("/inventory/goods-receipt/goodsReceiptPrint", service.preedit(id));
 	}
 }

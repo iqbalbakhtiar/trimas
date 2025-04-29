@@ -31,7 +31,7 @@
 			<td width="1%" align="center">:</td>
 			<td><form:input path="salutation" size="10"/></td>
 		</tr>
-		<tr>
+		<%-- <tr>
 			<td align="right"><spring:message code="customer.group"/></td>
 			<td width="1%" align="center">:</td>
 			<td>
@@ -39,7 +39,7 @@
 				</form:select>
 				<a class="item-popup" onclick="openCustomerGroup()" title="Costomer Group" />
 			</td>
-		</tr>
+		</tr> --%>
 		<tr>
 			<td align="right"><spring:message code="customer.name"/></td>
 			<td width="1%" align="center">:</td>
@@ -98,20 +98,20 @@ function validateForm() {
 		return false;
 	}
 	
-	if (salutation == null || salutation.trim() === "") {
+	/* if (salutation == null || salutation.trim() === "") {
 		alert('<spring:message code="party.salutation"/> <spring:message code="notif.empty"/> !');
 		return false;
-	}
+	} */
 	
 	if (fullName == null || fullName.trim() === "") {
 		alert('<spring:message code="customer.name"/> <spring:message code="notif.empty"/> !');
 		return false;
 	}
 
-	if (taxCode.length < 15) {
+	/* if (taxCode.length < 15) {
 	    alert('NPWP <spring:message code="notif.lower"/> 15 <spring:message code="invoice.digit"/> !');
 		return false
-	} 
+	}  */
 
 	if (active == null || active === undefined) {
 		alert('<spring:message code="notif.select1"/> <spring:message code="sirius.status"/> <spring:message code="notif.select2"/>');

@@ -232,6 +232,12 @@
 									</table>
 								</td>
 							</tr>
+							<tr>
+								<td colspan="5">&nbsp;</td>
+							</tr>
+							<tr>
+								<td colspan="5"><strong>*MOHON UNTUK TTD PENERIMA DILENGKAPI NAMA LENGKAP DAN CAP PERUSAHAAN</strong></td>
+							</tr>
 					  		</table>
 						</div>
 					</div>
