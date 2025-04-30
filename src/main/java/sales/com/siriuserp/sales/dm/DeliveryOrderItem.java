@@ -6,7 +6,9 @@
 package com.siriuserp.sales.dm;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -148,6 +150,14 @@ public class DeliveryOrderItem extends Model
 			return getDeliveryReferenceItem().getSalesOrderItem().getSalesOrder().getTax();
 		else
 			return getItemParent().getDeliveryReferenceItem().getSalesOrderItem().getSalesOrder().getTax();
+	}
+
+	public String getReferenceLot()
+	{
+		HashSet<String> references = new HashSet<String>();
+		references.addAll(getSerials().stream().map(item -> item.getLot() != null ? "LOT " + item.getLot().getCode() : "").collect(Collectors.toSet()));
+
+		return String.join(" ", references);
 	}
 
 	@Override

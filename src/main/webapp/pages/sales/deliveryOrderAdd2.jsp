@@ -55,13 +55,19 @@
 				<%-- <tr>
 					<td align="right"><spring:message code="deliveryorder.driver"/></td>
 					<td width="1%" align="center">:</td>
-					<td><form:input path="driverName" cssClass="input-box"/></td>
+					<td><form:input path="driverName" cssClass="inputbox"/></td>
 					<td>&nbsp;</td>
 				</tr> --%>
 				<tr>
+					<td align="right"><spring:message code="deliveryorder.vehicle"/></td>
+					<td width="1%" align="center">:</td>
+					<td><form:input path="vehicle" cssClass="inputbox"/></td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
 					<td align="right"><spring:message code="deliveryorder.plate"/></td>
 					<td width="1%" align="center">:</td>
-					<td><form:input path="plateNumber" cssClass="input-box"/></td>
+					<td><form:input path="plateNumber" cssClass="inputbox"/></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>

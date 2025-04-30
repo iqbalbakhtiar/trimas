@@ -31,39 +31,42 @@ import com.siriuserp.sdk.springmvc.JSONResponse;
 @Controller
 @SessionAttributes(value = "billing_form", types = AccountingForm.class)
 @DefaultRedirect(url = "billingview.htm")
-public class BillingController extends ControllerBase {
+public class BillingController extends ControllerBase
+{
+	@Autowired
+	private BillingService service;
 
-    @Autowired
-    private BillingService service;
+	@InitBinder
+	public void initBinder(WebDataBinder binder, WebRequest request)
+	{
+		initBinderFactory.initBinder(binder, Party.class, Date.class, Facility.class);
+	}
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder, WebRequest request)
-    {
-        initBinderFactory.initBinder(binder, Party.class, Date.class, Facility.class);
-    }
-
-    @RequestMapping("/billingview.htm")
+	@RequestMapping("/billingview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
 		return new ModelAndView("/accounting/billingList", service.view(criteriaFactory.create(request, BillingFilterCriteria.class), BillingViewQuery.class));
 	}
 
-    @RequestMapping("/billingpreedit.htm")
-	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception {
+	@RequestMapping("/billingpreedit.htm")
+	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
+	{
 		return new ModelAndView("/accounting/billingUpdate", service.preedit(id));
 	}
 
-    @RequestMapping("/billingedit.htm")
+	@RequestMapping("/billingedit.htm")
 	public ModelAndView edit(@ModelAttribute("billing_form") AccountingForm form, BindingResult result, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
-		try {
+		try
+		{
 			service.edit(form);
 			status.setComplete();
 
 			response.store("id", form.getBilling().getId());
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 			response.statusError();
 			response.setMessage(e.getLocalizedMessage());
@@ -79,7 +82,8 @@ public class BillingController extends ControllerBase {
 	}
 
 	@RequestMapping("/billingprint.htm")
-	public ModelAndView print(@RequestParam("id") Long id) throws Exception {
+	public ModelAndView print(@RequestParam("id") Long id) throws Exception
+	{
 		return new ModelAndView("/accounting/billingPrint", service.preedit(id));
 	}
 }

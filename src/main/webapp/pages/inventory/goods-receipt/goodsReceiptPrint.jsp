@@ -93,7 +93,7 @@
 					  			<c:forEach items="${goodsReceipt_edit.items}" var="item" varStatus="idx">
 					  			<tr style="height: 20px;">
 					  				<td style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.name}</td>
-					  				<td style="border-bottom:1px solid black;border-left:1px solid black;">&nbsp;</td>
+					  				<td style="border-bottom:1px solid black;border-left:1px solid black;">${item.lot.serial}</td>
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
 					  				<td align="center" style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.unitOfMeasure.measureId}</td>
 					  				<td style="border-bottom:1px solid black;border-left:1px solid black;">${ref.referenceFrom}</td>

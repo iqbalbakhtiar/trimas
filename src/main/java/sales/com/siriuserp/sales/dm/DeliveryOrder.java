@@ -74,6 +74,9 @@ public class DeliveryOrder extends Model implements JSONSupport
 	@Type(type = "yes_no")
 	private boolean realization = Boolean.FALSE;
 
+	@Column(name = "vehicle")
+	private String vehicle;
+
 	@Column(name = "driver_name")
 	private String driverName;
 

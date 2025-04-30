@@ -141,8 +141,11 @@ public class PurchaseOrderController extends ControllerBase
 	}
 
 	@RequestMapping("/purchaseorderprint.htm")
-	public ModelAndView print(@RequestParam("id") Long id) throws Exception
+	public ModelAndView print(@RequestParam("id") Long id, @RequestParam("printType") int printType) throws Exception
 	{
+		if (printType == 1)
+			return new ModelAndView("/procurement/purchaseOrderPrint", service.preedit(id));
+
 		return new ModelAndView("/procurement/purchaseOrderPrint", service.preedit(id));
 	}
 }
