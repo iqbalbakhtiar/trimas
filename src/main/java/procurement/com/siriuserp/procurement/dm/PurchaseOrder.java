@@ -1,5 +1,6 @@
 package com.siriuserp.procurement.dm;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -86,12 +87,22 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 	@Enumerated(EnumType.STRING)
 	protected PurchaseDocumentType purchaseDocumentType = PurchaseDocumentType.SPAREPART;
 
+	@Column(name = "payment_term")
+	@Enumerated(EnumType.STRING)
+	protected PaymentTerm paymentTerm = PaymentTerm.COD;
+
 	@Column(name = "invoice_before_receipt")
 	@Type(type = "yes_no")
 	private boolean invoiceBeforeReceipt = Boolean.FALSE;
 
 	@Column(name = "term")
-	private Integer term;
+	private Integer term = 0;
+
+	@Column(name = "down_payment")
+	private BigDecimal downPayment = BigDecimal.ZERO;
+
+	@Column(name = "payment_amount")
+	private BigDecimal paymentAmount = BigDecimal.ZERO;
 
 	@Embedded
 	private Money money;

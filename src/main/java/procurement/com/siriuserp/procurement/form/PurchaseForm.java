@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.siriuserp.procurement.dm.POStatus;
+import com.siriuserp.procurement.dm.PaymentTerm;
 import com.siriuserp.procurement.dm.PurchaseDocumentType;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.procurement.dm.PurchaseRequisition;
@@ -39,8 +40,13 @@ public class PurchaseForm extends Form
 	private PurchaseType purchaseType;
 	private PurchaseDocumentType purchaseDocumentType;
 	private POStatus status;
+	private PaymentTerm paymentTerm;
 
 	private BigDecimal totalTransaction;
+	private BigDecimal downPayment;
+	private BigDecimal paymentAmount;
+
 	private Date deliveryDate;
+
 	private boolean invoiceBeforeReceipt = true;
 }

@@ -68,6 +68,31 @@
               <td><input id="deliveryDate" name="deliveryDate" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>"/></td>
             </tr>
             <tr>
+              <td align="right"><spring:message code="purchaseorder.payment.term"/></td>
+              <td width="1%" align="center">:</td>
+              <td>
+                <form:select id="paymentTerm" path="paymentTerm" cssClass="combobox-min">
+	                <c:forEach var="term" items="${paymentTerms}">
+	                    <form:option value="${term}">${term.normalizedName}</form:option>
+	                </c:forEach>
+                </form:select>
+              </td>
+            </tr>
+			<tr>
+              <td align="right"><spring:message code="purchaseorder.downpayment"/></td>
+              <td width="1%" align="center">:</td>
+			  <td>
+				<form:input id='downPayment' path='downPayment' cssClass='input-number' size="10"/>
+			  </td>
+			</tr>
+			<tr>
+              <td align="right"><spring:message code="purchaseorder.paymentamount"/></td>
+              <td width="1%" align="center">:</td>
+			  <td>
+				<form:input id='paymentAmount' path='paymentAmount' cssClass='input-number' size="10"/>
+			  </td>
+			</tr>
+            <tr>
               <td align="right"><spring:message code="supplier"/></td>
               <td width="1%" align="center">:</td>
               <td>
