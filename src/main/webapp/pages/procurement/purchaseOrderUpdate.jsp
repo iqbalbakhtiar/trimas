@@ -2,7 +2,12 @@
 <div class="toolbar">
   <a class="item-button-list" href="<c:url value='/page/purchaseorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
   <a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
-  <a class="item-button-print"  href="<c:url value='/page/purchaseorderprint.htm?id=${purchase_edit.id}'/>"><span><spring:message code="sirius.print"/></span></a>
+  <c:if test="${purchase_edit.purchaseDocumentType eq 'BAHAN_BAKU'}">
+  	<a class="item-button-print"  href="<c:url value='/page/purchaseorderprint.htm?id=${purchase_edit.id}&printType=1'/>"><span><spring:message code="sirius.print"/></span></a>
+  </c:if>
+  <c:if test="${purchase_edit.purchaseDocumentType ne 'BAHAN_BAKU'}">
+  	<a class="item-button-print"  href="<c:url value='/page/purchaseorderprint.htm?id=${purchase_edit.id}&printType=2'/>"><span><spring:message code="sirius.print"/></span></a>
+  </c:if>
   <c:if test="${access.add and purchase_edit.barcodeable}">
   	<a class="item-button-doc" href="javascript:createBarcode(${purchase_edit.id});"><span><spring:message code="sirius.create"/>&nbsp;<spring:message code="barcode"/></span></a>
   </c:if>
@@ -83,6 +88,20 @@
                 </form:select>
               </td>
             </tr>
+			<tr>
+              <td align="right"><spring:message code="purchaseorder.downpayment"/></td>
+              <td width="1%" align="center">:</td>
+			  <td>
+				<form:input id='downPayment' path='downPayment' cssClass='number-disabled' size="5" disabled="true"/> %
+			  </td>
+			</tr>
+			<tr>
+              <td align="right"><spring:message code="purchaseorder.paymentamount"/></td>
+              <td width="1%" align="center">:</td>
+			  <td>
+				<form:input id='paymentAmount' path='paymentAmount' cssClass='number-disabled' size="5" disabled="true"/> %
+			  </td>
+			</tr>
 			<tr style="display: none;">
 				<td align="right"><spring:message code="invoiceverification.currency"/></td>
                 <td width="1%" align="center">:</td>

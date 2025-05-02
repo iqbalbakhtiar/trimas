@@ -59,18 +59,6 @@
 					  				</br><font size="2"></font>
 					  				</td>
 					  				<td style="width: 30%" valign="top">
-						  				<table border="0" width="100%" align="center">
-							  			<tr>
-							  				<td style="width: 10%;">PO No</td>
-							  				<td align="left" style="width: 40%;">: ${purchase_edit.code}</td>
-							  				<td style="width: 10%;">&nbsp;</td>
-							  				<td style="width: 40%;">&nbsp;</td>
-							  			</tr>
-							  			<tr>
-							  				<td style="width: 1%;"><spring:message code="sirius.date"/></td>
-							  				<td align="left" colspan="3">: <fmt:formatDate value='${purchase_edit.date}' pattern='dd MMMM yyyy'/></td>
-							  			</tr>
-							  			</table>
 					  				</td>
 					  			</tr>
 					  			<tr>
@@ -87,47 +75,74 @@
 					  				<td>&nbsp;</td>
 					  			</tr>
 					  		</table>
+					  		</br>
 					  		<table border="0" width="100%" align="center">
 				  			<tr>
-				  				<td colspan="2" align="center" style="text-transform: uppercase;"><h2><spring:message code="purchaseorder"/></h2></td>
+				  				<td style="width: 1%;">No PO</td>
+				  				<td align="left" style="width: 40%;">: ${purchase_edit.code}</td>
+				  				<td align="right" colspan="2"><spring:message code="sirius.date"/> : <fmt:formatDate value='${purchase_edit.date}' pattern='dd MMMM yyyy'/></td>
 				  			</tr>
-				  			<tr valign="top">
-				  				<td align="left" style="text-transform: uppercase;width: 60%;" class="word-wrap">
-				  					<strong>Vendor</strong></br>
-				  					<c:out value='${purchase_edit.supplier.salutation}'/> <c:out value='${purchase_edit.supplier.fullName}'/>
-				  					</br>
+				  			<tr>
+				  				<td style="width: 1%;">Kepada</td>
+				  				<td align="left" style="width: 40%;">: ${purchase_edit.supplier.fullName}</td>
+			  				</tr>
+				  			<tr>
+				  				<td style="width: 1%;">Attn</td>
+				  				<td align="left" style="width: 40%;">: ${purchase_edit.supplier.fullName}</td>
+			  				</tr>
+				  			<tr>
+				  				<td style="width: 1%;">Alamat</td>
+				  				<td align="left" style="width: 40%;">:
 				  					<c:forEach items='${purchase_edit.supplier.postalAddresses}' var='address'>
-									<c:if test='${address.selected}'>
-										${address.address}</br>
-										${address.city.name}
-									</c:if>
+										<c:if test='${address.selected}'>
+											${address.address}</br>
+										</c:if>
 								    </c:forEach>
 				  				</td>
-				  				<td align="left" style="text-transform: uppercase;width: 40%;" class="word-wrap">
-				  					<strong><spring:message code="purchaseorder.shipto"/></strong></br>
-				  					<c:out value='${purchase_edit.organization.salutation}'/> <c:out value='${purchase_edit.organization.fullName}'/>
-				  					</br>
-				  					<c:forEach items='${purchase_edit.organization.postalAddresses}' var='address'>
-									<c:if test='${address.selected}'>
-										${address.address}</br>
-										SUMEDANG - JAWA BARAT
-									</c:if>
-								    </c:forEach>
-				  				</td>
+			  				</tr>
+				  			<c:set var="phone" value=""/>
+				  			<c:set var="fax" value=""/>
+				  			<c:forEach items='${purchase_edit.supplier.contactMechanisms}' var='cont'>
+				  			<c:if test="${cont.active}">
+								<c:if test='${cont.contactMechanismType eq "PHONE"}'>
+						  			<c:set var="phone" value="${cont.contact}"/>
+								</c:if>
+								<c:if test='${cont.contactMechanismType eq "FAX"}'>
+						  			<c:set var="fax" value="${cont.contact}"/>
+								</c:if>
+							</c:if>
+						    </c:forEach>
+				  			<tr>
+				  				<td><spring:message code="contactmechanism.phone"/></td>
+				  				<td align="left">: ${phone}</td>
+				  				<td align="left"></td>
+				  			</tr>
+				  			<tr>
+				  				<td><spring:message code="contactmechanism.fax"/></td>
+				  				<td align="left">: ${fax}</td>
+				  				<td align="left"></td>
+				  			</tr>
+				  			<tr>
+				  				<td colspan="4" align="center" style="text-transform: uppercase;"><h2><spring:message code="purchaseorder"/></h2></td>
 				  			</tr>
 					  		</table>
 					  		<br/>
 					  		<table border="0" cellpadding="5" cellspacing="0" width="100%" align="center" style="border-width: 1px medium medium; border-style: solid none none; border-color: black -moz-use-text-color -moz-use-text-color;">
 					  			<tr>
-					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 30%"><spring:message code="product"/></th>
-					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.qty"/></th>
-					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.uom"/></th>
+					  				<th rowspan="2" style="border-bottom:1px solid black;border-left:1px solid black;width: 1%;"><spring:message code="sirius.number"/></th>
+					  				<th rowspan="2" style="border-bottom:1px solid black;border-left:1px solid black;width: 30%"><spring:message code="product"/></th>
+					  				<th rowspan="2" style="border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.qty"/></th>
+					  				<th rowspan="2" style="border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.uom"/></th>
+					  				<th colspan="2" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;width: 40%"><spring:message code="sirius.amount"/></th>
+					  			</tr>
+					  			<tr>
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.unitprice"/></th>
 					  				<th style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.total"/></th>
 					  			</tr>
-					            <c:forEach items="${purchase_edit.items}" var="item">
+					            <c:forEach items="${purchase_edit.items}" var="item" varStatus="stat">
 					            <c:if test="${item.purchaseItemType eq 'BASE'}">
 					  			<tr>
+					  				<td style="border-bottom:1px solid black;border-left:1px solid black;">${stat.index+1}</td>
 					  				<td style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.name}</td>
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
 					  				<td align="center" style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.unitOfMeasure.measureId}</td>
@@ -137,68 +152,74 @@
 					  			</c:if>
 					  			</c:forEach>
 					  			<tr style="font-weight: bold;">
-					  				<td align="right" colspan="3">&nbsp;</td>
+					  				<td align="right" colspan="4">&nbsp;</td>
 					  				<td align="right"><spring:message code="salesorder.total"/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalItemAmount}' pattern='${pattern}'/></td>
 					  			</tr>
 					  			<tr style="font-weight: bold;">
-					  				<td align="right" colspan="3">&nbsp;</td>
+					  				<td align="right" colspan="4">&nbsp;</td>
 					  				<td align="right"><spring:message code="salesorder.tax.amount"/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.taxAmount}' pattern='${pattern}'/></td>
 					  			</tr>
 					  			<tr style="font-weight: bold;">
-					  				<td align="right" colspan="3">&nbsp;</td>
+					  				<td align="right" colspan="4">&nbsp;</td>
 					  				<td align="right"><spring:message code="salesorder.total.transaction"/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalTransaction}' pattern='${pattern}'/></td>
 					  			</tr>
 					  		</table>
 					  		<br/>
-					  		<table border="0" cellpadding="1" cellspacing="2" width="100%" align="center" style="table-layout: fixed;">
-				  			<tr>
-				  				<td width="20%" align="center" valign="top"></td>
-					  			<td width="20%" align="center" valign="top">
-					  				<table border="0" cellpadding="0" cellspacing="0" width="100%">
-				  					<tr>
-				  						<td align="center" colspan="3"><spring:message code="purchaseorder.approvedby"/></td>
-				  					</tr>
-				  					<tr colspan="3" style="height: 100px">
-				  						<td align="center" colspan="3">&nbsp;</td>
-				  					</tr>
-									<tr style="text-transform: uppercase;font-weight: bold;">
-										<td style="width: 1px;">(</td>
-										<td align="center">${purchase_edit.supplier.salutation}&nbsp;${purchase_edit.supplier.fullName}</td>
-										<td style="width: 1px;">)</td>
-									</tr>
-									</table>
-								</td>
-				  				<td width="20%" align="center" valign="top"></td>
-					  			<td width="20%" align="center" valign="top">
-					  				<table border="0" cellpadding="0" cellspacing="0" width="100%">
-				  					<tr>
-				  						<td align="center" colspan="3"><spring:message code="purchaseorder.approvedby"/></td>
-				  					</tr>
-				  					<tr colspan="3" style="height: 100px">
-				  						<td align="center" colspan="3">&nbsp;</td>
-				  					</tr>
-									<tr style="text-transform: uppercase;font-weight: bold;">
-										<td style="width: 1px;">(</td>
-										<td align="center">&nbsp;${purchase_edit.organization.salutation}&nbsp;${purchase_edit.organization.fullName}&nbsp;</td>
-										<td style="width: 1px;">)</td>
-									</tr>
-									</table>
-								</td>
-				  				<td width=" 20%" align="center" valign="top"></td>
-							</tr>
-				  			<tr>
-								<td colspan="5">&nbsp;</td>
-							</tr>
-				  			<tr>
-								<td colspan="5"><spring:message code="sirius.note"/> : ${purchase_edit.note}</td>
-							</tr>
-				  			<tr style="overflow: hidden;">
-				  				<td colspan="5" nowrap="nowrap">
-					  				PO yang sudah di tandatangani dan di cap, mohon dikirim ulang ke email : ngati.ssm@gmail.com
+					  		<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center" style="table-layout: fixed;">
+				  			<tr>	
+				  				<td align="left" colspan="4"><strong><spring:message code="sirius.note2"/></strong>
+				  					<ul>
+				  						<li>Barang yang dikirim sesuai dengan pesanan.</li>
+				  						<li>Barang yang tidak dapat digunakan, dapat diretur.</li>
+				  						<li>Nomor PO jangan dicantumkan di Surat Jalan / Faktur.</li>
+				  						<li>Kontra Bon dilakukan berurutan sesuai dengan tanggal pengiriman barang.</li>
+				  						<li>Di dalam Invoice / Penagihan dicantumkan alamat transfer untuk pembayaran.</li>
+				  					</ul>
 				  				</td>
+				  			</tr>
+				  			<tr>
+				  				<td width="25%" align="center" valign="top"></td>
+					  			<td width="25%" align="center" valign="top" style="border-top:1px solid black;border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;">
+					  				<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				  					<tr>
+				  						<td align="center" colspan="3" style="border-bottom:1px solid black;height: 25px;"><spring:message code="salesorder.contract.seller"/></td>
+				  					</tr>
+				  					<tr colspan="3" style="height: 100px">
+				  						<td align="center" colspan="3">&nbsp;</td>
+				  					</tr>
+									</table>
+								</td>
+					  			<td width="25%" align="center" valign="top" style="border-top:1px solid black;border-bottom:1px solid black;border-right:1px solid black;;">
+					  				<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				  					<tr>
+				  						<td align="center" colspan="3" style="border-bottom:1px solid black;height: 25px;"><spring:message code="salesorder.contract.buyer"/></td>
+				  					</tr>
+				  					<tr colspan="3" style="height: 100px">
+				  						<td align="center" colspan="3">&nbsp;</td>
+				  					</tr>
+									</table>
+								</td>
+				  				<td width="25%" align="center" valign="top"></td>
+							</tr>
+				  			<tr>
+								<td colspan="4">&nbsp;</td>
+							</tr>
+							</table>
+					  		<br/>
+							<table border="0" cellpadding="1" cellspacing="2" width="100%" align="center" style="table-layout: fixed;">
+				  			<tr>
+				  				<td nowrap="nowrap" style="width: 20%;">Batas Tgl Penerimaan Barang</td>
+				  				<td colspan="3" nowrap="nowrap">: <fmt:formatDate value='${purchase_edit.shippingDate}' pattern='dd MMMM yyyy'/></td>
+				  			</tr>
+				  			<tr>
+				  				<td nowrap="nowrap">Term of Payment</td>
+				  				<td colspan="3" nowrap="nowrap">: ${purchase_edit.paymentTerm}</td>
+				  			</tr>
+				  			<tr style="overflow: hidden;">
+				  				<td colspan="4" nowrap="nowrap">Setelah ditandatangani dan dicap perusahaan mohon difax kembali ke 022 7790185</td>
 				  			</tr>
 					  		</table>
 						</div>

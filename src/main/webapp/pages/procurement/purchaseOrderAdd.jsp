@@ -82,14 +82,14 @@
               <td align="right"><spring:message code="purchaseorder.downpayment"/></td>
               <td width="1%" align="center">:</td>
 			  <td>
-				<form:input id='downPayment' path='downPayment' cssClass='input-number' size="10"/>
+				<form:input id='downPayment' path='downPayment' cssClass='input-number' size="5"/> %
 			  </td>
 			</tr>
 			<tr>
               <td align="right"><spring:message code="purchaseorder.paymentamount"/></td>
               <td width="1%" align="center">:</td>
 			  <td>
-				<form:input id='paymentAmount' path='paymentAmount' cssClass='input-number' size="10"/>
+				<form:input id='paymentAmount' path='paymentAmount' cssClass='input-number' size="5"/> %
 			  </td>
 			</tr>
             <tr>

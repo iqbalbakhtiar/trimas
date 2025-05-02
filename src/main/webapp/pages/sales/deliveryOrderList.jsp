@@ -75,7 +75,11 @@
 							<td nowrap="nowrap">${delivery.facility.name}</td>
 							<td nowrap="nowrap">${delivery.customer.fullName}</td>
 							<td nowrap="nowrap">${delivery.shippingAddress.addressName}</td>
-							<td nowrap="nowrap">${delivery.status}</td>
+							<td nowrap="nowrap">
+								<c:if test="${delivery.status eq 'OPEN'}"><div style="color: red;"><spring:message code="deliveryorder.status.${delivery.status.messageName}"/></div></c:if>
+								<c:if test="${delivery.status eq 'SENT'}"><div style="color: blue;"><spring:message code="deliveryorder.status.${delivery.status.messageName}"/></div></c:if>
+								<c:if test="${delivery.status eq 'DELIVERED'}"><div style="color: green;"><spring:message code="deliveryorder.status.${delivery.status.messageName}"/></div></c:if>
+							</td>
 							<td nowrap="nowrap">${delivery.note}</td>
 						</tr>
 						</c:forEach>
@@ -91,13 +95,7 @@
 			</div>
 		</div>
 	</div>
-	
   	<%@ include file="/common/sirius-footer.jsp"%>
-
-<div style="display: none">
-	<%@ include file="/common/dialog.jsp"%>
-</div>
 </div>
 </body>
-<!-- END OF BODY -->
 </html>

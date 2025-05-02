@@ -1034,7 +1034,7 @@ td, th{
 	cursor	:pointer;
 }
 .item-button-sent {
-	background-image: url('icons/save.gif');
+	background-image: url('icons/add_gl_child.png');
 	background-repeat:  no-repeat;
 	float     : left;
 	display   : block;

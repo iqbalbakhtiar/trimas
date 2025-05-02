@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.siriuserp.sales.criteria.DeliveryOrderFilterCriteria;
 import com.siriuserp.sales.dm.DeliveryOrder;
 import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
+import com.siriuserp.sales.dm.SOStatus;
 import com.siriuserp.sales.form.SalesForm;
 import com.siriuserp.sales.query.DeliveryOrderAddViewQuery;
 import com.siriuserp.sales.query.DeliveryOrderViewQuery;
@@ -133,6 +134,27 @@ public class DeliveryOrderController extends ControllerBase
 		service.delete(service.load(id));
 
 		return ViewHelper.redirectTo("deliveryorderview.htm");
+	}
+
+	@RequestMapping("/deliveryordersent.htm")
+	public ModelAndView sent(@RequestParam("id") Long id, @RequestParam("status") SOStatus soStatus, SessionStatus status) throws Exception
+	{
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			service.updateStatus(id, soStatus);
+			status.setComplete();
+
+			response.store("id", id);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			response.statusError();
+			response.setMessage(e.getLocalizedMessage());
+		}
+
+		return response;
 	}
 
 	@RequestMapping("/deliveryorderprint.htm")

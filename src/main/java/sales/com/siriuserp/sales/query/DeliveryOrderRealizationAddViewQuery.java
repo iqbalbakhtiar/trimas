@@ -33,7 +33,7 @@ public class DeliveryOrderRealizationAddViewQuery extends AbstractGridViewQuery
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);
-		query.setParameter("status", SOStatus.OPEN);
+		query.setParameter("status", SOStatus.SENT);
 
 		return query;
 	}

@@ -19,6 +19,7 @@ import com.siriuserp.sales.dm.DeliveryOrder;
 import com.siriuserp.sales.dm.DeliveryOrderItem;
 import com.siriuserp.sales.dm.DeliveryOrderItemType;
 import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
+import com.siriuserp.sales.dm.SOStatus;
 import com.siriuserp.sales.dm.SalesOrderItem;
 import com.siriuserp.sales.form.SalesForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
@@ -29,6 +30,7 @@ import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.dm.Item;
 import com.siriuserp.sdk.dm.TableType;
+import com.siriuserp.sdk.exceptions.DataEditException;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
@@ -235,5 +237,14 @@ public class DeliveryOrderService extends Service
 		}
 
 		genericDao.delete(deliveryOrder);
+	}
+
+	@AuditTrails(className = DeliveryOrder.class, actionType = AuditTrailsActionType.UPDATE)
+	public void updateStatus(Long id, SOStatus status) throws DataEditException
+	{
+		DeliveryOrder deliveryOrder = genericDao.load(DeliveryOrder.class, id);
+		deliveryOrder.setStatus(SOStatus.SENT);
+
+		genericDao.update(deliveryOrder);
 	}
 }
