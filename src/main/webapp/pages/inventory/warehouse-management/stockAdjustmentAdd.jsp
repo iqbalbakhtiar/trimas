@@ -162,7 +162,7 @@
 		const category = List.get('<input class="input-disabled" disabled="true" size="10"/>','category['+index+']');
 		const uom = List.get('<input class="input-disabled" disabled="true" size="5"/>','uom['+index+']');
 		const onHand = List.get('<input class="number-disabled" disabled="true" size="12"/>','onhand['+index+']', '0.00');
-		const quantity = List.get('<input class="input-number negative" onchange='+"checkQuantity("+index+");"+' size="12"/>','quantity['+index+']', '0.00');
+		const quantity = List.get('<input class="input-decimal negative" onchange='+"checkQuantity("+index+");"+' size="12"/>','quantity['+index+']', '0.00');
 		const price = List.get('<input class="input-number" size="12"/>','price['+index+']', '0.00');
 		/* const currency = List.get('<select hidden="hidden"/>','currency['+index+']');
 		const currencies = JSON.parse('${jsonUtil:toJson(currencies)}');
