@@ -24,23 +24,26 @@
 				<div id="r14">
 					<div id="se-contents">
 						<c:set var="url" value="/page/popupproductforadjustmentview.htm?target=${target}&index=${index}&container=${filterCriteria.container}&organization=${filterCriteria.organization}"/>
-						<form id="filterForm" name="filterForm" method="post" >
+						<form id="filterPopup" name="filterPopup" method="post" >
 							<table width="100%" cellspacing="0" cellpadding="1" align="center">
+                                 <tr>
+									<td width="130" align="right" style="WIDTH:130px;"><spring:message code="product.code"/></td>
+									<td width="7">&nbsp;:&nbsp;</td>
+									<td width="295" height="28" align="left">
+										<input type="text" id="code" name="code" value="${filterCriteria.code}" size="35" class="inputbox"/>
+									</td>
                                 <tr>
-                                    <td width="460" align="right">Code</td>
-                                    <td width="4">:</td>
-                                    <td width="765" height="28" align="left"><input id="code" name="code" value="${filterCriteria.code}" size="35"/></td>
-                                </tr>
+									<td width="130" align="right" style="WIDTH:130px;"><spring:message code="product.name"/></td>
+									<td width="7">&nbsp;:&nbsp;</td>
+									<td width="295" height="28" align="left">
+										<input type="text" id="name" name="name" value="${filterCriteria.name}" size="35" class="inputbox"/>
+									</td>
+								</tr>
                                 <tr>
-                                    <td width="460" align="right">Name</td>
-                                    <td width="4">:</td>
-                                    <td height="28" align="left"><input id="name" name="name" value="${filterCriteria.name}" size="35"/></td>
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td><input type="submit" value="Search" alt="Search" style="WIDTH:60px; HEIGHT:25px" onclick="search('<c:url value='${url}'/>');" class="btn"></td>
-                                </tr>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td><%@ include file="/common/button.jsp"%></td>
+								</tr>
 							</table>
 						</form>
 							
