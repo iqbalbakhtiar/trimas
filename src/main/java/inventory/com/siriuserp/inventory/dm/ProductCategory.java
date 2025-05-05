@@ -51,6 +51,10 @@ public class ProductCategory extends Model
 	@Column(name = "type")
 	private ProductCategoryType type;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "category_type")
+	private CategoryType categoryType = CategoryType.MATERIAL;
+
 	@OneToMany(mappedBy = "productCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)

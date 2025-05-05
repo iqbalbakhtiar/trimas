@@ -9,6 +9,7 @@ import com.siriuserp.sales.dm.DeliveryOrderRealization;
 import com.siriuserp.sales.dm.DeliveryPlanning;
 import com.siriuserp.sales.dm.DeliveryPlanningSequence;
 import com.siriuserp.sales.dm.SOStatus;
+import com.siriuserp.sales.dm.SalesInternalType;
 import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sdk.dm.Form;
 import com.siriuserp.sdk.dm.Party;
@@ -49,4 +50,5 @@ public class SalesForm extends Form
 	private PostalAddress shippingAddress;
 
 	private SOStatus soStatus;
+	private SalesInternalType salesInternalType;
 }

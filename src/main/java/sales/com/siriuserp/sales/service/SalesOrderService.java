@@ -95,9 +95,9 @@ public class SalesOrderService extends Service
 		money.setAmount(form.getAmount());
 
 		if (salesOrder.getTax() != null && salesOrder.getTax().getTaxRate().compareTo(BigDecimal.ZERO) > 0)
-			salesOrder.setCode(GeneratorHelper.instance().generate(TableType.SALES_ORDER, codeSequenceDao, "SSM", salesOrder.getDate(), salesOrder.getTax()));
+			salesOrder.setCode(GeneratorHelper.instance().generate(TableType.SALES_ORDER, codeSequenceDao, "SSM", salesOrder.getSalesInternalType().getCode(), salesOrder.getDate(), salesOrder.getTax()));
 		else
-			salesOrder.setCode(GeneratorHelper.instance().generate(TableType.SALES_ORDER, codeSequenceDao, null, salesOrder.getDate(), salesOrder.getTax()));
+			salesOrder.setCode(GeneratorHelper.instance().generate(TableType.SALES_ORDER, codeSequenceDao, null, salesOrder.getSalesInternalType().getCode(), salesOrder.getDate(), salesOrder.getTax()));
 
 		salesOrder.setMoney(money);
 		salesOrder.setSalesType(SalesType.STANDARD);

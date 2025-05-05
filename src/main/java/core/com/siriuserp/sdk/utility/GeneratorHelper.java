@@ -69,40 +69,40 @@ public class GeneratorHelper
 
 	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao) throws ServiceException
 	{
-		return generate(tableType, codeSequenceDao, "", null, CodeSequence.YEAR, null);
+		return generate(tableType, codeSequenceDao, "", null, null, CodeSequence.YEAR, null);
 	}
 
 	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, String code) throws ServiceException
 	{
-		return generate(tableType, codeSequenceDao, code, null, CodeSequence.YEAR, null);
+		return generate(tableType, codeSequenceDao, code, null, null, CodeSequence.YEAR, null);
 	}
 
 	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, Party organization) throws ServiceException
 	{
-		return generate(tableType, codeSequenceDao, organization.getCode(), null, CodeSequence.YEAR, null);
+		return generate(tableType, codeSequenceDao, organization.getCode(), null, null, CodeSequence.YEAR, null);
 	}
 
 	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, Party organization, Date date) throws ServiceException
 	{
-		return generate(tableType, codeSequenceDao, organization.getCode(), date, CodeSequence.YEAR, null);
+		return generate(tableType, codeSequenceDao, organization.getCode(), null, date, CodeSequence.YEAR, null);
 	}
 
 	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, Date date, Long sequence) throws ServiceException
 	{
-		return generate(tableType, codeSequenceDao, null, date, sequence, null);
+		return generate(tableType, codeSequenceDao, null, null, date, sequence, null);
 	}
 
 	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, Date date) throws ServiceException
 	{
-		return generate(tableType, codeSequenceDao, null, date, CodeSequence.MONTH, null);
+		return generate(tableType, codeSequenceDao, null, null, date, CodeSequence.MONTH, null);
 	}
 
-	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, String code, Date date, Tax tax) throws ServiceException
+	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, String code, String codeExt, Date date, Tax tax) throws ServiceException
 	{
-		return generate(tableType, codeSequenceDao, code, date, CodeSequence.MONTH, tax);
+		return generate(tableType, codeSequenceDao, code, codeExt, date, CodeSequence.MONTH, tax);
 	}
 
-	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, String code, Date date, Long sequence, Tax tax) throws ServiceException
+	public String generate(TableType tableType, CodeSequenceDao codeSequenceDao, String code, String codeExt, Date date, Long sequence, Tax tax) throws ServiceException
 	{
 		if (date == null)
 			date = DateHelper.today();
@@ -154,7 +154,7 @@ public class GeneratorHelper
 		case MOVING_CONTAINER_ISSUE_SEQUENCE:
 			return sequence(codeSequence, index);
 		case SALES_ORDER:
-			return sales(codeSequence, index, date, tax);
+			return sales(codeSequence, codeExt, index, date, tax);
 		case DELIVERY_ORDER:
 			return delivery(tableType, codeSequence, index, date);
 		case PURCHASE_ORDER:
@@ -242,7 +242,7 @@ public class GeneratorHelper
 		return barcode.toString();
 	}
 
-	private String sales(CodeSequence codeSequence, Integer index, Date date, Tax tax)
+	private String sales(CodeSequence codeSequence, String codeExt, Integer index, Date date, Tax tax)
 	{
 		StringBuffer sb = new StringBuffer();
 		String sCode = "" + index;
@@ -251,7 +251,9 @@ public class GeneratorHelper
 			sb.append("0");
 
 		sb.append(index);
-		sb.append("/BNG");
+
+		if (SiriusValidator.validateParam(codeExt))
+			sb.append("/" + codeExt);
 
 		if (tax != null && tax.getTaxRate().compareTo(BigDecimal.ZERO) > 0)
 			sb.append("/SSM");

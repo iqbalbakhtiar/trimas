@@ -90,6 +90,10 @@ public class SalesOrder extends Model implements JSONSupport, ApprovableBridge
 	@Enumerated(EnumType.STRING)
 	protected SalesType salesType = SalesType.STANDARD;
 
+	@Column(name = "sales_internal_type")
+	@Enumerated(EnumType.STRING)
+	protected SalesInternalType salesInternalType = SalesInternalType.YARN;
+
 	@Embedded
 	private Money money;
 

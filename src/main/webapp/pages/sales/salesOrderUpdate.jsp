@@ -34,6 +34,15 @@
 					</td>
 				</tr>
 				<tr>
+					<td align="right"><spring:message code="salesorder.type"/></td>
+					<td width="1%" align="center">:</td>
+					<td>
+						<form:select id="salesInternalType" path="salesInternalType" cssClass="input-disabled" disabled="true">
+							<form:option value="${salesOrder_edit.salesInternalType}"><spring:message code="salesorder.type.${salesOrder_edit.salesInternalType.messageName}"/></form:option>
+						</form:select>
+					</td>
+				</tr>
+				<tr>
 					<td align="right"><spring:message code="sirius.date"/></td>
 					<td width="1%" align="center">:</td>
 					<td><input id="date" name="date" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${salesOrder_edit.date}' pattern='dd-MM-yyyy'/>"/></td>

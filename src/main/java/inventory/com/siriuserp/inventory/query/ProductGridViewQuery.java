@@ -3,6 +3,7 @@ package com.siriuserp.inventory.query;
 import org.hibernate.Query;
 
 import com.siriuserp.inventory.criteria.ProductFilterCriteria;
+import com.siriuserp.inventory.dm.CategoryType;
 import com.siriuserp.inventory.dm.ProductCategoryType;
 import com.siriuserp.inventory.dm.ProductType;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
@@ -46,6 +47,9 @@ public class ProductGridViewQuery extends AbstractGridViewQuery
 		if (SiriusValidator.validateParam(criteria.getProductCategoryType()))
 			builder.append("AND pro.productCategory.type = :productCategoryType ");
 
+		if (SiriusValidator.validateParam(criteria.getExcludeCategoryType()))
+			builder.append("AND pro.productCategory.categoryType != :excludeCategoryType ");
+
 		if (SiriusValidator.validateParam(criteria.getSaleable()))
 			builder.append("AND pro.saleable =:saleable ");
 
@@ -79,6 +83,9 @@ public class ProductGridViewQuery extends AbstractGridViewQuery
 
 		if (SiriusValidator.validateParam(criteria.getProductCategoryType()))
 			query.setParameter("productCategoryType", ProductCategoryType.valueOf(criteria.getProductCategoryType()));
+
+		if (SiriusValidator.validateParam(criteria.getExcludeCategoryType()))
+			query.setParameter("excludeCategoryType", CategoryType.valueOf(criteria.getExcludeCategoryType()));
 
 		if (SiriusValidator.validateParam(criteria.getSaleable()))
 			query.setParameter("saleable", criteria.getSaleable());

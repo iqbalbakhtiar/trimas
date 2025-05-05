@@ -30,6 +30,16 @@
 					</td>
 				</tr>
 				<tr>
+					<td align="right"><spring:message code="salesorder.type"/></td>
+					<td width="1%" align="center">:</td>
+					<td>
+						<form:select id="salesInternalType" path="salesInternalType">
+							<form:option value="YARN" selected="true"><spring:message code="salesorder.type.yarn"/></form:option>
+							<form:option value="WASTE"><spring:message code="salesorder.type.waste"/></form:option>
+						</form:select>
+					</td>
+				</tr>
+				<tr>
 					<td align="right"><spring:message code="sirius.date"/></td>
 					<td width="1%" align="center">:</td>
 					<td><input id="date" name="date" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>" onchange="updateExpDate()"/></td>
@@ -187,10 +197,13 @@
 </div>
 <%@ include file="/common/sirius-general-bottom.jsp"%>
 <script type="text/javascript">
-$(function(){
-	var $index = 0; // For Line Item Index
+$(function(){ // For Line Item Index
 
 	updateDisplay();
+	
+	$('#salesInternalType').change(function(){
+		cleanItems();
+	});
 	
 	$('.item-button-save').click(function(){
 		if(validateForm()) {
@@ -199,8 +212,7 @@ $(function(){
 	});
 	
 	$('.item-button-new').click(function() {
-		addLine($index);
-		$index++;
+		addLine();
 	});
 	
 	$('.checkall').click(function () {
@@ -450,24 +462,31 @@ function updateDisplay() {
 	$('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
 }
 
-function addLine($index) {
+var index = 0;
+function cleanItems() {
+	$('.checkall').click();
+	$('.item-button-delete').click();
+	index = 0;
+}
+
+function addLine() {
 	$tbody = $('#lineItem');
     $tr = $('<tr/>');
     
-	$cbox = List.get('<input type="checkbox" class="check"/>','check'+$index);
+	$cbox = List.get('<input type="checkbox" class="check"/>','check'+index);
 	
-	$product = List.get('<select class="combobox-ext productInput" onchange="checkDuplicate(this);updateDisplay();"/>','product['+$index+']');
-	$productImg = List.img('<spring:message code="product"/>', $index, 'openProduct("'+$index+'")');
+	$product = List.get('<select class="combobox-ext productInput" onchange="checkDuplicate(this);updateDisplay();"/>','product['+index+']');
+	$productImg = List.img('<spring:message code="product"/>', index, 'openProduct("'+index+'")');
 	
-	$qty = List.get('<input type="text" class="input-decimal" size="6" onchange="updateDisplay();"/>','quantity['+$index+']', '0.00');
+	$qty = List.get('<input type="text" class="input-decimal" size="6" onchange="updateDisplay();"/>','quantity['+index+']', '0.00');
 	
-	$uom = List.get('<input type="text" class="input-disabled" disabled size="6" />','uom['+$index+']');
+	$uom = List.get('<input type="text" class="input-disabled" disabled size="6" />','uom['+index+']');
 	
-	$price = List.get('<input type="text" class="input-decimal" size="12" onchange="updateDisplay()"/>','amount['+$index+']', '0.00');
+	$price = List.get('<input type="text" class="input-decimal" size="12" onchange="updateDisplay()"/>','amount['+index+']', '0.00');
 
-	$totalAmount = List.get('<input type="text" class="input-decimal input-disabled" disabled size="12"/>','totalAmount['+$index+']', '0.00');
+	$totalAmount = List.get('<input type="text" class="input-decimal input-disabled" disabled size="12"/>','totalAmount['+index+']', '0.00');
 	
-	$packNote = List.get('<input type="text" size="30"/>','note['+$index+']');
+	$packNote = List.get('<input type="text" size="30"/>','note['+index+']');
 	
 	$tr.append(List.col([$cbox]));
 	$tr.append(List.col([$product, $productImg]));
@@ -478,15 +497,26 @@ function addLine($index) {
 	$tr.append(List.col([$packNote]));
 	
 	$tbody.append($tr);
-	
+  	index++;
 	$(".input-decimal").bind(inputFormat);
 }
 
 function openProduct(index) {
+	var exclCat = "";
+	var cat = "";
+	var salesType = $('#salesInternalType').val();
+  
+  	if(salesType == 'YARN')
+  		exclCat = "WASTE";
+  	else
+  		cat = "WASTE";
+	  
 	const baseUrl = '<c:url value="/page/popupproductview.htm"/>';
 	const params = {
 		target: 'product[' + index + ']', // Id Dropdown (Select) element
 		index: index,
+		excludeCategoryType: exclCat,
+		categoryName: cat,
 		saleable: true,
 		status: true // Filter Only Active Products
 	};

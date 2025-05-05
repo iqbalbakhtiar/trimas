@@ -108,7 +108,7 @@ public class ModuleService
 	@AuditTrails(className = Module.class, actionType = AuditTrailsActionType.CREATE)
 	public void add(Module module) throws Exception
 	{
-		module.setCode(GeneratorHelper.instance().generate(TableType.MODULE, codeSequenceDao, module.getModuleGroup().getCode(), DateHelper.toStartDate(Month.JANUARY, 2001), CodeSequence.YEAR, null));
+		module.setCode(GeneratorHelper.instance().generate(TableType.MODULE, codeSequenceDao, module.getModuleGroup().getCode(), null, DateHelper.toStartDate(Month.JANUARY, 2001), CodeSequence.YEAR, null));
 
 		if (module.getAlias() == null || module.getAlias().trim().length() == 0)
 			module.setAlias(module.getName());
