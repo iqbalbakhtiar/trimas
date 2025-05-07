@@ -26,7 +26,7 @@ public class DeliveryReportViewQuery extends AbstractStandardReportQuery
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT NEW com.siriuserp.sales.adapter.DeliveryReportAdapter(deliveryItem, deliveryItem.deliveryReferenceItem.salesOrderItem) ");
-		builder.append("FROM DeliveryOrderItem deliveryItem ");
+		builder.append("FROM DeliveryOrderRealizationItem realizationItem JOIN realizationItem.deliveryOrderItem deliveryItem ");
 		builder.append("WHERE deliveryItem.deliveryItemType = 'BASE' ");
 
 		if (SiriusValidator.validateLongParam(criteria.getOrganization()))

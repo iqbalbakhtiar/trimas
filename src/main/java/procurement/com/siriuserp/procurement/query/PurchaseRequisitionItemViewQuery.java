@@ -40,6 +40,12 @@ public class PurchaseRequisitionItemViewQuery extends AbstractGridViewQuery
 		if (SiriusValidator.validateParam(criteria.getRequisitionerName()))
 			builder.append("AND item.purchaseRequisition.requisitioner.fullName LIKE :requisitioner ");
 
+		if (SiriusValidator.validateParam(criteria.getProductName()))
+			builder.append("AND item.product.name LIKE :productName ");
+
+		if (SiriusValidator.validateParam(criteria.getProductCategoryName()))
+			builder.append("AND item.product.productCategory.name LIKE :productCategoryName ");
+
 		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 		{
 			if (SiriusValidator.validateDate(criteria.getDateTo()))
@@ -59,6 +65,12 @@ public class PurchaseRequisitionItemViewQuery extends AbstractGridViewQuery
 
 		if (SiriusValidator.validateParam(criteria.getRequisitionerName()))
 			query.setParameter("requisitioner", "%" + criteria.getRequisitionerName() + "%");
+
+		if (SiriusValidator.validateParam(criteria.getProductName()))
+			query.setParameter("productName", "%" + criteria.getProductName() + "%");
+
+		if (SiriusValidator.validateParam(criteria.getProductCategoryName()))
+			query.setParameter("productCategoryName", "%" + criteria.getProductCategoryName() + "%");
 
 		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 			query.setParameter("startDate", criteria.getDateFrom());

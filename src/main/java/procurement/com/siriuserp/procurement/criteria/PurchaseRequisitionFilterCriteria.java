@@ -26,6 +26,8 @@ public class PurchaseRequisitionFilterCriteria extends AbstractFilterCriteria
 
 	private String code;
 	private String requisitionerName;
+	private String productName;
+	private String productCategoryName;
 
 	private Date dateFrom;
 	private Date dateTo;

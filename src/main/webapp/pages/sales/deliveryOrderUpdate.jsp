@@ -286,6 +286,6 @@ function printDO() {
 	if(taxRate > 0)
 		window.location="<c:url value='/page/deliveryorderprint.htm?id=${deliveryOrder_form.deliveryOrder.id}&printType=1'/>";
 	else
-		window.location="<c:url value='/page//page/deliveryorderprint.htm?id=${deliveryOrder_form.deliveryOrder.id}&printType=2'/>";
+		window.location="<c:url value='/page/deliveryorderprint.htm?id=${deliveryOrder_form.deliveryOrder.id}&printType=2'/>";
 }
 </script>

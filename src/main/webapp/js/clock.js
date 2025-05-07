@@ -32,6 +32,7 @@ Clock.update=function () {
 	if (s < 10)
 		s = "0" + s;
 	$("#theClock").html(h + ":" + m + ":" + s);
+	$("#printTime").html(h + ":" + m + ":" + s);
 	s++;
 	clockID = setTimeout("Clock.update()", 1000);
 }

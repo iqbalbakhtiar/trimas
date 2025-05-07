@@ -156,6 +156,7 @@ public class GeneratorHelper
 		case SALES_ORDER:
 			return sales(codeSequence, codeExt, index, date, tax);
 		case DELIVERY_ORDER:
+		case BILLING:
 			return delivery(tableType, codeSequence, index, date);
 		case PURCHASE_ORDER:
 			return purchase(codeSequence, index, date);
@@ -242,6 +243,7 @@ public class GeneratorHelper
 		return barcode.toString();
 	}
 
+	//SEQ/CODEEXT/TAXORNOTAX/MONTH/YEAR EX:001/BNG/SSM/05/2025
 	private String sales(CodeSequence codeSequence, String codeExt, Integer index, Date date, Tax tax)
 	{
 		StringBuffer sb = new StringBuffer();
@@ -264,6 +266,7 @@ public class GeneratorHelper
 		return sb.toString();
 	}
 
+	//CODE|YEAR|MONTH|SEQ EX:SJ2505001
 	private String delivery(TableType tableType, CodeSequence codeSequence, Integer index, Date date)
 	{
 		StringBuffer sb = new StringBuffer();
@@ -282,6 +285,7 @@ public class GeneratorHelper
 		return sb.toString();
 	}
 
+	//SEQ/CODEEXT/TAXORNOTAX/MONTH/YEAR EX:001/BNG/SSM/05/2025
 	private String purchase(CodeSequence codeSequence, Integer index, Date date)
 	{
 		StringBuffer sb = new StringBuffer();

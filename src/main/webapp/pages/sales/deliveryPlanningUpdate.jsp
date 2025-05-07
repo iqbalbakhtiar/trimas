@@ -2,7 +2,7 @@
 
 <div class="toolbar">
 	<a class="item-button-list" href="<c:url value='/page/deliveryplanningview.htm'/>"><span>List</span></a>
-	<c:if test="${access.edit and planning_edit.planable and !planning_edit.salesOrder.locked}">
+	<c:if test="${access.edit and planning_edit.planable and !planning_edit.salesOrder.locked and planning_edit.salesOrder.soStatus ne 'CLOSE' and planning_edit.salesOrder.soStatus ne 'CANCELED'}">
 		<a class="item-button-add-gl-child" href="<c:url value='/page/deliveryplanningsequencepreadd.htm?id=${planning_edit.id}'/>"><span>Add Sequence</span></a>
 	</c:if>
 </div>

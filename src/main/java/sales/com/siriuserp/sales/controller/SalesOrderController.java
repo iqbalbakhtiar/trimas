@@ -119,13 +119,13 @@ public class SalesOrderController extends ControllerBase
 	}
 
 	@RequestMapping("/salesorderclose.htm")
-	public ModelAndView close(@RequestParam("id") Long id, SessionStatus status) throws Exception
+	public ModelAndView close(@RequestParam("id") Long id, @RequestParam("soStatus") String soStatus, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
 		try
 		{
-			service.close(id);
+			service.close(id, soStatus);
 			status.setComplete();
 
 			response.store("id", id);

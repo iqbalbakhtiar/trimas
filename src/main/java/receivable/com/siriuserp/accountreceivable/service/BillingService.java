@@ -61,7 +61,7 @@ public class BillingService extends Service {
 	public void add(Billing billing) throws Exception { // Used in DOR Add
 		AccountingForm form = (AccountingForm) billing.getForm();
 
-		billing.setCode(GeneratorHelper.instance().generate(TableType.BILLING, codeSequenceDao));
+		billing.setCode(GeneratorHelper.instance().generate(TableType.BILLING, codeSequenceDao, billing.getDate()));
 
 		for (Item item : form.getItems())
 		{

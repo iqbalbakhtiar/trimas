@@ -200,6 +200,9 @@
 					  				PO yang sudah di tandatangani dan di cap, mohon dikirim ulang ke email : ngati.ssm@gmail.com
 				  				</td>
 				  			</tr>
+				  			<tr>
+				  				<td colspan="5" align="right"><fmt:formatDate value="${now}" pattern="dd MMMM yyyy"/> &nbsp;<span id="printTime"></span></td>
+				  			</tr>
 					  		</table>
 						</div>
 					</div>

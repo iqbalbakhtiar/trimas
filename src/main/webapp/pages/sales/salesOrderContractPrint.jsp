@@ -133,11 +133,15 @@
 					  				<th style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.total"/></th>
 					  			</tr>
 								<c:forEach items="${adapter.items}" var="item" varStatus="idx">
-					  			<tr style="height: 25px;">
+								<c:set var="bale" value="${item.quantity / 181.44}"/>
+					  			<tr style="height: 35px;">
                                		<c:set var="pattern" value=",##0.00" />
 					  				<td style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.name}</td>
-					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
-					  				<td align="center" style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.unitOfMeasure.measureId}</td>
+					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;">
+					  					<fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></br>
+					  					<fmt:formatNumber value='${bale}' pattern=',##0.00'/>
+					  				</td>
+					  				<td align="center" style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.unitOfMeasure.measureId}</br>BALE</td>
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.amount}' pattern='${pattern}'/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.subTotal}' pattern='${pattern}'/></td>
 					  			</tr>
@@ -216,6 +220,9 @@
 					  				</br>sebagai bukti persetujuan. Jika hal di atas tidak terpenuhi maka penjual dapat memilih untuk membatalkan penjualan.
 				  				</td>
 				  			</tr>
+				  			<tr>
+				  				<td colspan="5" align="right"><fmt:formatDate value="${now}" pattern="dd MMMM yyyy"/> &nbsp;<span id="printTime"></span></td>
+				  			</tr>
 					  		</table>
 						</div>
 					</div>
@@ -227,3 +234,4 @@
 </div>
 </body>
 </html>
+-

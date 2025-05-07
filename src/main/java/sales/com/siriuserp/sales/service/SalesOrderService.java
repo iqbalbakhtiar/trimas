@@ -173,10 +173,10 @@ public class SalesOrderService extends Service
 	}
 
 	@AuditTrails(className = SalesOrder.class, actionType = AuditTrailsActionType.UPDATE)
-	public void close(Long id) throws ServiceException
+	public void close(Long id, String soStatus) throws ServiceException
 	{
 		SalesOrder salesOrder = genericDao.load(SalesOrder.class, id);
-		salesOrder.setSoStatus(SOStatus.CLOSE);
+		salesOrder.setSoStatus(SOStatus.valueOf(soStatus));
 
 		genericDao.update(salesOrder);
 	}

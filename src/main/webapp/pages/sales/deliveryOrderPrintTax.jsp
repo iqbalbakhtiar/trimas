@@ -166,7 +166,7 @@
 				  					</tr>
 									<tr style="text-transform: uppercase;font-weight: bold;">
 										<td style="width: 1px;">(</td>
-										<td align="center">${deliveryOrder_edit.customer.salutation}&nbsp;${deliveryOrder_edit.customer.fullName}</td>
+										<td align="center">&nbsp;</td>
 										<td style="width: 1px;">)</td>
 									</tr>
 									</table>

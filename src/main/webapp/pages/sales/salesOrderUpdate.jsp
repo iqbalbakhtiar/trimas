@@ -5,8 +5,11 @@
 	<a class="item-button-list" href="<c:url value='/page/salesorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
 	<a class="item-button-print"><span><spring:message code="sirius.print"/></span></a>
-	<c:if test="${salesOrder_edit.soStatus != 'CLOSE'}">
-		<a class="item-button-close"><span><spring:message code="sirius.close"/></span></a>
+	<c:if test="${approvalDecision.approvalDecisionStatus eq 'APPROVE_AND_FINISH' and salesOrder_edit.soStatus ne 'CLOSE'}">
+		<a class="item-button-close close"><span><spring:message code="sirius.close"/></span></a>
+	</c:if>
+	<c:if test="${salesOrder_edit.soStatus ne 'CLOSE' and salesOrder_edit.soStatus ne 'CANCELED'}">
+		<a class="item-button-close canceled"><span><spring:message code="sirius.canceled"/></span></a>
 	</c:if>
 </div>
 
@@ -118,6 +121,24 @@
 			
 			<td width="40%" valign="top">
 				<table width="100%" style="border: none">
+					<tr>
+						<td>
+							<fieldset>
+								<legend><strong><spring:message code="sirius.status"/></strong></legend>
+								<table width="100%" style="border: none">
+									<tr>
+										<td colspan="2" align="right">
+											<h1>
+											<c:if test="${salesOrder_edit.soStatus eq 'CLOSE' or salesOrder_edit.soStatus eq 'CANCELED'}"><div style="color: red;"><spring:message code="salesorder.status.${salesOrder_edit.soStatus.messageName}"/></div></c:if>
+											<c:if test="${salesOrder_edit.soStatus eq 'PLANNING'}"><div style="color: blue;"><spring:message code="salesorder.status.${salesOrder_edit.soStatus.messageName}"/></div></c:if>
+											<c:if test="${salesOrder_edit.soStatus eq 'OPEN'}"><div style="color: green;"><spring:message code="salesorder.status.${salesOrder_edit.soStatus.messageName}"/></div></c:if>
+											</h1>
+										</td>
+									</tr>
+								</table>
+							</fieldset>
+						</td>
+					</tr>
 					<tr>
 						<td>
 							<fieldset>
@@ -279,8 +300,40 @@ $(function(){
 		printSO();
 	});
 
-	$('.item-button-close').click(function(){
-		closeSO();
+	$('.close').click(function(){
+		const confirmDialog = $('<div><spring:message code="notif.proceed"/> (<spring:message code="sirius.close"/>) ?</div>').dialog(
+		{
+			autoOpen: false, title: '<spring:message code="sirius.close"/>', modal:true,
+			buttons: {
+				'<spring:message code="sirius.yes"/>': function() {
+					$(this).dialog('close');
+					closeSO('CLOSE');
+				},
+				'<spring:message code="sirius.no"/>': function() {
+					$(this).dialog('close');
+				}
+			}
+		});
+
+		confirmDialog.dialog('open');
+	});
+
+	$('.canceled').click(function(){
+		const confirmDialog = $('<div><spring:message code="notif.proceed"/> (<spring:message code="sirius.canceled"/>) ?</div>').dialog(
+		{
+			autoOpen: false, title: '<spring:message code="sirius.canceled"/>', modal:true,
+			buttons: {
+				'<spring:message code="sirius.yes"/>': function() {
+					$(this).dialog('close');
+					closeSO('CANCELED');
+				},
+				'<spring:message code="sirius.no"/>': function() {
+					$(this).dialog('close');
+				}
+			}
+		});
+
+		confirmDialog.dialog('open');
 	});
 });
 
@@ -469,10 +522,9 @@ function printSO() {
 		window.location="<c:url value='/page/salesorderprint.htm?id=${salesOrder_edit.id}&printType=2'/>";
 }
 
-function closeSO() {
+function closeSO(soStatus) {
 	$.ajax({
-		url:"<c:url value='/page/salesorderclose.htm?id=${salesOrder_edit.id}'/>",
-		// data:$('#addForm').serialize(),
+		url:"<c:url value='/page/salesorderclose.htm?id=${salesOrder_edit.id}&soStatus='/>"+soStatus,
 		type : 'POST',
 		dataType : 'json',
 		beforeSend:function()
@@ -487,8 +539,6 @@ function closeSO() {
 				if(json.status === 'OK')
 				{
 					$dialog.dialog('close');
-					<%--window.location="<c:url value='/page/deliveryorderview.htm'/>";--%>
-					// Or Can use This
 					window.location="<c:url value='/page/salesorderpreedit.htm?id='/>"+json.id;
 				}
 				else

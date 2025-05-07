@@ -2,7 +2,7 @@ package com.siriuserp.sales.dm;
 
 public enum SOStatus
 {
-	OPEN, CLOSE, LOCK, UNLOCK, PLANNING, SENT, DELIVERED;
+	OPEN, CLOSE, LOCK, UNLOCK, PLANNING, SENT, DELIVERED, CANCELED;
 
 	public String getNormalizedName()
 	{

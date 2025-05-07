@@ -268,6 +268,9 @@
 					  				</br>untuk membatalkan penjualan.
 				  				</td>
 				  			</tr>
+				  			<tr>
+				  				<td colspan="5" align="right"><fmt:formatDate value="${now}" pattern="dd MMMM yyyy"/> &nbsp;<span id="printTime"></span></td>
+				  			</tr>
 					  		</table>
 						</div>
 					</div>

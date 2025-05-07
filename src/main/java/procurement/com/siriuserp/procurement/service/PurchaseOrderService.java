@@ -26,7 +26,6 @@ import com.siriuserp.inventory.dm.WarehouseTransactionType;
 import com.siriuserp.inventory.form.InventoryForm;
 import com.siriuserp.procurement.adapter.PurchaseOrderAdapter;
 import com.siriuserp.procurement.dm.POStatus;
-import com.siriuserp.procurement.dm.PaymentTerm;
 import com.siriuserp.procurement.dm.PurchaseDocumentType;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.procurement.dm.PurchaseOrderApprovableBridge;
@@ -101,7 +100,6 @@ public class PurchaseOrderService extends Service
 		map.put("facilities", genericDao.loadAll(Facility.class));
 		map.put("purchaseTypes", PurchaseType.values());
 		map.put("documentTypes", PurchaseDocumentType.values());
-		map.put("paymentTerms", PaymentTerm.values());
 
 		return map;
 	}

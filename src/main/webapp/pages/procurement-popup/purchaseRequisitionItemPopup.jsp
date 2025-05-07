@@ -25,7 +25,7 @@
 						<table border="0" width="100%" cellpadding="0" cellspacing="0">
 						<tr>
 							<td>
-								<form id="popupForm" name="popupForm" method="post">
+								<form id="filterPopup" name="filterPopup" method="post">
 									<table width="100%" cellspacing="0" cellpadding="0" align="center">
 									<tr>
 										<td width="15%" align="right"><spring:message code="sirius.code"/></td>
@@ -36,6 +36,16 @@
 										<td align="right"><spring:message code="purchaserequisition.requisitioner"/></td>
 										<td>:&nbsp;</td>
 										<td><input type="text" id="requisitionerName" name="requisitionerName" value="${filterCriteria.requisitionerName}" size="35" class="inputbox"/></td>
+									</tr>
+									<tr>
+										<td align="right"><spring:message code="product"/></td>
+										<td>:&nbsp;</td>
+										<td><input type="text" id="productName" name="productName" value="${filterCriteria.productName}" size="35" class="inputbox"/></td>
+									</tr>
+									<tr>
+										<td align="right"><spring:message code="productcategory"/></td>
+										<td>:&nbsp;</td>
+										<td><input type="text" id="productCategoryName" name="productCategoryName" value="${filterCriteria.productCategoryName}" size="35" class="inputbox"/></td>
 									</tr>
 									<tr>
 										<td>&nbsp;</td>
@@ -64,6 +74,7 @@
 				            <th width="12%" nowrap="nowrap"><spring:message code="product"/></th>
 				            <th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
 				            <th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
+				            <th width="8%" nowrap="nowrap"><spring:message code="productcategory"/></th>
 			                <th width="8%"><spring:message code="sirius.code"/></th>
 			                <th width="8%"><spring:message code="sirius.date"/></th>
                        	  	<th width="20%"><spring:message code="sirius.note"/></th>
@@ -74,12 +85,13 @@
 			                <td><c:out value="${item.product.name}"/></td>
 							<td><fmt:formatNumber value='${item.quantity}' pattern=',##0'/></td>
 			                <td><c:out value="${item.product.unitOfMeasure.measureId}"/></td>
+			                <td><c:out value="${item.product.productCategory.name}"/></td>
 							<td><c:out value='${item.purchaseRequisition.code}'/></td>
                             <td><fmt:formatDate value='${item.purchaseRequisition.date}' pattern='dd-MM-yyyy'/></td>
 			                <td><c:out value="${item.note}"/></td>
 					  	</tr>
 						</c:forEach>
-					  	<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
+					  	<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
 					  	</table>
 						<table border="0" cellpadding="0" cellspacing="0" width="99%" align="center" height="20">
 						<tr>

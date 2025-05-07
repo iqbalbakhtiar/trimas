@@ -51,7 +51,7 @@
 								<a class="item-button-print" href="javascript: window.print();"><span><spring:message code="sirius.print"/></span></a>
 						  	</div>
 					  	</div>
-					  	<div class="main-box">
+					  	<div class="main-box" style="overflow-x: hidden;">
 					  		<table border="0" width="100%" align="center">
 					  			<tr>
 					  				<td style="width: 70%">
@@ -91,8 +91,8 @@
 				  				<td align="left" style="width: 40%;">: ${purchase_edit.supplier.fullName}</td>
 			  				</tr>
 				  			<tr>
-				  				<td style="width: 1%;">Alamat</td>
-				  				<td align="left" style="width: 40%;">:
+				  				<td style="width: 1%;" valign="top">Alamat</td>
+				  				<td align="left" colspan="2" class="word-wrap">:
 				  					<c:forEach items='${purchase_edit.supplier.postalAddresses}' var='address'>
 										<c:if test='${address.selected}'>
 											${address.address}</br>
@@ -168,7 +168,7 @@
 					  			</tr>
 					  		</table>
 					  		<br/>
-					  		<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center" style="table-layout: fixed;">
+					  		<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
 				  			<tr>	
 				  				<td align="left" colspan="4"><strong><spring:message code="sirius.note2"/></strong>
 				  					<ul>
@@ -188,7 +188,10 @@
 				  						<td align="center" colspan="3" style="border-bottom:1px solid black;height: 25px;"><spring:message code="salesorder.contract.seller"/></td>
 				  					</tr>
 				  					<tr colspan="3" style="height: 100px">
-				  						<td align="center" colspan="3">&nbsp;</td>
+				  						<td align="center" colspan="3" nowrap="nowrap">&nbsp;</td>
+				  					</tr>
+				  					<tr style="height: 20px;">
+				  						<td align="center" colspan="3" nowrap="nowrap" style="text-transform: uppercase;">${purchase_edit.supplier.salutation} ${purchase_edit.supplier.fullName}</td>
 				  					</tr>
 									</table>
 								</td>
@@ -198,7 +201,10 @@
 				  						<td align="center" colspan="3" style="border-bottom:1px solid black;height: 25px;"><spring:message code="salesorder.contract.buyer"/></td>
 				  					</tr>
 				  					<tr colspan="3" style="height: 100px">
-				  						<td align="center" colspan="3">&nbsp;</td>
+				  						<td align="center" colspan="3" nowrap="nowrap">&nbsp;</td>
+				  					</tr>
+				  					<tr style="height: 20px;">
+				  						<td align="center" colspan="3" nowrap="nowrap" style="text-transform: uppercase;">${purchase_edit.organization.salutation} ${purchase_edit.organization.fullName}</td>
 				  					</tr>
 									</table>
 								</td>
@@ -209,17 +215,22 @@
 							</tr>
 							</table>
 					  		<br/>
-							<table border="0" cellpadding="1" cellspacing="2" width="100%" align="center" style="table-layout: fixed;">
+							<table border="0" cellpadding="1" cellspacing="2" width="100%" align="center" style="overflow: hidden;table-layout: fixed;">
 				  			<tr>
-				  				<td nowrap="nowrap" style="width: 20%;">Batas Tgl Penerimaan Barang</td>
-				  				<td colspan="3" nowrap="nowrap">: <fmt:formatDate value='${purchase_edit.shippingDate}' pattern='dd MMMM yyyy'/></td>
+				  				<td nowrap="nowrap" style="width: 25%;">Batas Tgl Penerimaan Barang</td>
+				  				<td colspan="3" nowrap="nowrap">: ${purchase_edit.deliveryTerm}</td>
 				  			</tr>
 				  			<tr>
 				  				<td nowrap="nowrap">Term of Payment</td>
 				  				<td colspan="3" nowrap="nowrap">: ${purchase_edit.paymentTerm}</td>
 				  			</tr>
 				  			<tr style="overflow: hidden;">
-				  				<td colspan="4" nowrap="nowrap">Setelah ditandatangani dan dicap perusahaan mohon difax kembali ke 022 7790185</td>
+				  				<td colspan="5" nowrap="nowrap">
+					  				PO yang sudah di tandatangani dan di cap, mohon dikirim ulang ke email : ngati.ssm@gmail.com
+				  				</td>
+				  			</tr>
+				  			<tr style="overflow: hidden;">
+				  				<td colspan="5" nowrap="nowrap" align="right"><fmt:formatDate value="${now}" pattern="dd MMMM yyyy"/> &nbsp;<span id="printTime"></span></td>
 				  			</tr>
 					  		</table>
 						</div>

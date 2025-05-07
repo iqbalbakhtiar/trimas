@@ -59,15 +59,6 @@
               </td>
             </tr>
             <tr>
-              <td align="right"><spring:message code="purchaseorder.payment.term"/></td>
-              <td width="1%" align="center">:</td>
-              <td>
-                <form:select id="paymentTerm" path="paymentTerm" readonly="true" cssClass="input-disabled combobox-min">
-                    <form:option value="${purchase_edit.paymentTerm}">${purchase_edit.paymentTerm.normalizedName}</form:option>
-                </form:select>
-              </td>
-            </tr>
-            <tr>
               <td align="right"><spring:message code="sirius.date"/></td>
               <td width="1%" align="center">:</td>
               <td><input id="date" name="date" size="10" class="input-disabled" value="<fmt:formatDate value='${purchase_edit.date}' pattern='dd-MM-yyyy'/>"/></td>
@@ -88,20 +79,16 @@
                 </form:select>
               </td>
             </tr>
-			<tr>
-              <td align="right"><spring:message code="purchaseorder.downpayment"/></td>
+            <tr>
+              <td align="right"><spring:message code="purchaseorder.term.delivery"/></td>
               <td width="1%" align="center">:</td>
-			  <td>
-				<form:input id='downPayment' path='downPayment' cssClass='number-disabled' size="5" disabled="true"/> %
-			  </td>
-			</tr>
-			<tr>
-              <td align="right"><spring:message code="purchaseorder.paymentamount"/></td>
+              <td><form:input id='deliveryTerm' path='deliveryTerm' size="25"/></td>
+            </tr>
+            <tr>
+              <td align="right"><spring:message code="purchaseorder.term.payment"/></td>
               <td width="1%" align="center">:</td>
-			  <td>
-				<form:input id='paymentAmount' path='paymentAmount' cssClass='number-disabled' size="5" disabled="true"/> %
-			  </td>
-			</tr>
+              <td><form:input id='paymentTerm' path='paymentTerm' size="25"/></td>
+            </tr>
 			<tr style="display: none;">
 				<td align="right"><spring:message code="invoiceverification.currency"/></td>
                 <td width="1%" align="center">:</td>
