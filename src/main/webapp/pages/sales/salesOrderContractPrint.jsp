@@ -151,7 +151,12 @@
 					  						</br><fmt:formatNumber value='${bale}' pattern=',##0.00'/>
 					  					</c:if>
 					  				</td>
-					  				<td align="center" style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.unitOfMeasure.measureId}</br>BALE</td>
+					  				<td align="center" style="border-bottom:1px solid black;border-left:1px solid black;">
+					  					${item.product.unitOfMeasure.measureId}
+					  					<c:if test="${salesOrder_edit.salesInternalType eq 'YARN'}">
+					  						</br>BALE
+				  						</c:if>
+				  					</td>
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.amount}' pattern='${pattern}'/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.subTotal}' pattern='${pattern}'/></td>
 					  			</tr>
