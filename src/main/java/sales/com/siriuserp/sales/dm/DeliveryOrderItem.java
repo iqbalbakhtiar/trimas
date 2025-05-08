@@ -120,6 +120,14 @@ public class DeliveryOrderItem extends Model
 		return "";
 	}
 
+	public String getSaleOrderPOCustomer()
+	{
+		if (getDeliveryReferenceItem() != null && getDeliveryReferenceItem().getSalesOrderItem().getSalesOrder().getPoCode() != null)
+			return getDeliveryReferenceItem().getSalesOrderItem().getSalesOrder().getPoCode();
+
+		return "";
+	}
+
 	public Product getProduct()
 	{
 		if (getItemParent() != null)

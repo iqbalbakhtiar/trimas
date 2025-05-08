@@ -128,6 +128,12 @@
 							  					<td align="right" style="width: 20%;" nowrap="nowrap"><spring:message code="salesorder.contract.no"/></td>
 							  					<td style="width: 80%"nowrap="nowrap">: ${deliveryOrder_edit.referenceCode}</td>
 						  					</tr>
+											<c:if test="${not empty deliveryOrder_edit.referencePOCustomer}">
+											<tr>
+							  					<td align="right">PO No</td>
+												<td>: ${deliveryOrder_edit.referencePOCustomer}</td>
+											</tr>
+											</c:if>
 						  					<tr>
 							  					<td align="right"><spring:message code="product"/></td>
 							  					<td>: ${item.product.name} ${deliveryOrder_edit.referenceLot}</td>

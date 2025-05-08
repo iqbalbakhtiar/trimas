@@ -137,6 +137,14 @@ public class DeliveryOrder extends Model implements JSONSupport
 		return String.join(" ", references);
 	}
 
+	public String getReferencePOCustomer()
+	{
+		HashSet<String> references = new HashSet<String>();
+		references.addAll(getItems().stream().map(item -> item.getSaleOrderPOCustomer()).collect(Collectors.toSet()));
+
+		return String.join(" ", references);
+	}
+
 	public Tax getTax()
 	{
 		for (DeliveryOrderItem item : getItems())
