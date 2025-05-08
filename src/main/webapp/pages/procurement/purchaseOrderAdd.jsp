@@ -383,7 +383,7 @@ function validation() {
   if($('#totalTransaction').val().toNumber() > new Number(1000000)) {
     var approver = $('#approver').val();
     if (approver == null || approver === "") {
-      alert('<spring:message code="sirius.approver"/> <spring:message code="notif.empty"/> !');
+      alert('<spring:message code="approver"/> <spring:message code="notif.empty"/> !');
       return false;
     }
   }

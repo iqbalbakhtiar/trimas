@@ -145,7 +145,11 @@ public class PurchaseOrderController extends ControllerBase
 	{
 		if (printType == 1)
 			return new ModelAndView("/procurement/purchaseOrderPrint", service.preedit(id));
+		else if (printType == 2)
+			return new ModelAndView("/procurement/purchaseOrderPrintTax", service.preedit(id));
+		else if (printType == 3)
+			return new ModelAndView("/procurement/purchaseOrderPrintSparepart", service.preedit(id));
 
-		return new ModelAndView("/procurement/purchaseOrderPrintSparepart", service.preedit(id));
+		return new ModelAndView("/procurement/purchaseOrderPrintSparepartTax", service.preedit(id));
 	}
 }

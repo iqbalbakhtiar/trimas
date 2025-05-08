@@ -2,12 +2,7 @@
 <div class="toolbar">
   <a class="item-button-list" href="<c:url value='/page/purchaseorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
   <a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
-  <c:if test="${purchase_edit.purchaseDocumentType eq 'BAHAN_BAKU'}">
-  	<a class="item-button-print"  href="<c:url value='/page/purchaseorderprint.htm?id=${purchase_edit.id}&printType=1'/>"><span><spring:message code="sirius.print"/></span></a>
-  </c:if>
-  <c:if test="${purchase_edit.purchaseDocumentType ne 'BAHAN_BAKU'}">
-  	<a class="item-button-print"  href="<c:url value='/page/purchaseorderprint.htm?id=${purchase_edit.id}&printType=2'/>"><span><spring:message code="sirius.print"/></span></a>
-  </c:if>
+  <a class="item-button-print"  href="javascript:printDocument();"><span><spring:message code="sirius.print"/></span></a>
   <c:if test="${access.add and purchase_edit.barcodeable}">
   	<a class="item-button-doc" href="javascript:createBarcode(${purchase_edit.id});"><span><spring:message code="sirius.create"/>&nbsp;<spring:message code="barcode"/></span></a>
   </c:if>
@@ -399,5 +394,27 @@
 	});
 
 	confirmDialog.dialog('open');
+  }
+  
+  function printDocument()
+  {
+	  var documentType = '${purchase_edit.purchaseDocumentType}';
+	  var taxRate = $('#taxRate').val().toNumber();
+	  var printType = 1;
+	  
+	  if(documentType == 'BAHAN_BAKU') {
+		  if(taxRate > 0)
+			  printType = 2;
+		  else
+			  printType = 1;
+	  } else {
+		  if(taxRate > 0)
+			  printType = 4;
+		  else
+			  printType = 3;
+	  }
+	  
+	  var url = "<c:url value='/page/purchaseorderprint.htm?id=${purchase_edit.id}&printType='/>"+printType;
+	  window.location = url;
   }
 </script>

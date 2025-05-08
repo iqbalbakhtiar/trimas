@@ -53,6 +53,41 @@
 					  	</div>
 					  	<div class="main-box">
 					  		<table border="0" width="100%" align="center">
+					  			<tr>
+					  				<td style="width: 70%">
+					  				<img src="assets/images/ssm-logo.png"  width="250" height="40"/>
+					  				</br><font size="2"></font>
+					  				</td>
+					  				<td style="width: 30%" valign="top">
+						  				<table border="0" width="100%" align="center">
+							  			<tr>
+							  				<td style="width: 10%;">PO No</td>
+							  				<td align="left" style="width: 40%;">: ${purchase_edit.code}</td>
+							  				<td style="width: 10%;">&nbsp;</td>
+							  				<td style="width: 40%;">&nbsp;</td>
+							  			</tr>
+							  			<tr>
+							  				<td style="width: 1%;"><spring:message code="sirius.date"/></td>
+							  				<td align="left" colspan="3">: <fmt:formatDate value='${purchase_edit.date}' pattern='dd MMMM yyyy'/></td>
+							  			</tr>
+							  			</table>
+					  				</td>
+					  			</tr>
+					  			<tr>
+					  				<td style="text-transform: uppercase;">
+					  					<c:forEach items='${purchase_edit.organization.postalAddresses}' var='address'>
+										<c:if test='${address.selected}'>
+											${address.address}</br>
+											SUMEDANG - JAWA BARAT</br>
+											Tlp. (022) 7798320</br>
+											Fax. (022) 7790185</br>
+										</c:if>
+									    </c:forEach>
+					  				</td>
+					  				<td>&nbsp;</td>
+					  			</tr>
+					  		</table>
+					  		<table border="0" width="100%" align="center">
 				  			<tr>
 				  				<td colspan="2" align="center" style="text-transform: uppercase;"><h2><spring:message code="purchaseorder"/></h2></td>
 				  			</tr>
@@ -101,6 +136,16 @@
 					  			</tr>
 					  			</c:if>
 					  			</c:forEach>
+					  			<tr style="font-weight: bold;">
+					  				<td align="right" colspan="3">&nbsp;</td>
+					  				<td align="right"><spring:message code="purchaseorderitem.subtotal"/></td>
+					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalItemAmount}' pattern='${pattern}'/></td>
+					  			</tr>
+					  			<tr style="font-weight: bold;">
+					  				<td align="right" colspan="3">&nbsp;</td>
+					  				<td align="right"><spring:message code="salesorder.tax.amount"/></td>
+					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.taxAmount}' pattern='${pattern}'/></td>
+					  			</tr>
 					  			<tr style="font-weight: bold;">
 					  				<td align="right" colspan="3">&nbsp;</td>
 					  				<td align="right"><spring:message code="purchaseorderitem.total"/></td>

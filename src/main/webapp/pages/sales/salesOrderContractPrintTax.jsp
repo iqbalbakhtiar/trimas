@@ -74,37 +74,42 @@
 					  		</table>
 					  		<table border="0" width="100%" align="center">
 				  			<tr>
-				  				<td colspan="3" align="center"><h2>KONTRAK PENJUALAN</h2></td>
+				  				<td colspan="4" align="center"><h2>KONTRAK PENJUALAN</h2></td>
 				  			</tr>
 				  			<tr>
 				  				<td width="10%"><spring:message code="sirius.date"/></td>
-				  				<td align="left">: <fmt:formatDate value='${salesOrder_edit.date}' pattern='dd-MM-yyyy'/></td>
+				  				<td width="1%" align="center">:</td>
+				  				<td align="left"><fmt:formatDate value='${salesOrder_edit.date}' pattern='dd-MM-yyyy'/></td>
 				  				<td></td>
 				  			</tr>
 				  			<tr>
 				  				<td width="10%"><spring:message code="salesorder.expired.date"/></td>
-				  				<td align="left">: <fmt:formatDate value='${salesOrder_edit.expDate}' pattern='dd-MM-yyyy'/></td>
+				  				<td width="1%" align="center">:</td>
+				  				<td align="left"><fmt:formatDate value='${salesOrder_edit.expDate}' pattern='dd-MM-yyyy'/></td>
 				  				<td></td>
 				  			</tr>
 				  			<tr>
 				  				<td><spring:message code="salesorder.contract.no"/></td>
-				  				<td align="left">: ${salesOrder_edit.code}</td>
+				  				<td width="1%" align="center">:</td>
+				  				<td align="left">${salesOrder_edit.code}</td>
 				  				<td align="left"></td>
 				  			</tr>
 				  			<tr>
 				  				<td width="10%">No PO</td>
-				  				<td align="left">: ${salesOrder_edit.poCode}</td>
+				  				<td width="1%" align="center">:</td>
+				  				<td align="left">${salesOrder_edit.poCode}</td>
 				  				<td></td>
 				  			</tr>
 				  			<tr valign="top">
 				  				<td nowrap="nowrap"><spring:message code="customer"/></td>
-				  				<td align="left" style="text-transform: uppercase;">:
+				  				<td width="1%" align="center">:</td>
+				  				<td align="left" style="text-transform: uppercase;">
 				  					<c:out value='${salesOrder_edit.customer.salutation}'/> <c:out value='${salesOrder_edit.customer.fullName}'/>
 				  					</br>
 				  					<c:forEach items='${salesOrder_edit.customer.postalAddresses}' var='address'>
 									<c:if test='${address.selected}'>
-										&nbsp;&nbsp;<c:out value='${address.address}'/></br>
-										&nbsp;&nbsp;<c:out value='${address.city.name}'/>
+										${address.address}</br>
+										${address.city.name}
 									</c:if>
 								    </c:forEach>
 				  				</td>
@@ -124,21 +129,23 @@
 						    </c:forEach>
 				  			<tr>
 				  				<td><spring:message code="contactmechanism.phone"/></td>
-				  				<td align="left">: ${phone}</td>
+				  				<td align="left">${phone}</td>
 				  				<td align="left"></td>
 				  			</tr>
 				  			<tr>
 				  				<td><spring:message code="contactmechanism.fax"/></td>
-				  				<td align="left">: ${fax}</td>
+				  				<td width="1%" align="center">:</td>
+				  				<td align="left">${fax}</td>
 				  				<td align="left"></td>
 				  			</tr>
 				  			<tr>
 				  				<td><spring:message code="salesorder.contract.payment"/></td>
+				  				<td width="1%" align="center">:</td>
 				  				<c:if test="${salesOrder_edit.term gt 0}">
-				  					<td align="left">: ${salesOrder_edit.term} hari setelah barang diterima</td>
+				  					<td align="left">${salesOrder_edit.term} hari setelah barang diterima</td>
 				  				</c:if>
 				  				<c:if test="${salesOrder_edit.term eq 0}">
-				  					<td align="left">: CASH</td>
+				  					<td align="left">CASH</td>
 				  				</c:if>
 				  				<td align="left"></td>
 				  			</tr>

@@ -126,7 +126,7 @@ public class PostalAddressService extends Service
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("countries", geographicService.getCountryList());
 		map.put("province", geographicService.getProvince(postalAddress.getCity().getLastParent().getId()));
-		map.put("city", geographicService.getCity(postalAddress.getCity().getParent().getId()));
+		map.put("city", geographicService.getCity((postalAddress.getCity() != null && postalAddress.getCity().getParent() != null) ? postalAddress.getCity().getParent().getId() : null));
 		map.put("postalAddress_edit", postalAddress);
 
 		return map;

@@ -190,7 +190,7 @@
 				<tr>
 					<td align="right"><spring:message code="postaladdress.detail"/></td>
 					<td width="1%" align="center">:</td>
-					<td><input id="addressDetail" class="inputbox input-disabled" disabled value="${salesOrder_edit.shippingAddress.address}"/></td>
+					<td><input id="addressDetail" class="input-disabled" size="45" disabled value="${salesOrder_edit.shippingAddress.address}"/></td>
 				</tr>
   				<tr>
 					<td align="right"><spring:message code="postaladdress.postalcode"/></td>

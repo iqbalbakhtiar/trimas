@@ -41,7 +41,7 @@
 		<c:set var="total" value="${dpp+tax}"/>
 		<td align="left" nowrap="nowrap"><fmt:formatDate value='${repo.deliveryOrderItem.deliveryOrder.date}' pattern='dd MMM yyyy'/></td>
 		<td align="left" nowrap="nowrap"><c:out value='${repo.deliveryOrderItem.deliveryOrder.customer.fullName}'/></td>
-		<td align="left" nowrap="nowrap"><a href="<c:url value='/page/deliveryorderpreedit.htm?id=${repo.deliveryOrderItem.deliveryOrder.id}'/>">${repo.deliveryOrderItem.deliveryOrder.code}</a></td>
+		<td align="left" nowrap="nowrap"><a href="<c:url value='/page/deliveryorderpreedit.htm?id=${repo.deliveryOrderItem.deliveryOrder.id}'/>"><c:out value="${fn:replace(repo.deliveryOrderItem.deliveryOrder.code, 'SJ', '')}" /></a></td>
 		<td align="left" nowrap="nowrap"><a href="<c:url value='/page/salesorderpreedit.htm?id=${repo.salesOrderItem.salesOrder.id}'/>">${repo.salesOrderItem.salesOrder.code}</a></td>
 		<td align="left" nowrap="nowrap"><c:out value='${repo.deliveryOrderItem.product.name} ${repo.deliveryOrderItem.referenceLot}'/></td>
   		<td align="right"><fmt:formatNumber value='${bale}' pattern=',##0.00'/></td>
