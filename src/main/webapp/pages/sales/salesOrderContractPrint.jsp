@@ -109,6 +109,7 @@
 						    </c:forEach>
 				  			<tr>
 				  				<td><spring:message code="contactmechanism.phone"/></td>
+				  				<td width="1%" align="center">:</td>
 				  				<td align="left">${phone}</td>
 				  				<td align="left"></td>
 				  			</tr>
@@ -145,8 +146,10 @@
                                		<c:set var="pattern" value=",##0.00" />
 					  				<td style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.name}</td>
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;">
-					  					<fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></br>
-					  					<fmt:formatNumber value='${bale}' pattern=',##0.00'/>
+					  					<fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/>
+					  					<c:if test="${salesOrder_edit.salesInternalType eq 'YARN'}">
+					  						</br><fmt:formatNumber value='${bale}' pattern=',##0.00'/>
+					  					</c:if>
 					  				</td>
 					  				<td align="center" style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.unitOfMeasure.measureId}</br>BALE</td>
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.amount}' pattern='${pattern}'/></td>
