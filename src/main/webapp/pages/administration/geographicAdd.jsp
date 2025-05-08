@@ -139,7 +139,7 @@
 							if(json.status == 'OK')
 							{
 								$.each(json.geographics, function(idx, obj){
-									$('<option/>').text(obj.geographic.name).val(obj.geographic.id).appendTo($('#parent'));
+									$('<option/>').text(obj.name).val(obj.id).appendTo($('#parent'));
 								})
 							}
 							else
