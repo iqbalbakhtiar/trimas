@@ -43,6 +43,7 @@ public class Item extends SiriusItem
 	private BigDecimal price = BigDecimal.ZERO;
 	private BigDecimal rate = BigDecimal.ZERO;
 	private BigDecimal discount = BigDecimal.ZERO;
+	private BigDecimal discountPercent = BigDecimal.ZERO;
 	private BigDecimal weight = BigDecimal.ZERO;
 	private BigDecimal commission = BigDecimal.ZERO;
 	private BigDecimal receipted = BigDecimal.ZERO;

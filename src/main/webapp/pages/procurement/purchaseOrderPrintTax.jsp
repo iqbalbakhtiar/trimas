@@ -119,10 +119,12 @@
 					  		<br/>
 					  		<table border="0" cellpadding="5" cellspacing="0" width="100%" align="center" style="border-width: 1px medium medium; border-style: solid none none; border-color: black -moz-use-text-color -moz-use-text-color;">
 					  			<tr>
-					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 30%"><spring:message code="product"/></th>
+					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="product"/></th>
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.qty"/></th>
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.uom"/></th>
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.unitprice"/></th>
+					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 5%"><spring:message code="purchaseorderitem.discount"/></th>
+					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="purchaserequisition.discount"/></th>
 					  				<th style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.total"/></th>
 					  			</tr>
 					            <c:forEach items="${purchase_edit.items}" var="item">
@@ -132,22 +134,24 @@
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
 					  				<td align="center" style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.unitOfMeasure.measureId}</td>
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.money.amount}' pattern='${pattern}'/></td>
+					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.discountPercent}' pattern='${pattern}'/></td>
+					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.discount}' pattern='${pattern}'/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.totalAmount}' pattern='${pattern}'/></td>
 					  			</tr>
 					  			</c:if>
 					  			</c:forEach>
 					  			<tr style="font-weight: bold;">
-					  				<td align="right" colspan="3">&nbsp;</td>
+					  				<td align="right" colspan="5">&nbsp;</td>
 					  				<td align="right"><spring:message code="purchaseorderitem.subtotal"/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalItemAmount}' pattern='${pattern}'/></td>
 					  			</tr>
 					  			<tr style="font-weight: bold;">
-					  				<td align="right" colspan="3">&nbsp;</td>
+					  				<td align="right" colspan="5">&nbsp;</td>
 					  				<td align="right"><spring:message code="salesorder.tax.amount"/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.taxAmount}' pattern='${pattern}'/></td>
 					  			</tr>
 					  			<tr style="font-weight: bold;">
-					  				<td align="right" colspan="3">&nbsp;</td>
+					  				<td align="right" colspan="5">&nbsp;</td>
 					  				<td align="right"><spring:message code="purchaseorderitem.total"/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalTransaction}' pattern='${pattern}'/></td>
 					  			</tr>

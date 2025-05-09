@@ -262,6 +262,8 @@
               <th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
               <th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
               <th width="8%" nowrap="nowrap"><spring:message code="purchaseorder.amount"/></th>
+              <th width="8%" nowrap="nowrap"><spring:message code="purchaseorderitem.discount"/></th>
+              <th width="8%" nowrap="nowrap"><spring:message code="purchaserequisition.discount"/></th>
               <th width="8%" nowrap="nowrap"><spring:message code="purchaseorder.total"/></th>
               <th width="10%" nowrap="nowrap"><spring:message code="sirius.note"/></th>
               <th width="50%" nowrap="nowrap"><spring:message code="sirius.reference"/></th>
@@ -291,6 +293,8 @@
                 </td>
                 <td><input id="uom[${idx.index}]" size="6" value="${item.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${idx.index}].uom" index="${idx.index}" next="uom" disabled/></td>
                 <td><input id="amount[${idx.index}]" size="12" value="<fmt:formatNumber value='${item.money.amount}' pattern=',##0.00'/>" class="input-disabled input-decimal" name="items[${idx.index}].amount" index="${idx.index}" next="amount" disabled/></td>
+                <td><input id="discountPercent[${idx.index}]" size="8" value="<fmt:formatNumber value='${item.discountPercent}' pattern=',##0.00'/>" class="input-disabled input-decimal" name="items[${idx.index}].discountPercent" index="${idx.index}" next="discountPercent" disabled/></td>
+                <td><input id="discount[${idx.index}]" size="12" value="<fmt:formatNumber value='${item.discount}' pattern=',##0.00'/>" class="input-disabled input-decimal" name="items[${idx.index}].discount" index="${idx.index}" next="discount" disabled/></td>
                 <td><input id="totalAmount[${idx.index}]" size="12" class="input-number input-disabled" disabled value="<fmt:formatNumber value='${item.totalAmount}' pattern=',##0.00'/>"/></td>
                 <td><input id="note[${idx.index}]" type="text" value="${item.note}" name="purchaseOrder.items[${idx.index}].note"index="${idx.index}" next="note" size="40"/></td>
                 <td><a href="<c:url value='/page/purchaserequisitionpreedit.htm?id=${item.requisitionItem.purchaseRequisition.id}'/>"><c:out value="${item.requisitionItem.purchaseRequisition.code}"></c:out></a></td>

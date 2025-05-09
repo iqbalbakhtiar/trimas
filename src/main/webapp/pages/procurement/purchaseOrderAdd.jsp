@@ -200,6 +200,8 @@
               <th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
               <th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
               <th width="8%" nowrap="nowrap"><spring:message code="purchaseorderitem.unitprice"/></th>
+              <th width="8%" nowrap="nowrap"><spring:message code="purchaseorderitem.discount"/></th>
+              <th width="8%" nowrap="nowrap"><spring:message code="purchaserequisition.discount"/></th>
               <th width="8%" nowrap="nowrap"><spring:message code="purchaseorderitem.total"/></th>
               <th width="50%" nowrap="nowrap"><spring:message code="sirius.note"/></th>
             </tr>
@@ -207,7 +209,7 @@
             <tbody id="lineItem">
             </tbody>
             <tfoot>
-            <tr class="end-table"><td colspan="7">&nbsp;</td></tr>
+            <tr class="end-table"><td colspan="9">&nbsp;</td></tr>
             </tfoot>
           </table>
         </div>
@@ -288,13 +290,17 @@ function updateDisplay() {
 
     var qty = getNumericValue($row.find('input[id^="quantity["]'));
     var price = getNumericValue($row.find('input[id^="amount["]'));
+    var disc = getNumericValue($row.find('input[id^="discountPercent["]'));
 
     var amount = qty * price;
+    var discAmount = Math.round(amount * disc / 100);
+    var afterDisc = amount - discAmount;
 
-    totalSales += amount;
+    totalSales += afterDisc;
 
     // Update Buying Price per-line Item
-    $row.find('input[id^="totalAmount["]').val(amount.numberFormat('#,##0.00'));
+    $row.find('input[id^="totalAmount["]').val(afterDisc.numberFormat('#,##0.00'));
+    $row.find('input[id^="discount["]').val(discAmount.numberFormat('#,##0.00'));
   });
 
   // Menghitung totalTax dan totalTransaction
@@ -491,6 +497,8 @@ function addLine() {
   $qty = List.get('<input type="text" class="input-decimal" size="6" onchange="updateDisplay();"/>','quantity['+index+']', '0.00');
   $uom = List.get('<input type="text" class="input-disabled" disabled size="6" />','uom['+index+']');
   $price = List.get('<input type="text" class="input-decimal" size="12" onchange="updateDisplay()"/>','amount['+index+']', '0.00');
+  $discount = List.get('<input type="text" class="number-disabled" size="12" readonly="true"/>','discount['+index+']', '0.00');
+  $discountPercent = List.get('<input type="text" class="input-decimal" size="8" onchange="updateDisplay()"/>','discountPercent['+index+']', '0.00');
   $totalAmount = List.get('<input type="text" class="input-decimal input-disabled" disabled size="12"/>','totalAmount['+index+']', '0.00');
   $packNote = List.get('<input type="text" size="40"/>','note['+index+']');
 
@@ -504,6 +512,8 @@ function addLine() {
   $tr.append(List.col([$qty]));
   $tr.append(List.col([$uom]));
   $tr.append(List.col([$price]));
+  $tr.append(List.col([$discountPercent]));
+  $tr.append(List.col([$discount]));
   $tr.append(List.col([$totalAmount]));
   $tr.append(List.col([$packNote]));
 

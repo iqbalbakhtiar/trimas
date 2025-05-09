@@ -142,6 +142,7 @@ public class PurchaseOrderService extends Service
 
 				purchaseItem.setQuantity(item.getQuantity());
 				purchaseItem.setDiscount(item.getDiscount());
+				purchaseItem.setDiscountPercent(item.getDiscountPercent());
 				purchaseItem.getMoney().setAmount(item.getAmount());
 				purchaseItem.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
 				purchaseItem.setNote(item.getNote());

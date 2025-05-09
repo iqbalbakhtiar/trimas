@@ -59,17 +59,17 @@ public class PurchaseOrderController extends ControllerBase
 	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
+		binder.registerCustomEditor(Tax.class, modelEditor.forClass(Tax.class));
 		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
 		binder.registerCustomEditor(Product.class, modelEditor.forClass(Product.class));
-		binder.registerCustomEditor(Tax.class, modelEditor.forClass(Tax.class));
-		binder.registerCustomEditor(PurchaseOrder.class, modelEditor.forClass(PurchaseOrder.class));
-		binder.registerCustomEditor(PurchaseOrderItem.class, modelEditor.forClass(PurchaseOrderItem.class));
 		binder.registerCustomEditor(Facility.class, modelEditor.forClass(Facility.class));
 		binder.registerCustomEditor(PostalAddress.class, modelEditor.forClass(PostalAddress.class));
+		binder.registerCustomEditor(PurchaseOrder.class, modelEditor.forClass(PurchaseOrder.class));
 		binder.registerCustomEditor(ContactMechanism.class, modelEditor.forClass(ContactMechanism.class));
-		binder.registerCustomEditor(ApprovalDecisionStatus.class, enumEditor.forClass(ApprovalDecisionStatus.class));
+		binder.registerCustomEditor(PurchaseOrderItem.class, modelEditor.forClass(PurchaseOrderItem.class));
 		binder.registerCustomEditor(PurchaseType.class, enumEditor.forClass(PurchaseType.class));
 		binder.registerCustomEditor(PurchaseDocumentType.class, enumEditor.forClass(PurchaseDocumentType.class));
+		binder.registerCustomEditor(ApprovalDecisionStatus.class, enumEditor.forClass(ApprovalDecisionStatus.class));
 	}
 
 	@RequestMapping("/purchaseorderview.htm")
