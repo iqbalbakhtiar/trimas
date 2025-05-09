@@ -110,7 +110,7 @@
 	
 	function resetform()
 	{
-		window.location = "<c:url value='/page/salesdetailreportpre.htm'/>";
+		window.location = "<c:url value='/page/deliveryreportpre.htm'/>";
 	}
 
 	function openfacility(target)
@@ -134,13 +134,6 @@
 			return;
 		}
         
-        var fac = document.getElementById('facility');
-        if(fac.value == '')
-        {
-            alert('<spring:message code="notif.select1"/> <spring:message code="sirius.facility"/> <spring:message code="notif.select2"/> !!!');
-            return;
-        }
-		
-		openpopup("<c:url value='/page/popupcustomerview.htm?target=customer&organization='/>"+org.value+"&facility="+fac.value);
+		openpopup("<c:url value='/page/popupcustomerview.htm?target=customer&organization='/>"+org.value);
 	}
 </script>

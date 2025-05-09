@@ -152,17 +152,17 @@
 				  			</tr>
 					  		</table>
 					  		<br/>
-					  		<table border="0" cellpadding="1" cellspacing="1" width="100%" align="center" style="border-width: 1px medium medium; border-style: solid none none; border-color: black -moz-use-text-color -moz-use-text-color;">
-					  			<tr>
-					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 30%"><spring:message code="product"/></th>
-					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.qty"/></th>
-					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.uom"/></th>
-					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.unitprice"/></th>
-					  				<th style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.total"/></th>
+					  		<table border="0" cellpadding="5" cellspacing="0" width="100%" align="center">
+					  			<tr style="height: 30px;">
+					  				<th style="border-top:1px solid black;border-bottom:1px solid black;border-left:1px solid black;width: 30%"><spring:message code="product"/></th>
+					  				<th style="border-top:1px solid black;border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.qty"/></th>
+					  				<th style="border-top:1px solid black;border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.uom"/></th>
+					  				<th style="border-top:1px solid black;border-bottom:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.unitprice"/> / Kg</th>
+					  				<th style="border-top:1px solid black;border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.total"/></th>
 					  			</tr>
 								<c:forEach items="${adapter.items}" var="item" varStatus="idx">
 					  			<c:set var="bale" value="${item.quantity / 181.44}"/>
-					  			<tr style="height: 35px;">
+					  			<tr style="height: 40px;">
                                		<c:set var="pattern" value=",##0.00" />
 					  				<td style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.name}</td>
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;">
@@ -181,17 +181,17 @@
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.subTotal}' pattern='${pattern}'/></td>
 					  			</tr>
 					  			</c:forEach>
-					  			<tr style="font-weight: bold;">
+					  			<tr style="height: 20px;font-weight: bold;">
 					  				<td align="right" colspan="3">&nbsp;</td>
 					  				<td align="right"><spring:message code="salesorder.total"/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalItemAmount}' pattern='${pattern}'/></td>
 					  			</tr>
-					  			<tr style="font-weight: bold;">
+					  			<tr style="height: 20px;font-weight: bold;">
 					  				<td align="right" colspan="3">&nbsp;</td>
 					  				<td align="right"><spring:message code="salesorder.tax.amount"/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.taxAmount}' pattern='${pattern}'/></td>
 					  			</tr>
-					  			<tr style="font-weight: bold;">
+					  			<tr style="height: 20px;font-weight: bold;">
 					  				<td align="right" colspan="3">&nbsp;</td>
 					  				<td align="right"><spring:message code="salesorder.total.transaction"/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalTransaction}' pattern='${pattern}'/></td>
