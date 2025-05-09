@@ -5,9 +5,10 @@
  */
 package com.siriuserp.sales.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,8 +37,20 @@ public class DeliveryReportController extends ControllerBase
 	}
 
 	@RequestMapping("/deliveryreportview.htm")
-	public ModelAndView view(@ModelAttribute("reportCriteria") SalesReportFilterCriteria criteria)
+	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/report/sales/deliveryReportList", service.view(criteria));
+		return new ModelAndView("/report/sales/deliveryReportList", service.view(criteriaFactory.createReport(request, SalesReportFilterCriteria.class)));
+	}
+
+	@RequestMapping("/deliverytaxreportpre.htm")
+	public ModelAndView preTax()
+	{
+		return new ModelAndView("/report/sales/deliveryTaxReportAdd", service.pre());
+	}
+
+	@RequestMapping("/deliverytaxreportview.htm")
+	public ModelAndView viewTax(HttpServletRequest request) throws Exception
+	{
+		return new ModelAndView("/report/sales/deliveryTaxReportList", service.view(criteriaFactory.createReport(request, SalesReportFilterCriteria.class)));
 	}
 }
