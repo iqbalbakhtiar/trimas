@@ -24,6 +24,7 @@
 		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;">Benang</th>
 	</tr>
 	</thead>
+	<tbody>
  	<c:set var='tBale' value='0'/>
  	<c:set var='tKg' value='0'/>
  	<c:set var='tPriceBale' value='0'/>
@@ -32,7 +33,6 @@
  	<c:set var='tTax' value='0'/>
  	<c:set var='tTotal' value='0'/>
 	<c:forEach items='${reports}' var='repo' varStatus="status">
-	<tbody>
 	<tr>
 		<c:set var="bale" value="${repo.deliveryOrderItem.quantity / 181.44}"/>
 		<c:set var="priceBale" value="${repo.deliveryOrderItem.money.amount / 181.44}"/>

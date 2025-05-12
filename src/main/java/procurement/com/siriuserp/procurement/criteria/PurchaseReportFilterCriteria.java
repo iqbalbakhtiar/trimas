@@ -15,7 +15,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PurchaseOrderReportFilterCriteria extends AbstractReportFilterCriteria
+public class PurchaseReportFilterCriteria extends AbstractReportFilterCriteria
 {
 	private static final long serialVersionUID = 2723769357935188581L;
 
@@ -26,10 +26,11 @@ public class PurchaseOrderReportFilterCriteria extends AbstractReportFilterCrite
 	private Long product;
 	private Long colourId;
 	private Long fromProductId;
-	
+
 	private String productCode;
 	private String sortBy;
 	private String process;
+	private String documentType;
 
 	private Date dateFrom;
 	private Date dateTo;

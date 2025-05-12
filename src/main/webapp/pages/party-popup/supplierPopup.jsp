@@ -23,53 +23,45 @@
 			<div id="r13">
 				<div id="r14">
 					<div id="se-contents">
-							<form id="filterPopup" name="filterPopup" method="post" action="/page/.htm?target=${target}">
-								<table width="100%" cellspacing="0" cellpadding="1" align="center">
-								<tr>
-									<td width="15%" align="right"><spring:message code="supplier.code"/></td>
-								  	<td width="5%" align="center">:</td>
-							  	  	<td width="75%" align="left"><input type="text" id="code" name="code" value="${filterCriteria.code}" size="35" class="inputbox"/></td>
-								</tr>
-								<tr>
-									<td width="15%" align="right"><spring:message code="supplier.name"/></td>
-								  	<td width="5%" align="center">:</td>
-							  	  	<td width="75%" align="left"><input type="text" id="name" name="name" value="${filterCriteria.name}" size="35" class="inputbox"/></td>
-								</tr>
-								<tr>
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td align="left">
-										<%@ include file="/common/button.jsp"%>
-									</td>
-								</tr>
-								</table>
-							</form>
-
+						<table border="0" width="100%" cellpadding="0" cellspacing="0">
+						<tr>
+							<td>
+								<form id="filterPopup" name="filterPopup" method="post">
+									<table width="100%" cellspacing="0" cellpadding="3" align="center">
+									<tr>
+										<td width="15%" align="right" nowrap="nowrap"><spring:message code="supplier.name"/> : </td>
+										<td width="40%"><input id="name" name="name" value="${filterCriteria.name}" size="35"/></td>
+										<td width="45%"><%@ include file="/common/button.jsp"%></td>
+									</tr>
+									</table>
+								</form>
+							</td>
+						</tr>
+						</table>
+						<br/>
 						<table border="0" cellpadding="0" cellspacing="0" width="99%" align="center">
 						<tr>
 							<td width="34%" height="30" align="left" valign="middle"></td>
 							<td width="66%" align="right" height="20"><%@ include file="/common/navigate.jsp"%></td>
 						</tr>
 						</table>
-						
 						<table class="table-list" cellspacing="0" cellpadding="0" width="80%">
 					  	<tr>
 					  		<th width="6%">&nbsp;</th>
-					  		<th width="35%"><spring:message code="supplier.code"/></th>
-				  		  	<th width="59%"><spring:message code="supplier.name"/></th>
+					  		<th width="25%"><spring:message code="supplier.code"/></th>
+				  		  	<th width="65%"><spring:message code="supplier.name"/></th>
 				  		</tr>
 						<c:forEach items="${suppliers}" var="com">
 						<tr>
 					  		<td class="tools">
 					  			<a class="item-button-add-row" href="javascript:setclient('${com.partyFrom.id}')"  title="Edit"><span>Edit</span></a>
 					  		</td>
-							<td>${com.partyFrom.code}</td> 
+							<td nowrap="nowrap">${com.partyFrom.code}</td> 
 							<td>${com.partyFrom.fullName}</td>
 					  		</tr>
 						</c:forEach>
 					  	<tr class="end-table"><td colspan="3">&nbsp;</td></tr>
 					  	</table>
-
 						<table border="0" cellpadding="0" cellspacing="0" width="99%" align="center" height="20">
 						<tr>
 							<td align="right"><%@ include file="/common/navigate.jsp"%></td>
@@ -80,12 +72,9 @@
 			</div>
 		</div>
 	</div>
-	
    	<%@ include file="/common/sirius-footer.jsp"%>
-
 </div>
 </body>
-
 </html>
 <script type="text/javascript">
 	function setclient(id)

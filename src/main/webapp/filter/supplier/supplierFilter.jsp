@@ -9,7 +9,7 @@
 	<tr>
 		<td align="right" style="WIDTH:130px;"><spring:message code="sirius.name"/>&nbsp;&nbsp;</td>
 		<td width="4">:&nbsp;</td>
-		<td width="310" height="28"><input type="text" id="customer" name="customer" class="inputbox" value="<c:out value='${filterCriteria.customer}'/>"/></td>
+		<td width="310" height="28"><input type="text" id="name" name="name" class="inputbox" value="<c:out value='${filterCriteria.name}'/>"/></td>
 	</tr>
 	<tr>
 		<td align="right" style="WIDTH:130px;"><spring:message code="sirius.organization"/>&nbsp;&nbsp;</td>

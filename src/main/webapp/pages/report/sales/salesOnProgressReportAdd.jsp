@@ -103,14 +103,14 @@
 				return
 			}
 		
-			document.reportForm.action = "<c:url value='/page/deliveryreportview.htm'/>";
+			document.reportForm.action = "<c:url value='/page/salesonprogressreportview.htm'/>";
 			document.reportForm.submit();
 		});
 	});
 	
 	function resetform()
 	{
-		window.location = "<c:url value='/page/deliveryreportpre.htm'/>";
+		window.location = "<c:url value='/page/salesonprogressreportpre.htm'/>";
 	}
 
 	function openfacility(target)
@@ -133,7 +133,7 @@
 			alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
 			return;
 		}
-
+        
 		openpopup("<c:url value='/page/popupcustomerview.htm?target=customer&active=true&organization='/>"+org.value);
 	}
 </script>
