@@ -8,6 +8,7 @@ package com.siriuserp.sales.query;
 import org.hibernate.Query;
 
 import com.siriuserp.sales.criteria.SalesReportFilterCriteria;
+import com.siriuserp.sales.dm.SalesInternalType;
 import com.siriuserp.sdk.db.AbstractStandardReportQuery;
 import com.siriuserp.sdk.utility.SiriusValidator;
 
@@ -25,8 +26,8 @@ public class DeliveryReportViewQuery extends AbstractStandardReportQuery
 		SalesReportFilterCriteria criteria = (SalesReportFilterCriteria) getFilterCriteria();
 
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT NEW com.siriuserp.sales.adapter.DeliveryReportAdapter(deliveryItem, deliveryItem.deliveryReferenceItem.salesOrderItem) ");
-		builder.append("FROM DeliveryOrderRealizationItem realizationItem JOIN realizationItem.deliveryOrderItem deliveryItem ");
+		builder.append("SELECT NEW com.siriuserp.sales.adapter.DeliveryReportAdapter(deliveryItem, salesItem) ");
+		builder.append("FROM DeliveryOrderRealizationItem realizationItem JOIN realizationItem.deliveryOrderItem deliveryItem JOIN deliveryItem.deliveryReferenceItem.salesOrderItem salesItem ");
 		builder.append("WHERE deliveryItem.deliveryItemType = 'BASE' ");
 
 		if (SiriusValidator.validateLongParam(criteria.getOrganization()))
@@ -34,6 +35,12 @@ public class DeliveryReportViewQuery extends AbstractStandardReportQuery
 
 		if (SiriusValidator.validateLongParam(criteria.getCustomer()))
 			builder.append("AND deliveryItem.deliveryOrder.customer.id =:customerId ");
+
+		if (SiriusValidator.validateParam(criteria.getSalesOrderCode()))
+			builder.append("AND salesItem.salesOrder.code LIKE :salesOrderCode ");
+
+		if (SiriusValidator.validateParam(criteria.getSalesInternalType()))
+			builder.append("AND salesItem.salesOrder.salesInternalType =:salesInternalType ");
 
 		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 		{
@@ -54,6 +61,12 @@ public class DeliveryReportViewQuery extends AbstractStandardReportQuery
 
 		if (SiriusValidator.validateLongParam(criteria.getCustomer()))
 			query.setParameter("customerId", criteria.getCustomer());
+
+		if (SiriusValidator.validateParam(criteria.getSalesOrderCode()))
+			query.setParameter("salesOrderCode", "%" + criteria.getSalesOrderCode() + "%");
+
+		if (SiriusValidator.validateParam(criteria.getSalesInternalType()))
+			query.setParameter("salesInternalType", SalesInternalType.valueOf(criteria.getSalesInternalType()));
 
 		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 			query.setParameter("dateFrom", criteria.getDateFrom());

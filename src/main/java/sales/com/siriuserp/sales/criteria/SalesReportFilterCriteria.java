@@ -28,6 +28,8 @@ public class SalesReportFilterCriteria extends AbstractReportFilterCriteria
 	private Long customer;
 
 	private String code;
+	private String salesOrderCode;
+	private String salesInternalType;
 
 	private Date dateFrom;
 	private Date dateTo;

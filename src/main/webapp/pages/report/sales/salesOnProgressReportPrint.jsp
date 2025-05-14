@@ -2,24 +2,22 @@
 <table id="delivery" style="border:none;" width="100%" cellspacing="0" cellpadding="5">
 	<thead>
  	<tr>
- 		<td colspan="15" align="center"><strong>LAPORAN PROGRESS PENJUALAN</strong></td>
+ 		<td colspan="13" align="center"><strong>LAPORAN PROGRESS PENJUALAN</strong></td>
  	</tr>
 	</thead>
 	<thead>
 	<tr style="height: 30px">
-		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.date"/></th>
-		<th width="10%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="customer"/></th>
-		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="salesorder.contract.no"/></th>
-		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="product.name"/></th>
-		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.qty"/>(Bale)</th>
-		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.qty"/>(Kg)</th>
-		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryplanning.unassigned"/>(Bale)</th>
-		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryplanning.unassigned"/>(Kg)</th>
-		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryplanning.delivered"/>(Bale)</th>
-		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryplanning.delivered"/>(Kg)</th>
-		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryplanning.undelivered"/>(Bale)</th>
-		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryplanning.undelivered"/>(Kg)</th>
-		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.status"/></th>
+		<th width="5%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.date"/></th>
+		<th width="10%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="customer"/></th>
+		<th width="5%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="salesorder.contract.no"/></th>
+		<th width="5%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="product.name"/></th>
+		<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.qty"/>(Bale)</th>
+		<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.qty"/>(Kg)</th>
+		<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryplanning.delivered"/>(Bale)</th>
+		<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryplanning.delivered"/>(Kg)</th>
+		<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryplanning.undelivered"/>(Bale)</th>
+		<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryplanning.undelivered"/>(Kg)</th>
+		<th width="5%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.status"/></th>
 	</tr>
 	</thead>
 	<tbody>
@@ -39,8 +37,6 @@
 		<td align="left" nowrap="nowrap"><c:out value='${repo.salesOrderItem.product.name}'/></td>
   		<td align="right"><fmt:formatNumber value='${repo.bale}' pattern=',##0.00'/></td>
   		<td align="right"><fmt:formatNumber value='${repo.kg}' pattern=',##0.00'/></td>
-  		<td align="right"><fmt:formatNumber value='${repo.unassignedBale}' pattern=',##0.00'/></td>
-  		<td align="right"><fmt:formatNumber value='${repo.unassignedKg}' pattern=',##0.00'/></td>
   		<td align="right"><fmt:formatNumber value='${repo.deliveredBale}' pattern=',##0.00'/></td>
   		<td align="right"><fmt:formatNumber value='${repo.deliveredKg}' pattern=',##0.00'/></td>
   		<td align="right"><fmt:formatNumber value='${repo.undeliveredBale}' pattern=',##0.00'/></td>
@@ -53,8 +49,6 @@
 	</tr>
  	<c:set var='tBale' value='${tBale+repo.bale}'/>
  	<c:set var='tKg' value='${tKg+repo.kg}'/>
- 	<c:set var='tUnassignedBale' value='${tUnassignedBale+repo.unassignedBale}'/>
- 	<c:set var='tUnassignedKg' value='${tUnassignedKg+repo.unassignedKg}'/>
  	<c:set var='tDeliveredBale' value='${tDeliveredBale+repo.deliveredBale}'/>
  	<c:set var='tDeliveredKg' value='${tDeliveredKg+repo.deliveredKg}'/>
  	<c:set var='tUndeliveredBale' value='${tUndeliveredBale+repo.undeliveredBale}'/>
@@ -66,12 +60,10 @@
 		<td align="right" colspan="4" style="border-top:solid 1px black;"><strong><spring:message code="sirius.total"/></strong></td>
 		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tBale}' pattern=',##0.00'/></strong></td>
 		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tKg}' pattern=',##0.00'/></strong></td>
-		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tUnassignedBale}' pattern=',##0.00'/></strong></td>
-		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tUnassignedKg}' pattern=',##0.00'/></strong></td>
 		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tDeliveredBale}' pattern=',##0.00'/></strong></td>
 		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tDeliveredKg}' pattern=',##0.00'/></strong></td>
 		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tUndeliveredBale}' pattern=',##0.00'/></strong></td>
-		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tUndeliveredKg}' pattern=',##0.00'/></strong></td>>
+		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tUndeliveredKg}' pattern=',##0.00'/></strong></td>
 		<td style="border-top:solid 1px black;" align="right"><strong>&nbsp;</strong></td>
 	</tr>
 	</tfoot>

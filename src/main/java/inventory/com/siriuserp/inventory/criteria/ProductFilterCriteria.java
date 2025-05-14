@@ -24,6 +24,7 @@ public class ProductFilterCriteria extends AbstractFilterCriteria
 	private String uom;
 	private String serialNo;
 	private String excludeCategoryType;
+	private String lotCode;
 
 	private Boolean saleable;
 	private Boolean status;

@@ -51,6 +51,16 @@
                                     </td>
                                 </tr>
 								<tr>
+									<td align="right"><spring:message code="salesorder.type"/> :</td>
+									<td>
+										<select id="salesInternalType" name="salesInternalType">
+											<option value="" selected="true"><spring:message code="sirius.all"/></option>
+											<option value="YARN"><spring:message code="salesorder.type.yarn"/></option>
+											<option value="WASTE"><spring:message code="salesorder.type.waste"/></option>
+										</select>
+									</td>
+								</tr>
+								<tr>
 									<td nowrap="nowrap" align="right"><spring:message code='facility'/> :</td>
 									<td>
 										<select id="facility" name="facility" class="combobox-ext">
@@ -66,6 +76,10 @@
                                         <a class="item-popup" onclick="opencustomer();"  title='<spring:message code="customer"/>' />
                                     </td>
                                 </tr>
+								<tr>
+									<td align="right"><spring:message code="salesorder.contract.no"/> :</td>
+									<td><input id="salesOrderCode" name="salesOrderCode" class="input-box"/></td>
+								</tr>
                                 <tr>
                                     <td align="right"><spring:message code="sirius.datefrom2"/> :</td>
                                     <td>

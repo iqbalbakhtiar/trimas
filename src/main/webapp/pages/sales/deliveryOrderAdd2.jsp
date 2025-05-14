@@ -121,6 +121,7 @@
 						<th width="5%"><spring:message code="deliveryorder.reference.qty"/></th>
 						<th width="5%"><spring:message code="deliveryorder.quantity"/></th>
 						<th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
+						<th width="5%" nowrap="nowrap"><spring:message code="product.lot"/></th>
 						<th width="20%" nowrap="nowrap"><spring:message code="container"/></th>
 						<th width="60%" nowrap="nowrap"><spring:message code="deliveryorder.note"/></th>
 					</tr>
@@ -139,6 +140,7 @@
 					<c:if test="${!item.deliveryReferenceItem.product.serial}">
 						<td><input id="delivered[${stat.index}]" size="10" value="0.00" class="input-decimal quantities" name="items[${stat.index}].quantity" index="${stat.index}" next="delivered" onchange="checkQuantity(${stat.index})" producttype="nonserial"/></td>
 						<td><input id="uom[${stat.index}]" size="6" value="${item.deliveryReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${stat.index}].uom" index="${stat.index}" next="uom" disabled/></td>
+						<td>&nbsp;</td>
 						<td><select id="container[${stat.index}]" name="items[${stat.index}].container" index="${stat.index}" onchange="updateOnHand(this, ${stat.index});" next="container" class="combobox"></select><a class="item-popup" onclick="openContainer(${stat.index});" title="Container"></a></td>
 					</c:if>
 					<c:if test="${item.deliveryReferenceItem.product.serial}">
@@ -147,6 +149,7 @@
 							<input id="delivered[${stat.index}]" size="10" value="0.00" class="input-number quantities" name="items[${stat.index}].quantity" index="${stat.index}" next="delivered" style="display: none;" producttype="serial"/>
 						</td>
 						<td><input id="uom[${stat.index}]" size="6" value="${item.deliveryReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${stat.index}].uom" index="${stat.index}" next="uom" disabled style="display: none;"/></td>
+						<td>&nbsp;</td>
 						<td>&nbsp;</td>
 					</c:if>
 					<td>
@@ -158,7 +161,7 @@
 				</tbody>
 				</c:forEach>
 				<tfoot>
-					<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
+					<tr class="end-table"><td colspan="9">&nbsp;</td></tr>
 				</tfoot>
 				</table>
 			</div>
@@ -422,10 +425,10 @@ function addLine($idxRef, $index) {
     $tr = $('<tr/>');
     
 	$barcode = List.get('<select class="combobox barcodes" onchange="updateQuantity('+$idxRef+','+$referenceId+');"/>','serial['+$index+']');
-	$lotCode = List.get('<input type="text" class="input-disabled" readonly="true" size="10" style="display:none;"/>','lotCode['+$index+']');
 	$barcodeImg = List.img('<spring:message code="barcode"/>', $index, 'openBarcode("'+$index+'","'+$productId+'")');
 	
 	$qty = List.get('<input type="text" class="input-number input-disabled qtyRef'+$referenceId+'" readonly="true" size="10" onchange="updateQuantity('+$idxRef+','+$referenceId+');"/>','quantity['+$index+']', '0.00');
+	$lotCode = List.get('<input type="text" class="input-disabled" readonly="true" size="5"/>','lotCode['+$index+']');
 	$uom = List.get('<input type="text" class="input-disabled" disabled="true" size="6"/>','uom'+$index, $uom);
 
 	$container = List.get('<select class="combobox containers"/>','container['+$index+']');
@@ -436,9 +439,10 @@ function addLine($idxRef, $index) {
 
 	$tr.append(List.col(''));
 	$tr.append(List.col(''));
-	$tr.append(List.col([$barcode, $lotCode, $barcodeImg], '', 'text-align: right;').attr('colspan','2'));
+	$tr.append(List.col([$barcode, $barcodeImg], '', 'text-align: right;').attr('colspan','2'));
 	$tr.append(List.col([$qty]));
 	$tr.append(List.col([$uom]));
+	$tr.append(List.col([$lotCode]));
 	$tr.append(List.col([$container]));
 	$tr.append(List.col([$reference, $type]));
 	
