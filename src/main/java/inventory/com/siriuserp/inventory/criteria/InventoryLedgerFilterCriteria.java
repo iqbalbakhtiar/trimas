@@ -40,6 +40,7 @@ public class InventoryLedgerFilterCriteria extends AbstractReportFilterCriteria
 	private String type;
 	private String enabled;
 	private String process;
+	private String department;
 
 	private boolean priced = false;
 	private boolean reserved = false;

@@ -26,7 +26,7 @@ public class InventoryLedgerAdapter
 	private BigDecimal in = BigDecimal.ZERO;
 	private BigDecimal out = BigDecimal.ZERO;
 	private BigDecimal reserved = BigDecimal.ZERO;
-	
+	private BigDecimal cogs = BigDecimal.ZERO;
 
 	private String productCode;
 	private String productName;
@@ -132,7 +132,17 @@ public class InventoryLedgerAdapter
 		this.reserved = reserved;
 		this.grid = grid;
 	}
-	
+
+	/**
+	 * Used in {@link com.siriuserp.inventory.query.MutationReportQuery}
+	 */
+	public InventoryLedgerAdapter(BigDecimal in, BigDecimal out, BigDecimal cogs, String productCode, String productName) {
+		this.in = in;
+		this.out = out;
+		this.cogs = cogs;
+		this.productCode = productCode;
+		this.productName = productName;
+	}
 
 	public BigDecimal getBalance()
 	{
