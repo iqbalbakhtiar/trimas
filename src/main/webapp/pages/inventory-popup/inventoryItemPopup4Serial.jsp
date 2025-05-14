@@ -80,8 +80,6 @@
 				if(_lot)
 					_lot.value = inventory.lotCode;
 				
-				console.log('>>> '+_lot.value+' '+inventory.lotCode);
-				
 				var _productId = self.opener.document.getElementById('productId[${param.index}]');
 				if(_productId)
 					_productId.value = inventory.productId;
@@ -127,6 +125,11 @@
 								<td align="right"><spring:message code="product.name"/></td>
 							  	<td align="center">:&nbsp;</td>
 								<td align="left"><input type="text" id="name" name="name" value="${filterCriteria.name}" size="35" class="inputbox"/></td>
+							</tr>
+							<tr>
+								<td align="right"><spring:message code="product.lot"/></td>
+							  	<td align="center">:&nbsp;</td>
+								<td align="left"><input type="text" id="lotCode" name="lotCode" value="${filterCriteria.lotCode}" size="10"/></td>
 							</tr>
 							<tr>
 								<td>&nbsp;</td>

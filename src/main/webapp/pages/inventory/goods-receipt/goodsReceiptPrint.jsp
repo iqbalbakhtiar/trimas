@@ -72,11 +72,11 @@
 					  		</table>
 					  		<table border="0" width="100%" align="center">
 				  			<tr>
-				  				<td colspan="8" align="center"><h2 style="text-transform: uppercase;">LAPORAN HARIAN PEMERIKSAAAN BARANG MASUK</h2></td>
+				  				<td colspan="8" align="center"><h2 style="text-transform: uppercase;">LAPORAN HARIAN PEMERIKSAAN BARANG MASUK</h2></td>
 				  			</tr>
 					  		</table>
 					  		<br/>
-					  		<table border="0" cellpadding="2" cellspacing="1" width="100%" align="center" style="border-width: 1px medium medium; border-style: solid none none; border-color: black -moz-use-text-color -moz-use-text-color;">
+					  		<table border="0" cellpadding="2" cellspacing="0" width="100%" align="center" style="border-width: 1px medium medium; border-style: solid none none; border-color: black -moz-use-text-color -moz-use-text-color;">
 					  			<tr style="text-transform: uppercase;">
 					  				<th rowspan="2"style="border-bottom:1px solid black;border-left:1px solid black;width: 30%"><spring:message code="product.name"/></th>
 					  				<th rowspan="2" style="border-bottom:1px solid black;border-left:1px solid black;width: 10%">CATALOG/TYPE/UKURAN</th>
@@ -110,19 +110,22 @@
 					  			<td width="60%" valign="top" align="right">
 						  			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
 						  			<tr style="height: 25px;">
-						  				<th width="25%">&nbsp;</th>
-						  				<th width="25%" style="border-top:1px solid black;border-bottom:1px solid black;border-left:1px solid black;">MTC</th>
-						  				<th width="25%" style="border-top:1px solid black;border-bottom:1px solid black;border-left:1px solid black;">GUDANG</th>
-						  				<th width="25%" style="border-top:1px solid black;border-bottom:1px solid black;border-left:1px solid black;border-right: 1px solid black;">PURCHASING</th>
+						  				<th width="20%">&nbsp;</th>
+						  				<th width="20%"style="border-top:1px solid black;border-bottom:1px solid black;border-left:1px solid black;">&nbsp;</th>
+						  				<th width="20%" style="border-top:1px solid black;border-bottom:1px solid black;border-left:1px solid black;">MTC</th>
+						  				<th width="20%" style="border-top:1px solid black;border-bottom:1px solid black;border-left:1px solid black;">GUDANG</th>
+						  				<th width="20%" style="border-top:1px solid black;border-bottom:1px solid black;border-left:1px solid black;border-right: 1px solid black;">PURCHASING</th>
 									</tr>
 									<tr style="height: 80px;">
 						  				<td>&nbsp;</td>
+						  				<td style="border-bottom:1px solid black;border-left:1px solid black;"></td>
 						  				<td style="border-bottom:1px solid black;border-left:1px solid black;"></td>
 						  				<td style="border-bottom:1px solid black;border-left:1px solid black;"></td>
 						  				<td style="border-bottom:1px solid black;border-left:1px solid black;border-right: 1px solid black;"></td>
 									</tr>
 									<tr style="height: 25px;">
 						  				<td>&nbsp;</td>
+						  				<td style="border-bottom:1px solid black;border-left:1px solid black;"></td>
 						  				<td style="border-bottom:1px solid black;border-left:1px solid black;"></td>
 						  				<td style="border-bottom:1px solid black;border-left:1px solid black;"></td>
 						  				<td style="border-bottom:1px solid black;border-left:1px solid black;border-right: 1px solid black;"></td>

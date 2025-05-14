@@ -152,6 +152,7 @@
 							<th width="20%" nowrap="nowrap"><spring:message code="product"/></th>
 							<th width="5%" ><spring:message code="sirius.qty"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
+							<th width="5%" nowrap="nowrap"><spring:message code="product.lot"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="container"/></th>
 							<th width="60%" nowrap="nowrap"><spring:message code="deliveryorder.note"/></th>
 						</tr>
@@ -164,6 +165,7 @@
 							<td style="text-align: right;"><input size="30" value="${item.product.name}" class="input-disabled" disabled/></td>
 							<td><input size="8" value="<fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
 							<td><input size="5" value="${item.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
+							<td>&nbsp;</td>
 							<c:if test="${!item.product.serial}">
 								<td><input size="25" value="${item.container.name}" class="input-disabled" disabled/></td>
 								<td><input type="text" size="45" name="deliveryOrder.items[${idx.index}].note" value="${item.note}"/></td>
@@ -180,6 +182,7 @@
 							<td style="text-align: right;"><input size="15" value="${serial.lot.serial}" class="input-disabled" disabled/></td>
 							<td><input size="8" value="<fmt:formatNumber value='${serial.quantity}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
 							<td><input size="5" value="${serial.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
+							<td><input size="5" value="${serial.lot.code}" class="input-disabled" disabled/></td>
 							<td><input size="25" value="${serial.container.name}" class="input-disabled" disabled/></td>
 							<td>&nbsp;</td>
 						</tr>
@@ -187,7 +190,7 @@
 					</c:forEach>
 					</tbody>
 					<tfoot>
-						<tr class="end-table"><td colspan="6">&nbsp;</td></tr>
+						<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
 					</tfoot>
 				</table>
 			</div>

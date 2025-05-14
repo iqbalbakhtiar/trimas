@@ -116,10 +116,12 @@
 							  					<td align="right"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
 							  					<td>${item.product.unitOfMeasure.measureId}</td>
 						  					</tr>
+						  					<c:if test="${item.salesInternalType eq 'YARN'}">
 						  					<tr>
 							  					<td align="right"><fmt:formatNumber value='${bale}' pattern=',##0.00'/></td>
 							  					<td>Bale</td>
 						  					</tr>
+						  					</c:if>
 							  				</table>
 						  				</td>
 						  				<td style="border-bottom:1px solid black;border-left:1px solid black;text-transform: uppercase;" valign="top" nowrap="nowrap">
@@ -136,7 +138,7 @@
 											</c:if>
 						  					<tr>
 							  					<td align="right"><spring:message code="product"/></td>
-							  					<td>: ${item.product.name} ${deliveryOrder_edit.referenceLot}</td>
+							  					<td>: ${item.product.name} <c:if test="${item.salesInternalType eq 'YARN'}">${deliveryOrder_edit.referenceLot}</c:if></td>
 						  					</tr>
 							  				</table>
 						  				</td>
