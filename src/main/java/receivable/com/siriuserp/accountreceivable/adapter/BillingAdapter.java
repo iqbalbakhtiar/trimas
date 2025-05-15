@@ -80,4 +80,40 @@ public class BillingAdapter extends AbstractUIAdapter {
 
         return total;
     }
+
+    public BigDecimal getTotalDiscountAmount() {
+        BigDecimal totalDiscount = BigDecimal.ZERO;
+
+        if (billing != null && billing.getItems() != null) {
+            for (BillingItem item : billing.getItems()) {
+                BillingReferenceItem refItem = item.getBillingReferenceItem();
+                if (refItem != null) {
+                    BigDecimal discountAmount = refItem.getDiscountAmount();
+                    if (discountAmount != null) {
+                        totalDiscount = totalDiscount.add(discountAmount);
+                    }
+                }
+            }
+        }
+
+        return totalDiscount;
+    }
+
+    /**
+     * Hitung total amount seluruh item setelah diskon (sebelum pajak).
+     */
+    public BigDecimal getTotalAfterDiscount() {
+        BigDecimal totalAfterDiscount = BigDecimal.ZERO;
+
+        if (billing != null && billing.getItems() != null) {
+            for (BillingItem item : billing.getItems()) {
+                BillingReferenceItem refItem = item.getBillingReferenceItem();
+                if (refItem != null) {
+                    totalAfterDiscount = totalAfterDiscount.add(refItem.getTotalAmount());
+                }
+            }
+        }
+
+        return totalAfterDiscount;
+    }
 }
