@@ -57,24 +57,24 @@
 						<td>:</td>
 						<td><fmt:formatDate value='${billing_form.date}' pattern='dd - MM - yyyy'/></td>
 					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>Tanggal Jatuh Tempo</td>
-						<td>:</td>
-						<td><fmt:formatDate value='${billing_form.dueDate}' pattern='dd - MM - yyyy'/></td>
-					</tr>
+<%--					<tr>--%>
+<%--						<td>&nbsp;</td>--%>
+<%--						<td>Tanggal Jatuh Tempo</td>--%>
+<%--						<td>:</td>--%>
+<%--						<td><fmt:formatDate value='${billing_form.dueDate}' pattern='dd - MM - yyyy'/></td>--%>
+<%--					</tr>--%>
 					<tr>
 						<td>&nbsp;</td>
 						<td>Delivery Order No</td>
 						<td>:</td>
 						<td><c:out value='${doCode}'/></td>
 					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td valign="top">Note</td>
-						<td valign="top">:</td>
-						<td style="white-space: normal"><c:out value='${billing_form.note}'/></td>
-					</tr>
+<%--					<tr>--%>
+<%--						<td>&nbsp;</td>--%>
+<%--						<td valign="top">Note</td>--%>
+<%--						<td valign="top">:</td>--%>
+<%--						<td style="white-space: normal"><c:out value='${billing_form.note}'/></td>--%>
+<%--					</tr>--%>
 				</table>
 			</td>
 			<td width="2%" colspan="2">&nbsp;</td>
