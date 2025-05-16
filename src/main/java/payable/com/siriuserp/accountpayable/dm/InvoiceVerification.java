@@ -81,15 +81,15 @@ public class InvoiceVerification extends Payable
 	}
 
 	@Override
-	public String getUri()
+	public Long getReferenceId()
 	{
-		return "invoiceverificationpreedit.htm";
+		return getId();
 	}
 
 	@Override
-	public String getAuditCode()
+	public String getUri()
 	{
-		return getId() + ',' + getCode();
+		return "invoiceverificationpreedit.htm";
 	}
 
 	@Override
@@ -105,31 +105,30 @@ public class InvoiceVerification extends Payable
 	}
 
 	@Override
-	public String getLedgerType()
-	{
-		return "INV";
-	}
-
-	@Override
 	public int compareTo(APLedgerView o)
 	{
 		return getDate().compareTo(o.getDate());
 	}
-	
+
 	@Override
-    public Map<String, Object> val()
-    {
-        FastMap<String, Object> map = new FastMap<String, Object>();
-        map.put("verId", getId());
-        map.put("verCode", getCode());
+	public Map<String, Object> val()
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("verId", getId());
+		map.put("verCode", getCode());
 
-        map.put("amount", money.getAmount());
-        map.put("unpaid", getUnpaid());
-        map.put("paid", money.getAmount().subtract(getUnpaid()));
+		map.put("amount", money.getAmount());
+		map.put("unpaid", getUnpaid());
+		map.put("paid", money.getAmount().subtract(getUnpaid()));
 
-        map.put("date", DateHelper.format(getDate()));
+		map.put("date", DateHelper.format(getDate()));
 
-        return map;
-    }
-	
+		return map;
+	}
+
+	@Override
+	public String getAuditCode()
+	{
+		return getId() + ',' + getCode();
+	}
 }

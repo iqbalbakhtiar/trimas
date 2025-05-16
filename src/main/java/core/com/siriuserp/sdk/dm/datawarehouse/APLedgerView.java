@@ -14,15 +14,16 @@ import java.util.Date;
  * www.siriuserp.com
  * Version 1.5
  */
+
 public interface APLedgerView extends Comparable<APLedgerView>
 {
+	public Long getReferenceId();
+	
     public Date getDate();
     
-    public String getLedgerType();
-    
     public String getCode();
+    public String getUri();
     
     public BigDecimal getDebet();
-    
     public BigDecimal getCredit();
 }

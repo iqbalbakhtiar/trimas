@@ -5,13 +5,13 @@
  */
 package com.siriuserp.accountpayable.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -28,7 +28,6 @@ import com.siriuserp.sdk.dm.Party;
  */
 
 @Controller
-@SessionAttributes(value = "criteria", types = APLedgerFilterCriteria.class)
 public class APLedgerSummaryController extends ControllerBase
 {
 	@Autowired
@@ -41,15 +40,14 @@ public class APLedgerSummaryController extends ControllerBase
 	}
 
 	@RequestMapping("/apledgersummarypre.htm")
-	public ModelAndView pre()
+	public ModelAndView pre() throws Exception
 	{
-		return new ModelAndView("apLedgerSummaryReportAdd", service.pre());
+		return new ModelAndView("/report/payable/apLedgerSummaryReportAdd", service.pre());
 	}
 
 	@RequestMapping("/apledgersummaryview.htm")
-	public ModelAndView view(@ModelAttribute("criteria") APLedgerFilterCriteria criteria)
+	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("apLedgerSummaryReportList", service.view(criteria));
+		return new ModelAndView("/report/payable/apLedgerSummaryReportList", service.view(criteriaFactory.createReport(request, APLedgerFilterCriteria.class)));
 	}
-
 }

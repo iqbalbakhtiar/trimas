@@ -10,51 +10,24 @@ import java.util.Date;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.filter.AbstractReportFilterCriteria;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author Agung Dodi Perdana
  * Sirius Indonesia, PT
  * www.siriuserp.com
  * Version 1.5
  */
+
+@Getter
+@Setter
 public class APLedgerFilterCriteria extends AbstractReportFilterCriteria
 {
 	private static final long serialVersionUID = 4021524969907924976L;
 
-	private Date dateFrom;
-	private Date dateTo;
 	private Party supplier;
 
-	public APLedgerFilterCriteria()
-	{
-	}
-
-	public Date getDateFrom()
-	{
-		return dateFrom;
-	}
-
-	public void setDateFrom(Date dateFrom)
-	{
-		this.dateFrom = dateFrom;
-	}
-
-	public Date getDateTo()
-	{
-		return dateTo;
-	}
-
-	public void setDateTo(Date dateTo)
-	{
-		this.dateTo = dateTo;
-	}
-
-	public Party getSupplier()
-	{
-		return supplier;
-	}
-
-	public void setSupplier(Party supplier)
-	{
-		this.supplier = supplier;
-	}
+	private Date dateFrom;
+	private Date dateTo;
 }

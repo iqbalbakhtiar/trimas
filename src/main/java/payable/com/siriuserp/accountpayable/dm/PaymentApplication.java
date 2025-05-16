@@ -30,71 +30,80 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "payment_application")
-public class PaymentApplication extends Model implements APLedgerView {
-    private static final long serialVersionUID = 5521535215726930274L;
+public class PaymentApplication extends Model implements APLedgerView
+{
+	private static final long serialVersionUID = 5521535215726930274L;
 
-    @Column(name = "due_date")
-    private Date appliedDate = new Date();
+	@Column(name = "due_date")
+	private Date appliedDate = new Date();
 
-    @Column(name = "paid_amount")
-    private BigDecimal paidAmount = BigDecimal.ZERO;
+	@Column(name = "paid_amount")
+	private BigDecimal paidAmount = BigDecimal.ZERO;
 
-    @Column(name = "write_off")
-    private BigDecimal writeOff = BigDecimal.ZERO;
+	@Column(name = "write_off")
+	private BigDecimal writeOff = BigDecimal.ZERO;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "write_off_type")
-    private WriteOffType writeoffType;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "write_off_type")
+	private WriteOffType writeoffType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_payable")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private Payable payable;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_payable")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Payable payable;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_payment")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private Payment payment;
-
-    @Override
-    public String getAuditCode() {
-        return "";
-    }
-    
-    @Override
-   	public BigDecimal getCredit()
-   	{
-   		return BigDecimal.ZERO;
-   	}
-
-   	@Override
-   	public BigDecimal getDebet()
-   	{
-   		return getPayment().getPaymentInformation().getAmount();
-   	}
-
-   	@Override
-   	public String getLedgerType()
-   	{
-   		return "PYM";
-   	}
-
-   	@Override
-   	public int compareTo(APLedgerView o)
-   	{
-   		return getPayment().getDate().compareTo(o.getDate());
-   	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_payment")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Payment payment;
 
 	@Override
-	public Date getDate() {
+	public Date getDate()
+	{
 		return getPayment().getDate();
 	}
 
 	@Override
-	public String getCode() {
+	public Long getReferenceId()
+	{
+		return getPayment().getId();
+	}
+
+	@Override
+	public String getCode()
+	{
 		return getPayment().getCode();
 	}
-   
+
+	@Override
+	public String getUri()
+	{
+		return getPayment().getUri();
+	}
+
+	@Override
+	public BigDecimal getCredit()
+	{
+		return BigDecimal.ZERO;
+	}
+
+	@Override
+	public BigDecimal getDebet()
+	{
+		return getPayment().getPaymentInformation().getAmount().subtract(getWriteOff());
+	}
+
+	@Override
+	public int compareTo(APLedgerView o)
+	{
+		return getPayment().getDate().compareTo(o.getDate());
+	}
+
+	@Override
+	public String getAuditCode()
+	{
+		return "";
+	}
 }

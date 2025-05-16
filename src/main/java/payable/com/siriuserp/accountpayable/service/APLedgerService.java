@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.siriuserp.accountpayable.criteria.APLedgerFilterCriteria;
 import com.siriuserp.accountpayable.query.APLedgerDetailQuery;
 import com.siriuserp.accountpayable.query.APLedgerSummaryQuery;
+import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.dao.PartyDao;
 import com.siriuserp.sdk.utility.SiriusValidator;
@@ -38,37 +39,36 @@ public class APLedgerService
 	@Autowired
 	private PartyDao organizationDao;
 
-	public Map<String, Object> pre()
+	@InjectParty
+	public Map<String, Object> pre() throws Exception
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("criteria", new APLedgerFilterCriteria());
+		map.put("reportCriteria", new APLedgerFilterCriteria());
 
 		return map;
 	}
 
-	public Map<String, Object> view(APLedgerFilterCriteria criteria)
+	public Map<String, Object> view(APLedgerFilterCriteria reportCriteria)
 	{
-		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("organization", SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()) ? organizationDao.load(criteria.getOrganization()) : null);
-		map.put("criteria", criteria);
-
 		APLedgerSummaryQuery query = new APLedgerSummaryQuery();
-		query.setFilterCriteria(criteria);
+		query.setFilterCriteria(reportCriteria);
 
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("organization", SiriusValidator.validateParamWithZeroPosibility(reportCriteria.getOrganization()) ? organizationDao.load(reportCriteria.getOrganization()) : null);
+		map.put("reportCriteria", reportCriteria);
 		map.put("reports", genericDao.generate(query));
 
 		return map;
 	}
 
-	public Map<String, Object> viewdetail(APLedgerFilterCriteria criteria)
+	public Map<String, Object> viewdetail(APLedgerFilterCriteria reportCriteria)
 	{
-		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("organization", SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()) ? organizationDao.load(criteria.getOrganization()) : null);
-		map.put("criteria", criteria);
-
 		APLedgerDetailQuery query = new APLedgerDetailQuery();
-		query.setFilterCriteria(criteria);
+		query.setFilterCriteria(reportCriteria);
 
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("organization", SiriusValidator.validateParamWithZeroPosibility(reportCriteria.getOrganization()) ? organizationDao.load(reportCriteria.getOrganization()) : null);
+		map.put("reportCriteria", reportCriteria);
 		map.put("reports", genericDao.generate(query));
 
 		return map;

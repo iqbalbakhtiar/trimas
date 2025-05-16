@@ -18,24 +18,21 @@
 		@import url("<c:url value='/assets/sirius-print.css'/>");
 	</style>
 	<script type="text/javascript">
-			function printPage()
-			{
-	   			print();
-			}
+		function printPage()
+		{
+   			print();
+		}
 	</script>
 </head>
 <body>
-
 <div id="se-r00">
 	<div id="se-r01">&nbsp;</div>
 	<div id="se-r02">&nbsp;</div>
 </div>
-
 <div id="se-containers">
 	<div class="area" dojoType="Container" id="quick_link_container">
 		<%@ include file="/common/sirius-menu.jsp"%>
 	</div>
-
 	<div id="se-navigator">
 		<div class="area" dojoType="Container" id="quick_link_container">
 			<table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -55,11 +52,9 @@
 						<div class="area" dojoType="Container" id="quick_link_container">
 							<h1 class="page-title">${pageTitle}</h1>
 					  		<div class="toolbar">
-								<a class="item-button-back" href="<c:url value='/page/apledgersummarypre.htm'/>"><span>Back</span></a>
-								<a class="item-button-print" href="javascript:window.print();"><span>Print</span></a>
-								<a class="item-button-export-xls" href="<c:url value='/page/apledgersummaryexcell.xls'/>"><span>Export</span></a>
-								<%-- <a class="item-button-rprev" href="<c:url value='/page/apledgersummaryview.htm?organization=${organization.id}&date='/><fmt:formatDate value='${criteria.prev}' pattern='dd-MM-yyyy'/>"><span>Prev</span></a>
-								<a class="item-button-rnext" href="<c:url value='/page/apledgersummaryview.htm?organization=${organization.id}&date='/><fmt:formatDate value='${criteria.next}' pattern='dd-MM-yyyy'/>"><span>Next</span></a> --%>                  
+								<a class="item-button-back" href="<c:url value='/page/apledgersummarypre.htm'/>"><span><spring:message code="sirius.back"/></span></a>
+								<a class="item-button-print" href="javascript:window.print();"><span><spring:message code="sirius.print"/></span></a>
+								<a class="item-button-export-xls" download="apledgersummaryexcell.xls" href="#" onclick="return ExcellentExport.excel(this, 'apledgersummary', 'AP Ledger Summary');"><span><spring:message code="sirius.export"/></span></a>
 					  		</div>
 						</div>
 						
@@ -70,14 +65,14 @@
                                 <div class="report">
                                     <table width="498">	
                                     <tr>	
-                                        <td width="100" >Company</td>
+                                        <td width="100" ><spring:message code="organization"/></td>
                                         <td width="11" >:&nbsp;&nbsp;</td>
                                         <td width="344" ><c:out value='${organization.fullName}'/></td>			  
                                     </tr>
                                     <tr>	
-                                        <td width="100" >Period</td>
+                                        <td width="100" ><spring:message code="sirius.period"/></td>
                                         <td width="11" >:&nbsp;&nbsp;</td>
-                                        <td width="344" ><fmt:formatDate value='${criteria.dateFrom}' pattern='dd MMM yyyy' /> &nbsp;-&nbsp; <fmt:formatDate value='${criteria.dateTo}' pattern='dd MMM yyyy' /></td>			  
+                                        <td width="344" ><fmt:formatDate value='${reportCriteria.dateFrom}' pattern='dd MMM yyyy' /> &nbsp;-&nbsp; <fmt:formatDate value='${reportCriteria.dateTo}' pattern='dd MMM yyyy' /></td>			  
                                     </tr>
                                     </table>
                                 </div>
@@ -87,22 +82,20 @@
                                 <c:set var='totalDebet' value='${0}'/>
                                 <c:set var='totalCredit' value='${0}'/>
                                 <c:set var='totalClosing' value='${0}'/>
-                                <table width="100%"  cellpadding="5" cellspacing="0" class="report-table">
+                                <table width="100%"  cellpadding="5" cellspacing="0" class="report-table" id="apledgersummary" name="apledgersummary">
                                 <thead>
                                 <tr>
-                                    <!-- <th width="13%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;">Code</th> -->
-                                    <th width="31%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;">Name</th>
-                               	  	<th width="14%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;">Opening</th>
-                                  	<th width="14%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;">Debet</th>
-                                  	<th width="14%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;">Credit</th>
-                               	  	<th align="right" style="border-bottom:1px solid black;border-top:1px solid black;">Closing</th>
+                                    <th width="31%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="supplier"/></th>
+                               	  	<th width="14%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="accreport.opening"/></th>
+                                  	<th width="14%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.debit"/></th>
+                                  	<th width="14%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.credit"/></th>
+                               	  	<th align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="accreport.closing"/></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <c:forEach items='${reports}' var='report'>
                                 <tr>
-                                    <%-- <td align="left"><c:out value='${report.supplier.code}'/></td> --%>
-                                    <td align="left"><a href="<c:url value='/page/apledgerdetailview.htm?supplier=${report.supplier.id}&organization=${criteria.organization}&dateFrom='/><fmt:formatDate value='${criteria.dateFrom}' pattern='dd-MM-yyyy'/>&dateTo=<fmt:formatDate value='${criteria.dateTo}' pattern='dd-MM-yyyy'/>"><c:out value='${report.supplier.fullName}'/></a></td>
+                                    <td align="left"><a href="<c:url value='/page/apledgerdetailview.htm?supplier=${report.supplier.id}&organization=${reportCriteria.organization}&dateFrom='/><fmt:formatDate value='${reportCriteria.dateFrom}' pattern='dd-MM-yyyy'/>&dateTo=<fmt:formatDate value='${reportCriteria.dateTo}' pattern='dd-MM-yyyy'/>"><c:out value='${report.supplier.fullName}'/></a></td>
                                     <td align="right"><fmt:formatNumber value='${report.opening}' pattern=',##0.00'/></td>
                                     <td align="right"><fmt:formatNumber value='${report.debet}' pattern=',##0.00'/></td>
                                     <td align="right"><fmt:formatNumber value='${report.credit}' pattern=',##0.00'/></td>
@@ -115,28 +108,27 @@
                                 </c:forEach>
                                 </tbody>
                                 <tfoot>
-                                <tr><td colspan="5">&nbsp;</td></tr>
                                 <tr>
-                                  	<td align="left" style="border-top:1px solid black;"><strong>Total</strong></td>
-                                    <td align="right" width="14%" style="border-top:1px solid black;">
+                                  	<td align="left" style="border-top:1px solid black;border-bottom:1px solid black;"><strong><spring:message code="sirius.total"/></strong></td>
+                                    <td align="right" width="14%" style="border-top:1px solid black;border-bottom:1px solid black;">
                                         <strong>
                                         <fmt:formatNumber value='${totalOpening}' pattern=',##0.00'/>
                                         <c:remove var='totalOpening'/>
                                       </strong>
                                     </td>
-                                    <td align="right" width="14%" style="border-top:1px solid black;">
+                                    <td align="right" width="14%" style="border-top:1px solid black;border-bottom:1px solid black;">
                                         <strong>
                                         <fmt:formatNumber value='${totalDebet}' pattern=',##0.00'/>
                                         <c:remove var='totalDebet'/>
                                       </strong>
                                     </td>
-                                    <td align="right" width="14%" style="border-top:1px solid black;">
+                                    <td align="right" width="14%" style="border-top:1px solid black;border-bottom:1px solid black;">
                                         <strong>
                                         <fmt:formatNumber value='${totalCredit}' pattern=',##0.00'/>
                                         <c:remove var='totalCredit'/>
                                       </strong>
                                     </td>
-                                    <td align="right" width="14%" style="border-top:1px solid black;">
+                                    <td align="right" width="14%" style="border-top:1px solid black;border-bottom:1px solid black;">
                                         <strong>
                                         <fmt:formatNumber value='${totalClosing}' pattern=',##0.00'/>
                                         <c:remove var='totalClosing'/>

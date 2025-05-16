@@ -161,6 +161,7 @@
         </div>
     </sesform:form>
 </div>
+<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${payment_edit.createdBy.fullName}'/> (<fmt:formatDate value='${payment_edit.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${payment_edit.updatedBy.fullName}'/> (<fmt:formatDate value='${payment_edit.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
 <%@ include file="/common/sirius-general-bottom.jsp"%>
 <script type="text/javascript">
     $(function(){
@@ -223,9 +224,7 @@
                     if(json.status === 'OK')
                     {
                         $dialog.dialog('close');
-                        window.location="<c:url value='/page/paymentview.htm'/>";
-                        // Or Can use This
-                        <%--window.location="<c:url value='/page/paymentpreedit.htm?id='/>"+json.data.id;--%>
+                        window.location="<c:url value='/page/paymentpreedit.htm?id='/>"+json.id;
                     }
                     else
                     {

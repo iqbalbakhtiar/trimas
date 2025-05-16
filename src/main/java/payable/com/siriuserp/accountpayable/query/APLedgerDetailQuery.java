@@ -92,7 +92,7 @@ public class APLedgerDetailQuery extends AbstractStandardReportQuery
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT SUM(((ver.money.amount-ver.discount) * ver.quantity) + ((ver.money.amount-ver.discount)*invoiceVerification.tax.taxRate/100)) FROM InvoiceVerificationItem ver ");
 		builder.append("WHERE ver.invoiceVerification.date < :from ");
-		builder.append("AND ver.invoiceVerification.organization.id in(:orgs) ");
+		builder.append("AND ver.invoiceVerification.organization.id IN(:orgs) ");
 		builder.append("AND ver.invoiceVerification.supplier.id =:supplier");
 
 		Query query = getSession().createQuery(builder.toString());
@@ -109,7 +109,7 @@ public class APLedgerDetailQuery extends AbstractStandardReportQuery
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT SUM(app.paidAmount-app.writeOff) FROM PaymentApplication app ");
 		builder.append("WHERE app.payment.date < :from ");
-		builder.append("AND app.payable.organization.id in(:orgs) ");
+		builder.append("AND app.payable.organization.id IN(:orgs) ");
 		builder.append("AND app.payable.supplier.id =:supplier");
 
 		Query query = getSession().createQuery(builder.toString());
@@ -126,7 +126,7 @@ public class APLedgerDetailQuery extends AbstractStandardReportQuery
 		StringBuilder builder = new StringBuilder();
 		builder.append("FROM InvoiceVerification ver ");
 		builder.append("WHERE (ver.date BETWEEN :start AND :end) ");
-		builder.append("AND ver.organization.id in(:orgs) ");
+		builder.append("AND ver.organization.id IN(:orgs) ");
 		builder.append("AND ver.supplier.id =:supplier");
 
 		Query query = getSession().createQuery(builder.toString());
@@ -144,7 +144,7 @@ public class APLedgerDetailQuery extends AbstractStandardReportQuery
 		StringBuilder builder = new StringBuilder();
 		builder.append("FROM PaymentApplication app ");
 		builder.append("WHERE (app.payment.date BETWEEN :start AND :end) ");
-		builder.append("AND app.payment.organization.id in(:orgs) ");
+		builder.append("AND app.payment.organization.id IN(:orgs) ");
 		builder.append("AND app.payment.supplier.id =:supplier");
 
 		Query query = getSession().createQuery(builder.toString());
@@ -162,7 +162,7 @@ public class APLedgerDetailQuery extends AbstractStandardReportQuery
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT DISTINCT relation.partyFrom FROM PartyRelationship relation ");
 		builder.append("WHERE relation.relationshipType.id =:relationshipType ");
-		builder.append("AND relation.partyTo.id in(:orgs) ");
+		builder.append("AND relation.partyTo.id IN(:orgs) ");
 		builder.append("AND relation.partyRoleTypeFrom.id =:from ");
 		builder.append("AND relation.partyRoleTypeTo.id =:to");
 

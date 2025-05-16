@@ -17,7 +17,6 @@ import com.siriuserp.sales.query.DeliveryReportViewQuery;
 import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.dm.Party;
-import com.siriuserp.sdk.filter.AbstractReportFilterCriteria;
 
 import javolution.util.FastMap;
 
@@ -43,9 +42,8 @@ public class DeliveryReportService
 		return map;
 	}
 
-	public Map<String, Object> view(AbstractReportFilterCriteria filter)
+	public Map<String, Object> view(SalesReportFilterCriteria criteria)
 	{
-		SalesReportFilterCriteria criteria = (SalesReportFilterCriteria) filter;
 		Party organization = dao.load(Party.class, criteria.getOrganization());
 
 		Map<String, Object> map = new FastMap<String, Object>();
