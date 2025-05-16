@@ -1,7 +1,10 @@
 package com.siriuserp.inventory.criteria;
 
+import java.util.List;
+
 import com.siriuserp.sdk.filter.AbstractFilterCriteria;
 
+import javolution.util.FastList;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,4 +42,6 @@ public class ProductFilterCriteria extends AbstractFilterCriteria
 	private Long facility;
 	private Long grid;
 	private Long container;
+
+	private List<String> barcodes = new FastList<String>();
 }

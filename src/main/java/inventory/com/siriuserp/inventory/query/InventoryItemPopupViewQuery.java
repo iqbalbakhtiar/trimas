@@ -67,6 +67,9 @@ public class InventoryItemPopupViewQuery extends AbstractGridViewQuery
 		if (SiriusValidator.validateParam(criteria.getLotCode()))
 			builder.append("AND inv.lot.code LIKE :lotCode ");
 
+		if (SiriusValidator.validateParam(criteria.getBarcodes()))
+			builder.append("AND inv.lot.serial NOT IN(:serials) ");
+
 		if (type.compareTo(ExecutorType.HQL) == 0)
 			builder.append("ORDER BY inv.lot.code, inv.lot.serial, inv.product.name ");
 
@@ -93,6 +96,9 @@ public class InventoryItemPopupViewQuery extends AbstractGridViewQuery
 
 		if (SiriusValidator.validateParam(criteria.getLotCode()))
 			query.setParameter("lotCode", "%" + criteria.getLotCode() + "%");
+
+		if (SiriusValidator.validateParam(criteria.getBarcodes()))
+			query.setParameterList("serials", criteria.getBarcodes());
 
 		return query;
 	}

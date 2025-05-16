@@ -991,6 +991,18 @@ td, th{
 	display   : block;
 	cursor	:pointer;
 }
+.item-button-delete-line{
+	background-image: url('icons/delete.gif');
+	background-repeat: no-repeat;
+	display   : inline-block;
+	position: relative;
+	cursor	:pointer;
+	width : 16px;
+	height: 16px;
+	margin-left: 1px;
+	vertical-align: middle;
+	text-decoration: none;
+}
 .item-button-search {
 	background-image: url('icons/search.gif');
 	background-repeat: no-repeat;

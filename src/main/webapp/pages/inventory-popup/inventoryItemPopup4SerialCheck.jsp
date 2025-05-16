@@ -28,31 +28,26 @@
 								<form id="filterPopup" name="filterPopup" method="post">
 									<table width="100%" cellspacing="0" cellpadding="0" align="center">
 									<tr>
-										<td width="15%" align="right"><spring:message code="sirius.code"/></td>
-									  	<td width="5%" align="center">:</td>
-								  	  	<td width="65%" height="28" align="left"><input type="text" id="code" name="code" value="${filterCriteria.code}" size="35" class="inputbox"/></td>
+										<td align="right"><spring:message code="barcode"/></td>
+									  	<td align="center">:&nbsp;</td>
+										<td align="left"><input type="text" id="serialNo" name="serialNo" value="${filterCriteria.serialNo}" size="35" class="inputbox"/></td>
 									</tr>
 									<tr>
-										<td align="right"><spring:message code="purchaserequisition.requisitioner"/></td>
-										<td>:&nbsp;</td>
-										<td><input type="text" id="requisitionerName" name="requisitionerName" value="${filterCriteria.requisitionerName}" size="35" class="inputbox"/></td>
+										<td align="right"><spring:message code="product.name"/></td>
+									  	<td align="center">:&nbsp;</td>
+										<td align="left"><input type="text" id="name" name="name" value="${filterCriteria.name}" size="35" class="inputbox"/></td>
 									</tr>
 									<tr>
-										<td align="right"><spring:message code="product"/></td>
-										<td>:&nbsp;</td>
-										<td><input type="text" id="productName" name="productName" value="${filterCriteria.productName}" size="35" class="inputbox"/></td>
-									</tr>
-									<tr>
-										<td align="right"><spring:message code="productcategory"/></td>
-										<td>:&nbsp;</td>
-										<td><input type="text" id="productCategoryName" name="productCategoryName" value="${filterCriteria.productCategoryName}" size="35" class="inputbox"/></td>
+										<td align="right"><spring:message code="product.lot"/></td>
+									  	<td align="center">:&nbsp;</td>
+										<td align="left"><input type="text" id="lotCode" name="lotCode" value="${filterCriteria.lotCode}" size="10"/></td>
 									</tr>
 									<tr>
 										<td>&nbsp;</td>
 										<td>&nbsp;</td>
-										<td>
+										<td align="left">
 											<%@ include file="/common/button.jsp"%>
-											<input type="button" class="btn" style="WIDTH:60px; HEIGHT:25px" value='<spring:message code="sirius.ok"/>' onclick="addRequisitions();"/></td>
+											<input type="button" class="btn" style="WIDTH:60px; HEIGHT:25px" value='<spring:message code="sirius.ok"/>' onclick="addBarcodes();"/></td>
 										</td>
 									</tr>
 									</table>
@@ -71,27 +66,25 @@
 						<table class="table-list" cellspacing="0" cellpadding="0" width="80%">
 					  	<tr>
 					  		<th width="1%"><input type="checkbox" name="checkMaster" class="checkall"/></th>
-				            <th width="12%" nowrap="nowrap"><spring:message code="product"/></th>
-				            <th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
-				            <th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
-				            <th width="8%" nowrap="nowrap"><spring:message code="productcategory"/></th>
-			                <th width="8%"><spring:message code="sirius.code"/></th>
-			                <th width="8%"><spring:message code="sirius.date"/></th>
-                       	  	<th width="20%"><spring:message code="sirius.note"/></th>
+					  		<th width="10%"><spring:message code="barcode"/></th>
+                          	<th width="5%"><spring:message code="product.lot"/></th>
+                          	<th width="15%"><spring:message code="product.name"/></th>
+                          	<th style="text-align: right;" width="15%"><spring:message code="product.quantity"/></th>
+                          	<th style="text-align: center;" width="15%"><spring:message code="product.uom"/></th>
+                          	<th width="10%"><spring:message code="container"/></th>
 				  		</tr>
-						<c:forEach items="${requisitions}" var="item">
+						<c:forEach items="${onhands}" var="onhand">
 						<tr>
-					  		<td><input id="${item.id}" type="checkbox" name="checkRequisitions" onclick="tickRequisition('${item.id}');" class="requisitionItems"/></td>
-			                <td><c:out value="${item.product.name}"/></td>
-							<td><fmt:formatNumber value='${item.quantity}' pattern=',##0'/></td>
-			                <td><c:out value="${item.product.unitOfMeasure.measureId}"/></td>
-			                <td><c:out value="${item.product.productCategory.name}"/></td>
-							<td><c:out value='${item.purchaseRequisition.code}'/></td>
-                            <td><fmt:formatDate value='${item.purchaseRequisition.date}' pattern='dd-MM-yyyy'/></td>
-			                <td><c:out value="${item.note}"/></td>
+					  		<td><input id="${onhand.id}" type="checkbox" name="checkBarcode" onclick="tickBarcode('${onhand.id}');" class="barcodes"/></td>
+					  		<td nowrap="nowrap"><c:out value='${onhand.lot.serial}'/></td>
+					  		<td nowrap="nowrap"><c:out value='${onhand.lot.code}'/></td>
+                            <td nowrap="nowrap"><c:out value='${onhand.product.name}'/></td>
+                            <td style="text-align: right;" nowrap="nowrap"><fmt:formatNumber value='${onhand.onHand}' pattern=',##0.00'/></td>
+                            <td style="text-align: center;" nowrap="nowrap"><c:out value='${onhand.product.unitOfMeasure.measureId}'/></td>
+                            <td nowrap="nowrap"><c:out value='${onhand.container.name}'/></td>
 					  	</tr>
 						</c:forEach>
-					  	<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
+					  	<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
 					  	</table>
 						<table border="0" cellpadding="0" cellspacing="0" width="99%" align="center" height="20">
 						<tr>
@@ -107,16 +100,15 @@
 </div>
 </body>
 </html>
-<script type="text/javascript" src="<c:url value='/js/requisition.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/product.js'/>"></script>
 <script type="text/javascript">
 	$(function(){
 		checkSelected();
-		
 		$('.checkall').click(function () {
-	        $('.requisitionItems').prop("checked", this.checked);
+	        $('.barcodes').prop("checked", this.checked);
 	        
-	        $('.requisitionItems').each(function() {
-	        	tickRequisition($(this).attr('id'));
+	        $('.barcodes').each(function() {
+	        	tickBarcode($(this).attr('id'));
 	        });
 	    });
 	});
@@ -135,38 +127,38 @@
 		$('#totalTicked').text(selectedRequisitions.length);
 	}
 	
-	function tickRequisition(id)
+	function tickBarcode(id)
 	{
-		var checkRequisition = document.getElementById(id);
-		var selectedRequisitions = self.opener.selectedRequisitions;
+		var checkBarcode = document.getElementById(id);
+		var selectedBarcodes = self.opener.selectedBarcodes;
 		
-		if(checkRequisition.checked)
+		if(checkBarcode.checked)
 		{
 			//Check already add to table
 			if(checkSelectedStatus(id))
 			{
 				alert("Item has been selected !!!");
-				checkRequisition.checked = false;
+				checkBarcode.checked = false;
 			}
 			else {
 				//Push only if data isn't in array
-				if(!selectedRequisitions.includes(id))
-					selectedRequisitions.push(id);
+				if(!selectedBarcodes.includes(id))
+					selectedBarcodes.push(id);
 			}
 		}
 		else
 		{
-			var index = selectedRequisitions.indexOf(id);
+			var index = selectedBarcodes.indexOf(id);
 			if(index > -1)
-				selectedRequisitions.splice(index, 1);
+				selectedBarcodes.splice(index, 1);
 		}
 		
-		$('#totalTicked').text(selectedRequisitions.length);
+		$('#totalTicked').text(selectedBarcodes.length);
 	}
 	
 	function checkSelectedStatus(id)
 	{
-		var requisitionItemIds = self.opener.document.getElementsByClassName('references');
+		var requisitionItemIds = self.opener.document.getElementsByClassName('barcodes');
 	
 		for (var i = requisitionItemIds.length - 1; i >= 0; i--) {
 			if(requisitionItemIds[i].value == id)
@@ -176,15 +168,17 @@
 		return false;
 	}
 	
-	function addRequisitions()
+	function addBarcodes()
 	{
-		var selectedRequisitions = self.opener.selectedRequisitions;
-		for (var i = selectedRequisitions.length - 1; i >= 0; i--) 
+		var selectedBarcodes = self.opener.selectedBarcodes;
+		var referenceId = self.opener.refId;
+		
+		for (var i = selectedBarcodes.length - 1; i >= 0; i--) 
 		{
 			var index = self.opener.index;
 			self.opener.addLine();
 	
-			setclient(index, selectedRequisitions[i]);
+			setclient(index, selectedBarcodes[i]);
 		}
 		
 		window.close();

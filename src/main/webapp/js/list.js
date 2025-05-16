@@ -44,7 +44,7 @@ List.del = function(title)
 {
     $a = $('<a/>');
     $a.attr('style',"cursor:pointer;");
-    $a.attr('class','item-button-delete');
+    $a.attr('class','item-button-delete-line');
     $a.attr('title',title);
     $a.click(function(){
         $(this).parent().parent().remove();

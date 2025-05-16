@@ -482,10 +482,24 @@ function openBarcode(index, productId)
         if (obj.value != '')
         	selectedBarcodes.push(obj.value);
     });
-	
-	var facility = document.getElementById('facility').value;
+
 	var org = document.getElementById('org').value;
+	var facilityId = document.getElementById('facility').value;
 	
-	openpopup("<c:url value='/page/popupinventoryitemview.htm?ref=4Serial&group=false&onHand=true&target=serial['/>"+index+"]&facility="+facility+"&index="+index+"&organization="+org+"&productId="+productId);
+	const baseUrl = '<c:url value="/page/popupinventoryitemview.htm"/>';
+	const params = {
+		target: 'serial[' + index + ']',
+		index: index,
+		group: false,
+		onHand: true,
+		ref: '4Serial',
+		organization: org,
+		facility: facilityId,
+		productId: productId,
+		barcodes: Array.from(new Set(selectedBarcodes))
+	};
+	
+	openpopup(buildUrl(baseUrl, params));
+	//openpopup("<c:url value='/page/popupinventoryitemview.htm?ref=4Serial&group=false&onHand=true&target=serial['/>"+index+"]&facility="+facility+"&index="+index+"&organization="+org+"&productId="+productId);
 }
 </script>
