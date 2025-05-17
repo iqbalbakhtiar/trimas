@@ -56,9 +56,19 @@
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><a href="<c:url value='/page/deliveryorderpreedit.htm?id=${repo.deliveryOrderItem.deliveryOrder.id}'/>"><c:out value="${fn:replace(repo.deliveryOrderItem.deliveryOrder.code, 'SJ', '')}" /></a></td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><a href="<c:url value='/page/salesorderpreedit.htm?id=${repo.salesOrderItem.salesOrder.id}'/>">${repo.salesOrderItem.salesOrder.code}</a></td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><c:out value='${repo.deliveryOrderItem.product.name} ${repo.deliveryOrderItem.referenceLot}'/></td>
-  		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${bale}' pattern=',##0.00'/></td>
+  		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;">
+  		<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'YARN'}">
+  			<fmt:formatNumber value='${bale}' pattern=',##0.00'/>
+		</c:if>
+  		<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'WASTE'}">-</c:if>
+		</td>
   		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${repo.deliveryOrderItem.quantity}' pattern=',##0.00'/></td>
-  		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${priceBale}' pattern=',##0.00'/></td>
+  		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;">
+  		<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'YARN'}">
+  			<fmt:formatNumber value='${priceBale}' pattern=',##0.00'/>
+  		</c:if>
+  		<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'WASTE'}">-</c:if>
+  		</td></td>
   		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${repo.deliveryOrderItem.money.amount}' pattern=',##0.00'/></td>
   		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${dpp}' pattern=',##0.00'/></td>
   		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${tax}' pattern=',##0.00'/></td>
@@ -68,9 +78,9 @@
   		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${tax12}' pattern=',##0.00'/></td>
   		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;border-right:solid 1px black;"><fmt:formatNumber value='${totalCoreTax}' pattern=',##0.00'/></td>
 	</tr>
- 	<c:set var='tBale' value='${tBale+bale}'/>
+ 	<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'YARN'}"><c:set var='tBale' value='${tBale+bale}'/></c:if>
  	<c:set var='tKg' value='${tKg+repo.deliveryOrderItem.quantity}'/>
- 	<c:set var='tPriceBale' value='${tPriceBale+priceBale}'/>
+ 	<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'YARN'}"><c:set var='tPriceBale' value='${tPriceBale+priceBale}'/></c:if>
  	<c:set var='tPriceKg' value='${tPriceKg+repo.deliveryOrderItem.money.amount}'/>
  	<c:set var='tDpp' value='${tDpp+dpp}'/>
  	<c:set var='tTax' value='${tTax+tax}'/>
