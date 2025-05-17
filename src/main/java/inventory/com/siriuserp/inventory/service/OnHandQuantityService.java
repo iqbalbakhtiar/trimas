@@ -14,6 +14,7 @@ import com.siriuserp.inventory.criteria.OnHandQuantityFilterCriteria;
 import com.siriuserp.inventory.dao.InventoryItemDao;
 import com.siriuserp.inventory.dm.InventoryItem;
 import com.siriuserp.inventory.dm.Product;
+import com.siriuserp.inventory.query.OnHandQuantityDetailLotViewQuery;
 import com.siriuserp.inventory.query.OnHandQuantityDetailViewQuery;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.GridViewQuery;
@@ -51,12 +52,22 @@ public class OnHandQuantityService
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> preedit(OnHandQuantityFilterCriteria criteria) throws ServiceException
 	{
-		OnHandQuantityDetailViewQuery query = new OnHandQuantityDetailViewQuery();
-		query.setFilterCriteria(criteria);
-
 		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("details", genericDao.filter(query));
 		map.put("product", genericDao.load(Product.class, criteria.getProduct()));
+
+		if (!criteria.isViewByLot())
+		{
+			OnHandQuantityDetailViewQuery query = new OnHandQuantityDetailViewQuery();
+			query.setFilterCriteria(criteria);
+
+			map.put("details", genericDao.filter(query));
+		} else
+		{
+			OnHandQuantityDetailLotViewQuery query = new OnHandQuantityDetailLotViewQuery();
+			query.setFilterCriteria(criteria);
+
+			map.put("details", genericDao.filter(query));
+		}
 
 		return map;
 	}
