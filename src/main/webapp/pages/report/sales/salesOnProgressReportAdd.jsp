@@ -66,6 +66,16 @@
                                         <a class="item-popup" onclick="opencustomer();"  title='<spring:message code="customer"/>' />
                                     </td>
                                 </tr>
+								<tr>
+									<td align="right"><spring:message code="salesorder.type"/> :</td>
+									<td>
+										<select id="salesInternalType" name="salesInternalType">
+											<option value="" selected="true"><spring:message code="sirius.all"/></option>
+											<option value="YARN"><spring:message code="salesorder.type.yarn"/></option>
+											<option value="WASTE"><spring:message code="salesorder.type.waste"/></option>
+										</select>
+									</td>
+								</tr>
                                 <tr>
                                     <td align="right"><spring:message code="sirius.datefrom2"/> :</td>
                                     <td>

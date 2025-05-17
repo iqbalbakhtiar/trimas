@@ -35,11 +35,26 @@
 		<td align="left" nowrap="nowrap"><c:out value='${repo.salesOrderItem.salesOrder.customer.fullName}'/></td>
 		<td align="left" nowrap="nowrap"><a href="<c:url value='/page/salesorderpreedit.htm?id=${repo.salesOrderItem.salesOrder.id}'/>">${repo.salesOrderItem.salesOrder.code}</a></td>
 		<td align="left" nowrap="nowrap"><c:out value='${repo.salesOrderItem.product.name}'/></td>
-  		<td align="right"><fmt:formatNumber value='${repo.bale}' pattern=',##0.00'/></td>
+  		<td align="right">
+  		<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'YARN'}">
+  			<fmt:formatNumber value='${repo.bale}' pattern=',##0.00'/>
+		</c:if>
+  		<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'WASTE'}">-</c:if>
+  		</td>
   		<td align="right"><fmt:formatNumber value='${repo.kg}' pattern=',##0.00'/></td>
-  		<td align="right"><fmt:formatNumber value='${repo.deliveredBale}' pattern=',##0.00'/></td>
+  		<td align="right">
+  		<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'YARN'}">
+  			<fmt:formatNumber value='${repo.deliveredBale}' pattern=',##0.00'/>
+  		</c:if>
+  		<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'WASTE'}">-</c:if>
+  		</td>
   		<td align="right"><fmt:formatNumber value='${repo.deliveredKg}' pattern=',##0.00'/></td>
-  		<td align="right"><fmt:formatNumber value='${repo.undeliveredBale}' pattern=',##0.00'/></td>
+  		<td align="right">
+  		<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'YARN'}">
+  			<fmt:formatNumber value='${repo.undeliveredBale}' pattern=',##0.00'/>
+  		</c:if>
+  		<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'WASTE'}">-</c:if>
+  		</td>
   		<td align="right"><fmt:formatNumber value='${repo.undeliveredKg}' pattern=',##0.00'/></td>
   		<td>
 			<c:if test="${repo.salesOrderItem.salesOrder.soStatus eq 'CLOSE' or repo.salesOrderItem.salesOrder.soStatus eq 'CANCELED'}"><div style="color: red;"><spring:message code="salesorder.status.${repo.salesOrderItem.salesOrder.soStatus.messageName}"/></div></c:if>
