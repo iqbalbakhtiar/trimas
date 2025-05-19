@@ -99,7 +99,7 @@
 							<fmt:formatDate value='${billing_form.date}' pattern='dd MMMM yyyy'/>
 						</td>
 					</tr>
-					<tr><td>&nbsp;</td></tr>
+					<tr><td align="center">PT. SAN STAR MANUNGGAL</td></tr>
 					<tr><td>&nbsp;</td></tr>
 					<tr><td>&nbsp;</td></tr>
 					<!-- <tr><td align="center">.............................................</td></tr>
