@@ -27,6 +27,7 @@ import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.springmvc.JSONResponse;
+import com.siriuserp.sdk.springmvc.view.ViewHelper;
 
 @Controller
 @SessionAttributes(value = "billing_form", types = AccountingForm.class)
@@ -81,15 +82,22 @@ public class BillingController extends ControllerBase
 		return new JSONResponse(service.viewJson(criteriaFactory.create(request, BillingFilterCriteria.class), Billing4PaymentPopupViewQuery.class));
 	}
 
-	@RequestMapping("/billingprint.htm")
-	public ModelAndView print(@RequestParam("id") Long id) throws Exception
+	@RequestMapping("/billingprintoption.htm")
+	public ModelAndView option(@RequestParam("id") Long id) throws Exception
 	{
-		return new ModelAndView("/accounting/billingPrint", service.preedit(id));
+		return new ModelAndView("/accounting/billingPrintOption", service.preedit(id));
 	}
 	
-	@RequestMapping("/billingprintreceipt.htm")
-	public ModelAndView print2(@RequestParam("id") Long id) throws Exception
+	@RequestMapping("/billingprint.htm")
+	public ModelAndView print(@RequestParam("id") Long id, @RequestParam("invType") String invType) throws Exception
 	{
-		return new ModelAndView("/accounting/billingPrint2", service.preedit(id));
+		if (invType.equals("1"))
+			return new ModelAndView("/accounting/billingPrint", service.preedit(id));
+		if (invType.equals("2"))
+			return new ModelAndView("/accounting/billingPrint2", service.preedit(id));
+		if (invType.equals("3"))
+			return new ModelAndView("/accounting/billingPrint3", service.preedit(id));
+		else
+			return ViewHelper.redirectTo("billingview.htm");
 	}
 }
