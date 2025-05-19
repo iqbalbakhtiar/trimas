@@ -117,7 +117,7 @@
 		</tr>
 		<tr>
 			<td width="2%" colspan="2">&nbsp;</td>
-			<td width="96%" colspan="6" align="left">Atas perhatinannya saya ucapkan terima kasih.</td>
+			<td width="96%" colspan="6" align="left">Atas perhatiannya saya ucapkan terima kasih.</td>
 			<td width="2%" colspan="2">&nbsp;</td>
 		</tr>
 	</table>
