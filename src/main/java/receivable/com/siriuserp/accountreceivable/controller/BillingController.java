@@ -86,4 +86,10 @@ public class BillingController extends ControllerBase
 	{
 		return new ModelAndView("/accounting/billingPrint", service.preedit(id));
 	}
+	
+	@RequestMapping("/billingprintreceipt.htm")
+	public ModelAndView print2(@RequestParam("id") Long id) throws Exception
+	{
+		return new ModelAndView("/accounting/billingPrint2", service.preedit(id));
+	}
 }

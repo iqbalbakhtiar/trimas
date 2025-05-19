@@ -1,8 +1,10 @@
 package com.siriuserp.accountreceivable.service;
 
+import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.Set;
 
+import org.apache.commons.lang.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -31,6 +33,7 @@ import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.DateHelper;
+import com.siriuserp.sdk.utility.EnglishNumber;
 import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
@@ -119,9 +122,12 @@ public class BillingService extends Service {
 				.max(Comparator.comparing(Model::getCreatedDate)) // Ambil BankAccount dengan createdDate terbaru
 				.orElse(null);
 
+		String saidId = EnglishNumber.convertIdComma(adapter.getTotalBillingAmount().setScale(2, RoundingMode.HALF_UP));
+		
 		map.put("bankAccount", activeBankAccount);
 		map.put("billing_form", form);
 		map.put("billing_edit", adapter);
+		map.put("saidId", WordUtils.capitalizeFully(saidId));
 
 		return map;
 	}
