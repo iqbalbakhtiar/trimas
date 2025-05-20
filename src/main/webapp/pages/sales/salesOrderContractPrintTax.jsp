@@ -266,7 +266,11 @@
 				  						<td align="center" colspan="3"><spring:message code="salesorder.contract.seller"/></td>
 				  					</tr>
 				  					<tr colspan="3" style="height: 100px">
-				  						<td align="center" colspan="3">&nbsp;</td>
+				  						<td align="center" colspan="3">
+					  						<c:if test="${approvalDecision.approvalDecisionStatus eq'APPROVE_AND_FINISH'}">
+					  							<img src="assets/images/logo-stamp.png"  width="250" height="40"/>
+				  							</c:if>
+				  						</td>
 				  					</tr>
 									<tr style="text-transform: uppercase;font-weight: bold;">
 										<td style="width: 1px;">(</td>

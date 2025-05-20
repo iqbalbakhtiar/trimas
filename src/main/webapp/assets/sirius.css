@@ -86,6 +86,11 @@ form {
 	width:250px;
 	height: 25px;
 }
+#se-top a.logo-stamp {
+	background-image: url('images/logo-stamp.png');
+	width:250px;
+	height: 25px;
+}
 #se-top a.home {
 	background-image: url('icons/home.gif');
 	width:62px;
