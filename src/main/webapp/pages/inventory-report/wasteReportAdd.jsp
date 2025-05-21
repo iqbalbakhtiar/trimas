@@ -19,22 +19,22 @@
                     <a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupcompanystructurerolebasedview.htm?target=org'/>');"  title="Company Structure" />
                 </td>
             </tr>
-            <tr>
-                <td nowrap="nowrap" align="right"><spring:message code="facility"/> :</td>
-                <td>
-                    <select id="facility" name="facility" class="combobox-ext">
-                    </select>
-                    <img src="assets/icons/list_extensions.gif" onclick="javascript:openfacility();" style="CURSOR:pointer;" title=Facility />
-                </td>
-            </tr>
-            <tr>
-                <td nowrap="nowrap" align="right"><spring:message code="product"/> :</td>
-                <td>
-                    <select id="product" name="product" class="combobox">
-                    </select>
-                    <img src="assets/icons/list_extensions.gif" onclick="javascript:openpopup('<c:url value='/page/popupproductview.htm?target=product'/>');" style="CURSOR:pointer;" title="Product" />
-                </td>
-            </tr>
+<%--            <tr>--%>
+<%--                <td nowrap="nowrap" align="right"><spring:message code="facility"/> :</td>--%>
+<%--                <td>--%>
+<%--                    <select id="facility" name="facility" class="combobox-ext">--%>
+<%--                    </select>--%>
+<%--                    <img src="assets/icons/list_extensions.gif" onclick="javascript:openfacility();" style="CURSOR:pointer;" title=Facility />--%>
+<%--                </td>--%>
+<%--            </tr>--%>
+<%--            <tr>--%>
+<%--                <td nowrap="nowrap" align="right"><spring:message code="product"/> :</td>--%>
+<%--                <td>--%>
+<%--                    <select id="product" name="product" class="combobox">--%>
+<%--                    </select>--%>
+<%--                    <img src="assets/icons/list_extensions.gif" onclick="javascript:openpopup('<c:url value='/page/popupproductview.htm?target=product'/>');" style="CURSOR:pointer;" title="Product" />--%>
+<%--                </td>--%>
+<%--            </tr>--%>
             <tr>
                 <td align="right"><spring:message code="sirius.period"/>:</td>
                 <td>
