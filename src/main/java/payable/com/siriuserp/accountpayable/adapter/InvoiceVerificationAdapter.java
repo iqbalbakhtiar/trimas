@@ -59,8 +59,12 @@ public class InvoiceVerificationAdapter extends AbstractUIAdapter
 	{
 		BigDecimal amount = BigDecimal.ZERO;
 
-		for (InvoiceVerificationItem item : getInvoiceVerification().getItems())
-			amount = amount.add(item.getQuantity().multiply(item.getDiscount()));
+//		for (InvoiceVerificationItem item : getInvoiceVerification().getItems())
+//			amount = amount.add(item.getQuantity().multiply(item.getDiscount()));
+
+		for (InvoiceVerificationItem item : getInvoiceVerification().getItems()) {
+			amount = amount.add(item.getDiscount());
+		}
 
 		return amount;
 	}

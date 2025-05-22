@@ -11,7 +11,10 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -47,6 +50,10 @@ import lombok.Setter;
 public class InvoiceVerification extends Payable
 {
 	private static final long serialVersionUID = -6623484035906573364L;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "invoice_type")
+	protected InvoiceVerificationType invoiceType = InvoiceVerificationType.STANDARD;
 
 	@OneToMany(mappedBy = "invoiceVerification", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
@@ -89,7 +96,12 @@ public class InvoiceVerification extends Payable
 	@Override
 	public String getUri()
 	{
-		return "invoiceverificationpreedit.htm";
+		if (this.getInvoiceType() == InvoiceVerificationType.STANDARD)
+			return "invoiceverificationpreedit.htm";
+		else if (this.getInvoiceType() == InvoiceVerificationType.MANUAL) {
+			return "manualinvoiceverificationpreedit.htm";
+		}
+		return "";
 	}
 
 	@Override

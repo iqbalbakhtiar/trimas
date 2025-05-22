@@ -1,7 +1,7 @@
 <%@ include file="/common/sirius-general-top.jsp"%>
 
 <div class="toolbar">
-    <a class="item-button-back" href="<c:url value='/page/invoiceverificationpreedit.htm?id=${verification_edit.id}'/>"><span><spring:message code="sirius.back"/></span></a>
+    <a class="item-button-back" href="<c:url value='/page/${verification_edit.uri}?id=${verification_edit.id}'/>"><span><spring:message code="sirius.back"/></span></a>
     <a class="item-button-print" href="javascript:window.print();"><span><spring:message code="sirius.print"/></span></a>
     <a class="item-button-export-xls" download="invoiceverification.xls" href="#" onclick="return ExcellentExport.excel(this, 'size', 'Invoice Verification');"><span>Export</span></a>
 </div>

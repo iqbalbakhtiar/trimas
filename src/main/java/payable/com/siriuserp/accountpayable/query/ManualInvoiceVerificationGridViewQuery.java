@@ -7,7 +7,7 @@ import com.siriuserp.sdk.db.ExecutorType;
 import com.siriuserp.sdk.utility.SiriusValidator;
 import org.hibernate.Query;
 
-public class InvoiceVerificationGridViewQuery extends AbstractGridViewQuery
+public class ManualInvoiceVerificationGridViewQuery extends AbstractGridViewQuery
 {
 	@Override
 	public Query getQuery(ExecutorType type)
@@ -22,7 +22,7 @@ public class InvoiceVerificationGridViewQuery extends AbstractGridViewQuery
 			builder.append("SELECT DISTINCT item.invoiceVerification");
 
 		builder.append(" FROM InvoiceVerificationItem item JOIN item.invoiceVerification ver");
-		builder.append(" WHERE ver.invoiceType = 'STANDARD' ");
+		builder.append(" WHERE ver.invoiceType = 'MANUAL' ");
 
 		if (SiriusValidator.validateParam(criteria.getCode()))
 			builder.append(" AND ver.code like '%" + criteria.getCode() + "%'");
