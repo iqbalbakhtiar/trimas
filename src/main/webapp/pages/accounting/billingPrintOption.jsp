@@ -1,7 +1,7 @@
 <%@ include file="/common/sirius-general-top.jsp"%>
 
 <div class="toolbar">
-	<a class="item-button-back" href="<c:url value='/page/billingpreedit.htm?id=${billing_form.billing.id}'/>"><span><spring:message code="sirius.back"/></span></a>
+	<a class="item-button-back" href="<c:url value='/page/${billing_edit.billing.billingType.url}?id=${billing_edit.billing.id}'/>"><span><spring:message code="sirius.back"/></span></a>
 	<a class="item-button-print" href="javascript:printMode();"><span><spring:message code="sirius.print"/></span></a>
 </div>
 
@@ -39,10 +39,19 @@
 </div>
 <%@ include file="/common/sirius-general-bottom.jsp"%>
 
+<c:choose>
+	<c:when test="${billing_edit.billing.billingType.code == 'MANUAL'}">
+		<c:set var="printUrl" value="/page/billingmanualprint.htm?id=${billing_edit.billing.id}" />
+	</c:when>
+	<c:otherwise>
+		<c:set var="printUrl" value="/page/billingprint.htm?id=${billing_edit.billing.id}" />
+	</c:otherwise>
+</c:choose>
+
 <script type="text/javascript">
 function printMode()
 {
-	document.bilingPrintOptionForm.action="<c:url value='/page/billingprint.htm?id=${param.id}'/>";
+	document.bilingPrintOptionForm.action = '<c:url value="${printUrl}" />';
 	document.bilingPrintOptionForm.submit();
 }
 </script>

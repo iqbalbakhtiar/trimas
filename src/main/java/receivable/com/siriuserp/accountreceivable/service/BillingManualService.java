@@ -59,11 +59,11 @@ public class BillingManualService extends Service {
     }
 
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    @InjectParty(keyName = "billingManual_form")
+    @InjectParty(keyName = "billing_form")
     public Map<String, Object> preadd() {
         FastMap<String, Object> map = new FastMap<String, Object>();
 
-        map.put("billingManual_form", new AccountingForm());
+        map.put("billing_form", new AccountingForm());
         map.put("taxes", genericDao.loadAll(Tax.class));
         map.put("currencys", genericDao.loadAll(Currency.class));
         map.put("defaultCurrency", currencyDao.loadDefaultCurrency());
@@ -133,9 +133,11 @@ public class BillingManualService extends Service {
         AccountingForm form = FormHelper.bind(AccountingForm.class, billing);
         BillingAdapter adapter = new BillingAdapter(form.getBilling());
 
-        map.put("billingManual_form", form);
+        map.put("billing_form", form);
         map.put("billing_edit", adapter);
         map.put("defaultCurrency", currencyDao.loadDefaultCurrency());
+
+        System.out.println(form.getBilling().getBillingType().getUrl());
         return map;
     }
 

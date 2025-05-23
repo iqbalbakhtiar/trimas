@@ -3,6 +3,7 @@ package com.siriuserp.accountreceivable.controller;
 import com.siriuserp.accounting.form.AccountingForm;
 import com.siriuserp.accountreceivable.criteria.BillingFilterCriteria;
 import com.siriuserp.accountreceivable.dm.Billing;
+import com.siriuserp.accountreceivable.dm.BillingType;
 import com.siriuserp.accountreceivable.query.BillingManualViewQuery;
 import com.siriuserp.accountreceivable.service.BillingManualService;
 import com.siriuserp.inventory.dm.Product;
@@ -14,6 +15,7 @@ import com.siriuserp.sdk.dm.PostalAddress;
 import com.siriuserp.sdk.dm.Tax;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
+import com.siriuserp.sdk.springmvc.view.ViewHelper;
 import com.siriuserp.sdk.utility.FormHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@SessionAttributes(value = "billingManual_form", types = AccountingForm.class)
+@SessionAttributes(value = "billing_form", types = AccountingForm.class)
 @DefaultRedirect(url = "billingmanualview.htm")
 public class BillingManualController extends ControllerBase {
     @Autowired
@@ -43,6 +45,8 @@ public class BillingManualController extends ControllerBase {
         binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
         binder.registerCustomEditor(Product.class, modelEditor.forClass(Product.class));
         binder.registerCustomEditor(Tax.class, modelEditor.forClass(Tax.class));
+        binder.registerCustomEditor(Billing.class, modelEditor.forClass(Billing.class));
+        binder.registerCustomEditor(BillingType.class, modelEditor.forClass(BillingType.class));
         binder.registerCustomEditor(Currency.class, modelEditor.forClass(Currency.class));
         binder.registerCustomEditor(PostalAddress.class, modelEditor.forClass(PostalAddress.class));
     }
@@ -58,7 +62,7 @@ public class BillingManualController extends ControllerBase {
     }
     
     @RequestMapping("/billingmanualadd.htm")
-	public ModelAndView add(@ModelAttribute("billingManual_form") AccountingForm billingForm, BindingResult result, SessionStatus status) throws ServiceException
+	public ModelAndView add(@ModelAttribute("billing_form") AccountingForm billingForm, BindingResult result, SessionStatus status) throws ServiceException
 	{
 		JSONResponse response = new JSONResponse();
 
@@ -82,7 +86,7 @@ public class BillingManualController extends ControllerBase {
 	}
 
     @RequestMapping("/billingmanualedit.htm")
-	public ModelAndView edit(@ModelAttribute("billingManual_form") AccountingForm form, BindingResult result, SessionStatus status) throws Exception
+	public ModelAndView edit(@ModelAttribute("billing_form") AccountingForm form, BindingResult result, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
@@ -98,5 +102,24 @@ public class BillingManualController extends ControllerBase {
 		}
 
 		return response;
+	}
+
+	@RequestMapping("/billingmanualprintoption.htm")
+	public ModelAndView option(@RequestParam("id") Long id) throws Exception
+	{
+		return new ModelAndView("/accounting/billingPrintOption", service.preedit(id));
+	}
+
+	@RequestMapping("/billingmanualprint.htm")
+	public ModelAndView print(@RequestParam("id") Long id, @RequestParam("invType") String invType) throws Exception
+	{
+		if (invType.equals("1"))
+			return new ModelAndView("/accounting/billingPrint", service.preedit(id));
+		if (invType.equals("2"))
+			return new ModelAndView("/accounting/billingPrint2", service.preedit(id));
+		if (invType.equals("3"))
+			return new ModelAndView("/accounting/billingPrint3", service.preedit(id));
+		else
+			return ViewHelper.redirectTo("billingmanualview.htm");
 	}
 }

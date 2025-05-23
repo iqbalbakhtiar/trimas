@@ -6,7 +6,7 @@
 </div>
 
 <div class="main-box">
-    <sesform:form id="addForm" name="addForm" method="post" modelAttribute="billingManual_form" enctype="multipart/form-data">
+    <sesform:form id="addForm" name="addForm" method="post" modelAttribute="billing_form" enctype="multipart/form-data">
         <table width="100%" border="0">
             <tr>
                 <td width="60%">
@@ -21,8 +21,8 @@
                             <td width="1%" align="center">:</td>
                             <td>
                                 <form:select id="org" path="organization" cssClass="combobox-ext" onchange="updateTaxAddress(this)">
-                                    <c:if test='${not empty billingManual_form.organization}'>
-                                        <form:option value='${billingManual_form.organization.id}' label='${billingManual_form.organization.fullName}'/>
+                                    <c:if test='${not empty billing_form.organization}'>
+                                        <form:option value='${billing_form.organization.id}' label='${billing_form.organization.fullName}'/>
                                     </c:if>
                                 </form:select>
                                 <a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupcompanystructurerolebasedview.htm?target=org'/>');" title="Company Structure" />

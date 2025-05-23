@@ -4,11 +4,11 @@
 <div class="toolbar">
 	<a class="item-button-list" href="<c:url value='/page/billingmanualview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
-	<a class="item-button-print"  href="<c:url value='/page/billingprint.htm?id=${billingManual_form.billing.id}'/>"><span><spring:message code="sirius.print"/></span></a>
+	<a class="item-button-print"  href="<c:url value='/page/billingmanualprintoption.htm?id=${billing_form.billing.id}'/>"><span><spring:message code="sirius.print"/></span></a>
 </div>
 
 <div class="main-box">
-<sesform:form id="addForm" name="addForm" method="post" modelAttribute="billingManual_form" enctype="multipart/form-data">
+<sesform:form id="addForm" name="addForm" method="post" modelAttribute="billing_form" enctype="multipart/form-data">
 	<table width="100%" border="0">
 		<tr>
 			<td width="60%" valign="top">
@@ -24,8 +24,8 @@
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="org" path="organization" cssClass="combobox-ext input-disabled" disabled="true">
-							<c:if test='${not empty billingManual_form.organization}'>
-								<form:option value='${billingManual_form.organization.id}' label='${billingManual_form.organization.fullName}'/>
+							<c:if test='${not empty billing_form.organization}'>
+								<form:option value='${billing_form.organization.id}' label='${billing_form.organization.fullName}'/>
 							</c:if>
 						</form:select>
 					</td>
@@ -35,8 +35,8 @@
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="taxAddress" path="taxAddress" cssClass="combobox-ext input-disabled">
-							<c:if test='${not empty billingManual_form.taxAddress}'>
-								<form:option value='${billingManual_form.taxAddress.id}' label='${billingManual_form.taxAddress.addressName}'/>
+							<c:if test='${not empty billing_form.taxAddress}'>
+								<form:option value='${billing_form.taxAddress.id}' label='${billing_form.taxAddress.addressName}'/>
 							</c:if>
 						</form:select>
 					</td>
@@ -44,15 +44,15 @@
 				<tr>
 					<td align="right"><spring:message code="billing.date"/></td>
 					<td width="1%" align="center">:</td>
-					<td><input id="date" name="date" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${billingManual_form.date}' pattern='dd-MM-yyyy'/>"/></td>
+					<td><input id="date" name="date" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${billing_form.date}' pattern='dd-MM-yyyy'/>"/></td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="customer"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="customer" path="customer" cssClass="combobox-ext input-disabled" disabled="true">
-							<c:if test='${not empty billingManual_form.customer}'>
-								<form:option value="${billingManual_form.customer.id}">${billingManual_form.customer.code} ${billingManual_form.customer.fullName}</form:option>
+							<c:if test='${not empty billing_form.customer}'>
+								<form:option value="${billing_form.customer.id}">${billing_form.customer.code} ${billing_form.customer.fullName}</form:option>
 							</c:if>
 						</form:select>
 					</td>
@@ -60,19 +60,19 @@
 				<tr>
 					<td align="right"><spring:message code="billing.credit.term"/></td>
 					<td width="1%" align="center">:</td>
-					<td><input size="7" id="creditTerm" name="term" class="input-disabled" readonly value="${billingManual_form.term}"/></td>
+					<td><input size="7" id="creditTerm" name="term" class="input-disabled" readonly value="${billing_form.term}"/></td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="salesorder.tax.type"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="tax" path="tax" cssClass="input-disabled">
-							<c:if test='${not empty billingManual_form.tax}'>
-								<option value="${billingManual_form.tax.id}" data-taxrate="${billingManual_form.tax.taxRate}">${billingManual_form.tax.taxName}</option>
+							<c:if test='${not empty billing_form.tax}'>
+								<option value="${billing_form.tax.id}" data-taxrate="${billing_form.tax.taxRate}">${billing_form.tax.taxName}</option>
 							</c:if>
 						</form:select>
 						<spring:message code="billing.rate.percent"/>
-						<input size="7" id="taxRate" class="input-disabled" disabled value="<fmt:formatNumber value='${billingManual_form.tax.taxRate}' pattern=',##0.00'/>"/>
+						<input size="7" id="taxRate" class="input-disabled" disabled value="<fmt:formatNumber value='${billing_form.tax.taxRate}' pattern=',##0.00'/>"/>
 					</td>
 				</tr>
 				<tr>
@@ -80,16 +80,16 @@
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="currency" path="currency" class="rate" onchange="initCurrency(this)" cssClass="input-disabled">
-							<c:if test='${not empty billingManual_form.money and not empty billingManual_form.money.currency}'>
-								<option value="${billingManual_form.money.currency.id}">${billingManual_form.money.currency.symbol}</option>
+							<c:if test='${not empty billing_form.money and not empty billing_form.money.currency}'>
+								<option value="${billing_form.money.currency.id}">${billing_form.money.currency.symbol}</option>
 							</c:if>
 						</form:select>
 						<form:select id='type' path="exchangeType" class="rate" cssClass="input-disabled">
-							<c:if test='${not empty billingManual_form.money and not empty billingManual_form.money.exchangeType}'>
-								<option value="${billingManual_form.money.exchangeType}">${billingManual_form.money.exchangeType}</option>
+							<c:if test='${not empty billing_form.money and not empty billing_form.money.exchangeType}'>
+								<option value="${billing_form.money.exchangeType}">${billing_form.money.exchangeType}</option>
 							</c:if>
 						</form:select>
-						<input id="rate" name="rate" size="10" class="input-disabled input-number" readonly value="${billingManual_form.money.rate}" onchange="updateDisplay()"/>
+						<input id="rate" name="rate" size="10" class="input-disabled input-number" readonly value="${billing_form.money.rate}" onchange="updateDisplay()"/>
 						<input id="defaultCurrency" type="hidden" value="${defaultCurrency.id}"/>
 					</td>
 				</tr>
@@ -97,20 +97,20 @@
 					<td align="right"><spring:message code="billing.invoice.tax.no"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
-						<input size="7" id="invoiceTaxHeader" name="invoiceTaxHeader" value="${billingManual_form.invoiceTaxHeader}" readonly class="input-disabled"/>
+						<input size="7" id="invoiceTaxHeader" name="invoiceTaxHeader" value="${billing_form.invoiceTaxHeader}" readonly class="input-disabled"/>
 						&nbsp;
-						<input size="28" id="invoiceTaxNo" name="invoiceTaxNo" value="${billingManual_form.invoiceTaxNo}" readonly class="input-disabled"/>
+						<input size="28" id="invoiceTaxNo" name="invoiceTaxNo" value="${billing_form.invoiceTaxNo}" readonly class="input-disabled"/>
 					</td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="billing.duedate"/></td>
 					<td width="1%" align="center">:</td>
-					<td><input id="dueDate" name="dueDate" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${billingManual_form.dueDate}' pattern='dd-MM-yyyy'/>"/></td>
+					<td><input id="dueDate" name="dueDate" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${billing_form.dueDate}' pattern='dd-MM-yyyy'/>"/></td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="billing.paiddate"/></td>
 					<td width="1%" align="center">:</td>
-					<td><input id="paidDate" name="paidDate" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${billingManual_form.paidDate}' pattern='dd-MM-yyyy'/>"/></td>
+					<td><input id="paidDate" name="paidDate" size="10" class="input-disabled" disabled value="<fmt:formatDate value='${billing_form.paidDate}' pattern='dd-MM-yyyy'/>"/></td>
 				</tr>
 				<tr>
 					<td align="right"><spring:message code="sirius.note"/></td>
@@ -165,7 +165,7 @@
 								<table width="100%" style="border: none">
 									<tr>
 										<th width="60%">&nbsp;</th>
-										<th width="20%"><spring:message code="sirius.amount"/>&nbsp;(<span id="trx">${billingManual_form.money.currency.symbol}</span>)</th>
+										<th width="20%"><spring:message code="sirius.amount"/>&nbsp;(<span id="trx">${billing_form.money.currency.symbol}</span>)</th>
 										<th width="20%"><spring:message code="sirius.amount"/>&nbsp;(<span id="trxDef">${defaultCurrency.symbol}</span>)</th>
 									</tr>
 									<tr>
@@ -175,7 +175,7 @@
 												   class="number-disabled" readonly="readonly" size="20" disabled/>
 										</td>
 										<td width="20%">
-											<input id="unpaid" value="<fmt:formatNumber value='${billing_edit.totalLineAmount * billingManual_form.money.rate}' pattern=',##0.00'/>"
+											<input id="unpaid" value="<fmt:formatNumber value='${billing_edit.totalLineAmount * billing_form.money.rate}' pattern=',##0.00'/>"
 												   class="number-disabled" readonly="readonly" size="20" disabled/>
 										</td>
 									</tr>
@@ -186,7 +186,7 @@
 												   class="number-disabled" readonly="readonly" size="20" disabled/>
 										</td>
 										<td width="20%">
-											<input id="unpaid" value="<fmt:formatNumber value='${billing_edit.taxAmount * billingManual_form.money.rate}' pattern=',##0.00'/>"
+											<input id="unpaid" value="<fmt:formatNumber value='${billing_edit.taxAmount * billing_form.money.rate}' pattern=',##0.00'/>"
 												   class="number-disabled" readonly="readonly" size="20" disabled/>
 										</td>
 									</tr>
@@ -197,7 +197,7 @@
 												   class="number-disabled" readonly="readonly" size="20" disabled/>
 										</td>
 										<td width="20%">
-											<input id="unpaid" value="<fmt:formatNumber value='${billing_edit.totalAfterTax * billingManual_form.money.rate}' pattern=',##0.00'/>"
+											<input id="unpaid" value="<fmt:formatNumber value='${billing_edit.totalAfterTax * billing_form.money.rate}' pattern=',##0.00'/>"
 												   class="number-disabled" readonly="readonly" size="20" disabled/>
 										</td>
 									</tr>
@@ -208,7 +208,7 @@
 												   class="number-disabled" readonly="readonly" size="20" disabled/>
 										</td>
 										<td width="20%">
-											<input id="unpaid" value="<fmt:formatNumber value='${billing_edit.totalCreditMemo * billingManual_form.money.rate}' pattern=',##0.00'/>"
+											<input id="unpaid" value="<fmt:formatNumber value='${billing_edit.totalCreditMemo * billing_form.money.rate}' pattern=',##0.00'/>"
 												   class="number-disabled" readonly="readonly" size="20" disabled/>
 										</td>
 									</tr>
@@ -219,7 +219,7 @@
 												   class="number-disabled" readonly="readonly" size="20" disabled/>
 										</td>
 										<td width="20%">
-											<input id="unpaid" value="<fmt:formatNumber value='${billing_edit.totalBillingAmount * billingManual_form.money.rate}' pattern=',##0.00'/>"
+											<input id="unpaid" value="<fmt:formatNumber value='${billing_edit.totalBillingAmount * billing_form.money.rate}' pattern=',##0.00'/>"
 												   class="number-disabled" readonly="readonly" size="20" disabled/>
 										</td>
 									</tr>
@@ -244,8 +244,8 @@
 								<td width="1%" align="center">:</td>
 								<td>
 									<form:select id="shippingAddress" path="shippingAddress" cssClass="combobox-ext" onchange="updatedAddressDetail('shipping', this.value)">
-										<c:if test='${not empty billingManual_form.shippingAddress}'>
-											<option value="${billingManual_form.shippingAddress.id}">${billingManual_form.shippingAddress.addressName}</option>
+										<c:if test='${not empty billing_form.shippingAddress}'>
+											<option value="${billing_form.shippingAddress.id}">${billing_form.shippingAddress.addressName}</option>
 										</c:if>
 									</form:select>
 								</td>
@@ -253,17 +253,17 @@
 							<tr>
 								<td align="right"><spring:message code="postaladdress.detail"/></td>
 								<td width="1%" align="center">:</td>
-								<td><input id="shippingAddressDetail" class="inputbox input-disabled" disabled value="${billingManual_form.shippingAddress.address}"/></td>
+								<td><input id="shippingAddressDetail" class="inputbox input-disabled" disabled value="${billing_form.shippingAddress.address}"/></td>
 							</tr>
 							<tr>
 								<td align="right"><spring:message code="postaladdress.postalcode"/></td>
 								<td width="1%" align="center">:</td>
-								<td><input id="shippingAddressPostalCode" class="inputbox input-disabled" disabled value="${billingManual_form.shippingAddress.postalCode}"/></td>
+								<td><input id="shippingAddressPostalCode" class="inputbox input-disabled" disabled value="${billing_form.shippingAddress.postalCode}"/></td>
 							</tr>
 							<tr>
 								<td align="right"><spring:message code="postaladdress.city"/></td>
 								<td width="1%" align="center">:</td>
-								<td><input id="shippingAddressCity" class="inputbox input-disabled" disabled value="${billingManual_form.shippingAddress.city.name}"/></td>
+								<td><input id="shippingAddressCity" class="inputbox input-disabled" disabled value="${billing_form.shippingAddress.city.name}"/></td>
 							</tr>
 						</table>
 					</td>
@@ -274,8 +274,8 @@
 								<td width="1%" align="center">:</td>
 								<td>
 									<form:select id="billingAddress" path="billingAddress" cssClass="combobox-ext" onchange="updatedAddressDetail('billing', this.value)">
-										<c:if test='${not empty billingManual_form.billingAddress}'>
-											<option value="${billingManual_form.billingAddress.id}">${billingManual_form.billingAddress.addressName}</option>
+										<c:if test='${not empty billing_form.billingAddress}'>
+											<option value="${billing_form.billingAddress.id}">${billing_form.billingAddress.addressName}</option>
 										</c:if>
 									</form:select>
 								</td>
@@ -283,17 +283,17 @@
 							<tr>
 								<td align="right"><spring:message code="postaladdress.detail"/></td>
 								<td width="1%" align="center">:</td>
-								<td><input id="billingAddressDetail" class="inputbox input-disabled" disabled value="${billingManual_form.shippingAddress.address}"/></td>
+								<td><input id="billingAddressDetail" class="inputbox input-disabled" disabled value="${billing_form.shippingAddress.address}"/></td>
 							</tr>
 							<tr>
 								<td align="right"><spring:message code="postaladdress.postalcode"/></td>
 								<td width="1%" align="center">:</td>
-								<td><input id="billingAddressPostalCode" class="inputbox input-disabled" disabled value="${billingManual_form.shippingAddress.postalCode}"/></td>
+								<td><input id="billingAddressPostalCode" class="inputbox input-disabled" disabled value="${billing_form.shippingAddress.postalCode}"/></td>
 							</tr>
 							<tr>
 								<td align="right"><spring:message code="postaladdress.city"/></td>
 								<td width="1%" align="center">:</td>
-								<td><input id="billingAddressCity" class="inputbox input-disabled" disabled value="${billingManual_form.shippingAddress.city.name}"/></td>
+								<td><input id="billingAddressCity" class="inputbox input-disabled" disabled value="${billing_form.shippingAddress.city.name}"/></td>
 							</tr>
 						</table>
 					</td>
@@ -317,7 +317,7 @@
 						</tr>
 					</thead>
 					<tbody id="lineItem">
-					<c:forEach items="${billingManual_form.billing.items}" var="item" varStatus="idx">
+					<c:forEach items="${billing_form.billing.items}" var="item" varStatus="idx">
 						<c:if test="${item.billingReferenceItem.quantity > 0}">
 						<tr>
 							<td></td>
@@ -378,14 +378,14 @@
 				</tr>
 				<tr>
 					<td width="41%" nowrap="nowrap" align="right">Billing On Finance Date :</td>
-					<td width="59%"><input id="onFinanceDate" name="billing.collectingStatus.onFinanceDate" value="<fmt:formatDate value='${billingManual_form.billing.collectingStatus.onFinanceDate}' pattern='dd-MM-yyyy'/>" size="10" class="datepicker"/></td>
+					<td width="59%"><input id="onFinanceDate" name="billing.collectingStatus.onFinanceDate" value="<fmt:formatDate value='${billing_form.billing.collectingStatus.onFinanceDate}' pattern='dd-MM-yyyy'/>" size="10" class="datepicker"/></td>
 				</tr>
 				<tr>
 					<td width="41%" nowrap="nowrap" align="right">Collector Name :</td>
 					<td width="59%">
 						<form:select id="collector" path='billing.collectingStatus.collector' cssClass='combobox-ext'>
-							<c:if test='${not empty billingManual_form.billing.collectingStatus.collector}'>
-								<form:option value='${billingManual_form.billing.collectingStatus.collector.id}' label='${billingManual_form.billing.collectingStatus.collector.fullName}'/>
+							<c:if test='${not empty billing_form.billing.collectingStatus.collector}'>
+								<form:option value='${billing_form.billing.collectingStatus.collector.id}' label='${billing_form.billing.collectingStatus.collector.fullName}'/>
 							</c:if>
 						</form:select>
 						<a class="item-popup" onclick="openCollector()"  title="Collector" />
@@ -393,11 +393,11 @@
 				</tr>
 				<tr>
 					<td width="41%" nowrap="nowrap" align="right">Billing On Collector Date :</td>
-					<td width="59%"><input id="collectingDate" name="billing.collectingStatus.collectingDate" value="<fmt:formatDate value='${billingManual_form.billing.collectingStatus.collectingDate}' pattern='dd-MM-yyyy'/>" size="10" class="datepicker"/></td>
+					<td width="59%"><input id="collectingDate" name="billing.collectingStatus.collectingDate" value="<fmt:formatDate value='${billing_form.billing.collectingStatus.collectingDate}' pattern='dd-MM-yyyy'/>" size="10" class="datepicker"/></td>
 				</tr>
 				<tr>
 					<td width="41%" nowrap="nowrap" align="right">Billing Accepted Date :</td>
-					<td width="59%"><input id="acceptanceDate" name="billing.collectingStatus.acceptanceDate" value="<fmt:formatDate value='${billingManual_form.billing.collectingStatus.acceptanceDate}' pattern='dd-MM-yyyy'/>" size="10" class="datepicker"/></td>
+					<td width="59%"><input id="acceptanceDate" name="billing.collectingStatus.acceptanceDate" value="<fmt:formatDate value='${billing_form.billing.collectingStatus.acceptanceDate}' pattern='dd-MM-yyyy'/>" size="10" class="datepicker"/></td>
 				</tr>
 			</table>
 		</div><%--	End of Collection Panel--%>
@@ -405,7 +405,7 @@
  	</div><%--	End of Main Tab--%>
 </sesform:form>
 </div>
-<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${billingManual_form.createdBy.fullName}'/> (<fmt:formatDate value='${billingManual_form.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${billingManual_form.updatedBy.fullName}'/> (<fmt:formatDate value='${billingManual_form.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
+<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${billing_form.createdBy.fullName}'/> (<fmt:formatDate value='${billing_form.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${billing_form.updatedBy.fullName}'/> (<fmt:formatDate value='${billing_form.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
 <%@ include file="/common/sirius-general-bottom.jsp"%>
 <script type="text/javascript">
 $(function(){
