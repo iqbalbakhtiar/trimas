@@ -1,5 +1,6 @@
 package com.siriuserp.accountreceivable.service;
 
+import com.siriuserp.accounting.dm.BankAccount;
 import com.siriuserp.accounting.form.AccountingForm;
 import com.siriuserp.accountreceivable.adapter.BillingAdapter;
 import com.siriuserp.accountreceivable.dm.Billing;
@@ -8,6 +9,8 @@ import com.siriuserp.accountreceivable.dm.BillingItem;
 import com.siriuserp.accountreceivable.dm.BillingReferenceItem;
 import com.siriuserp.accountreceivable.dm.BillingReferenceType;
 import com.siriuserp.accountreceivable.dm.BillingType;
+import com.siriuserp.sales.dm.DeliveryOrderRealization;
+import com.siriuserp.sales.dm.DeliveryOrderRealizationItem;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.InjectParty;
@@ -18,23 +21,30 @@ import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.GridViewQuery;
 import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.Item;
+import com.siriuserp.sdk.dm.Model;
 import com.siriuserp.sdk.dm.Money;
+import com.siriuserp.sdk.dm.PartyBankAccount;
 import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.dm.Tax;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.DateHelper;
+import com.siriuserp.sdk.utility.EnglishNumber;
 import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
 import javolution.util.FastMap;
+import org.apache.commons.lang.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.RoundingMode;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.Set;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
@@ -133,11 +143,37 @@ public class BillingManualService extends Service {
         AccountingForm form = FormHelper.bind(AccountingForm.class, billing);
         BillingAdapter adapter = new BillingAdapter(form.getBilling());
 
+        // Find DO Code for Print Out
+        for (BillingItem billingItem: billing.getItems()){
+            if (billingItem.getBillingReferenceItem().getReferenceId() != null) {
+                DeliveryOrderRealization dor = genericDao.load(DeliveryOrderRealization.class, billingItem.getBillingReferenceItem().getReferenceId());
+                for (DeliveryOrderRealizationItem dorItem: dor.getItems()){
+                    if (dorItem.getDeliveryOrderItem().getDeliveryOrder().getCode() != null
+                            && !dorItem.getDeliveryOrderItem().getDeliveryOrder().getCode().isEmpty()) {
+                        map.put("doCode", dorItem.getDeliveryOrderItem().getDeliveryOrder().getCode());
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Get Active Organization BankAccount for Print Out
+        Set<PartyBankAccount> partyBankAccounts = billing.getOrganization().getPartyBankAccounts();
+        BankAccount activeBankAccount = partyBankAccounts.stream()
+                .filter(PartyBankAccount::isEnabled) // Filter hanya yang enabled
+                .map(PartyBankAccount::getBankAccount) // Ambil BankAccount dari PartyBankAccount
+                .filter(bankAccount -> bankAccount != null) // Pastikan BankAccount tidak null
+                .max(Comparator.comparing(Model::getCreatedDate)) // Ambil BankAccount dengan createdDate terbaru
+                .orElse(null);
+
+        String saidId = EnglishNumber.convertIdComma(adapter.getTotalBillingAmount().setScale(2, RoundingMode.HALF_UP));
+
+        map.put("bankAccount", activeBankAccount);
         map.put("billing_form", form);
         map.put("billing_edit", adapter);
         map.put("defaultCurrency", currencyDao.loadDefaultCurrency());
+        map.put("saidId", WordUtils.capitalizeFully(saidId));
 
-        System.out.println(form.getBilling().getBillingType().getUrl());
         return map;
     }
 
