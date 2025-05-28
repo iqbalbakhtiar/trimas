@@ -48,7 +48,9 @@
 										<tr>
 											<td width="10%"><strong>No.</strong></td>
 											<td width="1%"><strong>:</strong></td>
-											<td width="30%"><!-- CODE TBD --></td>
+											<td width="30%">
+												<strong><c:out value="${billing_form.billing.code}"/></strong>
+											</td>
 										</tr>
 										<tr>
 											<td width="10%"><strong>Sudah Terima dari</strong></td>
