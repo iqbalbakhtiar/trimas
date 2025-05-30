@@ -1,6 +1,7 @@
 package com.siriuserp.inventory.adapter;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 import com.siriuserp.sdk.dm.Grid;
@@ -143,6 +144,14 @@ public class InventoryLedgerAdapter
 		this.productCode = productCode;
 		this.productName = productName;
 	}
+	
+	//For OnHandQuantityByDateReportQuery
+	public InventoryLedgerAdapter(BigDecimal quantity, String productName, String containerName, Date date) {
+		this.quantity = quantity;
+		this.productName = productName;
+		this.containerName = containerName;
+		this.date = date;
+	}
 
 	public BigDecimal getBalance()
 	{
@@ -153,5 +162,9 @@ public class InventoryLedgerAdapter
 	{
 		return getQuantity().add(getIn()).subtract(getOut());
 	}
-
+	
+	public BigDecimal getBale()
+	{
+		return getQuantity().divide(BigDecimal.valueOf(181.44), 2, RoundingMode.HALF_UP);
+	}
 }
