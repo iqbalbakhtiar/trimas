@@ -39,6 +39,10 @@
  	<c:set var='tDpp' value='0'/>
  	<c:set var='tTax' value='0'/>
  	<c:set var='tTotal' value='0'/>
+ 	<c:set var='tDppCoreTax' value='0'/>
+ 	<c:set var='tDppOther' value='0'/>
+ 	<c:set var='tTax12' value='0'/>
+ 	<c:set var='tTotalCoreTax' value='0'/>
 	<c:forEach items='${reports}' var='repo' varStatus="status">
 	<tr>
 		<c:set var="bale" value="${repo.deliveryOrderItem.quantity / 181.44}"/>
@@ -46,9 +50,17 @@
 		<c:set var="dpp" value="${repo.deliveryOrderItem.quantity * repo.deliveryOrderItem.money.amount}"/>
 		<c:set var="tax" value="${dpp * (repo.deliveryOrderItem.deliveryOrder.tax.taxRate/100)}"/>
 		<c:set var="total" value="${dpp+tax}"/>
-		<c:set var="tax12" value="${dpp * 0.11}"/>
-		<c:set var="dppOther" value="${dpp - tax12}"/>
-		<c:set var="totalCoreTax" value="${dppOther+tax12}"/>
+		<c:set var="dppCoreTax" value="0"/>
+		<c:set var="dppOther" value="0"/>
+		<c:set var="tax12" value="0"/>
+		<c:set var="totalCoreTax" value="0"/>
+			
+		<c:if test="${tax gt 0}">
+			<c:set var="dppCoreTax" value="${dpp+tax}"/>
+			<c:set var="dppOther" value="${dpp * 11 / 12}"/>
+			<c:set var="tax12" value="${dppOther * 12 / 100}"/>
+			<c:set var="totalCoreTax" value="${dppOther+tax12}"/>
+		</c:if>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;">${status.index+1}</td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"></td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatDate value='${repo.deliveryOrderItem.deliveryOrder.date}' pattern='dd MMM yyyy'/></td>
@@ -73,7 +85,7 @@
   		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${dpp}' pattern=',##0.00'/></td>
   		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${tax}' pattern=',##0.00'/></td>
   		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${total}' pattern=',##0.00'/></td>
-  		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${dpp}' pattern=',##0.00'/></td>
+  		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${dppCoreTax}' pattern=',##0.00'/></td>
   		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${dppOther}' pattern=',##0.00'/></td>
   		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${tax12}' pattern=',##0.00'/></td>
   		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;border-right:solid 1px black;"><fmt:formatNumber value='${totalCoreTax}' pattern=',##0.00'/></td>

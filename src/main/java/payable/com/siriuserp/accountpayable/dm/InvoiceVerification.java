@@ -96,12 +96,7 @@ public class InvoiceVerification extends Payable
 	@Override
 	public String getUri()
 	{
-		if (this.getInvoiceType() == InvoiceVerificationType.STANDARD)
-			return "invoiceverificationpreedit.htm";
-		else if (this.getInvoiceType() == InvoiceVerificationType.MANUAL) {
-			return "manualinvoiceverificationpreedit.htm";
-		}
-		return "";
+		return getInvoiceType().getUri();
 	}
 
 	@Override

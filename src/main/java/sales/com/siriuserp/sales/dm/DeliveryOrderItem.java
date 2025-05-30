@@ -171,7 +171,7 @@ public class DeliveryOrderItem extends Model
 	public String getReferenceLot()
 	{
 		HashSet<String> references = new HashSet<String>();
-		references.addAll(getSerials().stream().map(item -> item.getLot() != null ? "LOT " + item.getLot().getCode() : "").collect(Collectors.toSet()));
+		references.addAll(getSerials().stream().map(item -> item.getLot() != null && item.getLot().getCode() != null ? "LOT " + item.getLot().getCode() : "").collect(Collectors.toSet()));
 
 		return String.join(" ", references);
 	}

@@ -8,12 +8,13 @@ import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.siriuserp.inventory.dm.GoodsIssue;
-import com.siriuserp.inventory.dm.Issueable;
+import com.siriuserp.inventory.dm.GoodsReceipt;
+import com.siriuserp.inventory.dm.Receiptable;
 import com.siriuserp.inventory.dm.WarehouseReferenceItem;
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.inventory.form.InventoryForm;
-import com.siriuserp.inventory.service.GoodsIssueService;
+import com.siriuserp.inventory.service.GoodsReceiptService;
+import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.dm.AbstractSiblingRole;
 import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Item;
@@ -29,60 +30,62 @@ import javolution.util.FastMap;
  */
 
 @Component
-public class DelInventorySiblingRole extends AbstractSiblingRole
+public class AddInventorySiblingRole extends AbstractSiblingRole
 {
 	@Autowired
-	private GoodsIssueService goodsIssueService;
+	private GenericDao genericDao;
+
+	@Autowired
+	private GoodsReceiptService goodsReceiptService;
 
 	@Override
 	public void execute() throws Exception
 	{
 		Object object = (Object) getSiblingable();
 
-		Issueable warehouse = (Issueable) object;
+		Receiptable warehouse = (Receiptable) object;
 
-		FastMap<Long, InventoryForm> issues = new FastMap<Long, InventoryForm>();
+		FastMap<Long, InventoryForm> receipts = new FastMap<Long, InventoryForm>();
 
-		for (WarehouseReferenceItem refItem : warehouse.getIssueables())
+		for (WarehouseReferenceItem refItem : warehouse.getReceiptables())
 		{
 			WarehouseReferenceItem transItem = genericDao.load(WarehouseReferenceItem.class, refItem.getId());
-
 			if (transItem.getTransactionItem() != null)
 			{
-				InventoryForm form = issues.get(transItem.getFacilitySource().getId());
+				InventoryForm form = receipts.get(transItem.getFacilityDestination().getId());
 
 				if (form == null)
 				{
 					form = new InventoryForm();
 					form.setDate(warehouse.getDate());
-					form.setNote("AUTO GOODS ISSUE FROM " + warehouse.getSelf().toUpperCase() + " ");
+					form.setNote("AUTO GOODS RECEIPT FROM " + warehouse.getSelf().toUpperCase() + " ");
 					form.setOrganization(warehouse.getOrganization());
-					form.setFacility(transItem.getFacilitySource());
+					form.setFacility(transItem.getFacilityDestination());
 
-					issues.put(transItem.getFacilitySource().getId(), form);
+					receipts.put(transItem.getFacilityDestination().getId(), form);
 				}
 
 				WarehouseTransactionItem transactionItem = genericDao.load(WarehouseTransactionItem.class, transItem.getTransactionItem().getId());
-
-				if (transactionItem.getUnissued().compareTo(BigDecimal.ZERO) > 0)
+				if (transactionItem.getUnreceipted().compareTo(BigDecimal.ZERO) > 0)
 				{
 					Item item = new Item();
-					item.setIssued(transactionItem.getUnissued());
+					item.setReceipted(transactionItem.getUnreceipted());
 					item.setWarehouseTransactionItem(transactionItem);
-					item.setGrid(transItem.getSourceGrid());
+					item.setGrid(transItem.getDestinationGrid());
 
-					if (transItem.getSourceContainer() != null)
-					{
-						Container container = genericDao.load(Container.class, transItem.getSourceContainer().getId());
+					Container container = null;
+					if (transItem.getDestinationContainer() != null)
+						container = genericDao.load(Container.class, transItem.getDestinationContainer().getId());
+
+					if (container != null)
 						item.setContainer(container);
-					}
 
 					form.getItems().add(item);
 				}
 			}
 		}
 
-		for (InventoryForm form : issues.values())
-			goodsIssueService.add(FormHelper.create(GoodsIssue.class, form));
+		for (InventoryForm form : receipts.values())
+			goodsReceiptService.add(FormHelper.create(GoodsReceipt.class, form));
 	}
 }

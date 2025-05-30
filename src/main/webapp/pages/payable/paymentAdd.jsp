@@ -175,6 +175,11 @@
             $index++;
             updateDisplay();
         });
+        
+        $('#supplier').change(function() {
+        	$("#lineItem tr").remove();
+        	getVerifications();
+        });
 
         $('.checkall').click(function () {
             $('.check').prop("checked", this.checked);
@@ -398,12 +403,6 @@
             $(element).closest('tr').remove();
         }
     }
-    
-    $('#supplier').change(function(e)
-    {
-    	getVerifications();
-       
-    });
     
     function getVerifications()
     {
