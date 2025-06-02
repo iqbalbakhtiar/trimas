@@ -28,8 +28,15 @@ public class DeliveryPlanningViewQuery extends AbstractGridViewQuery
 
 		if (type.equals(ExecutorType.COUNT))
 			builder.append("SELECT COUNT(planning) ");
+		
+		if (type.equals(ExecutorType.HQL))
+			builder.append("SELECT planning ");
 
 		builder.append("FROM DeliveryPlanning planning ");
+		
+		if (!criteria.getInProgress().equals("ALL"))
+			builder.append("JOIN planning.salesOrder.items item ");
+			
 		builder.append("WHERE planning.salesOrder IS NOT NULL ");
 
 		if (SiriusValidator.validateParam(criteria.getCode()))
@@ -51,7 +58,17 @@ public class DeliveryPlanningViewQuery extends AbstractGridViewQuery
 			builder.append("AND planning.date <= :dateTo ");
 
 		if (type.equals(ExecutorType.HQL))
+		{
+			builder.append("GROUP BY planning.salesOrder.id ");
+			
+			if (criteria.getInProgress().equals("IN_PROGRESS"))
+				builder.append("HAVING SUM(item.quantity - item.delivered) > 0 "); 
+			
+			if (criteria.getInProgress().equals("DONE"))
+				builder.append("HAVING SUM(item.quantity - item.delivered) <= 0 ");
+			
 			builder.append("ORDER BY planning.id DESC");
+		}
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);

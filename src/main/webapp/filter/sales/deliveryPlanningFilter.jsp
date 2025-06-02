@@ -1,4 +1,4 @@
-<div dojoType="FloatingPane" id="filter" title='<spring:message code="sirius.paging.filter"/>' constrainToContainer="true" style="width: 30%; height: 260px; left: 350px; display:none;" toggle="explode">
+<div dojoType="FloatingPane" id="filter" title='<spring:message code="sirius.paging.filter"/>' constrainToContainer="true" style="width: 30%; height: 300px; left: 350px; display:none;" toggle="explode">
 	<form id="filterForm" name="filterForm" method="post">
 		<table width="100%" cellspacing="2" cellpadding="1" align="center">
 		<tr>
@@ -25,6 +25,17 @@
             <td align="right"><spring:message code="sirius.dateto"/></td>
             <td>:</td>
             <td><input id="dateTo" name="dateTo" value="<fmt:formatDate value='${filterCriteria.dateTo}' pattern='dd-MM-yyyy'/>" class="datepicker"/></td>
+		</tr>
+		<tr>
+            <td align="right"><spring:message code="sirius.status"/></td>
+            <td>:</td>
+            <td>
+            	<select id="inProgress" name="inProgress">
+            		<option value="ALL" label="<spring:message code="sirius.all"/>" ${filterCriteria.inProgress eq 'ALL' ? 'selected' : ''}/>
+            		<option value="IN_PROGRESS" label="<spring:message code="deliveryplanning.inprogress"/>" ${filterCriteria.inProgress eq 'IN_PROGRESS' ? 'selected' : ''}/>
+            		<option value="DONE" label="<spring:message code="deliveryplanning.done"/>" ${filterCriteria.inProgress eq 'DONE' ? 'selected' : ''}/>
+            	</select>
+            </td>
 		</tr>
 		<tr><td colspan="3">&nbsp;</td></tr>
 		<tr>

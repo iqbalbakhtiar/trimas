@@ -27,6 +27,7 @@ public class DeliveryPlanningFilterCriteria extends AbstractFilterCriteria
 	private String code;
 	private String customerName;
 	private String salesOrderCode;
+	private String inProgress = "IN_PROGRESS";
 
 	private Date dateFrom;
 	private Date dateTo;
