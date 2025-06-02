@@ -1,6 +1,7 @@
 package com.siriuserp.accountpayable.query;
 
 import com.siriuserp.accountpayable.criteria.InvoiceVerificationFilterCriteria;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationType;
 import com.siriuserp.accountreceivable.dm.FinancialStatus;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
@@ -22,8 +23,11 @@ public class InvoiceVerificationGridViewQuery extends AbstractGridViewQuery
 			builder.append("SELECT DISTINCT item.invoiceVerification");
 
 		builder.append(" FROM InvoiceVerificationItem item JOIN item.invoiceVerification ver");
-		builder.append(" WHERE ver.invoiceType = 'STANDARD' ");
+		builder.append(" WHERE ver.id IS NOT NULL ");
 
+		if (SiriusValidator.validateParam(criteria.getInvoiceType()))
+			builder.append(" AND ver.invoiceType =:invoiceType");
+		
 		if (SiriusValidator.validateParam(criteria.getCode()))
 			builder.append(" AND ver.code like '%" + criteria.getCode() + "%'");
 
@@ -45,15 +49,15 @@ public class InvoiceVerificationGridViewQuery extends AbstractGridViewQuery
 		if (SiriusValidator.validateParam(criteria.getCurrencyName()))
 			builder.append(" AND ver.currency.symbol like '%" + criteria.getCurrencyName() + "%'");
 
-		if (criteria.getDateFrom() != null)
+		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 		{
-			if (criteria.getDateTo() != null)
+			if (SiriusValidator.validateDate(criteria.getDateTo()))
 				builder.append(" AND ver.date BETWEEN :startDate AND :endDate");
 			else
 				builder.append(" AND ver.date >= :startDate");
 		}
 
-		if (criteria.getDateTo() != null)
+		if (SiriusValidator.validateDate(criteria.getDateTo()))
 			builder.append(" AND ver.date <= :endDate");
 
 		if (SiriusValidator.validateParam(criteria.getReferenceCode()))
@@ -72,23 +76,27 @@ public class InvoiceVerificationGridViewQuery extends AbstractGridViewQuery
 		Query query = getSession().createQuery(builder.toString());
 		query.setCacheable(true);
 
-		if (criteria.getDateFrom() != null)
+		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 			query.setParameter("startDate", criteria.getDateFrom());
 
-		if (criteria.getDateTo() != null)
+		if (SiriusValidator.validateDate(criteria.getDateTo()))
 			query.setParameter("endDate", criteria.getDateTo());
 
 		if (criteria.getVerification() != null)
 			query.setParameter("verificated", criteria.getVerification());
 
-		if (criteria.getGoodsType() != null)
-			query.setParameter("goodsType", criteria.getGoodsType());
+//		Unused
+//		if (criteria.getGoodsType() != null)
+//			query.setParameter("goodsType", criteria.getGoodsType());
 
-		if (criteria.getSupplier() != null)
+		if (SiriusValidator.validateLongParam(criteria.getSupplier()))
 			query.setParameter("supplier", criteria.getSupplier());
 
-		if (criteria.getFinancialStatus() != null)
+		if (SiriusValidator.validateParam(criteria.getFinancialStatus()))
 			query.setParameter("financialStatus", FinancialStatus.valueOf(criteria.getFinancialStatus()));
+		
+		if (SiriusValidator.validateParam(criteria.getInvoiceType()))
+			query.setParameter("invoiceType", InvoiceVerificationType.valueOf(criteria.getInvoiceType()));
 
 		return query;
 	}
