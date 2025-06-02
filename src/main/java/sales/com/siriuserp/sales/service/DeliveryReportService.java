@@ -13,10 +13,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.siriuserp.sales.criteria.SalesReportFilterCriteria;
+import com.siriuserp.sales.query.DeliveryPlanningReportViewQuery;
 import com.siriuserp.sales.query.DeliveryReportViewQuery;
 import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.dao.GenericDao;
+import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.utility.SiriusValidator;
 
 import javolution.util.FastMap;
 
@@ -53,6 +56,23 @@ public class DeliveryReportService
 		map.put("dateTo", criteria.getDateTo());
 
 		DeliveryReportViewQuery query = new DeliveryReportViewQuery();
+		query.setFilterCriteria(criteria);
+
+		map.put("reports", dao.generateReport(query));
+
+		return map;
+	}
+	
+	public Map<String, Object> viewPlanning(SalesReportFilterCriteria criteria)
+	{
+		Map<String, Object> map = new FastMap<String, Object>();
+		
+		map.put("criteria", criteria);
+		map.put("organization",  dao.load(Party.class, criteria.getOrganization()));
+		map.put("customer", SiriusValidator.validateLongParam(criteria.getCustomer()) ? dao.load(Party.class, criteria.getCustomer()) : null);
+		map.put("facility", SiriusValidator.validateLongParam(criteria.getFacility()) ? dao.load(Facility.class, criteria.getFacility()) : null);
+
+		DeliveryPlanningReportViewQuery query = new DeliveryPlanningReportViewQuery();
 		query.setFilterCriteria(criteria);
 
 		map.put("reports", dao.generateReport(query));

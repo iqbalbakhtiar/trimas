@@ -13,7 +13,7 @@
 <div class="main-box">
     <table cellpadding="0" cellspacing="0" width="100%">
 	    <tr>
-	        <td colspan="3"><strong>MUTATION REPORT</strong></td>
+	        <td colspan="3"><strong>ON HAND QUANTITY BY DATE REPORT</strong></td>
 	    </tr>
 	    <tr><td colspan="3">&nbsp;</td></tr>
 	    <tr>
@@ -45,6 +45,9 @@
 	<c:set var="totalKg" value="0"/>
 	<c:set var="totalBale" value="0"/>
 	<table width="100%" cellpadding="5" cellspacing="0" class="report-table" id="onhand">
+		<tr class="hidden-row">
+			<td><strong>ON HAND QUANTITY BY DATE REPORT</strong></td>
+		</tr>
 		<tr class="hidden-row">
 			<td><spring:message code="sirius.organization"/></td>
 			<td>:</td>

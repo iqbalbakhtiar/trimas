@@ -6,6 +6,7 @@
 package com.siriuserp.sales.dm;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -85,6 +86,11 @@ public class DeliveryPlanningSequenceItem extends Model implements DeliveryOrder
 	@Fetch(FetchMode.SELECT)
 	private DeliveryOrderReferenceItem deliveryOrderReferenceItem;
 
+	public BigDecimal getBale()
+	{
+		return getQuantity().divide(BigDecimal.valueOf(181.44), 2, RoundingMode.HALF_UP);
+	}
+	
 	@Override
 	public DeliveryOrderReferenceType getReferenceType()
 	{

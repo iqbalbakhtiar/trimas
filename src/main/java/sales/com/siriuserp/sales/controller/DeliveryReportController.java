@@ -53,4 +53,16 @@ public class DeliveryReportController extends ControllerBase
 	{
 		return new ModelAndView("/report/sales/deliveryTaxReportList", service.view(criteriaFactory.createReport(request, SalesReportFilterCriteria.class)));
 	}
+	
+	@RequestMapping("/deliveryplanningreportpre.htm")
+	public ModelAndView prePlanning()
+	{
+		return new ModelAndView("/report/sales/deliveryPlanningReportAdd", service.pre());
+	}
+
+	@RequestMapping("/deliveryplanningreportview.htm")
+	public ModelAndView viewPlanning(HttpServletRequest request) throws Exception
+	{
+		return new ModelAndView("/report/sales/deliveryPlanningReportList", service.viewPlanning(criteriaFactory.createReport(request, SalesReportFilterCriteria.class)));
+	}
 }
