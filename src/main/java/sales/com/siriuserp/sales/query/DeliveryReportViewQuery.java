@@ -42,6 +42,12 @@ public class DeliveryReportViewQuery extends AbstractStandardReportQuery
 		if (SiriusValidator.validateParam(criteria.getSalesInternalType()))
 			builder.append("AND salesItem.salesOrder.salesInternalType =:salesInternalType ");
 
+		if (criteria.getTaxReport() != null)
+		{
+			if (criteria.getTaxReport())
+				builder.append("AND salesItem.salesOrder.tax.taxId != 'Ex' ");
+		}
+
 		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 		{
 			if (SiriusValidator.validateDate(criteria.getDateTo()))

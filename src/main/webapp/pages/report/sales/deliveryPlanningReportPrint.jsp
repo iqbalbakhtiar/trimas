@@ -4,7 +4,7 @@
     display: none;
 }
 </style>
-<table cellpadding="0" cellspacing="0" width="100%">
+<table cellpadding="3" cellspacing="0" width="100%">
     <tr>
         <td colspan="3"><strong>DELIVERY PLANNING REPORT</strong></td>
     </tr>
@@ -88,9 +88,10 @@
         <td><fmt:formatDate value="${criteria.dateFrom}" pattern="dd MMMM yyyy"/> - <fmt:formatDate value="${criteria.dateTo}" pattern="dd MMMM yyyy"/></td>
     </tr>
     <tr class="hidden-row"></tr>
-	<tr>
-		<th width="10%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.date"/></th>
-		<th width="15%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="deliveryplanning"/></th>
+	<tr style="height: 30px;text-transform: uppercase;">
+		<th width="8%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.date"/></th>
+		<th width="10%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="deliveryplanning"/></th>
+		<th width="15%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="customer"/></th>
 		<th width="15%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="product"/></th>
 		<th width="20%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="product.quantity"/> (Kg)</th>
 		<th width="17%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="product.quantity"/> (Bale)</th>
@@ -101,6 +102,7 @@
 		<tr>
 			<td><fmt:formatDate value="${sequence.deliveryPlanningSequence.date}" pattern="dd-MM-yyyy"/></td>
 			<td><c:out value="${sequence.deliveryPlanningSequence.deliveryPlanning.code}"/></td>
+			<td><c:out value="${sequence.deliveryPlanningSequence.deliveryPlanning.salesOrder.customer.fullName}"/></td>
 			<td><c:out value="${sequence.product.name}"/></td>
 			<td align="right"><fmt:formatNumber value="${sequence.quantity}" pattern="#,##0.00"/></td>
 			<td align="right"><fmt:formatNumber value="${sequence.bale}" pattern="#,##0.00"/></td>
@@ -108,7 +110,8 @@
 		<c:set var="totalKg" value="${totalKg + sequence.quantity}"/>
 		<c:set var="totalBale" value="${totalBale + sequence.bale}"/>
 	</c:forEach>
-	<tr>
+	<tr style="height: 30px;font-weight: bold;">
+		<td align="left" style="border-bottom:1px solid black;border-top:1px solid black;"></td>
 		<td align="left" style="border-bottom:1px solid black;border-top:1px solid black;"></td>
 		<td align="left" style="border-bottom:1px solid black;border-top:1px solid black;"></td>
 		<td align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><strong>Total</strong></td>

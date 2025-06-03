@@ -51,9 +51,12 @@ public class DeliveryReportController extends ControllerBase
 	@RequestMapping("/deliverytaxreportview.htm")
 	public ModelAndView viewTax(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/report/sales/deliveryTaxReportList", service.view(criteriaFactory.createReport(request, SalesReportFilterCriteria.class)));
+		SalesReportFilterCriteria criteria = (SalesReportFilterCriteria) criteriaFactory.createReport(request, SalesReportFilterCriteria.class);
+		criteria.setTaxReport(true);
+
+		return new ModelAndView("/report/sales/deliveryTaxReportList", service.view(criteria));
 	}
-	
+
 	@RequestMapping("/deliveryplanningreportpre.htm")
 	public ModelAndView prePlanning()
 	{

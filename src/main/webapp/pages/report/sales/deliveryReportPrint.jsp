@@ -6,7 +6,7 @@
  	</tr>
 	</thead>
 	<thead>
-	<tr style="height: 30px">
+	<tr style="height: 30px;text-transform: uppercase;">
 		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.date"/></th>
 		<th width="10%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="customer"/></th>
 		<th width="8%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryorder"/></th>
@@ -35,7 +35,7 @@
 	<c:forEach items='${reports}' var='repo' varStatus="status">
 	<tr>
 		<c:set var="bale" value="${repo.deliveryOrderItem.quantity / 181.44}"/>
-		<c:set var="priceBale" value="${repo.deliveryOrderItem.money.amount / 181.44}"/>
+		<c:set var="priceBale" value="${repo.deliveryOrderItem.money.amount * 181.44}"/>
 		<c:set var="dpp" value="${repo.deliveryOrderItem.quantity * repo.deliveryOrderItem.money.amount}"/>
 		<c:set var="tax" value="${dpp * (repo.deliveryOrderItem.deliveryOrder.tax.taxRate/100)}"/>
 		<c:set var="total" value="${dpp+tax}"/>

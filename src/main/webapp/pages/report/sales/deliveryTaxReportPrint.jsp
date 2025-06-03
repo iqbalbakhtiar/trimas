@@ -46,21 +46,15 @@
 	<c:forEach items='${reports}' var='repo' varStatus="status">
 	<tr>
 		<c:set var="bale" value="${repo.deliveryOrderItem.quantity / 181.44}"/>
-		<c:set var="priceBale" value="${repo.deliveryOrderItem.money.amount / 181.44}"/>
+		<c:set var="priceBale" value="${repo.deliveryOrderItem.money.amount * 181.44}"/>
 		<c:set var="dpp" value="${repo.deliveryOrderItem.quantity * repo.deliveryOrderItem.money.amount}"/>
 		<c:set var="tax" value="${dpp * (repo.deliveryOrderItem.deliveryOrder.tax.taxRate/100)}"/>
 		<c:set var="total" value="${dpp+tax}"/>
-		<c:set var="dppCoreTax" value="0"/>
-		<c:set var="dppOther" value="0"/>
-		<c:set var="tax12" value="0"/>
-		<c:set var="totalCoreTax" value="0"/>
-			
-		<c:if test="${tax gt 0}">
-			<c:set var="dppCoreTax" value="${repo.deliveryOrderItem.quantity * repo.deliveryOrderItem.money.amount}"/>
-			<c:set var="dppOther" value="${dpp * 11 / 12}"/>
-			<c:set var="tax12" value="${dppOther * 12 / 100}"/>
-			<c:set var="totalCoreTax" value="${dppOther+tax12}"/>
-		</c:if>
+		<c:set var="dppCoreTax" value="${repo.deliveryOrderItem.quantity * repo.deliveryOrderItem.money.amount}"/>
+		<c:set var="dppOther" value="${dpp * 11 / 12}"/>
+		<c:set var="tax12" value="${dppOther * 12 / 100}"/>
+		<c:set var="totalCoreTax" value="${dppOther+tax12}"/>
+		
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;">${status.index+1}</td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"></td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatDate value='${repo.deliveryOrderItem.deliveryOrder.date}' pattern='dd MMM yyyy'/></td>

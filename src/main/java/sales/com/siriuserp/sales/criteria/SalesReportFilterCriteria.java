@@ -32,6 +32,8 @@ public class SalesReportFilterCriteria extends AbstractReportFilterCriteria
 	private String salesInternalType;
 	private String status;
 
+	private Boolean taxReport;
+
 	private Date dateFrom;
 	private Date dateTo;
 }
