@@ -39,6 +39,15 @@ public class SalesOnProgressReportViewQuery extends AbstractStandardReportQuery
 		if (SiriusValidator.validateParam(criteria.getSalesInternalType()))
 			builder.append("AND salesItem.salesOrder.salesInternalType =:salesInternalType ");
 
+		if (SiriusValidator.validateParam(criteria.getStatus()))
+		{
+			if (criteria.getStatus().equals("IN_PROGRESS"))
+				builder.append("AND (salesItem.quantity - salesItem.delivered) > 0");
+			
+			if (criteria.getStatus().equals("DONE"))
+				builder.append("AND (salesItem.quantity - salesItem.delivered) <= 0");
+		}
+		
 		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 		{
 			if (SiriusValidator.validateDate(criteria.getDateTo()))

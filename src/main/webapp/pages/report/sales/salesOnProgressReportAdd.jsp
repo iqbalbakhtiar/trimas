@@ -69,10 +69,20 @@
 								<tr>
 									<td align="right"><spring:message code="salesorder.type"/> :</td>
 									<td>
-										<select id="salesInternalType" name="salesInternalType">
+										<select id="salesInternalType" name="salesInternalType" class="combobox-min">
 											<option value="" selected="true"><spring:message code="sirius.all"/></option>
 											<option value="YARN"><spring:message code="salesorder.type.yarn"/></option>
 											<option value="WASTE"><spring:message code="salesorder.type.waste"/></option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td align="right"><spring:message code="sirius.status"/> :</td>
+									<td>
+										<select id="status" name="status" class="combobox-min">
+											<option value="" label="<spring:message code="sirius.all"/>" selected/>
+						            		<option value="IN_PROGRESS" label="<spring:message code="deliveryplanning.inprogress"/>"/>
+						            		<option value="DONE" label="<spring:message code="deliveryplanning.done"/>"/>
 										</select>
 									</td>
 								</tr>
