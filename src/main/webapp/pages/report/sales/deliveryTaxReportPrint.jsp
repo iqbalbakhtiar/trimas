@@ -56,7 +56,7 @@
 		<c:set var="totalCoreTax" value="0"/>
 			
 		<c:if test="${tax gt 0}">
-			<c:set var="dppCoreTax" value="${dpp+tax}"/>
+			<c:set var="dppCoreTax" value="${repo.deliveryOrderItem.quantity * repo.deliveryOrderItem.money.amount}"/>
 			<c:set var="dppOther" value="${dpp * 11 / 12}"/>
 			<c:set var="tax12" value="${dppOther * 12 / 100}"/>
 			<c:set var="totalCoreTax" value="${dppOther+tax12}"/>
