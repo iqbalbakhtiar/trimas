@@ -44,7 +44,7 @@ public class LedgerSummaryReportQuery extends AbstractStandardReportQuery {
                 .append("AND application.billing.organization.id =:org AND application.billing.customer.id = bill.customer.id), ");
 
         builder.append("(SELECT SUM(memo.amount*memo.billing.money.rate) FROM CreditMemo memo ")
-                .append("WHERE memo.organization.id =:org AND memo.date < :dateFrom AND memo.customer.id = bill.customer.id), ");
+                .append("WHERE memo.organization.id =:org AND memo.date < :dateFrom AND memo.party.id = bill.customer.id), ");
 
         builder.append("SUM(CASE WHEN bill.date BETWEEN :dateFrom AND :dateTo THEN (bill.money.amount*bill.money.rate) ELSE 0 END), ");
         builder.append("(SELECT SUM((application.paidAmount*application.receipt.rate)-(application.writeOff*application.receipt.rate)) ")
@@ -52,7 +52,7 @@ public class LedgerSummaryReportQuery extends AbstractStandardReportQuery {
 
         builder.append("AND application.billing.organization.id =:org AND application.billing.customer.id = bill.customer.id), ");
         builder.append("(SELECT SUM(memo.amount*memo.billing.money.rate) ")
-                .append("FROM CreditMemo memo WHERE memo.organization.id =:org AND memo.date BETWEEN :dateFrom AND :dateTo AND memo.customer.id = bill.customer.id)) ");
+                .append("FROM CreditMemo memo WHERE memo.organization.id =:org AND memo.date BETWEEN :dateFrom AND :dateTo AND memo.party.id = bill.customer.id)) ");
 
         builder.append("FROM Billing bill WHERE bill.organization.id = :org ");
         builder.append("AND bill.date <=:dateTo ");
