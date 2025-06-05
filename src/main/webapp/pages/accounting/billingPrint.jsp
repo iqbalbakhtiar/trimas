@@ -146,6 +146,7 @@
 					<td class="border-top border-left border-bottom" align="center" width="5%">No.<br/>Urut</td>
 					<td class="border-top border-left border-bottom" colspan="2" align="center" width="46%">Nama Barang Kena Pajak/Jasa Kena Pajak</td>
 					<td class="border-top border-left border-bottom" align="center" width="15%">Kwantum</td>
+					<td class="border-top border-left border-bottom" align="center" width="5%">Satuan</td>
 					<td class="border-top border-left border-bottom" align="center" width="15%">Harga Satuan</td>
 					<td class="border-top border-left border-right border-bottom" align="center" width="15%">Jumlah<br/>(<c:out value="${billing_form.money.currency.symbol}"/>.)</td>
 					<td colspan="2">&nbsp;</td>
@@ -154,8 +155,9 @@
 					<tr class="data-row">
 						<td colspan="2">&nbsp;</td>
 						<td class="border-left" align="center"><c:out value="${status.index+1}"/></td>
-						<td class="border-left" colspan="2">${item.billingReferenceItem.product.name}&nbsp;${item.billingReferenceItem.product.unitOfMeasure.measureId}</td>
+						<td class="border-left" colspan="2">${item.billingReferenceItem.product.name}</td>
 						<td class="border-left" align="right"><fmt:formatNumber value='${item.billingReferenceItem.quantity}' pattern=',##0.00'/></td>
+						<td class="border-left" align="center">${item.billingReferenceItem.product.unitOfMeasure.measureId}</td>
 						<td class="border-left" align="right"><fmt:formatNumber value='${item.billingReferenceItem.money.amount}' pattern=',##0.00'/></td>
 						<td class="border-left border-right" align="right"><fmt:formatNumber value='${item.billingReferenceItem.subtotal}' pattern=',##0.00'/></td>
 						<td colspan="2">&nbsp;</td>
@@ -171,16 +173,17 @@
 					</td>
 					<td class="border-left"></td>
 					<td class="border-left"></td>
+					<td class="border-left"></td>
 					<td class="border-left border-right"></td>
 					<td colspan="2">&nbsp;</td>
 				</tr>
 				<tr>
 					<td colspan="2">&nbsp;</td>
-					<td class="border-left border-top" colspan="4">
+					<td class="border-left border-top" colspan="5">
 						<span style="display:inline-block; width:2em"></span>
 						Harga Jual<s>/Penggantian/Uang Muka/Termin</s> **)
 					</td>
-					<td class="border-top"><c:out value="${billing_form.money.currency.symbol}"/>.</td>
+					<td class="border-top" align="right"><c:out value="${billing_form.money.currency.symbol}"/>.</td>
 					<td class="border-left border-top border-right" align="right">
 						<fmt:formatNumber value='${billing_edit.totalLineAmount}' pattern=',##0.00'/>
 					</td>
@@ -188,7 +191,7 @@
 				</tr>
 				<tr>
 					<td colspan="2">&nbsp;</td>
-					<td class="border-left border-top" colspan="4">
+					<td class="border-left border-top" colspan="5">
 						<span style="display:inline-block; width:2em"></span>
 						Dikurangi Potongan Harga
 					</td>
@@ -200,7 +203,7 @@
 				</tr>
 				<tr>
 					<td colspan="2">&nbsp;</td>
-					<td class="border-left border-top" colspan="4">
+					<td class="border-left border-top" colspan="5">
 						<span style="display:inline-block; width:2em"></span>
 						Dikurangi Uang Muka yang telah diterima
 					</td>
@@ -211,11 +214,11 @@
 				</tr>
 				<tr>
 					<td colspan="2">&nbsp;</td>
-					<td class="border-left border-top" colspan="4">
+					<td class="border-left border-top" colspan="5">
 						<span style="display:inline-block; width:2em"></span>
 						Dasar Pengenaan Pajak
 					</td>
-					<td class="border-top"><c:out value="${billing_form.money.currency.symbol}"/>.</td>
+					<td class="border-top" align="right"><c:out value="${billing_form.money.currency.symbol}"/>.</td>
 					<td class="border-left border-top border-right" align="right">
 						<fmt:formatNumber value='${billing_edit.totalAfterDiscount}' pattern=',##0.00'/>
 					</td>
@@ -223,11 +226,11 @@
 				</tr>
 				<tr>
 					<td colspan="2">&nbsp;</td>
-					<td class="border-left border-top border-bottom" colspan="4">
+					<td class="border-left border-top border-bottom" colspan="5">
 						<span style="display:inline-block; width:2em"></span>
 						PPN = <fmt:formatNumber value='${billing_form.tax.taxRate}' pattern=',##0'/>% x Dasar Pengenaan Pajak
 					</td>
-					<td class="border-top border-bottom"><c:out value="${billing_form.money.currency.symbol}"/>.</td>
+					<td class="border-top border-bottom" align="right"><c:out value="${billing_form.money.currency.symbol}"/>.</td>
 					<td class="border-left border-top border-right border-bottom" align="right">
 						<fmt:formatNumber value='${billing_edit.taxAmount}' pattern=',##0.00'/>
 					</td>
