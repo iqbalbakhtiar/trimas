@@ -64,10 +64,15 @@
 	</tr>
  	<c:set var='tBale' value='${tBale+repo.bale}'/>
  	<c:set var='tKg' value='${tKg+repo.kg}'/>
- 	<c:set var='tDeliveredBale' value='${tDeliveredBale+repo.deliveredBale}'/>
  	<c:set var='tDeliveredKg' value='${tDeliveredKg+repo.deliveredKg}'/>
- 	<c:set var='tUndeliveredBale' value='${tUndeliveredBale+repo.undeliveredBale}'/>
  	<c:set var='tUndeliveredKg' value='${tUndeliveredKg+repo.undeliveredKg}'/>
+	<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'YARN'}">
+ 		<c:set var='tDeliveredBale' value='${tDeliveredBale+repo.deliveredBale}'/>
+	</c:if>
+	
+	<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'YARN'}">
+ 		<c:set var='tUndeliveredBale' value='${tUndeliveredBale+repo.undeliveredBale}'/>
+	</c:if>
 	</c:forEach>
 	</tbody>
 	<tfoot>
