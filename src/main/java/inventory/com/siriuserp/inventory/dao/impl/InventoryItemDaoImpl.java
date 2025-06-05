@@ -4,6 +4,7 @@
 package com.siriuserp.inventory.dao.impl;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.hibernate.Query;
 import org.springframework.stereotype.Component;
@@ -61,4 +62,17 @@ public class InventoryItemDaoImpl extends DaoHelper<InventoryItem> implements In
 
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<InventoryItem> getAllItem(Long productId, Long containerId) {
+		  
+        Query query = getSession().createQuery("FROM InventoryItem item WHERE item.product.id =:productId AND item.container.id =:containerId ");
+        query.setParameter("productId",productId);
+        query.setParameter("containerId",containerId);
+        query.setCacheable(true);
+        query.setReadOnly(true);
+        
+        return query.list();
+    }
 }

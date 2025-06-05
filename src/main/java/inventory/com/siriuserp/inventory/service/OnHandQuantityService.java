@@ -3,6 +3,7 @@
  */
 package com.siriuserp.inventory.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,5 +86,11 @@ public class OnHandQuantityService
 	public InventoryItem load(Long id)
 	{
 		return genericDao.load(InventoryItem.class, id);
+	}
+	
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public List<InventoryItem> loadList(Long productId, Long containerId)
+	{
+		return inventoryItemDao.getAllItem(productId, containerId);
 	}
 }

@@ -157,7 +157,7 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 
 	public String getRefFrom()
 	{
-		return getFacilitySource().getName();
+		return getReferenceFrom();
 	}
 
 	public void setSourceContainer(Container container)

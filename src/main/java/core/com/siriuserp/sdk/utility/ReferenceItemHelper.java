@@ -41,8 +41,11 @@ public class ReferenceItemHelper {
 		item.setParty(transaction.getParty());
 		item.setDate(transaction.getDate());
 
-		item.getMoney().setCurrency(genericDao.load(Currency.class, transaction.getCurrency().getId()));
-		item.setTax(genericDao.load(Tax.class, transaction.getTax().getId()));
+		if(transaction.getCurrency() != null)
+			item.getMoney().setCurrency(genericDao.load(Currency.class, transaction.getCurrency().getId()));
+		
+		if(transaction.getTax() != null)
+			item.setTax(genericDao.load(Tax.class, transaction.getTax().getId()));
 
 		if(transaction instanceof Issueable && item.getSourceContainer() != null) {
 			Container source = genericDao.load(Container.class, item.getSourceContainer().getId());

@@ -8,6 +8,7 @@ package com.siriuserp.inventory.form;
 import com.siriuserp.accountpayable.dm.InvoiceVerification;
 import com.siriuserp.inventory.dm.GoodsIssue;
 import com.siriuserp.inventory.dm.GoodsReceipt;
+import com.siriuserp.inventory.dm.GoodsReceiptManual;
 import com.siriuserp.inventory.dm.GoodsType;
 import com.siriuserp.inventory.dm.ProductCategory;
 import com.siriuserp.inventory.dm.ProductType;
@@ -21,6 +22,7 @@ import com.siriuserp.sdk.dm.BarcodeGroupType;
 import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Form;
+import com.siriuserp.sdk.dm.Grid;
 import com.siriuserp.sdk.dm.StatusType;
 
 import lombok.Getter;
@@ -45,6 +47,7 @@ public class InventoryForm extends Form
 	private StockAdjustment stockAdjustment;
 	private GoodsIssue goodsIssue;
 	private GoodsReceipt goodsReceipt;
+	private GoodsReceiptManual goodsReceiptManual;
 	//private TransferOrder transferOrder;
 
 	private PurchaseOrder purchaseOrder;
@@ -58,6 +61,7 @@ public class InventoryForm extends Form
 	private Facility source;
 	private Facility destination;
 	private Container container;
+	private Grid grid;
 
 	private ProductType productType;
 	private GoodsType goodsType;

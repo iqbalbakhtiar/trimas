@@ -65,7 +65,7 @@
 						<c:forEach items="${products}" var="product">
 						<tr>
 					  		<td class="tools">
-					  			<a class="item-button-add-row" href="javascript:setclient('${product.id}','${product.code}','${fn:replace(product.name, '\"','*')}','${com.qtyToBase}','${com.onHand}','${product.unitOfMeasure.measureId}','${com.buyingPrice}','${product.productCategory.name}')"  title="Edit"><span>Edit</span></a>
+					  			<a class="item-button-add-row" href="javascript:setclient('${product.id}','${product.code}','${fn:replace(product.name, '\"','*')}','${product.qtyToBase}','${product.onHand}','${product.unitOfMeasure.measureId}','${product.buyingPrice}','${product.productCategory.name}')"  title="Edit"><span>Edit</span></a>
 					  		</td>
 							<td nowrap="nowrap"><c:out value='${product.code}'/></td> 
 							<td nowrap="nowrap"><c:out value='${product.name}'/></td>
@@ -115,7 +115,15 @@
 			var _qtyBase = self.opener.document.getElementById('qtyToBase[${index}]');
 			var _code = self.opener.document.getElementById('codeprod[${index}]');
 			var _category = self.opener.document.getElementById('category[${index}]');
-
+			
+			var _pricePcs = self.opener.document.getElementById('amountPcs[${index}]');
+			var _qtyPcs = self.opener.document.getElementById('qtyPcs[${index}]');
+			
+			if(_pricePcs)
+				_pricePcs.value = parseFloat(price).numberFormat('#,##.00000');
+				
+			if(_qtyPcs)
+				_qtyPcs.value = parseFloat(onhand).numberFormat('#,##.00000');
 			
 			if(_onhand)
 				_onhand.value = parseFloat(onhand).numberFormat('#,##.00000');

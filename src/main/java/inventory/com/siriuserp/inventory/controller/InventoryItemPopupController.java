@@ -17,6 +17,7 @@ import com.siriuserp.inventory.criteria.ProductFilterCriteria;
 import com.siriuserp.inventory.query.InventoryItemPopupViewQuery;
 import com.siriuserp.inventory.service.OnHandQuantityService;
 import com.siriuserp.sdk.base.ControllerBase;
+import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.ModelReferenceView;
 
@@ -46,6 +47,24 @@ public class InventoryItemPopupController extends ControllerBase
 		try
 		{
 			response.store("inventory", service.load(id));
+		} catch (Exception e)
+		{
+			response.statusError();
+			response.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+	
+	@RequestMapping("/popupinventoryitemlistjson.htm")
+	public ModelAndView viewList(@RequestParam("productId") Long productId, @RequestParam("containerId") Long containerId) throws ServiceException
+	{
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			response.store("barcodes", service.loadList(productId, containerId));
 		} catch (Exception e)
 		{
 			response.statusError();

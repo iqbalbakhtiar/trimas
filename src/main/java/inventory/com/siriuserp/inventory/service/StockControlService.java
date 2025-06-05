@@ -116,7 +116,9 @@ public class StockControlService
 			transaction.setSerial(inventory.getLot().getSerial());
 		}
 
-		transaction.setCurrency(dataWarehouseDao.load(Currency.class, money.getCurrency().getId()));
+		if(money.getCurrency() != null)
+			transaction.setCurrency(dataWarehouseDao.load(Currency.class, money.getCurrency().getId()));
+		
 		transaction.setRate(money.getRate());
 		transaction.setPrice(money.getAmount());
 		
