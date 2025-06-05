@@ -53,7 +53,7 @@
 		<c:set var="dppCoreTax" value="${repo.deliveryOrderItem.quantity * repo.deliveryOrderItem.money.amount}"/>
 		<c:set var="dppOther" value="${dpp * 11 / 12}"/>
 		<c:set var="tax12" value="${dppOther * 12 / 100}"/>
-		<c:set var="totalCoreTax" value="${dppOther+tax12}"/>
+		<c:set var="totalCoreTax" value="${dppCoreTax+tax12}"/>
 		
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;">${status.index+1}</td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"></td>
