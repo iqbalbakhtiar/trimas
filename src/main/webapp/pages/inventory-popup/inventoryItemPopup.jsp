@@ -69,7 +69,7 @@
 							<td nowrap="nowrap"><c:out value='${com.product.name}'/></td>
 							<td nowrap="nowrap"><c:out value='${com.container.name}'/></td>
 							<td nowrap="nowrap"><c:out value='${com.lot.code}'/></td>
-                            <td nowrap="nowrap"><fmt:formatNumber value='${com.availableSale}' pattern='${com.product.unitOfMeasure.pattern}'/></td>
+                            <td nowrap="nowrap"><fmt:formatNumber value='${com.availableSale}' pattern='${com.product.unitOfMeasure.name}'/></td>
                         </tr>
 						</c:forEach>
 					  	<tr class="end-table"><td colspan="6">&nbsp;</td></tr>
@@ -93,6 +93,7 @@
 	function setclient(id)
 	{
 		Product.inventory(id);
+		
 		var inventory = Product.data;
 
 		if(!jQuery.isEmptyObject(inventory))
@@ -102,10 +103,11 @@
 			{
 				_client.remove(_client.selectedIndex);
 				var _opt = document.createElement('option');
-				_opt.value = inventory.product.productId;
-				_opt.text = inventory.product.productName;
+				_opt.value = inventory.product.id;
+				_opt.text = inventory.product.name;
 
 				_client.appendChild(_opt);
+				_client.dispatchEvent(new Event('change'));
 			}
 
 			var _code = self.opener.document.getElementById('productCode[${param.index}]');
@@ -118,7 +120,12 @@
 
 			var _onhand = self.opener.document.getElementById('onHand[${param.index}]');
 			if(_onhand)
-				_onhand.value = parseFloat(inventory.available).numberFormat(inventory.product.pattern);
+				_onhand.value = parseFloat(inventory.available).numberFormat('#,##.00000');
+			
+			var _qtyPcs = self.opener.document.getElementById('qtyPcs[${param.index}]');
+			if(_qtyPcs){
+				_qtyPcs.value = parseFloat(inventory.available).numberFormat('#,##');
+			}
 
 			var _base = self.opener.document.getElementById('base[${param.index}]');
 			if(_base)
@@ -134,7 +141,7 @@
 				if(inventory.product.isDecimal)
 					_quantity.value = '0.000';
 				else
-					_quantity.value = '0';					
+					_quantity.value = '0';		
 
 			}
 
@@ -147,19 +154,20 @@
 				_ctr.text = inventory.container.containerName;
 
 				_container.appendChild(_ctr);
+				_container.dispatchEvent(new Event('change'));
 			}
 
 			var _uom = self.opener.document.getElementById('uom[${param.index}]');
 			if(_uom)
-				_uom.value = inventory.product.uomSymbol;
+				_uom.value = inventory.product.unitOfMeasure.name;
 			
-			var _lot= self.opener.document.getElementById('code[${param.index}]');
+			/*var _lot= self.opener.document.getElementById('code[${param.index}]');
 			if(_lot)
 				_lot.value = inventory.lotCode;
 
 			var _price = self.opener.document.getElementById('price[${param.index}]');
 			if(_price)
-				_price.value = parseFloat(inventory.product.price).numberFormat('#.00');				
+				_price.value = parseFloat(inventory.price).numberFormat('#,##.00000');*/			
 		}
 		
 		window.close();

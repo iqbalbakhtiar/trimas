@@ -328,4 +328,43 @@ public class BarcodeGroupService
 
 		return map;
 	}
+	
+	@AuditTrails(className = BarcodeGroup.class, actionType = AuditTrailsActionType.CREATE)
+	public void addFromGR(BarcodeGroup barcodeGroup, List<Item> items) throws Exception
+	{
+		if (!SiriusValidator.validateParam(barcodeGroup.getCode()))
+			barcodeGroup.setCode(GeneratorHelper.instance().generate(TableType.BARCODE_GROUP, codeSequenceDao, barcodeGroup.getFacility().getCode()));
+
+		for (Item item : items)
+		{
+			if (item.getProduct() != null && SiriusValidator.gz(item.getReceipted()))
+			{
+				String code = "";
+
+				if (SiriusValidator.validateParam(item.getSerial()))
+					code = item.getSerial();
+				else
+					code = GeneratorHelper.instance().generate(TableType.BARCODE_PRODUCT, codeSequenceDao, barcodeGroup.getDate());
+
+				Barcode barcode = new Barcode();
+				barcode.setCode(code);
+				barcode.setLotCode(item.getLotCode());
+				barcode.setProduct(item.getProduct());
+				barcode.setQuantity(item.getReceipted());
+
+				if (SiriusValidator.gz(item.getQuantityReal()))
+					barcode.setQuantityReal(item.getQuantityReal());
+				else
+					barcode.setQuantityReal(barcode.getQuantity());
+
+				barcode.setBarcodeGroup(barcodeGroup);
+				item.setSerial(barcode.getCode());
+
+				barcodeGroup.getBarcodes().add(barcode);
+			}
+		}
+
+		genericDao.add(barcodeGroup);
+
+	}
 }

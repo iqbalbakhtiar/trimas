@@ -29,9 +29,8 @@
 					_opt.text = name;
 					
 					_client.appendChild(_opt);
-
-					var event = new Event('change');
-					_client.dispatchEvent(event);
+					
+					_client.dispatchEvent(new Event('change'));
 				}
 
 				let _grid = self.opener.document.getElementById('grid[${param.index}]');
