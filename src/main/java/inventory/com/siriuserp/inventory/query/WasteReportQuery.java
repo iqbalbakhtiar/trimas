@@ -35,7 +35,10 @@ public class WasteReportQuery extends AbstractStandardReportQuery {
 		builder.append("SUM( CASE WHEN balance.date < :start THEN (balance.in-balance.out) ELSE 0 END ), ");
 		builder.append("SUM( CASE WHEN balance.date BETWEEN :start AND :end THEN balance.in ELSE 0 END ), ");
 		builder.append("SUM( CASE WHEN balance.date BETWEEN :start AND :end THEN balance.out ELSE 0 END ), ");
-		builder.append("SUM(CASE WHEN balance.date < :start AND balance.serial IS NOT NULL THEN 1 ELSE 0 END), "); // openingSerial
+		builder.append("(");
+		builder.append("    SUM(CASE WHEN balance.date < :start AND balance.in  > 0 AND balance.serial IS NOT NULL THEN 1 ELSE 0 END)");
+		builder.append("   - SUM(CASE WHEN balance.date < :start AND balance.out > 0 AND balance.serial IS NOT NULL THEN 1 ELSE 0 END)");
+		builder.append("), "); // openingSerial
 		builder.append("SUM(CASE WHEN balance.date BETWEEN :start AND :end AND balance.in  > 0 AND balance.serial IS NOT NULL THEN 1 ELSE 0 END), "); // inSerial
 		builder.append("SUM(CASE WHEN balance.date BETWEEN :start AND :end AND balance.out > 0 AND balance.serial IS NOT NULL THEN 1 ELSE 0 END), "); // outSerial
 		builder.append("balance.productCode, balance.productName, balance.productId, balance.uom ");
