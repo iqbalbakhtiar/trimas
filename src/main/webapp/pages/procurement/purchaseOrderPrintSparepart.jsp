@@ -70,7 +70,7 @@
 				  			<tr>
 				  				<td style="width: 1%;">Attn</td>
 				  				<td style="width: 5px;" align="center">:</td>
-				  				<td align="left" style="width: 40%;">${purchase_edit.supplier.fullName}</td>
+				  				<td align="left" style="width: 40%;">${purchase_edit.supplierPhone.contactName}</td>
 			  				</tr>
 				  			<tr>
 				  				<td style="width: 1%;" valign="top">Alamat</td>
@@ -83,13 +83,10 @@
 								    </c:forEach>
 				  				</td>
 			  				</tr>
-				  			<c:set var="phone" value=""/>
+				  			<c:set var="phone" value="${purchase_edit.supplierPhone.contact}"/>
 				  			<c:set var="fax" value=""/>
 				  			<c:forEach items='${purchase_edit.supplier.contactMechanisms}' var='cont'>
 				  			<c:if test="${cont.active}">
-								<c:if test='${cont.contactMechanismType eq "PHONE"}'>
-						  			<c:set var="phone" value="${cont.contact}"/>
-								</c:if>
 								<c:if test='${cont.contactMechanismType eq "FAX"}'>
 						  			<c:set var="fax" value="${cont.contact}"/>
 								</c:if>

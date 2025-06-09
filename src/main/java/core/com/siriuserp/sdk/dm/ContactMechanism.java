@@ -37,52 +37,53 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="contact_mechanism")
+@Table(name = "contact_mechanism")
 public class ContactMechanism extends Model implements JSONSupport
 {
-    private static final long serialVersionUID = 5738766381408352582L;
+	private static final long serialVersionUID = 5738766381408352582L;
 
-    @Column(name="contact")
-    private String contact;
-    
-    @Column(name="contact_name")
-    private String contactName;
-    
-    @Column(name="department")
-    private String department;
-    
-    @Column(name="active")
-    @Type(type="yes_no")
-    private boolean active;
-    
-    @Column(name="note")
-    private String note;
-    
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="fk_party")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private Party party;
-    
-    @Column(name="contact_mechanism_type")
-    @Enumerated(EnumType.STRING)
-    private ContactMechanismType contactMechanismType = ContactMechanismType.PHONE;
+	@Column(name = "contact")
+	private String contact;
 
-    @Override
-    public String getAuditCode()
-    {
-        return this.contactMechanismType.toString();
-    }
+	@Column(name = "contact_name")
+	private String contactName;
 
-    @JsonValue
-    public Map<String, Object> val()
-    {
-        Map<String,Object> map = new HashMap<String, Object>();
-        map.put("contactId",getId());
-        map.put("contactName",getContact());
-        map.put("contactType",getContactMechanismType());
-        map.put("active",isActive());
+	@Column(name = "department")
+	private String department;
 
-        return map;
-    }
+	@Column(name = "active")
+	@Type(type = "yes_no")
+	private boolean active;
+
+	@Column(name = "note")
+	private String note;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_party")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Party party;
+
+	@Column(name = "contact_mechanism_type")
+	@Enumerated(EnumType.STRING)
+	private ContactMechanismType contactMechanismType = ContactMechanismType.PHONE;
+
+	@Override
+	public String getAuditCode()
+	{
+		return this.contactMechanismType.toString();
+	}
+
+	@JsonValue
+	public Map<String, Object> val()
+	{
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("contactId", getId());
+		map.put("contact", getContact());
+		map.put("contactName", getContactName());
+		map.put("contactType", getContactMechanismType());
+		map.put("active", isActive());
+
+		return map;
+	}
 }

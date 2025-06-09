@@ -73,6 +73,11 @@
                                 %
                             </td>
                         </tr>
+						<tr>
+							<td align="right"><spring:message code="billing.invoice.tax.no"/></td>
+							<td width="1%" align="center">:</td>
+							<td><form:input size="28" id="taxNo" path="invoiceVerification.taxNo"/></td>
+						</tr>
                         <tr>
                             <td align="right"><spring:message code="sirius.note"/></td>
                             <td width="1%" align="center">:</td>

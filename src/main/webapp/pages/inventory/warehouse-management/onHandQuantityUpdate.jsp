@@ -98,6 +98,10 @@
     let reserved = 0;
     let available = 0;
 
+    let onHandBale = 0;
+    let reservedBale = 0;
+    let availableBale = 0;
+
     for(const detail of details)
     {
         const index = detail.getAttribute('data-index');
@@ -107,8 +111,22 @@
         available += document.getElementById('available' + index).innerHTML.toNumber();
     }
 
-    document.getElementById('onHand').innerHTML = onHand.numberFormat('#,##0.00');
-    document.getElementById('reserved').innerHTML = reserved.numberFormat('#,##0.00');
-    document.getElementById('available').innerHTML = available.numberFormat('#,##0.00');
+    let serial = '${product.serial}';
+    let showOnHand = onHand.numberFormat('#,##0.00') + ' ${product.unitOfMeasure.measureId}';
+    let showReserved = reserved.numberFormat('#,##0.00') + ' ${product.unitOfMeasure.measureId}';
+    let showAvailable = available.numberFormat('#,##0.00') + ' ${product.unitOfMeasure.measureId}';
+    
+    if(serial == 'true') {
+        onHandBale = onHand / 181.44;
+        reservedBale = reserved / 181.44;
+        availableBale = available / 181.44;
 
+        showOnHand = onHand.numberFormat('#,##0.00') + ' ${product.unitOfMeasure.measureId} <strong>['+onHandBale.numberFormat('#,##0.00')+' BALE]</strong>';
+        showReserved = reserved.numberFormat('#,##0.00') + ' ${product.unitOfMeasure.measureId} <strong>['+reservedBale.numberFormat('#,##0.00')+' BALE]</strong>';
+        showAvailable = available.numberFormat('#,##0.00') + ' ${product.unitOfMeasure.measureId} <strong>['+availableBale.numberFormat('#,##0.00')+' BALE]</strong>';
+    }
+
+    document.getElementById('onHand').innerHTML = showOnHand;
+    document.getElementById('reserved').innerHTML = showReserved;
+    document.getElementById('available').innerHTML = showAvailable;
 </script>

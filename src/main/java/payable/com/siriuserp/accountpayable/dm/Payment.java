@@ -64,6 +64,9 @@ public class Payment extends Model implements Siblingable, CashBankTransactionRe
 	@Column(name = "rate")
 	private BigDecimal rate = BigDecimal.ONE;
 
+	@Column(name = "tax_no")
+	private String taxNo;
+
 	@Column(name = "note")
 	private String note;
 

@@ -26,6 +26,7 @@ import com.siriuserp.sdk.dm.PostalAddressType;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
+import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
 
 import javolution.util.FastMap;
@@ -94,15 +95,16 @@ public class FacilityService
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> preedit(Long id) throws ServiceException
+	public Map<String, Object> preedit(Long id) throws Exception
 	{
-		Facility facility = load(id);
+		AdministrationForm administrationForm = FormHelper.bind(AdministrationForm.class, load(id));
 
 		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("facility_edit", facility);
+		map.put("facility_form", administrationForm);
+		map.put("facility_edit", administrationForm.getFacility());
 		map.put("countries", geographicService.getCountryList());
-		map.put("province", geographicService.getProvince(facility.getPostalAddress().getCity().getLastParent().getId()));
-		map.put("city", geographicService.getCity(facility.getPostalAddress().getCity().getParent().getId()));
+		map.put("province", geographicService.getProvince(administrationForm.getFacility().getPostalAddress().getCity().getLastParent().getId()));
+		map.put("city", geographicService.getCity(administrationForm.getFacility().getPostalAddress().getCity().getParent().getId()));
 
 		return map;
 	}
@@ -117,6 +119,7 @@ public class FacilityService
 	public void edit(Facility facility) throws ServiceException
 	{
 		genericDao.update(facility);
+		genericDao.update(facility.getPostalAddress());
 	}
 
 	@AuditTrails(className = Facility.class, actionType = AuditTrailsActionType.DELETE)

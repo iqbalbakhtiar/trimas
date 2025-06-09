@@ -79,6 +79,12 @@
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
+					<td align="right"><spring:message code="deliveryrealization.driver.courier"/></td>
+					<td width="1%" align="center">:</td>
+					<td><form:input path="driverName" cssClass="inputbox"/></td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
 					<td align="right"><spring:message code="sirius.note"/></td>
 					<td width="1%" align="center">:</td>
 					<td><form:textarea path="note" rows="6" cols="45" value="${deliveryOrder_form.note}"/></td>
@@ -100,6 +106,7 @@
 											<c:if test="${deliveryOrder_form.deliveryOrder.status eq 'SENT'}"><div style="color: blue;"><spring:message code="deliveryorder.status.${deliveryOrder_form.deliveryOrder.status.messageName}"/></div></c:if>
 											<c:if test="${deliveryOrder_form.deliveryOrder.status eq 'DELIVERED'}"><div style="color: green;"><spring:message code="deliveryorder.status.${deliveryOrder_form.deliveryOrder.status.messageName}"/></div></c:if>
 											</h1>
+											<strong><a href="<c:url value='/page/deliveryorderrealizationpreedit.htm?id=${deliveryOrder_form.deliveryOrder.deliveryOrderRealization.id}'/>">${deliveryOrder_form.deliveryOrder.deliveryOrderRealization.code}</a></strong>
 										</td>
 									</tr>
 								</table>

@@ -145,6 +145,15 @@ public class DeliveryOrder extends Model implements JSONSupport
 		return String.join(" ", references);
 	}
 
+	public DeliveryOrderRealization getDeliveryOrderRealization()
+	{
+		for (DeliveryOrderItem item : getItems())
+			for (DeliveryOrderRealizationItem realizationItem : item.getRealizationItems())
+				return realizationItem.getDeliveryOrderRealization();
+
+		return null;
+	}
+
 	public Tax getTax()
 	{
 		for (DeliveryOrderItem item : getItems())

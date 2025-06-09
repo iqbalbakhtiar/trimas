@@ -96,7 +96,7 @@
 				<tr class="body-print">
 					<td width="2%" colspan="2">&nbsp;</td>
 					<td width="2%">&nbsp;</td>
-					<td width="96%" colspan="6" align="left">2. Faktur Pajak Asli No. <c:out value="${billing_form.customer.coreTax.npwp}"/></td>
+					<td width="96%" colspan="6" align="left">2. Faktur Pajak Asli No. <c:out value="${billing_form.billing.invoiceTaxHeader}${billing_form.billing.invoiceTaxNo}"/></td>
 					<td width="2%" colspan="2">&nbsp;</td>
 				</tr>
 				<tr class="body-print">

@@ -88,9 +88,8 @@
 					<td align="right"><spring:message code="billing.invoice.tax.no"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
-						<input size="7" id="invoiceTaxHeader" name="billing.invoiceTaxHeader" />
-						&nbsp;
-						<input size="28" id="invoiceTaxNo" name="billing.invoiceTaxNo" />
+						<form:input size="7" id="invoiceTaxHeader" path="billing.invoiceTaxHeader" />
+						<form:input size="28" id="invoiceTaxNo" path="billing.invoiceTaxNo" />
 					</td>
 				</tr>
 				<tr>

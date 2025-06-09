@@ -84,7 +84,7 @@ public abstract class Payable extends Model implements JSONSupport, APLedgerView
 	protected String documentNo;
 
 	@Column(name = "tax_no")
-	protected String tax_no;
+	protected String taxNo;
 
 	@Column(name = "unpaid")
 	protected BigDecimal unpaid = BigDecimal.ZERO;
@@ -153,5 +153,5 @@ public abstract class Payable extends Model implements JSONSupport, APLedgerView
 	protected Set<DebitMemoManual> debitMemoManuals = new FastSet<DebitMemoManual>();
 
 	public abstract String getUri();
-	
+
 }

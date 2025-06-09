@@ -620,10 +620,10 @@ function updateSupplierAddress(element) {
   let contacts = Party.data.contactMechanises;
 
   contacts.forEach(contact => {
-    if (contact.contactType === 'PHONE' && contact.active === true) {
+    if ((contact.contactType === 'PHONE' || contact.contactType === 'MOBILE') && contact.active === true) {
       let option = $('<option></option>')
               .val(contact.contactId)
-              .text(contact.contactName);
+              .text(contact.contactName +' ('+contact.contact+')');
 
       _supplierPhone.append(option);
     }

@@ -21,6 +21,7 @@
 		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.total"/></th>
 		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.note2"/></th>
         <th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;">Angkutan</th>
+        <th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryrealization.driver.courier"/></th>
 		<th width="5%" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;">Benang</th>
 	</tr>
 	</thead>
@@ -63,6 +64,7 @@
   		<td align="right"><fmt:formatNumber value='${total}' pattern=',##0.00'/></td>
 		<td align="left" nowrap="nowrap"><c:out value='${repo.deliveryOrderItem.deliveryOrder.plateNumber}'/></td>
 		<td align="left" nowrap="nowrap"><c:out value='${repo.deliveryOrderItem.deliveryOrder.vehicle}'/></td>
+		<td align="left" nowrap="nowrap"><c:out value='${repo.deliveryOrderItem.deliveryOrder.driverName}'/></td>
 		<td align="left" nowrap="nowrap">&nbsp;</td>
 	</tr>
  	<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'YARN'}"><c:set var='tBale' value='${tBale+bale}'/></c:if>
@@ -84,7 +86,7 @@
 		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tDpp}' pattern=',##0.00'/></strong></td>
 		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tTax}' pattern=',##0.00'/></strong></td>
 		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tTotal}' pattern=',##0.00'/></strong></td>
-		<td colspan="3" style="border-top:solid 1px black;" align="right"><strong>&nbsp;</strong></td>
+		<td colspan="4" style="border-top:solid 1px black;" align="right"><strong>&nbsp;</strong></td>
 	</tr>
 	</tfoot>
 </table>

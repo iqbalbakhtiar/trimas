@@ -13,7 +13,7 @@
                 <td width="60%">
                     <table style="border:none" width="100%">
                         <tr>
-                            <td width="34%" align="right">Sales Order ID</td>
+                            <td width="34%" align="right"><spring:message code="sirius.code"/></td>
                             <td width="1%" align="center">:</td>
                             <td width="64%"><form:input path="code" id="code" cssClass="inputbox input-disabled" disabled="true"/></td>
                             <td width="1%"><form:errors path="code"/></td>
@@ -45,6 +45,11 @@
                             <td width="1%" align="center">:</td>
                             <td><input id="date" name="date" size="10" class="input-disabled" value="<fmt:formatDate value='${payment_edit.date}' pattern='dd-MM-yyyy'/>"/></td>
                         </tr>
+						<tr>
+							<td align="right"><spring:message code="billing.invoice.tax.no"/></td>
+							<td width="1%" align="center">:</td>
+							<td><form:input size="28" id="taxNo" path="taxNo"/></td>
+						</tr>
                         <tr>
                             <td align="right"><spring:message code="sirius.note"/></td>
                             <td width="1%" align="center">:</td>

@@ -71,6 +71,12 @@
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
+					<td align="right"><spring:message code="deliveryrealization.driver.courier"/></td>
+					<td width="1%" align="center">:</td>
+					<td><form:input path="driverName" cssClass="inputbox"/></td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
 					<td align="right"><spring:message code="sirius.note"/></td>
 					<td width="1%" align="center">:</td>
 					<td><form:textarea path="note" rows="6" cols="45"/></td>

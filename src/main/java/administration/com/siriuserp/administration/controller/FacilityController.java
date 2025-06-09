@@ -42,7 +42,7 @@ import com.siriuserp.sdk.utility.FormHelper;
  */
 
 @Controller
-@SessionAttributes(value = { "facility_add", "facility_edit" }, types = { AdministrationForm.class, Facility.class })
+@SessionAttributes(value = "facility_form", types = AdministrationForm.class)
 public class FacilityController extends ControllerBase
 {
 	@Autowired
@@ -71,7 +71,7 @@ public class FacilityController extends ControllerBase
 	}
 
 	@RequestMapping("/facilityadd.htm")
-	public ModelAndView add(@ModelAttribute("facility_add") AdministrationForm form, SessionStatus status) throws Exception
+	public ModelAndView add(@ModelAttribute("facility_form") AdministrationForm form, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
@@ -98,11 +98,24 @@ public class FacilityController extends ControllerBase
 	}
 
 	@RequestMapping("/facilityedit.htm")
-	public ModelAndView edit(@ModelAttribute("facility_edit") Facility facility, BindingResult result, SessionStatus status) throws Exception
+	public ModelAndView edit(@ModelAttribute("facility_form") AdministrationForm form, BindingResult result, SessionStatus status) throws Exception
 	{
-		service.edit(facility);
-		status.setComplete();
-		return ViewHelper.redirectTo("facilityview.htm");
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			service.edit(FormHelper.update(form.getFacility(), form));
+			status.setComplete();
+
+			response.store("id", form.getFacility().getId());
+		} catch (Exception e)
+		{
+			response.statusError();
+			response.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
 	}
 
 	@RequestMapping("/facilitydelete.htm")

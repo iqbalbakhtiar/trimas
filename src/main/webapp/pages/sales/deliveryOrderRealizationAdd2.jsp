@@ -76,11 +76,11 @@
 						</form:select>
 					</td>
 				</tr>
-				<tr>
+				<%-- <tr>
 					<td align="right"><spring:message code="deliveryrealization.driver.courier"/></td>
 					<td width="1%" align="center">:</td>
 					<td width="64%"><input id="driver" name="driver" class="inputbox"/></td>
-				</tr>
+				</tr> --%>
 				<tr>
 					<td align="right"><spring:message code="sirius.note"/></td>
 					<td width="1%" align="center">:</td>

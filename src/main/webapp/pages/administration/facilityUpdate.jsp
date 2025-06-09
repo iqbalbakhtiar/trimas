@@ -8,7 +8,7 @@
 					  	</div>
 					  
 						<div class="main-box">
-							<sesform:form id="editForm" name="editForm" method="post" modelAttribute="facility_edit">
+							<sesform:form id="editForm" name="editForm" method="post" modelAttribute="facility_form">
 								<table width="100%" style="border:none">
                                 <tr>
                                 	<td width="65%" valign="top">
@@ -131,6 +131,7 @@
 	                                </div>
 	                            </div>
 							</sesform:form>
+							<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${facility_edit.createdBy.fullName}'/> (<fmt:formatDate value='${facility_edit.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${facility_edit.updatedBy.fullName}'/> (<fmt:formatDate value='${facility_edit.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
                         </div>
 					<%@ include file="/common/sirius-general-bottom.jsp"%>
 <script type="text/javascript">

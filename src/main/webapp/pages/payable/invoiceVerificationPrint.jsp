@@ -76,7 +76,7 @@
                         <tr>
                             <td width="35%">No. Invoice</td>
                             <td width="3%">:</td>
-                            <td width="62%"><c:out value='${verification_edit.invoice}'/></td>
+                            <td width="62%"><c:out value='${verification_edit.taxNo}'/></td>
                         </tr>
                         <tr>
                             <td>Tanggal Invoice</td>
