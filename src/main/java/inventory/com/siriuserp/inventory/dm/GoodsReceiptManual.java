@@ -47,43 +47,44 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "goods_receipt_manual")
-public class GoodsReceiptManual extends Model implements Transaction, JSONSupport, Receiptable {
+public class GoodsReceiptManual extends Model implements Transaction, JSONSupport, Receiptable
+{
 
 	private static final long serialVersionUID = 5895311821742826408L;
-	
+
 	@Column(name = "code")
 	private String code;
 
 	@Column(name = "invoice_no")
-    private String invoiceNo;
-	
+	private String invoiceNo;
+
 	@Column(name = "date")
 	private Date date;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_facility")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private Facility facility;
-	
-	@ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name="fk_party_organization")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private Party organization;
 
-	@ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name="fk_party_supplier")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private Party supplier;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_barcode_group")
-    @LazyToOne(LazyToOneOption.PROXY)
-    @Fetch(FetchMode.SELECT)
-    private BarcodeGroup barcodeGroup;
-	
+	@JoinColumn(name = "fk_party_organization")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Party organization;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_party_supplier")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Party supplier;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_barcode_group")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private BarcodeGroup barcodeGroup;
+
 	@OneToMany(mappedBy = "goodsReceiptManual", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
@@ -91,44 +92,43 @@ public class GoodsReceiptManual extends Model implements Transaction, JSONSuppor
 	@OrderBy("id")
 	private Set<GoodsReceiptManualItem> items = new FastSet<GoodsReceiptManualItem>();
 
-	
-	public BigDecimal getTotalQuantity() {
-		
+	public BigDecimal getTotalQuantity()
+	{
+
 		BigDecimal amount = BigDecimal.ZERO;
-		
-		for(GoodsReceiptManualItem item : getItems())
+
+		for (GoodsReceiptManualItem item : getItems())
 			amount = amount.add(item.getQuantity());
-			
+
 		return amount;
 	}
-	
-	public BigDecimal getTotalQuantityPcs() {
-		
+
+	public BigDecimal getTotalQuantityPcs()
+	{
+
 		BigDecimal amount = BigDecimal.ZERO;
-		
-		for(GoodsReceiptManualItem item : getItems())
+
+		for (GoodsReceiptManualItem item : getItems())
 			amount = amount.add(item.getQuantity().multiply(item.getProduct().getQtyToBase()));
-			
+
 		return amount;
 	}
 
 	@Override
-    public String getAuditCode() {
-        return id + ',' + code;
-    }
-
-    @Override
-    public String getCode() {
-        return this.code;
-    }
+	public String getCode()
+	{
+		return this.code;
+	}
 
 	@Override
-	public Date getDate() {
+	public Date getDate()
+	{
 		return date;
 	}
 
 	@Override
-	public Tax getTax() {
+	public Tax getTax()
+	{
 		return null;
 	}
 
@@ -143,9 +143,10 @@ public class GoodsReceiptManual extends Model implements Transaction, JSONSuppor
 	{
 		return getOrganization();
 	}
-	
+
 	@Override
-	public String getNote() {
+	public String getNote()
+	{
 		return "";
 	}
 
@@ -156,21 +157,27 @@ public class GoodsReceiptManual extends Model implements Transaction, JSONSuppor
 	}
 
 	@Override
-	public Set<? extends WarehouseReferenceItem> getReceiptables() {
+	public Set<? extends WarehouseReferenceItem> getReceiptables()
+	{
 		return this.items;
 	}
 
-	public Set<GoodsReceipt> getReceipts() {
-	    return getItems() == null ? Collections.emptySet() :
-	        getItems().stream()
-	            .map(GoodsReceiptManualItem::getTransactionItem)
-	            .filter(Objects::nonNull)
-	            .map(WarehouseTransactionItem::getReceiptedItems)
-	            .filter(Objects::nonNull)
-	            .flatMap(list -> list.stream())
-	            .map(GoodsReceiptItem::getGoodsReceipt)
-	            .filter(Objects::nonNull)
-	            .collect(Collectors.toSet());
+	public Set<GoodsReceipt> getReceipts()
+	{
+		return getItems() == null ? Collections.emptySet()
+				: getItems().stream().map(GoodsReceiptManualItem::getTransactionItem).filter(Objects::nonNull).map(WarehouseTransactionItem::getReceiptedItems).filter(Objects::nonNull).flatMap(list -> list.stream())
+						.map(GoodsReceiptItem::getGoodsReceipt).filter(Objects::nonNull).collect(Collectors.toSet());
 	}
-	
+
+	@Override
+	public String getSelf()
+	{
+		return "Goods Receipt Manual";
+	}
+
+	@Override
+	public String getAuditCode()
+	{
+		return id + ',' + code;
+	}
 }

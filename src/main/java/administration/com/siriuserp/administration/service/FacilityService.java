@@ -61,7 +61,7 @@ public class FacilityService
 	public Map<String, Object> preadd() throws ServiceException
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("facility_add", new AdministrationForm());
+		map.put("facility_form", new AdministrationForm());
 		map.put("types", genericDao.loadAll(FacilityType.class));
 		map.put("countries", geographicService.getCountryList());
 		map.put("postals", AddressType.values());

@@ -5,6 +5,7 @@
  */
 package com.siriuserp.sales.adapter;
 
+import com.siriuserp.accountreceivable.dm.Billing;
 import com.siriuserp.sales.dm.DeliveryOrderItem;
 import com.siriuserp.sales.dm.SalesOrderItem;
 import com.siriuserp.sdk.adapter.AbstractUIAdapter;
@@ -26,10 +27,18 @@ public class DeliveryReportAdapter extends AbstractUIAdapter
 
 	private DeliveryOrderItem deliveryOrderItem;
 	private SalesOrderItem salesOrderItem;
+	private Billing billing;
 
 	public DeliveryReportAdapter(DeliveryOrderItem deliveryOrderItem, SalesOrderItem salesOrderItem)
 	{
 		this.deliveryOrderItem = deliveryOrderItem;
 		this.salesOrderItem = salesOrderItem;
+	}
+
+	public DeliveryReportAdapter(DeliveryOrderItem deliveryOrderItem, SalesOrderItem salesOrderItem, Billing billing)
+	{
+		this.deliveryOrderItem = deliveryOrderItem;
+		this.salesOrderItem = salesOrderItem;
+		this.billing = billing;
 	}
 }

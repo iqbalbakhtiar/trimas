@@ -28,13 +28,11 @@
 		        <td><c:out value="${facility.name}"/></td>
 		    </tr>
 	    </c:if>
-	    <c:if test="${not empty criteria.productCategory}">
-		    <tr>
-		        <td><spring:message code="product.category"/></td>
-		        <td>&nbsp;:</td>
-		        <td><c:out value="${productCategory.name}"/></td>
-		    </tr>
-	    </c:if>
+	    <tr>
+	        <td><spring:message code="product.category"/></td>
+	        <td>&nbsp;:</td>
+	        <td><c:out value="${not empty criteria.productCategory ? productCategory.name : '-'}"/></td>
+	    </tr>
 	    <tr>
 	        <td><spring:message code="sirius.period"/></td>
 	        <td>&nbsp;:</td>
@@ -44,6 +42,8 @@
 	</table>
 	<c:set var="totalKg" value="0"/>
 	<c:set var="totalBale" value="0"/>
+	<c:set var="totalAvailableKg" value="0"/>
+	<c:set var="totalAvailableBale" value="0"/>
 	<table width="100%" cellpadding="5" cellspacing="0" class="report-table" id="onhand">
 		<tr class="hidden-row">
 			<td><strong>ON HAND QUANTITY BY DATE REPORT</strong></td>
@@ -60,49 +60,62 @@
 		        <td><c:out value="${facility.name}"/></td>
 		    </tr>
 	    </c:if>
-	    <c:if test="${not empty criteria.productCategory}">
-		    <tr class="hidden-row">
-		        <td><spring:message code="product.category"/></td>
-		        <td>:</td>
-		        <td><c:out value="${productCategory.name}"/></td>
-		    </tr>
-	    </c:if>
+	    <tr class="hidden-row">
+	        <td><spring:message code="product.category"/></td>
+	        <td>:</td>
+	        <td><c:out value="${not empty productCategory ? productCategory.name : '-'}"/></td>
+	    </tr>
 	    <tr class="hidden-row">
 	        <td><spring:message code="sirius.period"/></td>
 	        <td>:</td>
 	        <td><fmt:formatDate value="${criteria.dateFrom}" pattern="dd MMMM yyyy"/> - <fmt:formatDate value="${criteria.dateTo}" pattern="dd MMMM yyyy"/></td>
 	    </tr>
 	    <tr class="hidden-row"></tr>
-		<tr>
-			<th width="10%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.date"/></th>
-			<th width="15%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="product"/></th>
-			<th width="15%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="container"/></th>
-			<th width="20%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="product.onhand"/> (Kg)</th>
-			<c:if test="${productCategory.categoryType eq 'MATERIAL'}">
-				<th width="17%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="product.onhand"/> (Bale)</th>
-			</c:if>
+		<tr style="height: 30px;">
+			<th width="5%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.date"/></th>
+			<th width="5%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="product.lot"/></th>
+			<th width="12%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="product"/></th>
+			<th width="10%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="container"/></th>
+			<th width="10%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="product.onhand"/> (Kg)</th>
+			<th width="10%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="product.available"/> (Kg)</th>
+			<th width="10%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="product.onhand"/> (Bale)</th>
+			<th width="10%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="product.available"/> (Bale)</th>
 		</tr>
 		<c:forEach items="${reports}" var="onhand" varStatus="status">
 			<tr>
 				<td><fmt:formatDate value="${onhand.date}" pattern="dd-MM-yyyy"/></td>
+				<td><c:out value="${onhand.lotCode}"/></td>
 				<td><c:out value="${onhand.productName}"/></td>
 				<td><c:out value="${onhand.containerName}"/></td>
+				<td align="right"><fmt:formatNumber value="${onhand.receipted}" pattern="#,##0.00"/></td>
 				<td align="right"><fmt:formatNumber value="${onhand.quantity}" pattern="#,##0.00"/></td>
-				<c:if test="${productCategory.categoryType eq 'MATERIAL'}">
+				<c:if test="${onhand.categoryType eq 'MATERIAL' or onhand.categoryType eq 'FINISH_GOODS'}">
 					<td align="right"><fmt:formatNumber value="${onhand.bale}" pattern="#,##0.00"/></td>
 				</c:if>
+				<c:if test="${onhand.categoryType ne 'MATERIAL' and onhand.categoryType ne 'FINISH_GOODS'}">
+					<td align="right">-</td>
+				</c:if>
+				<c:if test="${onhand.categoryType eq 'MATERIAL' or onhand.categoryType eq 'FINISH_GOODS'}">
+					<td align="right"><fmt:formatNumber value="${onhand.availableBale}" pattern="#,##0.00"/></td>
+				</c:if>
+				<c:if test="${onhand.categoryType ne 'MATERIAL' and onhand.categoryType ne 'FINISH_GOODS'}">
+					<td align="right">-</td>
+				</c:if>
 			</tr>
-			<c:set var="totalKg" value="${totalKg + onhand.quantity}"/>
+			<c:set var="totalKg" value="${totalKg + onhand.receipted}"/>
 			<c:set var="totalBale" value="${totalBale + onhand.bale}"/>
+			<c:set var="totalAvailableKg" value="${totalAvailableKg + onhand.quantity}"/>
+			<c:set var="totalAvailableBale" value="${totalAvailableBale + onhand.availableBale}"/>
 		</c:forEach>
-		<tr>
+		<tr style="height: 30px;font-weight: bold;">
 			<td align="left" style="border-bottom:1px solid black;border-top:1px solid black;"></td>
 			<td align="left" style="border-bottom:1px solid black;border-top:1px solid black;"></td>
-			<td align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><strong>Total</strong></td>
+			<td align="left" style="border-bottom:1px solid black;border-top:1px solid black;"></td>
+			<td align="left" style="border-bottom:1px solid black;border-top:1px solid black;">Total</td>
 			<td align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><fmt:formatNumber value="${totalKg}" pattern="#,##0.00"/></td>
-			<c:if test="${productCategory.categoryType eq 'MATERIAL'}">
-				<td align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><fmt:formatNumber value="${totalBale}" pattern="#,##0.00"/></td>
-			</c:if>
+			<td align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><fmt:formatNumber value="${totalAvailableKg}" pattern="#,##0.00"/></td>
+			<td align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><fmt:formatNumber value="${totalBale}" pattern="#,##0.00"/></td>
+			<td align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><fmt:formatNumber value="${totalAvailableBale}" pattern="#,##0.00"/></td>
 		</tr>
 	</table>
 </div>

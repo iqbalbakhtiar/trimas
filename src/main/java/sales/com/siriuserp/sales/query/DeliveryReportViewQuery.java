@@ -26,7 +26,8 @@ public class DeliveryReportViewQuery extends AbstractStandardReportQuery
 		SalesReportFilterCriteria criteria = (SalesReportFilterCriteria) getFilterCriteria();
 
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT NEW com.siriuserp.sales.adapter.DeliveryReportAdapter(deliveryItem, salesItem) ");
+		builder.append("SELECT NEW com.siriuserp.sales.adapter.DeliveryReportAdapter(deliveryItem, salesItem, ");
+		builder.append("(SELECT billItem.billing FROM BillingItem billItem WHERE billItem.billingReferenceItem.referenceId = realizationItem.deliveryOrderRealization.id))");
 		builder.append("FROM DeliveryOrderRealizationItem realizationItem JOIN realizationItem.deliveryOrderItem deliveryItem JOIN deliveryItem.deliveryReferenceItem.salesOrderItem salesItem ");
 		builder.append("WHERE deliveryItem.deliveryItemType = 'BASE' ");
 

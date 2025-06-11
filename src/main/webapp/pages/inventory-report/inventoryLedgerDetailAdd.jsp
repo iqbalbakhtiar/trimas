@@ -75,13 +75,42 @@
                                         <a class="item-popup"" onclick="javascript:openProduct();" style="CURSOR:pointer;" title="Product"/>
                                     </td>
                                 </tr>
-                                 <tr>
-                                	<td nowrap="nowrap" align="right"><spring:message code="sirius.datefrom"/>&nbsp;:</td>
+                                <tr>
+                                    <td nowrap="nowrap" align="right">Bale&nbsp;:</td>
                                     <td>
-								        <input id="dateFrom" name="dateFrom" class="datepicker" value="<fmt:formatDate value='${filterCriteria.dateFrom}' pattern='dd-MM-yyyy'/>"/>
-								        &nbsp;<spring:message code="sirius.dateto"/> &nbsp;:&nbsp;
-								        <input id="dateTo" name="dateTo" class="datepicker" value="<fmt:formatDate value='${filterCriteria.dateTo}' pattern='dd-MM-yyyy'/>"/>
-								    </td>
+                                        <select id="showBale" name="showBale" class="combobox-min3">
+                                        	<option value="true"><spring:message code="sirius.yes"/></option>
+                                        	<option value="no"><spring:message code="sirius.no"/></option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td nowrap="nowrap" align="right"><spring:message code="product.lot"/>&nbsp;:</td>
+                                    <td><input id="lotCode" name="lotCode" size="5"/></td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><spring:message code="sirius.month"/>&nbsp;:</td>
+                                    <td>
+                                    	<select id="month" name="month">
+                                        	<option value="JANUARY" selected><spring:message code="month.january"/></option>
+                                            <option value="FEBRUARY"><spring:message code="month.february"/></option>
+                                            <option value="MARCH"><spring:message code="month.march"/></option>
+                                            <option value="APRIL"><spring:message code="month.april"/></option>
+                                            <option value="MAY"><spring:message code="month.may"/></option>
+                                            <option value="JUNE"><spring:message code="month.june"/></option>
+                                            <option value="JULY"><spring:message code="month.july"/></option>
+                                            <option value="AUGUST"><spring:message code="month.august"/></option>
+                                            <option value="SEPTEMBER"><spring:message code="month.september"/></option>
+                                            <option value="OCTOBER"><spring:message code="month.october"/></option>
+                                            <option value="NOVEMBER"><spring:message code="month.november"/></option>
+                                            <option value="DECEMBER"><spring:message code="month.december"/></option>
+                                        </select>
+                                        <select id="year" name="year">
+                                            <c:forEach var="year" begin="${years-10}" end="${years}">
+                                            	<option value="${(years*2)-year-10}">${(years*2)-year-10}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </td>
                                 </tr>
 				  				</table>
 							</sesform:form>
@@ -91,19 +120,9 @@
 			</div>
 		</div>
 	</div>
-    
-  	<div style="clear:both;height:0px">&nbsp;</div>
-	<div id="footer">
-		<div>
-			<span>&copy; 2007 siriusERP v1.0GA</span>
-		</div>
-	</div>
-	<div style="clear:both;height:20px">&nbsp;</div>
-
+ 	<%@ include file="/common/sirius-footer.jsp"%>
 </div>
-
 </body>
-
 </html>
 <script type="text/javascript">
 	function generate()
