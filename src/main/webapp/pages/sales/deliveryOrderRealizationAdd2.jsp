@@ -218,11 +218,11 @@ function validateForm() {
 		return false;
 	}
 
-	var driver = $('#driver').val();
+	/* var driver = $('#driver').val();
 	if (driver == null || driver.trim() === ''){
 		alert('<spring:message code="deliveryrealization.driver.courier"/> <spring:message code="notif.empty"/> !');
 		return false;
-	}
+	} */
 
 	var facility = $('#facility').val();
 	if (facility == null || facility === "") {
