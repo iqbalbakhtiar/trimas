@@ -28,13 +28,16 @@ public class SalesOrderApprovableInterceptor extends AbstractApprovableIntercept
 		SalesOrder salesOrder = genericDao.load(SalesOrder.class, this.getApprovable().getNormalizedID());
 		if (status == ApprovalDecisionStatus.APPROVE_AND_FORWARD || status == ApprovalDecisionStatus.APPROVE_AND_FINISH)
 		{
-			DeliveryPlanning deliveryPlanning = new DeliveryPlanning();
-			deliveryPlanning.setDate(DateHelper.today());
-			deliveryPlanning.setSalesOrder(salesOrder);
+			if (salesOrder.getDeliveryPlanning() == null)
+			{
+				DeliveryPlanning deliveryPlanning = new DeliveryPlanning();
+				deliveryPlanning.setDate(DateHelper.today());
+				deliveryPlanning.setSalesOrder(salesOrder);
 
-			planningService.add(deliveryPlanning);
+				planningService.add(deliveryPlanning);
 
-			genericDao.update(salesOrder);
+				genericDao.update(salesOrder);
+			}
 		}
 	}
 }
