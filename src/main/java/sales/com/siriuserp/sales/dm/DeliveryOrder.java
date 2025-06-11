@@ -8,6 +8,7 @@ package com.siriuserp.sales.dm;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -120,6 +121,22 @@ public class DeliveryOrder extends Model implements JSONSupport
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@OrderBy("id")
 	private Set<DeliveryOrderItem> items = new FastSet<DeliveryOrderItem>();
+
+	public Set<SalesOrder> getSalesOrders()
+	{
+		HashSet<SalesOrder> references = new HashSet<SalesOrder>();
+		references.addAll(getItems().stream().map(item -> item.getSalesOrder()).collect(Collectors.toSet()));
+
+		return references;
+	}
+
+	public Set<DeliveryPlanningSequence> getDeliveryPlanningSequences()
+	{
+		HashSet<DeliveryPlanningSequence> references = new HashSet<DeliveryPlanningSequence>();
+		references.addAll(getItems().stream().filter(item -> Objects.nonNull(item.getDeliveryPlanningSequence())).map(item -> item.getDeliveryPlanningSequence()).collect(Collectors.toSet()));
+
+		return references;
+	}
 
 	public String getReferenceCode()
 	{

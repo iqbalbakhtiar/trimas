@@ -133,6 +133,7 @@
 											<c:if test="${salesOrder_edit.soStatus eq 'PLANNING'}"><div style="color: blue;"><spring:message code="salesorder.status.${salesOrder_edit.soStatus.messageName}"/></div></c:if>
 											<c:if test="${salesOrder_edit.soStatus eq 'OPEN'}"><div style="color: green;"><spring:message code="salesorder.status.${salesOrder_edit.soStatus.messageName}"/></div></c:if>
 											</h1>
+											<strong><a href="<c:url value='/page/deliveryplanningpreedit.htm?id=${salesOrder_edit.deliveryPlanning.id}'/>">${salesOrder_edit.deliveryPlanning.code}</a></strong>
 										</td>
 									</tr>
 								</table>

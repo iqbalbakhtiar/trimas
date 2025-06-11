@@ -120,18 +120,34 @@ public class DeliveryOrderItem extends Model
 		return null;
 	}
 
-	public String getSaleOrderCode()
+	public SalesOrder getSalesOrder()
 	{
 		if (getDeliveryReferenceItem() != null)
-			return getDeliveryReferenceItem().getSalesOrderItem().getSalesOrder().getCode();
+			return getDeliveryReferenceItem().getSalesOrderItem().getSalesOrder();
+
+		return null;
+	}
+
+	public DeliveryPlanningSequence getDeliveryPlanningSequence()
+	{
+		if (getDeliveryReferenceItem() != null && getDeliveryReferenceItem().getSequenceItem() != null)
+			return getDeliveryReferenceItem().getSequenceItem().getDeliveryPlanningSequence();
+
+		return null;
+	}
+
+	public String getSaleOrderCode()
+	{
+		if (getSalesOrder() != null)
+			return getSalesOrder().getCode();
 
 		return "";
 	}
 
 	public String getSaleOrderPOCustomer()
 	{
-		if (getDeliveryReferenceItem() != null && getDeliveryReferenceItem().getSalesOrderItem().getSalesOrder().getPoCode() != null)
-			return getDeliveryReferenceItem().getSalesOrderItem().getSalesOrder().getPoCode();
+		if (getSalesOrder() != null && getSalesOrder().getPoCode() != null)
+			return getSalesOrder().getPoCode();
 
 		return "";
 	}

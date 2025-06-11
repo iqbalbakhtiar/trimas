@@ -106,6 +106,40 @@
 											<c:if test="${deliveryOrder_form.deliveryOrder.status eq 'SENT'}"><div style="color: blue;"><spring:message code="deliveryorder.status.${deliveryOrder_form.deliveryOrder.status.messageName}"/></div></c:if>
 											<c:if test="${deliveryOrder_form.deliveryOrder.status eq 'DELIVERED'}"><div style="color: green;"><spring:message code="deliveryorder.status.${deliveryOrder_form.deliveryOrder.status.messageName}"/></div></c:if>
 											</h1>
+										</td>
+									</tr>
+								</table>
+							</fieldset>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<fieldset>
+								<legend><strong><spring:message code="sirius.reference"/></strong></legend>
+								<table width="100%" style="border: none">
+									<tr>
+										<td align="right"><spring:message code="salesorder.contract"/> : </td>
+										<td>
+											<strong>
+											<c:forEach items="${deliveryOrder_form.deliveryOrder.salesOrders}" var="sales">
+												<a href="<c:url value='/page/salesorderpreedit.htm?id=${sales.id}'/>">${sales.code}</a>
+											</c:forEach>
+											</strong>
+										</td>
+									</tr>
+									<tr>
+										<td align="right"><spring:message code="deliveryplanning"/> : </td>
+										<td>
+											<strong>
+											<c:forEach items="${deliveryOrder_form.deliveryOrder.deliveryPlanningSequences}" var="seq">
+												<a href="<c:url value='/page/deliveryplanningpreedit.htm?id=${seq.deliveryPlanning.id}'/>">${seq.deliveryPlanning.code}.${seq.no}</a>
+											</c:forEach>
+											</strong>
+										</td>
+									</tr>
+									<tr>
+										<td align="right"><spring:message code="deliveryrealization"/> : </td>
+										<td>
 											<strong><a href="<c:url value='/page/deliveryorderrealizationpreedit.htm?id=${deliveryOrder_form.deliveryOrder.deliveryOrderRealization.id}'/>">${deliveryOrder_form.deliveryOrder.deliveryOrderRealization.code}</a></strong>
 										</td>
 									</tr>
