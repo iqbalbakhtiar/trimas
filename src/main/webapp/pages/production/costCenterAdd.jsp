@@ -1,4 +1,5 @@
 <%@ include file="/common/sirius-general-top.jsp"%>
+<link rel="stylesheet" type="text/css" href="<c:url value='/assets/jquery-editable-select.css'/>">
 
 <div class="toolbar">
 	<a class="item-button-list" href="<c:url value='/page/costcenterview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
@@ -29,6 +30,26 @@
 		</td>
 	</tr>
 	<tr>
+	  <td align="right"><spring:message code="glaccount"/> : </td>
+	  <td nowrap="nowrap">
+	    <select id="accountText" name="accountText" targetName="account" size="42">
+			<c:forEach items="${glaccounts}" var="account" varStatus="status">
+				<option value="${account.id}">${account.code} - ${account.name}</option>
+			</c:forEach>
+		</select>
+	  </td>
+	</tr>
+	<tr>
+	  <td align="right"><spring:message code="glaccount"/> : </td>
+	  <td nowrap="nowrap">
+	    <select id="accountWipText" name="accountWipText" targetName="accountWip" size="42">
+			<c:forEach items="${glaccounts}" var="account" varStatus="status">
+				<option value="${account.id}">${account.code} - ${account.name}</option>
+			</c:forEach>
+		</select>
+	  </td>
+	</tr>
+	<tr>
 		<td align="right"><spring:message code="sirius.note"/> :</td>
 		<td><form:textarea path="note" rows="6" cols="45"/></td>
 	</tr>
@@ -41,13 +62,17 @@
 <script type="text/javascript">
 $(function(){
 	$('#code').focus();
-
+	
 	var $dialog = $('<div></div>').dialog({autoOpen: false, title: '${title}',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
 
 	$('.item-button-save').click(function(){
-		save();
+		if(validation())
+			save();
 	});
 
+	$('#accountText').editableSelect();
+	$("#accountWipText").editableSelect();
+	
 	function save() {
 		var xhr = new XMLHttpRequest();
 		xhr.open('POST', "<c:url value='/page/costcenteradd.htm'/>");
@@ -83,4 +108,27 @@ $(function(){
 		xhr.send(new FormData($('#addForm')[0]));
 	}
 });
+
+function popup()
+{
+	openpopup("<c:url value='/page/popupglaccountview.htm?target=account'/>");
+}
+
+function validation()
+{
+	if(!$('#account').val())
+	{
+		alert('<spring:message code="glaccount"/> <spring:message code="notif.empty"/> !!!');
+		return false;
+	}
+	
+	if(!$('#accountWip').val())
+	{
+		alert('<spring:message code="glaccount"/> WIP <spring:message code="notif.empty"/> !!!');
+		return false;
+	}
+
+	return true;
+}
+
 </script>

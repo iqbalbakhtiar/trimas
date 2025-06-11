@@ -20,6 +20,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.siriuserp.accounting.dm.GLAccount;
 import com.siriuserp.inventory.criteria.MasterDataFilterCriteria;
 import com.siriuserp.production.dm.CostCenter;
 import com.siriuserp.production.dm.CostCenterType;
@@ -50,6 +51,7 @@ public class CostCenterController extends ControllerBase
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
 		binder.registerCustomEditor(CostCenterType.class, enumEditor.forClass(CostCenterType.class));
+		binder.registerCustomEditor(GLAccount.class, modelEditor.forClass(GLAccount.class));
 	}
 	
 	@RequestMapping("/costcenterview.htm")

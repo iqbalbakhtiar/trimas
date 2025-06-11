@@ -23,7 +23,27 @@
 	<tr>
 		<td align="right"><spring:message code="sirius.type"/> :</td>
 		<td nowrap="nowrap">
-			<form:input id='type' path="type" size="43" class='input'/>
+			<form:input id='type' path="type" size="43" class='input-disabled' readonly="true"/>
+		</td>
+	</tr>
+	<tr>
+		<td align="right"><spring:message code="sirius.type"/> :</td>
+		<td nowrap="nowrap">
+			<form:input id='type' path="type" size="43" class='input-disabled' readonly="true"/>
+		</td>
+	</tr>
+	<tr>
+		<td align="right"><spring:message code="glaccount"/> :</td>
+		<td nowrap="nowrap">
+			<form:hidden path="account.id" />
+			<input type="text" value="${costcenter_edit.account.code} - ${costcenter_edit.account.name}" readonly="readonly" size="43" class="input-disabled" />
+		</td>
+	</tr>
+	<tr>
+		<td align="right"><spring:message code="glaccount"/> :</td>
+		<td nowrap="nowrap">
+			<form:hidden path="account.id" />
+			<input type="text" value="${costcenter_edit.accountWip.code} - ${costcenter_edit.accountWip.name}" readonly="readonly" size="43" class="input-disabled" />
 		</td>
 	</tr>
 	<tr>

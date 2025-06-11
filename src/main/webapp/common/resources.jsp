@@ -7,6 +7,7 @@
 <link rel="stylesheet" type="text/css" href="<c:url value='/assets/css/menuzord/menuzord.css'/>">
 <link rel="stylesheet" type="text/css" href="<c:url value='/assets/sirius.css'/>">
 <link rel="stylesheet" type="text/css" href="<c:url value='/assets/sirius-jquery-fixes.css'/>">
+<link rel="stylesheet" type="text/css" href="<c:url value='/assets/jquery-editable-select.css'/>">
 <style type="text/css" media="screen">
 	@import url("<c:url value='/assets/sirius.css'/>");
 	@import url("<c:url value='/assets/sirius-print.css'/>");
@@ -53,6 +54,7 @@
 <script type="text/javascript" src="<c:url value='/js/container.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/facility.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/party.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/jquery-editable-select.js'/>"></script>
 <script type="text/javascript">
 	Clock.init("<fmt:formatDate value='${now}' pattern='dd-MM-yyyy|HH:mm:ss'/>");
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.siriuserp.accounting.dm.GLAccount;
 import com.siriuserp.production.dm.CostCenter;
 import com.siriuserp.production.dm.CostCenterType;
 import com.siriuserp.sdk.annotation.AuditTrails;
@@ -56,6 +57,7 @@ public class CostCenterService
 		FastMap<String, Object> map = new FastMap<String, Object>();
 
 		CostCenter costCenter = new CostCenter();
+		map.put("glaccounts", genericDao.loadAll(GLAccount.class));
 		map.put("costcenter_add", costCenter);
 
 		return map;
@@ -65,6 +67,7 @@ public class CostCenterService
 	public Map<String, Object> preedit(Long id)
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
+		
 		map.put("costcenter_edit", load(id));
 
 		return map;
