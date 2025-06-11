@@ -8,7 +8,7 @@
 					  	</div>
 					  
 						<div class="main-box">
-							<sesform:form id="addForm" name="addForm" method="post" modelAttribute="facility_add">
+							<sesform:form id="addForm" name="addForm" method="post" modelAttribute="facility_form">
 								<table width="100%" style="border:none">
                                 <tr>
                                 	<td width="65%" valign="top">
