@@ -23,31 +23,29 @@ import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class OnHandQuantityReportService extends Service 
+public class OnHandQuantityReportService extends Service
 {
 	@InjectParty
-    public Map<String, Object> pre() throws ServiceException
-    {
-        FastMap<String, Object> map = new FastMap<String, Object>();
-        map.put("criteria", new InventoryLedgerFilterCriteria());
+	public Map<String, Object> pre() throws ServiceException
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("criteria", new InventoryLedgerFilterCriteria());
 
-        return map;
-    }
-	
+		return map;
+	}
+
 	public Map<String, Object> view(InventoryLedgerFilterCriteria criteria)
-    {
-        FastMap<String, Object> map = new FastMap<String, Object>();
-        
-        OnHandQuantityByDateReportQuery query = new OnHandQuantityByDateReportQuery();
-        query.setFilterCriteria(criteria);
-        
-        map.put("criteria", criteria);
-        map.put("reports", genericDao.generate(query));
-        
-        map.put("organization", genericDao.load(Party.class, criteria.getOrganization()));
-        map.put("facility", SiriusValidator.validateLongParam(criteria.getFacility()) ? genericDao.load(Facility.class, criteria.getFacility()) : null);
-        map.put("productCategory", SiriusValidator.validateLongParam(criteria.getProductCategory()) ? genericDao.load(ProductCategory.class, criteria.getProductCategory()) : null);
-        
-        return map;
-    }
+	{
+		OnHandQuantityByDateReportQuery query = new OnHandQuantityByDateReportQuery();
+		query.setFilterCriteria(criteria);
+
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("criteria", criteria);
+		map.put("reports", genericDao.generate(query));
+		map.put("organization", genericDao.load(Party.class, criteria.getOrganization()));
+		map.put("facility", SiriusValidator.validateLongParam(criteria.getFacility()) ? genericDao.load(Facility.class, criteria.getFacility()) : null);
+		map.put("productCategory", SiriusValidator.validateLongParam(criteria.getProductCategory()) ? genericDao.load(ProductCategory.class, criteria.getProductCategory()) : null);
+
+		return map;
+	}
 }

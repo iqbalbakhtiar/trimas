@@ -29,19 +29,19 @@ public class OnHandQuantityReportController extends ControllerBase
 {
 	@Autowired
 	private OnHandQuantityReportService service;
-	
+
 	@InitBinder
-    public void initBinder(WebDataBinder binder, WebRequest request)
-    {
-        initBinderFactory.initBinder(binder, Product.class, Facility.class, ProductCategory.class);
-    }
-	
+	public void initBinder(WebDataBinder binder, WebRequest request)
+	{
+		initBinderFactory.initBinder(binder, Product.class, Facility.class, ProductCategory.class);
+	}
+
 	@RequestMapping("/onhandquantitybydatereportpre.htm")
 	public ModelAndView pre() throws ServiceException
 	{
 		return new ModelAndView("inventory-report/onHandQuantityByDateReportAdd", service.pre());
 	}
-	
+
 	@RequestMapping("/onhandquantitybydatereportview.htm")
 	public ModelAndView view(HttpServletRequest request) throws ServiceException
 	{

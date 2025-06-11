@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.siriuserp.inventory.criteria.InventoryLedgerFilterCriteria;
 import com.siriuserp.inventory.query.InventoryLedgerDetailQuery;
 import com.siriuserp.inventory.query.InventoryLedgerSummaryReportQuery;
+import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.base.Service;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.dm.Facility;
@@ -23,19 +24,21 @@ import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class InventoryLedgerReportService extends Service {
-	
+public class InventoryLedgerReportService extends Service
+{
 	@Autowired
 	private GenericDao genericDao;
-	
+
+	@InjectParty
 	public Map<String, Object> pre() throws ServiceException
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("criteria", new InventoryLedgerFilterCriteria());
+		map.put("years", DateHelper.toYear(DateHelper.today()));
 
 		return map;
 	}
-	
+
 	public Map<String, Object> view(InventoryLedgerFilterCriteria criteria)
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
@@ -57,7 +60,7 @@ public class InventoryLedgerReportService extends Service {
 
 		return map;
 	}
-	
+
 	public InventoryLedgerFilterCriteria createMonth(InventoryLedgerFilterCriteria criteria)
 	{
 		if (SiriusValidator.validateDate(criteria.getDateFrom()))
@@ -75,7 +78,7 @@ public class InventoryLedgerReportService extends Service {
 
 		return criteria;
 	}
-	
+
 	public Map<String, Object> detailview(InventoryLedgerFilterCriteria criteria)
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
@@ -87,10 +90,10 @@ public class InventoryLedgerReportService extends Service {
 
 		InventoryLedgerDetailQuery query = new InventoryLedgerDetailQuery();
 		query.setFilterCriteria(criteria);
-		
+
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()))
 			map.put("organization", genericDao.load(Party.class, criteria.getOrganization()));
-		
+
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getFacility()))
 			map.put("facility", genericDao.load(Facility.class, criteria.getFacility()));
 

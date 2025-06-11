@@ -29,11 +29,11 @@ import com.siriuserp.sdk.springmvc.XLSFile;
 
 @Controller
 @SessionAttributes(value = "criteria", types = InventoryLedgerFilterCriteria.class)
-public class InventoryLedgerReportController extends ControllerBase 
+public class InventoryLedgerReportController extends ControllerBase
 {
 	@Autowired
 	private InventoryLedgerReportService service;
-	
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
@@ -45,19 +45,19 @@ public class InventoryLedgerReportController extends ControllerBase
 	{
 		return new ModelAndView("inventory-report/inventoryLedgerSummaryAdd", service.pre());
 	}
-	
+
 	@RequestMapping("/inventoryledgersummaryview.htm")
 	public ModelAndView view(HttpServletRequest request) throws ServiceException
 	{
 		return new ModelAndView("inventory-report/inventoryLedgerSummaryList", service.view(service.createMonth((InventoryLedgerFilterCriteria) criteriaFactory.createReport(request, InventoryLedgerFilterCriteria.class))));
 	}
-	
+
 	@RequestMapping("/inventoryledgersummaryexcell.xls")
 	public ModelAndView excell(@ModelAttribute("criteria") InventoryLedgerFilterCriteria criteria)
 	{
 		return new XLSFile("inventory-report/inventoryLedgerSummaryPrint", service.view(service.createMonth(criteria)));
 	}
-	
+
 	//Inventory Ledger Detail
 	@RequestMapping("/inventoryledgerdetailpre.htm")
 	public ModelAndView predetail() throws ServiceException
@@ -76,6 +76,4 @@ public class InventoryLedgerReportController extends ControllerBase
 	{
 		return new XLSFile("inventory-report/inventoryLedgerDetailPrint", service.detailview(criteria));
 	}
-
-
 }

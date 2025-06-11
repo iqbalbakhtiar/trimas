@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class InventoryLedgerFilterCriteria extends AbstractReportFilterCriteria 
+public class InventoryLedgerFilterCriteria extends AbstractReportFilterCriteria
 {
 	private static final long serialVersionUID = -8831530257792290868L;
 
@@ -33,6 +33,7 @@ public class InventoryLedgerFilterCriteria extends AbstractReportFilterCriteria
 	private Long tax;
 	private Long colourId;
 
+	private String lotCode;
 	private String itemName;
 	private String customer;
 	private String reference;
@@ -46,6 +47,7 @@ public class InventoryLedgerFilterCriteria extends AbstractReportFilterCriteria
 	private boolean reserved = false;
 	private boolean transfer = false;
 	private boolean onhand = false;
+	private boolean showBale = true;
 	private Boolean status;
 
 	private List<Long> containers = new FastList<Long>();

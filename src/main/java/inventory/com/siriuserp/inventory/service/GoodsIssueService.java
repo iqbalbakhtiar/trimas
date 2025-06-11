@@ -78,8 +78,7 @@ public class GoodsIssueService
 	//  @AutomaticUpdateMemoable(className = WarehouseReferenceItem.class, memoName = PurchaseMemoable.class, signFactor = 1)
 	//	@AutomaticPosting(roleClasses ={ GoodsIssuePostingRole.class })
 	@AuditTrails(className = GoodsIssue.class, actionType = AuditTrailsActionType.CREATE)
-	@AutomaticSibling(roles =
-	{ "AddDWInventoryItemOutSiblingRole" })
+	@AutomaticSibling(roles = "AddDWInventoryItemOutSiblingRole")
 	public void add(GoodsIssue goodsIssue) throws Exception
 	{
 		Assert.notEmpty(goodsIssue.getForm().getItems(), "Empty item transaction, please recheck !");
