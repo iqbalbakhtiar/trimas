@@ -40,7 +40,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td align="right"><spring:message code="glaccount"/> :</td>
+		<td align="right"><spring:message code="glaccount"/> (WIP) :</td>
 		<td nowrap="nowrap">
 			<form:hidden path="account.id" />
 			<input type="text" value="${costcenter_edit.accountWip.code} - ${costcenter_edit.accountWip.name}" readonly="readonly" size="43" class="input-disabled" />

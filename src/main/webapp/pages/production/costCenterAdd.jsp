@@ -40,7 +40,7 @@
 	  </td>
 	</tr>
 	<tr>
-	  <td align="right"><spring:message code="glaccount"/> : </td>
+	  <td align="right"><spring:message code="glaccount"/> (WIP) : </td>
 	  <td nowrap="nowrap">
 	    <select id="accountWipText" name="accountWipText" targetName="accountWip" size="42">
 			<c:forEach items="${glaccounts}" var="account" varStatus="status">
