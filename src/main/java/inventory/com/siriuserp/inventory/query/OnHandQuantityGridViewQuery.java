@@ -27,15 +27,18 @@ public class OnHandQuantityGridViewQuery extends AbstractGridViewQuery
 			builder.append("SELECT COUNT(DISTINCT inv.product) ");
 
 		if (type.compareTo(ExecutorType.HQL) == 0)
-			builder.append("SELECT new com.siriuserp.inventory.adapter.OnhandQuantityUIAdapter(inv.product, SUM(inv.onHand), SUM(inv.onTransfer), SUM(inv.reserved)) ");
+			builder.append("SELECT NEW com.siriuserp.inventory.adapter.OnhandQuantityUIAdapter(inv.product, inv.lot, SUM(inv.onHand), SUM(inv.onTransfer), SUM(inv.reserved)) ");
 
 		builder.append("FROM InventoryItem inv WHERE inv.total > 0 ");
 
+		if (SiriusValidator.validateLongParam(criteria.getProduct()))
+			builder.append("AND inv.product.id =:productId ");
+
 		if (SiriusValidator.validateParam(criteria.getCode()))
-			builder.append("AND inv.product.code like :code ");
+			builder.append("AND inv.product.code LIKE :code ");
 
 		if (SiriusValidator.validateParam(criteria.getName()))
-			builder.append("AND inv.product.name like :name ");
+			builder.append("AND inv.product.name LIKE :name ");
 
 		if (SiriusValidator.validateParam(criteria.getProductCategory()))
 			builder.append("AND inv.product.productCategory.name LIKE :category ");
@@ -43,12 +46,18 @@ public class OnHandQuantityGridViewQuery extends AbstractGridViewQuery
 		if (SiriusValidator.validateParam(criteria.getUom()))
 			builder.append("AND inv.product.unitOfMeasure.measureId LIKE :uom ");
 
+		if (SiriusValidator.validateParam(criteria.getLotCode()))
+			builder.append("AND inv.lot.code =:lotCode ");
+
 		if (type.compareTo(ExecutorType.HQL) == 0)
-			builder.append("GROUP BY inv.product.id ORDER BY inv.product.name ASC");
+			builder.append("GROUP BY inv.product.id, inv.lot.code ORDER BY inv.product.name ASC, inv.lot.code ASC");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);
 		query.setCacheable(true);
+
+		if (SiriusValidator.validateLongParam(criteria.getProduct()))
+			query.setParameter("productId", criteria.getProduct());
 
 		if (SiriusValidator.validateParam(criteria.getCode()))
 			query.setParameter("code", "%" + criteria.getCode() + "%");
@@ -61,6 +70,9 @@ public class OnHandQuantityGridViewQuery extends AbstractGridViewQuery
 
 		if (SiriusValidator.validateParam(criteria.getUom()))
 			query.setParameter("uom", "%" + criteria.getUom() + "%");
+
+		if (SiriusValidator.validateParam(criteria.getLotCode()))
+			query.setParameter("lotCode", criteria.getLotCode());
 
 		return query;
 	}

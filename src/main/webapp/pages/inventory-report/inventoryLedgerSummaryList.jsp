@@ -70,11 +70,11 @@
 
 	function prev()
 	{
-		window.location = "<c:url value='/page/inventoryledgersummaryview.htm?organization=${organization.id}&facility=${criteria.facility}&container=${criteria.container}&product=${criteria.product}&dateFrom='/><fmt:formatDate value='${criteria.prev}' pattern='dd-MM-yyyy'/>";
+		window.location = "<c:url value='/page/inventoryledgersummaryview.htm?organization=${organization.id}&facility=${criteria.facility}&container=${criteria.container}&lotCode=${criteria.lotCode}&productCategory=${criteria.productCategory}&product=${criteria.product}&showBale=${criteria.showBale}&dateFrom='/><fmt:formatDate value='${criteria.prev}' pattern='dd-MM-yyyy'/>";
 	}
 	
 	function next()
 	{
-		window.location = "<c:url value='/page/inventoryledgersummaryview.htm?organization=${organization.id}&facility=${criteria.facility}&container=${criteria.container}&product=${criteria.product}&dateFrom='/><fmt:formatDate value='${criteria.next}' pattern='dd-MM-yyyy'/>";
+		window.location = "<c:url value='/page/inventoryledgersummaryview.htm?organization=${organization.id}&facility=${criteria.facility}&container=${criteria.container}&lotCode=${criteria.lotCode}&productCategory=${criteria.productCategory}&product=${criteria.product}&showBale=${criteria.showBale}&dateFrom='/><fmt:formatDate value='${criteria.next}' pattern='dd-MM-yyyy'/>";
 	}
 </script>

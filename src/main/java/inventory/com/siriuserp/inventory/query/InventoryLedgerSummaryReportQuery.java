@@ -41,7 +41,6 @@ public class InventoryLedgerSummaryReportQuery extends AbstractStandardReportQue
 				adapter = new InventoryLedgerAdapter();
 				adapter.setFacilityName(detail.getFacilityName());
 				adapter.setFacilityId(detail.getFacilityId());
-				adapter.setGrid(detail.getGrid());
 				adapter.getAdapters().add(detail);
 
 				list.add(adapter);
@@ -56,28 +55,34 @@ public class InventoryLedgerSummaryReportQuery extends AbstractStandardReportQue
 		FastList<InventoryLedgerAdapter> adapters = new FastList<InventoryLedgerAdapter>();
 
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT new com.siriuserp.inventory.adapter.InventoryLedgerAdapter(SUM( CASE WHEN balance.date < :start THEN (balance.in-balance.out) ELSE 0 END ), ");
-		builder.append("SUM( CASE WHEN balance.date BETWEEN :start AND :end THEN balance.in ELSE 0 END ), ");
-		builder.append("SUM( CASE WHEN balance.date BETWEEN :start AND :end THEN balance.out ELSE 0 END ), ");
-		builder.append("balance.facilityName, balance.gridName, balance.containerName, balance.productCode, balance.productName, balance.uom, balance.facilityId, ");
-		builder.append("grid) ");
-		builder.append("FROM DWInventoryItemBalanceDetail balance, Grid grid ");
-		builder.append("WHERE balance.gridId = grid.id AND balance.date <=:end ");
+		builder.append("SELECT new com.siriuserp.inventory.adapter.InventoryLedgerAdapter(SUM(CASE WHEN balance.date < :start THEN (balance.in-balance.out) ELSE 0 END), ");
+		builder.append("SUM(CASE WHEN balance.date BETWEEN :start AND :end THEN balance.in ELSE 0 END), ");
+		builder.append("SUM(CASE WHEN balance.date BETWEEN :start AND :end THEN balance.out ELSE 0 END), ");
+		builder.append("balance.facilityId, balance.facilityName, balance.gridName, balance.containerName, ");
+		builder.append("balance.lotCode, balance.productId, balance.productCode, balance.productName, balance.uom) ");
+		builder.append("FROM DWInventoryItemBalanceDetail balance ");
+		builder.append("WHERE balance.date <=:end ");
 
-		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()))
+		if (SiriusValidator.validateLongParam(criteria.getOrganization()))
 			builder.append("AND balance.organizationId =:organization ");
 
-		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getFacility()))
+		if (SiriusValidator.validateLongParam(criteria.getFacility()))
 			builder.append("AND balance.facilityId =:facility ");
 
-		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getContainer()))
+		if (SiriusValidator.validateLongParam(criteria.getContainer()))
 			builder.append("AND balance.containerId =:container ");
 
-		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getProduct()))
+		if (SiriusValidator.validateLongParam(criteria.getProductCategory()))
+			builder.append("AND balance.productCategoryId =:productCategory ");
+
+		if (SiriusValidator.validateLongParam(criteria.getProduct()))
 			builder.append("AND balance.productId =:product ");
 
-		builder.append("GROUP BY balance.facilityId, balance.containerId, balance.productId ");
-		builder.append("ORDER BY balance.containerName ASC, balance.productCode ASC, balance.productName ASC");
+		if (SiriusValidator.validateParam(criteria.getLotCode()))
+			builder.append("AND balance.lotCode =:lotCode ");
+
+		builder.append("GROUP BY balance.facilityId, balance.containerId, balance.lotCode, balance.productId ");
+		builder.append("ORDER BY balance.containerName ASC, balance.productName ASC, balance.lotCode ASC");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setCacheable(true);
@@ -85,17 +90,23 @@ public class InventoryLedgerSummaryReportQuery extends AbstractStandardReportQue
 		query.setParameter("start", criteria.getDateFrom());
 		query.setParameter("end", criteria.getDateTo());
 
-		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()))
+		if (SiriusValidator.validateLongParam(criteria.getOrganization()))
 			query.setParameter("organization", criteria.getOrganization());
 
-		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getFacility()))
+		if (SiriusValidator.validateLongParam(criteria.getFacility()))
 			query.setParameter("facility", criteria.getFacility());
 
-		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getContainer()))
+		if (SiriusValidator.validateLongParam(criteria.getContainer()))
 			query.setParameter("container", criteria.getContainer());
 
-		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getProduct()))
+		if (SiriusValidator.validateLongParam(criteria.getProductCategory()))
+			query.setParameter("productCategory", criteria.getProductCategory());
+
+		if (SiriusValidator.validateLongParam(criteria.getProduct()))
 			query.setParameter("product", criteria.getProduct());
+
+		if (SiriusValidator.validateParam(criteria.getLotCode()))
+			query.setParameter("lotCode", criteria.getLotCode());
 
 		adapters.addAll(query.list());
 

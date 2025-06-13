@@ -119,11 +119,10 @@ public class InventoryLedgerDetailQuery extends AbstractStandardReportQuery
 		builder.append("SELECT NEW com.siriuserp.inventory.adapter.InventoryLedgerAdapter(");
 		builder.append("SUM(CASE WHEN balance.date < :date THEN balance.in ELSE 0 END ), ");
 		builder.append("SUM(CASE WHEN balance.date < :date THEN balance.out ELSE 0 END ), ");
-		builder.append("balance.facilityName, balance.containerName, balance.lotCode, balance.productCode, balance.productName,  ");
+		builder.append("balance.facilityId, balance.facilityName, balance.containerId, balance.containerName, ");
+		builder.append("balance.lotCode, balance.productId, balance.productCode, balance.productName, ");
 		builder.append("(SELECT cat.categoryType FROM ProductCategory cat WHERE cat.id = balance.productCategoryId), ");
-		builder.append("balance.facilityId, balance.containerId, balance.productId, ");
-		builder.append("(SELECT(SUM(inv.reserved)) FROM InventoryItem inv WHERE inv.product.id = balance.productId AND inv.container.id = balance.containerId), ");
-		builder.append("(SELECT grid FROM Grid grid WHERE grid.id = balance.gridId)) ");
+		builder.append("(SELECT(SUM(inv.reserved)) FROM InventoryItem inv WHERE inv.product.id = balance.productId AND inv.container.id = balance.containerId)) ");
 		builder.append("FROM DWInventoryItemBalanceDetail balance WHERE balance.id IS NOT NULL ");
 
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()))
@@ -135,11 +134,11 @@ public class InventoryLedgerDetailQuery extends AbstractStandardReportQuery
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getContainer()))
 			builder.append("AND balance.containerId =:container ");
 
-		if (SiriusValidator.validateParam(criteria.getLotCode()))
-			builder.append("AND balance.lotCode =:lotCode ");
-
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getProduct()))
 			builder.append("AND balance.productId =:product ");
+
+		if (SiriusValidator.validateParam(criteria.getLotCode()))
+			builder.append("AND balance.lotCode =:lotCode ");
 
 		builder.append("GROUP BY balance.containerId, balance.lotCode, balance.productId");
 
@@ -156,11 +155,11 @@ public class InventoryLedgerDetailQuery extends AbstractStandardReportQuery
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getContainer()))
 			query.setParameter("container", criteria.getContainer());
 
-		if (SiriusValidator.validateParam(criteria.getLotCode()))
-			query.setParameter("lotCode", criteria.getLotCode());
-
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getProduct()))
 			query.setParameter("product", criteria.getProduct());
+
+		if (SiriusValidator.validateParam(criteria.getLotCode()))
+			query.setParameter("lotCode", criteria.getLotCode());
 
 		adapters.addAll(query.list());
 
@@ -180,8 +179,10 @@ public class InventoryLedgerDetailQuery extends AbstractStandardReportQuery
 		builder.append("FROM DWInventoryItemBalanceDetail balance ");
 		builder.append("WHERE balance.productId =:productId ");
 		builder.append("AND balance.containerId =:containerId ");
-		builder.append("AND balance.lotCode =:lotCode ");
 		builder.append("AND balance.date >= :start AND balance.date <= :end ");
+
+		if (adapter.getLotCode() != null)
+			builder.append("AND balance.lotCode =:lotCode ");
 
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()))
 			builder.append("AND balance.organizationId =:organization ");
@@ -196,9 +197,11 @@ public class InventoryLedgerDetailQuery extends AbstractStandardReportQuery
 		query.setReadOnly(true);
 		query.setParameter("productId", adapter.getProductId());
 		query.setParameter("containerId", adapter.getContainerId());
-		query.setParameter("lotCode", adapter.getLotCode());
 		query.setParameter("start", criteria.getDateFrom());
 		query.setParameter("end", criteria.getDateTo());
+
+		if (adapter.getLotCode() != null)
+			query.setParameter("lotCode", adapter.getLotCode());
 
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()))
 			query.setParameter("organization", criteria.getOrganization());

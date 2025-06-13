@@ -39,13 +39,16 @@ public class ProductGridViewQuery extends AbstractGridViewQuery
 			builder.append("AND pro.unitOfMeasure.measureId LIKE :uom ");
 
 		if (SiriusValidator.validateParam(criteria.getType()))
-			builder.append("AND pro.type = :type ");
+			builder.append("AND pro.type =:type ");
+
+		if (SiriusValidator.validateLongParam(criteria.getCategoryId()))
+			builder.append("AND pro.productCategory.id =:categoryId ");
 
 		if (SiriusValidator.validateParam(criteria.getCategoryName()))
 			builder.append("AND pro.productCategory.name LIKE :productCategory ");
 
 		if (SiriusValidator.validateParam(criteria.getProductCategoryType()))
-			builder.append("AND pro.productCategory.type = :productCategoryType ");
+			builder.append("AND pro.productCategory.type =:productCategoryType ");
 
 		if (SiriusValidator.validateParam(criteria.getExcludeCategoryType()))
 			builder.append("AND pro.productCategory.categoryType != :excludeCategoryType ");
@@ -77,6 +80,9 @@ public class ProductGridViewQuery extends AbstractGridViewQuery
 
 		if (SiriusValidator.validateParam(criteria.getType()))
 			query.setParameter("type", ProductType.valueOf(criteria.getType()));
+
+		if (SiriusValidator.validateLongParam(criteria.getCategoryId()))
+			query.setParameter("categoryId", criteria.getCategoryId());
 
 		if (SiriusValidator.validateParam(criteria.getCategoryName()))
 			query.setParameter("productCategory", "%" + criteria.getCategoryName() + "%");

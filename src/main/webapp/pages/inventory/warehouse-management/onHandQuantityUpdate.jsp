@@ -1,7 +1,12 @@
 <%@ include file="/pages/includes/sirius-head.jsp"%>	
 
 <div class="toolbar">
-    <a class="item-button-list" href="<c:url value='/page/onhandquantityview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
+	<c:if test="${product.serial}">
+		<a class="item-button-edit" href="<c:url value='/page/onhandquantityview.htm?product=${product.id}'/>" title="Edit"><span><spring:message code="sirius.list"/></span></a>
+	</c:if>
+	<c:if test="${!product.serial}">
+    	<a class="item-button-list" href="<c:url value='/page/onhandquantitygroupview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
+    </c:if>
 </div>
 
 <div class="main-box">

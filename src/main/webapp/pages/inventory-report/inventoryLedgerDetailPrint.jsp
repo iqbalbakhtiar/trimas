@@ -113,7 +113,7 @@
           <td align="right" colspan='4' style="border-bottom:solid 1px black;">&nbsp;</td>
           <td align="right" style="border-bottom:solid 1px black;">&nbsp;</td>
           <td align="right" style="border-bottom:solid 1px black;"><spring:message code="sirius.total"/> : </td>
-          <td align="right" style="border-bottom:solid 1px black;"><fmt:formatNumber value='${report.sum - report.reserved}' pattern=',##0.00'/></td>
+          <td align="right" style="border-bottom:solid 1px black;"><fmt:formatNumber value='${report.sum}' pattern=',##0.00'/></td>
           <c:if test="${criteria.showBale}">
 	          <td align="right" style="border-bottom:solid 1px black;">&nbsp;</td>
 	          <td align="right" style="border-bottom:solid 1px black;">&nbsp;</td>

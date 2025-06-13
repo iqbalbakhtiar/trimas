@@ -61,24 +61,6 @@ public class InventoryLedgerReportService extends Service
 		return map;
 	}
 
-	public InventoryLedgerFilterCriteria createMonth(InventoryLedgerFilterCriteria criteria)
-	{
-		if (SiriusValidator.validateDate(criteria.getDateFrom()))
-		{
-			criteria.setYear(DateHelper.getYear(criteria.getDateFrom()));
-			criteria.setMonth(DateHelper.toMonthEnum(criteria.getDateFrom()));
-		}
-
-		Date now = new DateTime(criteria.getYear(), DateHelper.toIntMonth(criteria.getMonth()), 1, 0, 0, 0, 0).toDate();
-		if (criteria.getDateFrom() != null)
-			now = criteria.getDateFrom();
-
-		criteria.setNext(DateHelper.plusOneMonth(now));
-		criteria.setPrev(DateHelper.minusOneMonth(now));
-
-		return criteria;
-	}
-
 	public Map<String, Object> detailview(InventoryLedgerFilterCriteria criteria)
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
@@ -104,4 +86,21 @@ public class InventoryLedgerReportService extends Service
 		return map;
 	}
 
+	public InventoryLedgerFilterCriteria createMonth(InventoryLedgerFilterCriteria criteria)
+	{
+		if (SiriusValidator.validateDate(criteria.getDateFrom()))
+		{
+			criteria.setYear(DateHelper.getYear(criteria.getDateFrom()));
+			criteria.setMonth(DateHelper.toMonthEnum(criteria.getDateFrom()));
+		}
+
+		Date now = new DateTime(criteria.getYear(), DateHelper.toIntMonth(criteria.getMonth()), 1, 0, 0, 0, 0).toDate();
+		if (criteria.getDateFrom() != null)
+			now = criteria.getDateFrom();
+
+		criteria.setNext(DateHelper.plusOneMonth(now));
+		criteria.setPrev(DateHelper.minusOneMonth(now));
+
+		return criteria;
+	}
 }

@@ -146,7 +146,7 @@
 											</c:if>
 						  					<tr>
 							  					<td align="right"><spring:message code="product"/></td>
-							  					<td>: ${item.product.name} <c:if test="${item.salesInternalType eq 'YARN'}">${deliveryOrder_edit.referenceLot}</c:if></td>
+							  					<td>: ${item.product.name} <c:if test="${item.salesInternalType eq 'YARN'}">${deliveryOrder_edit.referencePrintLot}</c:if></td>
 						  					</tr>
 							  				</table>
 						  				</td>

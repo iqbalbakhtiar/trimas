@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.util.Date;
 
 import com.siriuserp.inventory.dm.CategoryType;
-import com.siriuserp.sdk.dm.Grid;
 
 import javolution.util.FastList;
 import lombok.Getter;
@@ -43,43 +42,57 @@ public class InventoryLedgerAdapter
 	private String uom;
 	private String note;
 
-	private Long facilityId;
-	private Long productId;
-	private Long containerId;
-
-	private Grid grid;
-
-	private String description;
+	private String referenceUri;
+	private String referenceCode;
 	private String reference;
+	private String referenceType;
+	private String description;
+	private String descriptionType;
+	private String descriptionUri;
 
-	private Date date;
-
+	private Long facilityId;
+	private Long containerId;
+	private Long productId;
 	private Long referenceId;
 	private Long descriptionId;
 
-	private String referenceUri;
-	private String referenceCode;
-	private String descriptionUri;
-
-	private String referenceType;
-	private String descriptionType;
+	private Date date;
 
 	private FastList<InventoryLedgerAdapter> adapters = new FastList<InventoryLedgerAdapter>();
 
-	//Inventory Ledger Summary Production
-	public InventoryLedgerAdapter(BigDecimal quantity, BigDecimal in, BigDecimal out, String facilityName, String gridName, String containerName, String productCode, String productName, String uom, Long facilityId, Grid grid)
+	//Inventory Ledger Summary
+	public InventoryLedgerAdapter(BigDecimal quantity, BigDecimal in, BigDecimal out, Long facilityId, String facilityName, String gridName, String containerName, String lotCode, Long productId, String productCode, String productName, String uom)
 	{
 		this.quantity = quantity;
 		this.in = in;
 		this.out = out;
+		this.facilityId = facilityId;
 		this.facilityName = facilityName;
 		this.gridName = gridName;
 		this.containerName = containerName;
+		this.lotCode = lotCode;
+		this.productId = productId;
 		this.productCode = productCode;
 		this.productName = productName;
 		this.uom = uom;
+	}
+
+	//Inventory Ledger Detail Opening
+	public InventoryLedgerAdapter(BigDecimal in, BigDecimal out, Long facilityId, String facilityName, Long containerId, String containerName, String lotCode, Long productId, String productCode, String productName, CategoryType categoryType,
+			BigDecimal reserved)
+	{
+		this.in = in;
+		this.out = out;
 		this.facilityId = facilityId;
-		this.grid = grid;
+		this.facilityName = facilityName;
+		this.containerId = containerId;
+		this.containerName = containerName;
+		this.lotCode = lotCode;
+		this.productId = productId;
+		this.productCode = productCode;
+		this.productName = productName;
+		this.categoryType = categoryType.toString();
+		this.reserved = reserved;
 	}
 
 	//Inventory Ledger Detail & Reference
@@ -102,25 +115,6 @@ public class InventoryLedgerAdapter
 		this.note = note;
 	}
 
-	//Inventory Ledger Detail Opening
-	public InventoryLedgerAdapter(BigDecimal in, BigDecimal out, String facilityName, String containerName, String lotCode, String productCode, String productName, CategoryType categoryType, Long facilityId, Long containerId, Long productId,
-			BigDecimal reserved, Grid grid)
-	{
-		this.in = in;
-		this.out = out;
-		this.facilityName = facilityName;
-		this.containerName = containerName;
-		this.lotCode = lotCode;
-		this.productCode = productCode;
-		this.productName = productName;
-		this.categoryType = categoryType.toString();
-		this.facilityId = facilityId;
-		this.containerId = containerId;
-		this.productId = productId;
-		this.reserved = reserved;
-		this.grid = grid;
-	}
-
 	//For MutationReportQuery
 	public InventoryLedgerAdapter(BigDecimal in, BigDecimal out, BigDecimal cogs, String productCode, String productName)
 	{
@@ -141,6 +135,27 @@ public class InventoryLedgerAdapter
 		this.lotCode = lotCode;
 		this.containerName = containerName;
 		this.date = date;
+	}
+
+	//Qty Bale, In Bale, Out Bale & Sum Bale used in Ledger Summary
+	public BigDecimal getQuantityBale()
+	{
+		return getQuantity().divide(BigDecimal.valueOf(181.44), 5, RoundingMode.HALF_UP);
+	}
+
+	public BigDecimal getInBale()
+	{
+		return getIn().divide(BigDecimal.valueOf(181.44), 5, RoundingMode.HALF_UP);
+	}
+
+	public BigDecimal getOutBale()
+	{
+		return getOut().divide(BigDecimal.valueOf(181.44), 5, RoundingMode.HALF_UP);
+	}
+
+	public BigDecimal getSumBale()
+	{
+		return getSum().divide(BigDecimal.valueOf(181.44), 5, RoundingMode.HALF_UP);
 	}
 
 	public BigDecimal getBalance()

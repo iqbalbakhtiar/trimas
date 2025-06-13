@@ -47,7 +47,8 @@ public class InventoryLedgerFilterCriteria extends AbstractReportFilterCriteria
 	private boolean reserved = false;
 	private boolean transfer = false;
 	private boolean onhand = false;
-	private boolean showBale = true;
+
+	private Boolean showBale = false;
 	private Boolean status;
 
 	private List<Long> containers = new FastList<Long>();

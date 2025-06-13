@@ -154,6 +154,14 @@ public class DeliveryOrder extends Model implements JSONSupport
 		return String.join(" ", references);
 	}
 
+	public String getReferencePrintLot()
+	{
+		HashSet<String> references = new HashSet<String>();
+		references.addAll(getItems().stream().map(item -> item.getLot() != null ? "LOT " + item.getLot().getCode().split("-")[0] : "").collect(Collectors.toSet()));
+
+		return String.join(" ", references);
+	}
+
 	public String getReferencePOCustomer()
 	{
 		HashSet<String> references = new HashSet<String>();
