@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.siriuserp.sales.criteria.SalesReportFilterCriteria;
+import com.siriuserp.sales.query.SalesDetailReportViewQuery;
 import com.siriuserp.sales.query.SalesOnProgressReportViewQuery;
+import com.siriuserp.sales.query.SalesSummaryReportQuery;
 import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.dm.Party;
@@ -53,6 +55,36 @@ public class SalesReportService
 		map.put("customer", criteria.getCustomer() != null ? genericDao.load(Party.class, criteria.getCustomer()) : null);
 		map.put("dateFrom", criteria.getDateFrom());
 		map.put("dateTo", criteria.getDateTo());
+		map.put("reports", genericDao.generateReport(query));
+
+		return map;
+	}
+
+	public Map<String, Object> viewSummary(SalesReportFilterCriteria criteria)
+	{
+		Party organization = genericDao.load(Party.class, criteria.getOrganization());
+		SalesSummaryReportQuery query = new SalesSummaryReportQuery();
+		query.setFilterCriteria(criteria);
+
+		Map<String, Object> map = new FastMap<String, Object>();
+		map.put("criteria", criteria);
+		map.put("organization", organization);
+		map.put("customer", criteria.getCustomer() != null ? genericDao.load(Party.class, criteria.getCustomer()) : null);
+		map.put("reports", genericDao.generateReport(query));
+
+		return map;
+	}
+
+	public Map<String, Object> viewDetail(SalesReportFilterCriteria criteria)
+	{
+		Party organization = genericDao.load(Party.class, criteria.getOrganization());
+		SalesDetailReportViewQuery query = new SalesDetailReportViewQuery();
+		query.setFilterCriteria(criteria);
+
+		Map<String, Object> map = new FastMap<String, Object>();
+		map.put("criteria", criteria);
+		map.put("organization", organization);
+		map.put("customer", criteria.getCustomer() != null ? genericDao.load(Party.class, criteria.getCustomer()) : null);
 		map.put("reports", genericDao.generateReport(query));
 
 		return map;

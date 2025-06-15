@@ -12,6 +12,7 @@ import com.siriuserp.sales.dm.SalesOrderItem;
 import com.siriuserp.sdk.adapter.AbstractUIAdapter;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -22,6 +23,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class SalesOnProgressReportAdapter extends AbstractUIAdapter
 {
 	private static final long serialVersionUID = -4378508826387149429L;

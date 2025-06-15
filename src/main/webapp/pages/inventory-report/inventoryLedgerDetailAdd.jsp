@@ -79,7 +79,6 @@
                                     <td nowrap="nowrap" align="right">Bale&nbsp;:</td>
                                     <td>
                                         <select id="showBale" name="showBale" class="combobox-min3">
-                                        	<option value=""></option>
                                         	<option value="true" selected="true"><spring:message code="sirius.yes"/></option>
                                         	<option value="no"><spring:message code="sirius.no"/></option>
                                         </select>

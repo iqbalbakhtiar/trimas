@@ -33,6 +33,7 @@ public class SalesReportFilterCriteria extends AbstractReportFilterCriteria
 	private String status;
 
 	private Boolean taxReport;
+	private Boolean showBale = false;
 
 	private Date dateFrom;
 	private Date dateTo;
