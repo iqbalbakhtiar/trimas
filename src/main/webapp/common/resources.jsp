@@ -49,6 +49,7 @@
 <script type="text/javascript" src="<c:url value='/js/table.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/dialog.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/list.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/generic.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/excellentexport.min.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/PostalAddress.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/container.js'/>"></script>

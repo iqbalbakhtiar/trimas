@@ -25,6 +25,7 @@
 	  	<th width="25%" nowrap="nowrap"><spring:message code="product.name"/></th>
   	  	<th width="5%" nowrap="nowrap"><spring:message code="product.uom"/></th>
   	  	<th width="10%" nowrap="nowrap"><spring:message code="productcategory"/></th>
+  	  	<th width="5%" nowrap="nowrap"><spring:message code="product.serial"/></th>
   	  	<th width="45%" nowrap="nowrap"><spring:message code="sirius.status"/></th>
 	</tr>
 	<c:forEach items="${products}" var="product">
@@ -42,12 +43,16 @@
 		<td nowrap="nowrap">${product.unitOfMeasure.name}</td>
 		<td nowrap="nowrap">${product.productCategory.name}</td>
 		<td nowrap="nowrap">
+			<c:if test="${product.serial}"><spring:message code="sirius.yes"/></div></c:if>
+			<c:if test="${!product.serial}"><spring:message code="sirius.no"/></div></c:if>
+		</td>
+		<td nowrap="nowrap">
 			<c:if test="${product.enabled}"><div style="color: green;"><spring:message code="sirius.active"/></div></c:if>
 			<c:if test="${!product.enabled}"><div style="color: red;"><spring:message code="sirius.inactive"/></div></c:if>
 		</td>
 	</tr>
 	</c:forEach>
-	<tr class="end-table"><td colspan="6">&nbsp;</td></tr>
+	<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
   	</table>
 </div>
 <table border="0" cellpadding="0" cellspacing="0" width="99%" align="center" height="20">

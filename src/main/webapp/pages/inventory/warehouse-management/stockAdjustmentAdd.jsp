@@ -190,8 +190,8 @@
 		
 		index++;
 
-		$(".input-number").bind(inputNumber);
-		$(".input-decimal").bind(inputNumber);
+		$(".input-number").bind(inputFormat);
+		$(".input-decimal").bind(inputFormat);
 	}
 					
 	function opengridpopup(index)

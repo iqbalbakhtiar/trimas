@@ -28,6 +28,7 @@ public class ProductFilterCriteria extends AbstractFilterCriteria
 	private String serialNo;
 	private String excludeCategoryType;
 	private String lotCode;
+	private String productCategory;
 
 	private Boolean saleable;
 	private Boolean status;
@@ -42,6 +43,7 @@ public class ProductFilterCriteria extends AbstractFilterCriteria
 	private Long facility;
 	private Long grid;
 	private Long container;
+	private Long id;
 
 	private List<String> barcodes = new FastList<String>();
 }

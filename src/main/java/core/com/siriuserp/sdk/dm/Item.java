@@ -84,6 +84,7 @@ public class Item extends SiriusItem
 	private Grid grid;
 	private Container container;
 	private Container destination;
+	private Container source;
 
 	private Product product;
 	private UnitOfMeasure uom;

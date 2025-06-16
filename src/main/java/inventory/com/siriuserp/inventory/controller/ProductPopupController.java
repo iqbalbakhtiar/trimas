@@ -5,6 +5,7 @@ package com.siriuserp.inventory.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.siriuserp.inventory.query.ProductPopup4TransferGridViewQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,5 +47,15 @@ public class ProductPopupController extends ControllerBase
 		map.put("index", index);
 
 		return new ModelAndView("/inventory-popup/product4AdjustmentPopup", map);
+	}
+
+	@RequestMapping("/popupproductfortransfer.htm")
+	public ModelAndView forTransfer(HttpServletRequest request, @RequestParam("target") String target, @RequestParam(required = false, value = "index") String index) throws Exception
+	{
+		FastMap<String, Object> map = service.view(criteriaFactory.createPopup(request, ProductFilterCriteria.class), ProductPopup4TransferGridViewQuery.class);
+		map.put("target", target);
+		map.put("index", index);
+
+		return new ModelAndView("/inventory-popup/product4TransferPopup", map);
 	}
 }

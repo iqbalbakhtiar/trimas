@@ -13,6 +13,8 @@ import com.siriuserp.inventory.dm.GoodsType;
 import com.siriuserp.inventory.dm.ProductCategory;
 import com.siriuserp.inventory.dm.ProductType;
 import com.siriuserp.inventory.dm.StockAdjustment;
+import com.siriuserp.inventory.dm.TransferOrder;
+import com.siriuserp.inventory.dm.TransferType;
 import com.siriuserp.inventory.dm.UnitOfMeasure;
 import com.siriuserp.inventory.dm.WarehouseTransactionSource;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
@@ -48,7 +50,7 @@ public class InventoryForm extends Form
 	private GoodsIssue goodsIssue;
 	private GoodsReceipt goodsReceipt;
 	private GoodsReceiptManual goodsReceiptManual;
-	//private TransferOrder transferOrder;
+	private TransferOrder transferOrder;
 
 	private PurchaseOrder purchaseOrder;
 	private InvoiceVerification invoiceVerification;
@@ -56,7 +58,7 @@ public class InventoryForm extends Form
 	private BarcodeGroup barcodeGroup;
 	private BarcodeGroupType barcodeGroupType;
 	private StatusType statusType;
-	//private TransferType transferType;
+	private TransferType transferType;
 
 	private Facility source;
 	private Facility destination;

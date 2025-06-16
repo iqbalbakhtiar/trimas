@@ -68,6 +68,16 @@ public class OnhandQuantityUIAdapter extends AbstractUIAdapter implements JSONSu
 		this.reserved = reserved;
 	}
 
+	public OnhandQuantityUIAdapter(Product product, Grid grid, Container container, BigDecimal onHand, BigDecimal onTransfer, BigDecimal reserved)
+	{
+		this.product = product;
+		this.grid = grid;
+		this.container = container;
+		this.onHand = onHand;
+		this.onTransfer = onTransfer;
+		this.reserved = reserved;
+	}
+
 	public OnhandQuantityUIAdapter(Container container, Lot lot, Product product, BigDecimal onHand, BigDecimal onTransfer, BigDecimal reserved, Party organization)
 	{
 		this.container = container;

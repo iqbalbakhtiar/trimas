@@ -43,14 +43,14 @@
 				}
 
 				var _client = self.opener.document.getElementById('product[${param.index}]');
-				if(_client)
-				{
-					_client.remove(_client.selectedIndex);
-					var _opt = document.createElement('option');
-					_opt.value = inventory.product.productId;
-					_opt.text = inventory.product.productName;
-	
-					_client.appendChild(_opt);
+				if (_client) {
+					if (_client.tagName === 'SELECT') {
+						_client.options.length = 0;
+						var _opt = document.createElement('option');
+						_opt.value = inventory.product.productId;
+						_opt.text = inventory.product.productName;
+						_client.appendChild(_opt);
+					}
 				}
 				
 				var _onHand = self.opener.document.getElementById('onHand[${param.index}]');
@@ -63,17 +63,17 @@
 				
 				var _uom = self.opener.document.getElementById('uom[${param.index}]');
 				if(_uom)
-					_uom.value = inventory.product.uomSymbol;
-				
+					_uom.value = inventory.product.unitOfMeasure.measureId;
+
 				var _container = self.opener.document.getElementById('container[${param.index}]');
-				if(_container)
-				{
-					_container.remove(_container.selectedIndex);
-					var _opt = document.createElement('option');
-					_opt.value = inventory.container.containerId;
-					_opt.text = inventory.container.containerName;
-	
-					_container.appendChild(_opt);
+				if (_container) {
+					if (_container.tagName === 'SELECT') {
+						_container.options.length = 0;
+						var _opt = document.createElement('option');
+						_opt.value = inventory.container.containerId;
+						_opt.text = inventory.container.containerName;
+						_container.appendChild(_opt);
+					}
 				}
 
 				var _lot = self.opener.document.getElementById('lotCode[${param.index}]');

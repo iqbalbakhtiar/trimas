@@ -46,6 +46,10 @@
 
 					_grid.dispatchEvent(new Event('change'));
 				}
+
+				let _gridTo = self.opener.document.getElementById('gridTo[${param.index}]');
+				if(_gridTo)
+					_gridTo.value = Container.data.grid.gridName;
 			}
 			
 			window.close();

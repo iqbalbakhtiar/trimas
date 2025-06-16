@@ -24,6 +24,28 @@ Facility.load = function($plugin)
 	});
 }
 
+/**
+ * Generic load berdasarkan criteria apapun.
+ * @param {Object} criteria – key/value sesuai FacilityFilterCriteria
+ */
+Facility.loadByCriteria = function (criteria)
+{
+	$.ajax({
+		url:$('base').attr('href')+"page/popupfacilityjsonview.htm",
+		data     : criteria,
+		method : 'POST',
+		async: false,
+		dataType : 'json',
+		success : function(json) {
+			if(json.status == "OK")
+			{
+				if(!$.isEmptyObject(json.facilitys))
+					Facility.data = json.facilitys;
+			}
+		}
+	});
+}
+
 Facility.loadByOrg = function($plugin)
 {
 	$.ajax({
