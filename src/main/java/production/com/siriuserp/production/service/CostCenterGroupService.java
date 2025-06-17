@@ -11,7 +11,7 @@ import com.siriuserp.inventory.dm.UnitOfMeasure;
 import com.siriuserp.production.dm.CostCenterGroup;
 import com.siriuserp.production.dm.CostCenterGroupItem;
 import com.siriuserp.production.dm.CostCenterType;
-import com.siriuserp.production.form.CostCenterForm;
+import com.siriuserp.production.form.ProductionForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
@@ -22,7 +22,6 @@ import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
-import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
 
@@ -60,8 +59,7 @@ public class CostCenterGroupService
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 
-		CostCenterGroup costGroup = new CostCenterGroup();
-		map.put("costgroup_add", costGroup);
+		map.put("costgroup_add", new ProductionForm());
 		map.put("uoms", genericDao.loadAll(UnitOfMeasure.class));
 
 		return map;
@@ -71,11 +69,7 @@ public class CostCenterGroupService
 	public Map<String, Object> preedit(Long id) throws Exception
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
-		
 		CostCenterGroup costCenterGroup = genericDao.load(CostCenterGroup.class, id);
-		CostCenterForm costCenterForm = FormHelper.bind(CostCenterForm.class, costCenterGroup);
-		
-		costCenterForm.setCostCenterGroup(costCenterGroup);
 		
 		map.put("costgroup_edit", costCenterGroup);
 
@@ -93,11 +87,9 @@ public class CostCenterGroupService
 	{
 		costGroup.setCode(GeneratorHelper.instance().generate(TableType.COST_CENTER, codeSequenceDao));
 		
-		CostCenterForm form = (CostCenterForm) costGroup.getForm();
-		
-		for (Item item : form.getItems()) {
-			if (item.getCostCenter() != null) {
-				
+		for (Item item : costGroup.getForm().getItems())
+			if (item.getCostCenter() != null) 
+			{
 				CostCenterGroupItem costCenterGroupItem = new CostCenterGroupItem();
 
 				costCenterGroupItem.setCostCenter(item.getCostCenter());
@@ -106,7 +98,6 @@ public class CostCenterGroupService
 
 				costGroup.getItems().add(costCenterGroupItem);
 			}
-		}
 		
 		genericDao.add(costGroup);
 	}

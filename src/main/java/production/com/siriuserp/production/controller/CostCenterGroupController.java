@@ -24,7 +24,7 @@ import com.siriuserp.inventory.criteria.MasterDataFilterCriteria;
 import com.siriuserp.inventory.dm.UnitOfMeasure;
 import com.siriuserp.production.dm.CostCenter;
 import com.siriuserp.production.dm.CostCenterGroup;
-import com.siriuserp.production.form.CostCenterForm;
+import com.siriuserp.production.form.ProductionForm;
 import com.siriuserp.production.query.CostCenterGroupGridViewQuery;
 import com.siriuserp.production.service.CostCenterGroupService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
@@ -42,7 +42,7 @@ import com.siriuserp.sdk.utility.FormHelper;
  */
 
 @Controller
-@SessionAttributes(value = {"costgroup_add","costgroup_edit"}, types = CostCenterGroup.class)
+@SessionAttributes(value = {"costgroup_add", "costgroup_edit"}, types = {ProductionForm.class, CostCenterGroup.class})
 @DefaultRedirect(url = "costcentergroupview.htm")
 public class CostCenterGroupController extends ControllerBase
 {
@@ -52,8 +52,8 @@ public class CostCenterGroupController extends ControllerBase
 	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
-		binder.registerCustomEditor(UnitOfMeasure.class, modelEditor.forClass(UnitOfMeasure.class));
 		binder.registerCustomEditor(CostCenter.class, modelEditor.forClass(CostCenter.class));
+		binder.registerCustomEditor(UnitOfMeasure.class, modelEditor.forClass(UnitOfMeasure.class));
 		binder.registerCustomEditor(CostCenterGroup.class, modelEditor.forClass(CostCenterGroup.class));
 	}
 	
@@ -70,17 +70,18 @@ public class CostCenterGroupController extends ControllerBase
 	}
 
 	@RequestMapping("/costcentergroupadd.htm")
-	public ModelAndView add(@ModelAttribute("costgroup_add") CostCenterForm costForm, BindingResult result, SessionStatus status) throws ServiceException
+	public ModelAndView add(@ModelAttribute("costgroup_add") ProductionForm form, BindingResult result, SessionStatus status) throws ServiceException
 	{
 		JSONResponse response = new JSONResponse();
 
 		try
 		{
-			service.add(FormHelper.create(CostCenterGroup.class, costForm));
+			service.add(FormHelper.create(CostCenterGroup.class, form));
 			status.setComplete();
 
-			response.store("id", costForm.getCostCenterGroup().getId());
-		} catch (Exception e)
+			response.store("id", form.getCostCenterGroup().getId());
+		} 
+		catch (Exception e)
 		{
 			response.setStatus(ResponseStatus.ERROR);
 			response.setMessage(e.getMessage());
@@ -107,7 +108,8 @@ public class CostCenterGroupController extends ControllerBase
 			status.setComplete();
 
 			response.store("id", costCenterGroup.getId());
-		} catch (Exception e)
+		} 
+		catch (Exception e)
 		{
 			response.statusError();
 			response.setMessage(e.getMessage());
