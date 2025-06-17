@@ -42,7 +42,7 @@
 			<tr>
 				<td nowrap="nowrap" align="right"><spring:message code="transferorder.warehousefrom"/> :</td>
 				<td>
-					<form:select id="source" path="source" cssClass="combobox-ext" onchange="copySourceToDestination(this);populateGrid();">
+					<form:select id="source" path="source" cssClass="combobox-ext">
 					</form:select>
 				</td>
 			</tr>
@@ -143,13 +143,7 @@
 			}
 		});
 
-		$('#source').focus(function(){
-			$('.barcode').remove();
-			$('.check').prop("checked", true);
-			$('.item-button-delete').click();
-			
-		});
-
+		// Onclick Section
 		$('.checkall').click(function () {
             $('.check').prop("checked", this.checked);
         });
@@ -170,35 +164,42 @@
                 
             $('.checkall').prop("checked", false);   
 		});
-        
-        $("#transferType").change();
 
-		// Populate Warehouse first to "source" then copy to "destination"
+		// OnFocus Section
+		$('#source, #destination').focus(resetLineItems);
+
+		// OnChange Section
+		$('#transferType')
+				.off('change')
+				.on('change', handleTypeChange)
+				.trigger('change');
+	});
+
+	function handleTypeChange() {
+		const type = $('#transferType').val();
+		resetLineItems();
+		$('#gridFrom,#gridTo').empty();
+		$('#source, #destination').empty();
+
 		populateWarehouse().then(() => {
-			$("#source").change();
+			$('#source').off('change.source');
+			if (type === 'INTERNAL') {
+				$('#destination').addClass('input-disabled');
+				$('#destinationPopup').hide();
+				$('#source').on('change.source', e => {
+					copySourceToDestination(e.target);
+					populateGrid();
+				});
+			}
+			else { // CROSSFACILITY or Else
+				$('#destination').removeClass('input-disabled');
+				$('#destinationPopup').show();
+				$('#source').on('change.source', populateGrid);
+			}
+			// setelah opsi muncul, trigger sekali
+			$('#source').trigger('change.source');
 		});
-	});
-	
-	$("#transferType").change(() => {
-		if ($("#transferType").val() == 'INTERNAL')
-		{
-			$("#destination").addClass('input-disabled');
-			$("#destinationPopup").hide();
-		}
-		
-		if ($("#transferType").val() == 'CROSSFACILITY')
-		{
-			$("#destination").removeClass('input-disabled');
-			$("#destinationPopup").show();
-		}
-		
-		$("#source").empty();
-		$("#destination").empty();
-		$("#gridFrom").empty();
-		$("#gridTo").empty();
-		$(".checkall").click();
-		$(".item-button-delete").click();
-	});
+	}
 
 	async function populateWarehouse() {
 		const orgId = $('#org').val();
@@ -217,29 +218,16 @@
 					keys, types, values
 			);
 
-			const $source = $('#source').empty();
-			facilities.forEach(f => {
-				$('<option>')
-						.val(f.facilityId)
-						.text(f.facilityName)
-						.appendTo($source);
-			});
+			const $s = $('#source').empty()
+			const $d = $('#destination').empty()
+			facilities.forEach(f=>{
+				$('<option>').val(f.facilityId).text(f.facilityName).appendTo($s)
+				$('<option>').val(f.facilityId).text(f.facilityName).appendTo($d)
+			})
 		}
 		catch (err) {
 			alert('Gagal mengambil facility:', err);
 		}
-	}
-
-	function copySourceToDestination(element) {
-		console.log("copySource")
-		var val  = element.value;
-		var txt  = element.options[element.selectedIndex].text;
-
-		var $dest = $('#destination').empty();
-		$('<option>')
-				.val(val)
-				.text(txt)
-				.appendTo($dest);
 	}
 
 	async function populateGrid() {
@@ -268,6 +256,20 @@
 		} catch (err) {
 			console.error('Gagal mengambil data grid:', err);
 		}
+	}
+
+	function copySourceToDestination(el){
+		const val = el.value;
+		const txt = el.options[el.selectedIndex].text;
+		$('#destination').empty().append(
+				$('<option>').val(val).text(txt)
+		);
+	}
+
+	function resetLineItems(){
+		$('.barcode').remove();
+		$('.check').prop('checked', true);
+		$('.item-button-delete').click();
 	}
 
 	var index = 0;
@@ -322,12 +324,17 @@
 		$(".input-number").bind(inputFormat);
 		$(".input-decimal").bind(inputFormat);
 	}
-					
-	function opencontainerpopup(index)
-	{
-		openpopup("<c:url value='/page/popupcontainerview.htm?target=container['/>"+index+"]&index="+index);
+
+	function opencontainerpopup(idx){
+		const baseUrl = '<c:url value="/page/popupcontainerview.htm"/>';
+		const params = {
+			target: `container[${i}]`,
+			index: idx,
+			facility: $('#destination').val()
+		};
+		openpopup(buildUrl(baseUrl, params));
 	}
-	
+
 	function openproduct(index)
 	{
 		const org = document.getElementById('org');
