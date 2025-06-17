@@ -55,15 +55,13 @@
 								<input size="26" value="${item.costCenter.code}" class="input-disabled" index="${idx.index}" disabled/>
 							</td>
 							<td>
-								<input id="costCenter[${idx.index}]" size="26" value="${item.costCenter.name}" class="input-disabled"
-									   name="items[${idx.index}].costCenter" index="${idx.index}" disabled/>
+								<input id="costCenter[${idx.index}]" size="26" value="${item.costCenter.name}" class="input-disabled" name="items[${idx.index}].costCenter" index="${idx.index}" disabled/>
 							</td>
 							<td>
 								<input size="26" value="${item.costCenter.type}" class="input-disabled" index="${idx.index}" disabled/>
 							</td>
 							<td>
-								<input id="unitCost[${idx.index}]" size="26" value="${item.unitCost}" class="input-disabled"
-									   name="items[${idx.index}].unitCost" index="${idx.index}" disabled/>
+								<input id="unitCost[${idx.index}]" size="26" value="<fmt:formatNumber value='${item.unitCost}' pattern='#,##0.00'/>" class="number-disabled" name="items[${idx.index}].unitCost" index="${idx.index}" disabled/>
 							</td>
 						</tr>
 					</c:forEach>
