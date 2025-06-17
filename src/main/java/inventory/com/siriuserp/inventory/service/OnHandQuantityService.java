@@ -77,7 +77,7 @@ public class OnHandQuantityService
 	public Map<String, Object> viewOnHand(OnHandQuantityFilterCriteria criteria) throws ServiceException
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("onHand", inventoryItemDao.getOnHand(criteria.getProduct(), criteria.getContainer()));
+		map.put("onHand", inventoryItemDao.getOnHand(criteria));
 
 		return map;
 	}

@@ -34,6 +34,7 @@ import com.siriuserp.inventory.util.InventoryBalanceUtil;
 import com.siriuserp.inventory.util.InventoryItemTagUtil;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
+import com.siriuserp.sdk.annotation.AutomaticReverseSibling;
 import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.CurrencyDao;
@@ -163,6 +164,7 @@ public class StockAdjustmentService
 
 	@AuditTrails(className = StockAdjustment.class, actionType = AuditTrailsActionType.CREATE)
 	//	@AutomaticPosting(roleClasses = StockAdjustmentPostingRole.class)
+	@AutomaticReverseSibling(roles = "StockAdjustmentGenerateBarcodeSiblingRole")
 	public void add(StockAdjustment stockAdjustment) throws Exception
 	{
 		InventoryForm form = (InventoryForm) stockAdjustment.getForm();
@@ -181,7 +183,7 @@ public class StockAdjustmentService
 				adjustmentItem.setStockAdjustment(stockAdjustment);
 				adjustmentItem.setProduct(item.getProduct());
 				adjustmentItem.setContainer(item.getContainer());
-				adjustmentItem.setGrid(item.getGrid());
+				adjustmentItem.setGrid(item.getContainer().getGrid());
 				adjustmentItem.setQuantity(item.getQuantity());
 
 				if (SiriusValidator.validateParam(item.getSerial()))

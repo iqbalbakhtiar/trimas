@@ -24,9 +24,12 @@ public class OnHandQuantityFilterCriteria extends AbstractFilterCriteria
 	private String productCategory;
 	private String uom;
 	private String lotCode;
+	private String serial;
 
 	private Long product;
 	private Long container;
+	private Long productId;
+	private Long containerId;
 
 	private boolean viewByLot = false;
 }

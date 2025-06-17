@@ -9,9 +9,11 @@ import java.util.List;
 import org.hibernate.Query;
 import org.springframework.stereotype.Component;
 
+import com.siriuserp.inventory.criteria.OnHandQuantityFilterCriteria;
 import com.siriuserp.inventory.dao.InventoryItemDao;
 import com.siriuserp.inventory.dm.InventoryItem;
 import com.siriuserp.sdk.db.DaoHelper;
+import com.siriuserp.sdk.utility.SiriusValidator;
 
 /**
  * @author ferdinand
@@ -21,26 +23,30 @@ import com.siriuserp.sdk.db.DaoHelper;
 public class InventoryItemDaoImpl extends DaoHelper<InventoryItem> implements InventoryItemDao
 {
 	@Override
-	public BigDecimal getOnHand(Long productId, Long containerId)
+	public BigDecimal getOnHand(OnHandQuantityFilterCriteria criteria) 
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT SUM(item.onHand) FROM InventoryItem item ");
 		builder.append("WHERE item.onHand > 0 ");
 		builder.append("AND item.container.id =:container ");
 		builder.append("AND item.product.id =:product ");
-		builder.append("GROUP BY item.product.id");
-
+		
+		if(SiriusValidator.validateParam(criteria.getSerial()))
+			builder.append("AND item.lot.serial =:serial ");
+		
 		Query query = getSession().createQuery(builder.toString());
 		query.setCacheable(true);
-		query.setParameter("product", productId);
-		query.setParameter("container", containerId);
+		query.setParameter("product", criteria.getProductId());
+		query.setParameter("container", criteria.getContainerId());
+		
+		if(SiriusValidator.validateParam(criteria.getSerial()))
+			query.setParameter("serial", criteria.getSerial());
 
-		Object obj = query.uniqueResult();
-		if (obj != null)
-			return (BigDecimal) obj;
-
-		return BigDecimal.ZERO;
+		 Object obj = query.uniqueResult();
+		 
+		 return obj != null ? (BigDecimal) obj : BigDecimal.ZERO;
 	}
+
 
 	@Override
 	public InventoryItem getItemBySerial(String serial, boolean available)

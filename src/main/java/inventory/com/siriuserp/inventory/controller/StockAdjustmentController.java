@@ -74,7 +74,7 @@ public class StockAdjustmentController extends ControllerBase
 	@RequestMapping("/stockadjustmentpreadd.htm")
 	public ModelAndView preadd() throws ServiceException
 	{
-		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentAdd", service.preadd());
+		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentAddNew", service.preadd());
 	}
 
 	@RequestMapping("/stockadjustmentadd.htm")
