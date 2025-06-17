@@ -328,7 +328,7 @@
 	function opencontainerpopup(idx){
 		const baseUrl = '<c:url value="/page/popupcontainerview.htm"/>';
 		const params = {
-			target: `container[${i}]`,
+			target: 'container[' + idx + ']',
 			index: idx,
 			facility: $('#destination').val()
 		};
