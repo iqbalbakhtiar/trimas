@@ -46,7 +46,8 @@ public class InventoryLedgerReportService extends Service
 		if (criteria.getDateFrom() == null)
 			criteria.setDateFrom(new DateTime(criteria.getYear(), DateHelper.toIntMonth(criteria.getMonth()), 1, 0, 0, 0, 0).toDate());
 
-		criteria.setDateTo(DateHelper.toEndDate(criteria.getDateFrom()));
+		if (criteria.getDateTo() == null)
+			criteria.setDateTo(DateHelper.toEndDate(criteria.getDateFrom()));
 
 		InventoryLedgerSummaryReportQuery query = new InventoryLedgerSummaryReportQuery();
 		query.setFilterCriteria(criteria);
@@ -68,7 +69,8 @@ public class InventoryLedgerReportService extends Service
 		if (criteria.getDateFrom() == null)
 			criteria.setDateFrom(new DateTime(criteria.getYear(), DateHelper.toIntMonth(criteria.getMonth()), 1, 0, 0, 0, 0).toDate());
 
-		criteria.setDateTo(DateHelper.toEndDate(criteria.getDateFrom()));
+		if (criteria.getDateTo() == null)
+			criteria.setDateTo(DateHelper.toEndDate(criteria.getDateFrom()));
 
 		InventoryLedgerDetailQuery query = new InventoryLedgerDetailQuery();
 		query.setFilterCriteria(criteria);

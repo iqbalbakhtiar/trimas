@@ -35,17 +35,18 @@
 <tr style="height: 30px;">
 	<th width="10%" style="border-left:solid 1px #000000;border-bottom:solid 1px #000000;border-right:solid 1px #000000;"><spring:message code="container"/></th>
   	<th width="20%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"><spring:message code="sirius.name"/></th>
+ 	<th width="10%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"><spring:message code="productcategory"/></th>
  	<th width="5%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"><spring:message code="sirius.uom"/></th>
  	<th width="6%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><spring:message code="sirius.opening.report"/></th>
  	<th width="6%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><spring:message code="sirius.in"/></th>
   	<th width="6%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><spring:message code="sirius.out"/></th>
     <th width="6%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><spring:message code="sirius.closing.report"/></th>
-    <c:if test="${criteria.showBale}">
+    <%-- <c:if test="${criteria.showBale}">
 		<th width="8%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"  align="center"><spring:message code="sirius.opening.report"/> (Bale)</th>
 		<th width="8%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"  align="center"><spring:message code="sirius.in"/> (Bale)</th>
 		<th width="8%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"  align="center"><spring:message code="sirius.out"/> (Bale)</th>
 	  	<th width="8%" style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;"  align="center"><spring:message code="sirius.closing.report"/> (Bale)</th>
- 	</c:if>
+ 	</c:if> --%>
 </tr>                   
 </thead>
 <tbody>
@@ -56,17 +57,30 @@
             <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;">
             	<a href="<c:url value='/page/inventoryledgerdetailview.htm?organization=${organization.id}&facility=${criteria.facility}&showBale=${criteria.showBale}&containerId=${adapter.containerId}&product=${adapter.productId}&lotCode=${adapter.lotCode}&dateFrom='/><fmt:formatDate value='${criteria.dateFrom}' pattern='dd-MM-yyyy'/>"><c:out value='${adapter.productName}'/> <c:if test="${not empty adapter.lotCode}"> LOT <c:out value='${adapter.lotCode}'/></c:if></a>
             </td>
+            <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="center"><c:out value='${adapter.categoryName}'/></td>
             <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="center"><c:out value='${adapter.uom}'/></td>
-            <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${adapter.quantity}' pattern=',##0.00'/></td>
-            <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${adapter.in}' pattern=',##0.00'/></td>
-            <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${adapter.out}' pattern=',##0.00'/></td>
-            <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${adapter.sum}' pattern=',##0.00'/></td>
-            <c:if test="${criteria.showBale}">
-            <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${adapter.quantityBale}' pattern=',##0.00'/></td>
-	          <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${adapter.inBale}' pattern=',##0.00'/></td>
-	          <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${adapter.outBale}' pattern=',##0.00'/></td>
-	          <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${adapter.sumBale}' pattern=',##0.00'/></td>
-          </c:if>
+            <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right">
+            	<fmt:formatNumber value='${adapter.quantity}' pattern=',##0.00'/>
+            	<c:if test="${criteria.showBale}"><strong>(<fmt:formatNumber value='${adapter.quantityBale}' pattern=',##0.00'/> BALE)</strong></c:if>
+            </td>
+            <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right">
+            	<fmt:formatNumber value='${adapter.in}' pattern=',##0.00'/>
+            	<c:if test="${criteria.showBale}"><strong>(<fmt:formatNumber value='${adapter.inBale}' pattern=',##0.00'/> BALE)</strong></c:if>
+            </td>
+            <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right">
+            	<fmt:formatNumber value='${adapter.out}' pattern=',##0.00'/>
+            	<c:if test="${criteria.showBale}"><strong>(<fmt:formatNumber value='${adapter.outBale}' pattern=',##0.00'/> BALE)</strong></c:if>
+            </td>
+            <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right">
+            	<fmt:formatNumber value='${adapter.sum}' pattern=',##0.00'/>
+            	<c:if test="${criteria.showBale}"><strong>(<fmt:formatNumber value='${adapter.sumBale}' pattern=',##0.00'/> BALE)</strong></c:if>
+            </td>
+            <%-- <c:if test="${criteria.showBale}">
+            	<td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${adapter.quantityBale}' pattern=',##0.00'/></td>
+	          	<td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${adapter.inBale}' pattern=',##0.00'/></td>
+	          	<td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${adapter.outBale}' pattern=',##0.00'/></td>
+	          	<td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${adapter.sumBale}' pattern=',##0.00'/></td>
+          </c:if> --%>
         </tr>
    </c:if>
 </c:forEach>

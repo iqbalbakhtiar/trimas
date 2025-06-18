@@ -44,8 +44,8 @@
                                 <a class="item-button-back" href="<c:url value='/page/inventoryledgersummarypre.htm'/>"><span><spring:message code="sirius.back"/></span></a>
                                 <a class="item-button-print" href="javascript:window.print();"><span><spring:message code="sirius.print"/></span></a>
                                 <a class="item-button-export-xls" href="<c:url value='/page/inventoryledgersummaryexcell.xls?organization=${criteria.organization}&facility=${criteria.facility}'/>"><span><spring:message code="sirius.export"/></span></a>
-                                <a class="item-button-rprev" href="javascript:prev();"><span><spring:message code="sirius.prev"/></span></a>
-                                <a class="item-button-rnext" href="javascript:next();"><span><spring:message code="sirius.next"/></span></a>
+                                <%-- <a class="item-button-rprev" href="javascript:prev();"><span><spring:message code="sirius.prev"/></span></a>
+                                <a class="item-button-rnext" href="javascript:next();"><span><spring:message code="sirius.next"/></span></a> --%>
                             </div>
                         </div>
 
