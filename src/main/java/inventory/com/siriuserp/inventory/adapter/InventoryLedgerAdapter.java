@@ -33,6 +33,7 @@ public class InventoryLedgerAdapter
 
 	private String productCode;
 	private String productName;
+	private String categoryName;
 	private String categoryType;
 	private String containerName;
 	private String facilityName;
@@ -53,6 +54,7 @@ public class InventoryLedgerAdapter
 	private Long facilityId;
 	private Long containerId;
 	private Long productId;
+	private Long categoryId;
 	private Long referenceId;
 	private Long descriptionId;
 
@@ -61,7 +63,8 @@ public class InventoryLedgerAdapter
 	private FastList<InventoryLedgerAdapter> adapters = new FastList<InventoryLedgerAdapter>();
 
 	//Inventory Ledger Summary
-	public InventoryLedgerAdapter(BigDecimal quantity, BigDecimal in, BigDecimal out, Long facilityId, String facilityName, String gridName, String containerName, String lotCode, Long productId, String productCode, String productName, String uom)
+	public InventoryLedgerAdapter(BigDecimal quantity, BigDecimal in, BigDecimal out, Long facilityId, String facilityName, String gridName, String containerName, String lotCode, Long productId, String productCode, String productName,
+			Long categoryId, String categoryName, String uom)
 	{
 		this.quantity = quantity;
 		this.in = in;
@@ -74,12 +77,14 @@ public class InventoryLedgerAdapter
 		this.productId = productId;
 		this.productCode = productCode;
 		this.productName = productName;
+		this.categoryId = categoryId;
+		this.categoryName = categoryName;
 		this.uom = uom;
 	}
 
 	//Inventory Ledger Detail Opening
-	public InventoryLedgerAdapter(BigDecimal in, BigDecimal out, Long facilityId, String facilityName, Long containerId, String containerName, String lotCode, Long productId, String productCode, String productName, CategoryType categoryType,
-			BigDecimal reserved)
+	public InventoryLedgerAdapter(BigDecimal in, BigDecimal out, Long facilityId, String facilityName, Long containerId, String containerName, String lotCode, Long productId, String productCode, String productName, Long categoryId,
+			String categoryName, CategoryType categoryType, BigDecimal reserved)
 	{
 		this.in = in;
 		this.out = out;
@@ -91,6 +96,8 @@ public class InventoryLedgerAdapter
 		this.productId = productId;
 		this.productCode = productCode;
 		this.productName = productName;
+		this.categoryId = categoryId;
+		this.categoryName = categoryName;
 		this.categoryType = categoryType.toString();
 		this.reserved = reserved;
 	}

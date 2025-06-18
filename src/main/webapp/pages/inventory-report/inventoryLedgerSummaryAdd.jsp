@@ -97,6 +97,14 @@
                                     <td><input id="lotCode" name="lotCode" size="6"/></td>
                                 </tr>
                                 <tr>
+                                	<td nowrap="nowrap" align="right"><spring:message code="sirius.datefrom2"/>&nbsp;:</td>
+                                    <td>
+								        <input id="dateFrom" name="dateFrom" class="datepicker" value="<fmt:formatDate value='${filterCriteria.dateFrom}' pattern='dd-MM-yyyy'/>"/>
+								        &nbsp;<spring:message code="sirius.dateto2"/> &nbsp;:&nbsp;
+								        <input id="dateTo" name="dateTo" class="datepicker" value="<fmt:formatDate value='${filterCriteria.dateTo}' pattern='dd-MM-yyyy'/>"/>
+								    </td>
+                                </tr>
+                                <%-- <tr>
                                     <td align="right"><spring:message code="sirius.month"/>&nbsp;:</td>
                                     <td>
                                     	<select id="month" name="month">
@@ -119,7 +127,7 @@
                                             </c:forEach>
                                         </select>
                                     </td>
-                                </tr>
+                                </tr> --%>
 				  				</table>
 							</sesform:form>
 						</div>

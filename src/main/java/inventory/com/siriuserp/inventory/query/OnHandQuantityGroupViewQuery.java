@@ -34,6 +34,9 @@ public class OnHandQuantityGroupViewQuery extends AbstractGridViewQuery
 
 		builder.append("FROM InventoryItem inv WHERE inv.total > 0 ");
 
+		if (SiriusValidator.validateLongParam(criteria.getContainer()))
+			builder.append("AND inv.container.id =:containerId ");
+
 		if (SiriusValidator.validateParam(criteria.getCode()))
 			builder.append("AND inv.product.code LIKE :code ");
 
@@ -52,6 +55,9 @@ public class OnHandQuantityGroupViewQuery extends AbstractGridViewQuery
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);
 		query.setCacheable(true);
+
+		if (SiriusValidator.validateLongParam(criteria.getContainer()))
+			query.setParameter("containerId", criteria.getContainer());
 
 		if (SiriusValidator.validateParam(criteria.getCode()))
 			query.setParameter("code", "%" + criteria.getCode() + "%");

@@ -19,6 +19,7 @@ import com.siriuserp.inventory.query.OnHandQuantityDetailLotViewQuery;
 import com.siriuserp.inventory.query.OnHandQuantityDetailViewQuery;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.GridViewQuery;
+import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
@@ -46,6 +47,7 @@ public class OnHandQuantityService
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("filterCriteria", filterCriteria);
 		map.put("onhands", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
+		map.put("containers", genericDao.loadAll(Container.class));
 
 		return map;
 	}
@@ -87,14 +89,14 @@ public class OnHandQuantityService
 	{
 		return genericDao.load(InventoryItem.class, id);
 	}
-	
+
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public InventoryItem loadBySerial(String barcode)
 	{
 		return inventoryItemDao.getItemBySerial(barcode, true);
 	}
-	
+
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public List<InventoryItem> loadList(Long productId, Long containerId)
 	{

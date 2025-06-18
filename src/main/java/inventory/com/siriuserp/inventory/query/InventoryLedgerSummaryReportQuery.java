@@ -59,7 +59,8 @@ public class InventoryLedgerSummaryReportQuery extends AbstractStandardReportQue
 		builder.append("SUM(CASE WHEN balance.date BETWEEN :start AND :end THEN balance.in ELSE 0 END), ");
 		builder.append("SUM(CASE WHEN balance.date BETWEEN :start AND :end THEN balance.out ELSE 0 END), ");
 		builder.append("balance.facilityId, balance.facilityName, balance.gridName, balance.containerName, ");
-		builder.append("balance.lotCode, balance.productId, balance.productCode, balance.productName, balance.uom) ");
+		builder.append("balance.lotCode, balance.productId, balance.productCode, balance.productName, ");
+		builder.append("balance.productCategoryId, balance.productCategoryName, balance.uom) ");
 		builder.append("FROM DWInventoryItemBalanceDetail balance ");
 		builder.append("WHERE balance.date <=:end ");
 
@@ -82,7 +83,7 @@ public class InventoryLedgerSummaryReportQuery extends AbstractStandardReportQue
 			builder.append("AND balance.lotCode =:lotCode ");
 
 		builder.append("GROUP BY balance.facilityId, balance.containerId, balance.lotCode, balance.productId ");
-		builder.append("ORDER BY balance.containerName ASC, balance.productName ASC, balance.lotCode ASC");
+		builder.append("ORDER BY balance.containerName ASC, balance.productName ASC, balance.lotCode ASC, balance.productCategoryName ASC");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setCacheable(true);

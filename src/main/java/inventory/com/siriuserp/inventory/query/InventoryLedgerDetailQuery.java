@@ -85,6 +85,7 @@ public class InventoryLedgerDetailQuery extends AbstractStandardReportQuery
 				pMap.put("lotCode", adapter.getLotCode());
 				pMap.put("code", adapter.getProductCode());
 				pMap.put("product", adapter.getProductName());
+				pMap.put("productCategory", adapter.getCategoryName());
 				pMap.put("opening", adapter.getIn().subtract(adapter.getOut()));
 				pMap.put("in", in);
 				pMap.put("out", out);
@@ -120,10 +121,10 @@ public class InventoryLedgerDetailQuery extends AbstractStandardReportQuery
 		builder.append("SUM(CASE WHEN balance.date < :date THEN balance.in ELSE 0 END ), ");
 		builder.append("SUM(CASE WHEN balance.date < :date THEN balance.out ELSE 0 END ), ");
 		builder.append("balance.facilityId, balance.facilityName, balance.containerId, balance.containerName, ");
-		builder.append("balance.lotCode, balance.productId, balance.productCode, balance.productName, ");
-		builder.append("(SELECT cat.categoryType FROM ProductCategory cat WHERE cat.id = balance.productCategoryId), ");
+		builder.append("balance.lotCode, balance.productId, balance.productCode, balance.productName, cat.id, cat.name, cat.categoryType, ");
 		builder.append("(SELECT(SUM(inv.reserved)) FROM InventoryItem inv WHERE inv.product.id = balance.productId AND inv.container.id = balance.containerId)) ");
-		builder.append("FROM DWInventoryItemBalanceDetail balance WHERE balance.id IS NOT NULL ");
+		builder.append("FROM DWInventoryItemBalanceDetail balance, ProductCategory cat ");
+		builder.append("WHERE balance.productCategoryId = cat.id ");
 
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()))
 			builder.append("AND balance.organizationId =:organization ");
