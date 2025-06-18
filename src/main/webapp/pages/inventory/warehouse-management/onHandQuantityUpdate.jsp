@@ -2,10 +2,10 @@
 
 <div class="toolbar">
 	<c:if test="${product.serial}">
-		<a class="item-button-edit" href="<c:url value='/page/onhandquantityview.htm?product=${product.id}'/>" title="Edit"><span><spring:message code="sirius.list"/></span></a>
+		<a class="item-button-back" href="<c:url value='/page/onhandquantityview.htm?product=${product.id}'/>" title="Edit"><span><spring:message code="sirius.back"/></span></a>
 	</c:if>
 	<c:if test="${!product.serial}">
-    	<a class="item-button-list" href="<c:url value='/page/onhandquantitygroupview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
+    	<a class="item-button-back" href="<c:url value='/page/onhandquantitygroupview.htm'/>"><span><spring:message code="sirius.back"/></span></a>
     </c:if>
 </div>
 
@@ -32,7 +32,7 @@
         <td align="left"><spring:message code="product.category"/></td>
         <td align="center">:</td>
         <td align="left"><c:out value='${product.productCategory.name}'/></td>
-        <td align="left"><spring:message code="product.reserved"/></td>
+        <td align="left"><spring:message code="product.reserved.process"/></td>
         <td align="center">:</td>
         <td align="left" id="reserved"></td>
     </tr>
@@ -51,7 +51,7 @@
             <th width="8%"><spring:message code="barcode"/></th>
             <th width="8%"><spring:message code="product.lot"/></th>
             <th width="8%"><spring:message code="product.onhand"/></th>
-            <th width="8%"><spring:message code="product.reserved"/></th>
+            <th width="8%"><spring:message code="product.reserved.process"/></th>
             <th width="8%"><spring:message code="product.ontransfer"/></th>
             <th width="10%"><spring:message code="product.available"/></th>
         </tr>

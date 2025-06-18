@@ -21,6 +21,11 @@
 			<td>:</td>
 			<td width="304" height="28"><input type="text" id="uom" name="uom" value="${filterCriteria.uom}" size="35" class="inputbox"/></td>
 		</tr>
+		<tr style="display: none;">
+			<td align="right"><spring:message code="container"/>&nbsp;&nbsp;</td>
+			<td>:</td>
+			<td width="304" height="28"><input type="text" name="container" value="${filterCriteria.container}" size="35" class="inputbox"/></td>
+		</tr>
 		<tr><td colspan="3">&nbsp;</td></tr>
 		<tr>
 			<td colspan="2">&nbsp;</td>

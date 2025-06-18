@@ -1,17 +1,35 @@
-<%@ include file="/pages/includes/sirius-head.jsp"%>	
+<%@ include file="/pages/includes/sirius-head.jsp"%>
 
 <%@ include file="/filter/inventory/onHandQuantityGroupFilter.jsp"%>
 <div class="item-navigator">
 	<table border="0" cellpadding="0" cellspacing="0" width="99%" align="center">
 		<tr>
-			<td width="30%" height="30" align="left" valign="middle">
+			<td width="10%" height="30" align="left" valign="middle">
 				<div class="toolbar-clean">
 					<div dojoType="Toggler" targetId="filter">
 						<a class="item-button-search" href="javascript:return;"><span><spring:message code="sirius.paging.filter"/></span>
 						</a>
 					</div>
-				</div></td>
-			<td width="70%" align="right" height="20"><%@ include file="/pages/includes/navigation.jsp"%></td>
+				</div>
+			</td>
+			<td width="60%" align="left">
+				<form id="filterFormList" name="filterFormList" method="post">
+					<table width="100%" cellspacing="0" cellpadding="0" align="right">
+					<tr>
+						<td align="right"><spring:message code="container"/>&nbsp;</td>
+						<td height="28">
+							<select id="container" name="container">
+								<option value=""></option>
+								<c:forEach items="${containers}" var="cont">
+									<option value="${cont.id}" ${filterCriteria.container eq cont.id ? "selected='true'":""}>${cont.name}</option>
+								</c:forEach>
+							</select>
+						</td>
+					</tr>
+					</table>
+				</form>
+			</td>
+			<td width="30%" align="right" height="20"><%@ include file="/pages/includes/navigation.jsp"%></td>
 		</tr>
 	</table>
 </div>
@@ -22,9 +40,9 @@
 		<th width="8%"><spring:message code="product.code"/></th>
 		<th width="15%" nowrap="nowrap"><spring:message code="product.name"/></th>
 		<th width="10%" nowrap="nowrap"><spring:message code="product.category"/></th>
-		<th width="10%" nowrap="nowrap"><spring:message code="product.onhand"/></th>
-		<th width="10%" nowrap="nowrap"><spring:message code="product.available"/></th>
-		<th width="10%" nowrap="nowrap"><spring:message code="product.reserved"/></th>
+		<th width="10%" nowrap="nowrap"><spring:message code="product.onhand.opening"/></th>
+		<th width="10%" nowrap="nowrap"><spring:message code="product.reserved.process"/></th>
+		<th width="10%" nowrap="nowrap"><spring:message code="product.onhand.closing"/></th>
 		<th width="6%" nowrap="nowrap"><spring:message code="product.uom"/></th>
 	</tr>
 	<c:forEach items="${onhands}" var="on">
@@ -40,9 +58,18 @@
 			<td nowrap="nowrap"><c:out value='${on.product.code}' /></td>
 			<td nowrap="nowrap"><c:out value='${on.product.name}' /></td>
 			<td nowrap="nowrap"><c:out value='${on.product.productCategory.name}' /></td>
-			<td><fmt:formatNumber value='${on.onHand}' pattern=',##0.00' /></td>
-			<td><fmt:formatNumber value='${on.availableSale}' pattern=',##0.00' /></td>
-			<td><fmt:formatNumber value='${on.reserved}' pattern=',##0.00' /></td>
+			<td>
+				<fmt:formatNumber value='${on.onHand}' pattern=',##0.00' />
+				<c:if test="${on.product.productCategory.categoryType eq 'FINISH_GOODS'}"><strong>[<fmt:formatNumber value='${on.onHand/181.44}' pattern=',##0.00' /> BALE]</strong></c:if>
+			</td>
+			<td>
+				<fmt:formatNumber value='${on.reserved}' pattern=',##0.00' />
+				<c:if test="${on.product.productCategory.categoryType eq 'FINISH_GOODS'}"><strong>[<fmt:formatNumber value='${on.reserved/181.44}' pattern=',##0.00' /> BALE]</strong></c:if>
+			</td>
+			<td>
+				<fmt:formatNumber value='${on.availableSale}' pattern=',##0.00' />
+				<c:if test="${on.product.productCategory.categoryType eq 'FINISH_GOODS'}"><strong>[<fmt:formatNumber value='${on.availableSale/181.44}' pattern=',##0.00' /> BALE]</strong></c:if>
+			</td>
 			<td><c:out value='${on.product.unitOfMeasure.measureId}' /></td>
 		</tr>
 	</c:forEach>
@@ -58,3 +85,10 @@
 </table>
 
 <%@ include file="/pages/includes/sirius-foot.jsp"%>
+<script type="text/javascript">
+	$("#container").change(function() {
+		var url=window.location.pathname;
+		document.filterFormList.action = url;
+		document.filterFormList.submit();
+	})
+</script>
