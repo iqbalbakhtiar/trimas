@@ -13,6 +13,7 @@ public class GoodsIssueFilterCriteria extends AbstractFilterCriteria {
 
     private String code;
     private String org;
+    private String source;
     private String createdBy;
 
     private Date dateFrom;

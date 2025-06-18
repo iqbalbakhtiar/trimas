@@ -7,6 +7,7 @@ package com.siriuserp.inventory.form;
 
 import com.siriuserp.accountpayable.dm.InvoiceVerification;
 import com.siriuserp.inventory.dm.GoodsIssue;
+import com.siriuserp.inventory.dm.GoodsIssueManual;
 import com.siriuserp.inventory.dm.GoodsReceipt;
 import com.siriuserp.inventory.dm.GoodsReceiptManual;
 import com.siriuserp.inventory.dm.GoodsType;
@@ -48,6 +49,7 @@ public class InventoryForm extends Form
 	private ProductCategory productCategory;
 	private StockAdjustment stockAdjustment;
 	private GoodsIssue goodsIssue;
+	private GoodsIssueManual goodsIssueManual;
 	private GoodsReceipt goodsReceipt;
 	private GoodsReceiptManual goodsReceiptManual;
 	private TransferOrder transferOrder;

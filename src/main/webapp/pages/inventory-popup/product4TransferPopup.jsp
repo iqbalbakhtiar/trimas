@@ -59,6 +59,7 @@
 			  		  	  	<th width="10%"><spring:message code="product.category"/></th>
 			  		  	  	<th width="7%"><spring:message code="container"/></th>
                           	<th width="7%"><spring:message code="product.onhand"/></th>
+                          	<th width="7%"><spring:message code="product.serial"/></th>
 				  		</tr>
 						<c:forEach items="${products}" var="inv">
 						<tr>
@@ -70,9 +71,13 @@
 							<td nowrap="nowrap"><c:out value='${inv.product.productCategory.name}'/></td>
 							<td nowrap="nowrap"><c:out value='${inv.container.name}'/></td>
                             <td nowrap="nowrap"><fmt:formatNumber value='${inv.onHand}' pattern=',##0.00'/></td>
+							<td nowrap="nowrap">
+								<c:if test="${inv.product.serial}"><spring:message code="sirius.yes"/></c:if>
+								<c:if test="${!inv.product.serial}"><spring:message code="sirius.no"/></c:if>
+							</td>
                         </tr>
 						</c:forEach>
-					  	<tr class="end-table"><td colspan="6">&nbsp;</td></tr>
+					  	<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
 					  	</table>
 						<table border="0" cellpadding="0" cellspacing="0" width="99%" align="center" height="20">
 						<tr>
