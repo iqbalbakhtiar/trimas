@@ -95,4 +95,10 @@ public class OnHandQuantityService
 	{
 		return inventoryItemDao.getAllItem(productId, containerId);
 	}
+	
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public InventoryItem loadBySerial(String barcode)
+	{
+		return inventoryItemDao.getItemBySerial(barcode, true);
+	}
 }
