@@ -90,13 +90,6 @@ public class OnHandQuantityService
 		return genericDao.load(InventoryItem.class, id);
 	}
 
-
-	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public InventoryItem loadBySerial(String barcode)
-	{
-		return inventoryItemDao.getItemBySerial(barcode, true);
-	}
-
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public List<InventoryItem> loadList(Long productId, Long containerId)
 	{
