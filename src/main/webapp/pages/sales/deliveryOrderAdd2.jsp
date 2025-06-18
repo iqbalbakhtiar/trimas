@@ -250,7 +250,6 @@ function validateForm() {
 	{
         var idx = obj.getAttribute('index');
 		var serial =  $('#serial\\['+idx+'\\]').val();
-		console.log('>>> '+idx);
 		
 		if (serial == null || serial.trim() === "") {
 			alert('<spring:message code="product.serial"/> <spring:message code="notif.empty"/> !');

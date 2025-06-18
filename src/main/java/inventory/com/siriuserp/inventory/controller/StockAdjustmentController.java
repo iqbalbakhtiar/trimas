@@ -18,6 +18,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.inventory.criteria.BarcodeGroupFilterCriteria;
+import com.siriuserp.inventory.criteria.OnHandQuantityFilterCriteria;
 import com.siriuserp.inventory.criteria.StockAdjustmentFilterCriteria;
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.dm.StockAdjustment;
@@ -125,21 +126,9 @@ public class StockAdjustmentController extends ControllerBase
 	}
 
 	@RequestMapping("/stockadjustmentbyproductjson.htm")
-	public ModelAndView viewJson(@RequestParam("productId") Long productId) throws ServiceException
+	public ModelAndView viewJson(HttpServletRequest request) throws ServiceException
 	{
-		JSONResponse response = new JSONResponse();
-
-		try
-		{
-			response.store("product", service.loadInOut(productId));
-		} catch (Exception e)
-		{
-			response.statusError();
-			response.setMessage(e.getMessage());
-			e.printStackTrace();
-		}
-
-		return response;
+		return new JSONResponse(service.loadInOut((OnHandQuantityFilterCriteria) criteriaFactory.create(request, OnHandQuantityFilterCriteria.class)));
 	}
 
 	@RequestMapping("/stockadjustmentbarcodepreadd1.htm")

@@ -74,4 +74,23 @@ public class InventoryItemPopupController extends ControllerBase
 
 		return response;
 	}
+	
+	@RequestMapping("/inventoryitembyserialjson.htm")
+	public ModelAndView view(@RequestParam("barcode") String barcode) throws ServiceException
+	{
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			response.store("inventory", service.loadBySerial(barcode));
+		} catch (Exception e)
+		{
+			response.statusError();
+			response.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+	
 }

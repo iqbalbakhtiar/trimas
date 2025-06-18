@@ -54,13 +54,12 @@
 				<th ><spring:message code="product.name"/></th>
 				<th width="16%"><spring:message code="product.category"/></th>
 				<th width="8%"><spring:message code="product.uom"/></th>
+				<th width="8%"><spring:message code="product.lot"/></th>
 				<th width="12%"><spring:message code="product.onhand"/></th>
 				<th width="12%"><spring:message code="product.quantity"/></th>
 				<th width="14%" colspan="2"><spring:message code="sirius.price"/></th>
 			</tr>
 		</thead>
-		<tbody id="iBody">
-		</tbody>
 		<tfoot>
 			<tr class="end-table"><td colspan="16">&nbsp;</td></tr>
 		</tfoot>
@@ -74,13 +73,33 @@
 		var $dialog = $('<div></div>').dialog({autoOpen: false,title: '${title}',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
     
 		$('.item-button-save').click(function(){
-			var total = $("#iBody0 tr").length;
-			if(total < 1)
-			{
+			
+			if ($('#lineItemTable tbody').length === 0) {
 				alert('<spring:message code="notif.line"/> !');
 				return;
 			}
 			
+		    $('#lineItemTable tbody').each(function(i, tbody) {
+		        let $tbody = $(tbody);
+		        
+		        const idx = $tbody.attr('id').replace('iBody', '');
+
+		       	const productVal = $tbody.find('[name="items['+idx+'].product"]').val();
+		        if (!productVal) {
+		            alert("Produk pada baris ke-" + (i+1) + " belum dipilih!");
+		            return; 
+		        }
+		    });
+		    
+		    let allBarcodes = document.querySelectorAll('input.barcode-input');
+		    for (let i = 0; i < allBarcodes.length; i++) {
+		        if (!allBarcodes[i].value.trim()) {
+		            alert("Barcode tidak boleh kosong di baris ke-" + (i + 1));
+		            allBarcodes[i].focus();
+		            return false;
+		        }
+		    }
+		    
 			$('[data-name="quantityDel"]').remove();
 			
 			$.ajax({
@@ -125,8 +144,13 @@
             $('.check').each(function(){
                 if(this.checked){
                     this.checked = false;
-
+                    
                     $(this).parent().parent().remove();
+                    
+                    let indexAttr = $(this).attr('index');
+                    
+                    document.querySelectorAll('.barcodeGroup'+indexAttr).forEach(e => e.remove());
+                    
                 }
             });
                 
@@ -162,7 +186,7 @@
 		const category = List.get('<input class="input-disabled" disabled="true" size="16"/>','category['+index+']');
 		const uom = List.get('<input class="input-disabled" disabled="true" size="5"/>','uom['+index+']');
 		const onHand = List.get('<input class="number-disabled" disabled="true" size="12"/>','onhand['+index+']', '0.00');
-		const quantity = List.get('<input class="input-decimal negative" onkeyup='+"checkQuantity(this);"+' size="12"/>','quantity['+index+']', '0.00');
+		const quantity = List.get('<input class="input-number negative" onkeyup='+"checkQuantity(this);"+' size="12"/>','quantity['+index+']', '0');
 		const price = List.get('<input class="input-number" size="12" colspan="2"/>','price['+index+']', '0.00');
 		const serial = List.get('<input disabled="true" size="12" type="hidden"/>','serialCheck['+index+']');
 		/* const currency = List.get('<select hidden="hidden"/>','currency['+index+']');
@@ -182,6 +206,7 @@
 		$tr.append(List.col([product, productImg]));
 		$tr.append(List.col([category]));
 		$tr.append(List.col([uom]));
+		$tr.append(List.col($("<span>&nbsp;</span>")));
 		$tr.append(List.col([onHand]));
 		$tr.append(List.col([quantity]));
 		$tr.append(List.col([price]));
@@ -255,15 +280,17 @@
 		
 		if (prodId) {
 	        $.ajax({
-	            url: "<c:url value='/page/onhandquantityviewonhandjson.htm'/>",
-	            data: requestData,
+	            url: "<c:url value='/page/inventoryitembyserialjson.htm'/>",
+	            data: {barcode:serial},
 	            method: 'GET',
 	            dataType: 'json',
 	            success: function (json) {
-					console.log(json);
-	                if (json && json.status === 'OK' &&  json.onHand != null) {
-	                	$('#onHand\\['+index+'\\]').val(parseFloat(json.onHand).numberFormat('#,##0.00'));
-	                	$('#onhand\\['+index+'\\]').val(parseFloat(json.onHand).numberFormat('#,##0.00'));
+	                if (json && json.status === 'OK' &&  json.inventory != null) {
+	                	$('#onHand\\['+index+'\\]').val(parseFloat(json.inventory.onHand).numberFormat('#,##0.00'));
+	                	$('#onhand\\['+index+'\\]').val(parseFloat(json.inventory.onHand).numberFormat('#,##0.00'));
+	                	$('#lotCode\\['+index+'\\]').val(json.inventory.lotCode);
+	                	$('#uom\\['+index+'\\]').val(json.inventory.product.unitOfMeasure.name);
+	                	console.log(json.inventory);
 	                }else{
 	                	$('#onHand\\['+index+'\\]').val(parseFloat(0).numberFormat('#,##0.00'));
 	                	$('#onhand\\['+index+'\\]').val(parseFloat(0).numberFormat('#,##0.00'));
@@ -271,25 +298,28 @@
 	            }
 	        });
 	    }
-
+		
 		if(prodId) {
 			$.ajax({
 				url:"<c:url value='/page/stockadjustmentbyproductjson.htm'/>",
-				data:{productId:prodId},
+				data:requestData,
 				method : 'GET',
 				dataType : 'json',
 				success : function(json) {
 					if(json)
-					{	
+					{
 						if(json.status == 'OK'){
 							let amount = document.getElementsByName('items['+index+'].price')[0];
-							if(amount)
+							if(amount && json.product != null)
 								amount.value = parseFloat(json.product.price).numberFormat('#,##0.00');
+							else
+								amount.value = parseFloat(0).numberFormat('#,##0.00');
 						}
 					}
 				}
 			});
 		}
+		
 		
 		if(serialCheck.toLowerCase() === "true"){
 			$('#iBody' + index + ' tr.barcodeGroup'+0).remove();
@@ -299,6 +329,7 @@
 			
 			$('#uom\\['+index+'\\]').remove();
 			$('#price\\['+index+'\\]').remove();
+			$('#quantity\\['+index+'\\]').val(1);
 			$('#product\\[' + index + '\\]').prop('disabled', true);	
 			$('#container\\[' + index + '\\]').prop('disabled', true);
 			
@@ -342,8 +373,6 @@
 		var qty = document.getElementById('quantity[' + idxRef + ']').value.toNumber();
 		var serialCheck = document.getElementById('serialCheck[' + idxRef + ']').value;
 		
-		console.log(serialCheck)
-		
 		if((onHand+qty) < 0) 
 		{
 			alert('Qty Adjustment (-) cannot greater than On Hand !!!');
@@ -379,7 +408,7 @@
 	    const $gridId = $('#grid\\[' + $idxRef + '\\]').val();
 	    const $uom = $('#uom\\[' + $idxRef + '\\]').val();
 
-	    const $tbody = $('#iBody' + $idxRef);
+	    $('#iBody' + $idxRef).addClass('barcodeGroup' + $idxRef);
 	    const $tr = $('<tr/>').addClass('barcodeGroup' + $idxRef);
 
 	    if ($productId) {
@@ -436,6 +465,7 @@
 	                const $barcodeImg = List.img('<spring:message code="barcode"/>', index, 'openBarcode("' + index + '","' + $productId + '")').css('display', 'none');
 	                const $qty = List.get('<input type="text" class="input-number input-disabled" readonly="true" size="12"/>', 'onHand[' + index + ']', '0.00');
 	                const $uomField = List.get('<input type="text" class="input-disabled" disabled="true" size="12"/>', 'uom[' + index + ']', $uom);
+	        		const lotCode = List.get('<input type="text" class="input-disabled" readonly="true" size="5"/>','lotCode[' + index + ']');
 	                const quantity = List.get('<input class="input-number negative totals' + $idxRef + '" size="12" onchange="calculateAdjust(\'' + index + '\', \'' + $idxRef + '\');"/>', 'quantity[' + index + ']', '1');
 	                const cogs = List.get('<input class="input-number negative" size="12"/>', 'price[' + index + ']', '0.00');
 
@@ -444,6 +474,7 @@
 	                $tr.append(List.col($("<span>&nbsp;</span>")));
 	                $tr.append(List.col([$barcode, $barcodeImg], '', 'text-align: right;').attr('colspan', '2'));
 	                $tr.append(List.col([$uomField]));
+	                $tr.append(List.col([lotCode]));
 	                $tr.append(List.col([$qty]));
 	                $tr.append(List.col([quantity]));
 	                $tr.append(List.col([cogs]));

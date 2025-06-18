@@ -5,6 +5,7 @@
  */
 package com.siriuserp.sdk.dao;
 
+import com.siriuserp.inventory.criteria.OnHandQuantityFilterCriteria;
 import com.siriuserp.inventory.dm.ProductInOutTransaction;
 import com.siriuserp.sdk.base.Dao;
 import com.siriuserp.sdk.base.Filterable;
@@ -17,6 +18,6 @@ import com.siriuserp.sdk.base.Filterable;
 
 public interface ProductInOutTransactionDao extends Dao<ProductInOutTransaction>, Filterable
 {
-	public ProductInOutTransaction loadByProduct(Long productId);
+	public ProductInOutTransaction loadByProduct(OnHandQuantityFilterCriteria criteria);
 
 }

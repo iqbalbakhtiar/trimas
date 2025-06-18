@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.siriuserp.inventory.criteria.BarcodeGroupFilterCriteria;
+import com.siriuserp.inventory.criteria.OnHandQuantityFilterCriteria;
 import com.siriuserp.inventory.criteria.StockAdjustmentFilterCriteria;
 import com.siriuserp.inventory.dm.DWInventoryItemBalance;
 import com.siriuserp.inventory.dm.DWInventoryItemBalanceDetail;
@@ -34,7 +35,6 @@ import com.siriuserp.inventory.util.InventoryBalanceUtil;
 import com.siriuserp.inventory.util.InventoryItemTagUtil;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
-import com.siriuserp.sdk.annotation.AutomaticReverseSibling;
 import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.CurrencyDao;
@@ -134,7 +134,7 @@ public class StockAdjustmentService
 
 	@Transactional(propagation = Propagation.NOT_SUPPORTED)
 	@InjectParty(keyName = "adjustment_add")
-	public Map<String, Object> barcodePreadd2(Long id)
+	public Map<String, Object> barcodePreadd2(Long id) throws ServiceException
 	{
 		InventoryForm form = new InventoryForm();
 		form.setBarcodeGroup(genericDao.load(BarcodeGroup.class, id));
@@ -146,10 +146,18 @@ public class StockAdjustmentService
 			Item item = new Item();
 			BeanUtils.copyProperties(barcode, item);
 			item.setSerial(barcode.getCode());
+			
+			
+			OnHandQuantityFilterCriteria criteria = new OnHandQuantityFilterCriteria();
+			criteria.setProductId(barcode.getProduct().getId());	
+			
+			Map<String, Object> result = loadInOut(criteria);
+			ProductInOutTransaction inOut = (ProductInOutTransaction) result.get("product");
 
-			ProductInOutTransaction inOut = loadInOut(barcode.getProduct().getId());
-			if (inOut != null)
-				item.setPrice(inOut.getPrice());
+			if (inOut != null) 
+			    item.setPrice(inOut.getPrice());
+			
+
 
 			items.add(item);
 		}
@@ -164,7 +172,7 @@ public class StockAdjustmentService
 
 	@AuditTrails(className = StockAdjustment.class, actionType = AuditTrailsActionType.CREATE)
 	//	@AutomaticPosting(roleClasses = StockAdjustmentPostingRole.class)
-	@AutomaticReverseSibling(roles = "StockAdjustmentGenerateBarcodeSiblingRole")
+	// @AutomaticReverseSibling(roles = "StockAdjustmentGenerateBarcodeSiblingRole")
 	public void add(StockAdjustment stockAdjustment) throws Exception
 	{
 		InventoryForm form = (InventoryForm) stockAdjustment.getForm();
@@ -185,6 +193,7 @@ public class StockAdjustmentService
 				adjustmentItem.setContainer(item.getContainer());
 				adjustmentItem.setGrid(item.getContainer().getGrid());
 				adjustmentItem.setQuantity(item.getQuantity());
+				adjustmentItem.getLot().setCode(item.getLotCode());
 
 				if (SiriusValidator.validateParam(item.getSerial()))
 					adjustmentItem.getLot().setSerial(item.getSerial());
@@ -281,9 +290,12 @@ public class StockAdjustmentService
 		return genericDao.load(StockAdjustment.class, id);
 	}
 
-	@Transactional(propagation = Propagation.NOT_SUPPORTED)
-	public ProductInOutTransaction loadInOut(Long productId)
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public Map<String, Object> loadInOut(OnHandQuantityFilterCriteria criteria) throws ServiceException
 	{
-		return productInOutTransactionDaoImpl.loadByProduct(productId);
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("product", productInOutTransactionDaoImpl.loadByProduct(criteria));
+
+		return map;
 	}
 }
