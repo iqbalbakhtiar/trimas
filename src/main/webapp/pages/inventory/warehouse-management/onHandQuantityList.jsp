@@ -24,9 +24,9 @@
 		<th width="15%" nowrap="nowrap"><spring:message code="product.name"/></th>
 		<th width="5%" nowrap="nowrap"><spring:message code="product.lot"/></th>
 		<th width="10%" nowrap="nowrap"><spring:message code="product.category"/></th>
-		<th width="10%" nowrap="nowrap"><spring:message code="product.onhand"/></th>
-		<th width="10%" nowrap="nowrap"><spring:message code="product.available"/></th>
-		<th width="10%" nowrap="nowrap"><spring:message code="product.reserved"/></th>
+		<th width="10%" nowrap="nowrap"><spring:message code="product.onhand.opening"/></th>
+		<th width="10%" nowrap="nowrap"><spring:message code="product.reserved.process"/></th>
+		<th width="10%" nowrap="nowrap"><spring:message code="product.onhand.closing"/></th>
 		<th width="6%" nowrap="nowrap"><spring:message code="product.uom"/></th>
 	</tr>
 	<c:forEach items="${onhands}" var="on">
@@ -38,9 +38,18 @@
 			<td nowrap="nowrap"><c:out value='${on.product.name}' /></td>
 			<td nowrap="nowrap"><c:out value='${on.lot.code}' /></td>
 			<td nowrap="nowrap"><c:out value='${on.product.productCategory.name}' /></td>
-			<td><fmt:formatNumber value='${on.onHand}' pattern=',##0.00' /></td>
-			<td><fmt:formatNumber value='${on.availableSale}' pattern=',##0.00' /></td>
-			<td><fmt:formatNumber value='${on.reserved}' pattern=',##0.00' /></td>
+			<td>
+				<fmt:formatNumber value='${on.onHand}' pattern=',##0.00' />
+				<c:if test="${on.product.productCategory.categoryType eq 'FINISH_GOODS'}"><strong>[<fmt:formatNumber value='${on.onHand/181.44}' pattern=',##0.00' /> BALE]</strong></c:if>
+			</td>
+			<td>
+				<fmt:formatNumber value='${on.reserved}' pattern=',##0.00' />
+				<c:if test="${on.product.productCategory.categoryType eq 'FINISH_GOODS'}"><strong>[<fmt:formatNumber value='${on.reserved/181.44}' pattern=',##0.00' /> BALE]</strong></c:if>
+			</td>
+			<td>
+				<fmt:formatNumber value='${on.availableSale}' pattern=',##0.00' />
+				<c:if test="${on.product.productCategory.categoryType eq 'FINISH_GOODS'}"><strong>[<fmt:formatNumber value='${on.availableSale/181.44}' pattern=',##0.00' /> BALE]</strong></c:if>
+			</td>
 			<td><c:out value='${on.product.unitOfMeasure.measureId}' /></td>
 		</tr>
 	</c:forEach>
