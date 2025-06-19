@@ -56,6 +56,7 @@
 				<th width="8%"><spring:message code="product.uom"/></th>
 				<th width="8%"><spring:message code="product.lot"/></th>
 				<th width="12%"><spring:message code="product.onhand"/></th>
+				<th width="12%"><spring:message code="product.bale"/></th>
 				<th width="12%"><spring:message code="product.quantity"/></th>
 				<th width="14%" colspan="2"><spring:message code="sirius.price"/></th>
 			</tr>
@@ -186,6 +187,7 @@
 		const category = List.get('<input class="input-disabled" disabled="true" size="16"/>','category['+index+']');
 		const uom = List.get('<input class="input-disabled" disabled="true" size="5"/>','uom['+index+']');
 		const onHand = List.get('<input class="number-disabled" disabled="true" size="12"/>','onhand['+index+']', '0.00');
+		const bale = List.get('<input class="number-disabled" disabled="true" size="12"/>','bale['+index+']', '0.00');
 		const quantity = List.get('<input class="input-number negative" onkeyup='+"checkQuantity(this);"+' size="12"/>','quantity['+index+']', '0');
 		const price = List.get('<input class="input-number" size="12" colspan="2"/>','price['+index+']', '0.00');
 		const serial = List.get('<input disabled="true" size="12" type="hidden"/>','serialCheck['+index+']');
@@ -208,6 +210,7 @@
 		$tr.append(List.col([uom]));
 		$tr.append(List.col($("<span>&nbsp;</span>")));
 		$tr.append(List.col([onHand]));
+		$tr.append(List.col([bale]));
 		$tr.append(List.col([quantity]));
 		$tr.append(List.col([price]));
 		$tr.append(List.col([serial]));
@@ -278,7 +281,7 @@
             serial:serial
         };
 		
-		if (prodId) {
+		if (serial) {
 	        $.ajax({
 	            url: "<c:url value='/page/inventoryitembyserialjson.htm'/>",
 	            data: {barcode:serial},
@@ -294,6 +297,24 @@
 	                }else{
 	                	$('#onHand\\['+index+'\\]').val(parseFloat(0).numberFormat('#,##0.00'));
 	                	$('#onhand\\['+index+'\\]').val(parseFloat(0).numberFormat('#,##0.00'));
+	                }
+	            }
+	        });
+	    }
+		
+		if (prodId) {
+	        $.ajax({
+	            url: "<c:url value='/page/onhandquantityviewonhandjson.htm'/>",
+	            data: requestData,
+	            method: 'GET',
+	            dataType: 'json',
+	            success: function (json) {
+	                if (json && json.status === 'OK' &&  json.onHand != null) {
+	                	$('#onhand\\['+index+'\\]').val(parseFloat(json.onHand).numberFormat('#,##0.00'));
+	                	$('#bale\\['+index+'\\]').val(parseFloat(json.onHand/181.44).numberFormat('#,##0.00'));
+	                }else{
+	                	$('#onhand\\['+index+'\\]').val(parseFloat(0).numberFormat('#,##0.00'));
+	                	$('#bale\\['+index+'\\]').val(parseFloat(0).numberFormat('#,##0.00'));
 	                }
 	            }
 	        });
@@ -476,6 +497,7 @@
 	                $tr.append(List.col([$uomField]));
 	                $tr.append(List.col([lotCode]));
 	                $tr.append(List.col([$qty]));
+	                $tr.append(List.col($("<span>&nbsp;</span>")));
 	                $tr.append(List.col([quantity]));
 	                $tr.append(List.col([cogs]));
 
