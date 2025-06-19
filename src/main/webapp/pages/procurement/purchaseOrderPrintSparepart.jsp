@@ -83,7 +83,7 @@
 								    </c:forEach>
 				  				</td>
 			  				</tr>
-				  			<c:set var="phone" value="${purchase_edit.supplierPhone.contact}"/>
+				  			<c:set var="phone" value="${purchase_edit.contactMechanism.contact}"/>
 				  			<c:set var="fax" value=""/>
 				  			<c:forEach items='${purchase_edit.supplier.contactMechanisms}' var='cont'>
 				  			<c:if test="${cont.active}">

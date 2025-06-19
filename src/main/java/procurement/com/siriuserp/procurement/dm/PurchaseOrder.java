@@ -278,4 +278,12 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 	{
 		return id + "," + code;
 	}
+	
+	public ContactMechanism getContactMechanism() {
+		
+	    return getSupplier().getContactMechanisms().stream()
+	        .filter(ContactMechanism::isActive)
+	        .findFirst()
+	        .orElse(null);
+	}
 }
