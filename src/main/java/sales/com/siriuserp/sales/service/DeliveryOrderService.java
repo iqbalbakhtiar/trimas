@@ -30,7 +30,6 @@ import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.dm.Item;
 import com.siriuserp.sdk.dm.TableType;
-import com.siriuserp.sdk.exceptions.DataEditException;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
@@ -240,10 +239,36 @@ public class DeliveryOrderService extends Service
 	}
 
 	@AuditTrails(className = DeliveryOrder.class, actionType = AuditTrailsActionType.UPDATE)
-	public void updateStatus(Long id, SOStatus status) throws DataEditException
+	public void updateStatus(Long id, SOStatus status) throws Exception
 	{
 		DeliveryOrder deliveryOrder = genericDao.load(DeliveryOrder.class, id);
-		deliveryOrder.setStatus(SOStatus.SENT);
+		deliveryOrder.setStatus(status);
+
+		if (status.equals(SOStatus.CANCELED))
+		{
+			for (DeliveryOrderItem item : deliveryOrder.getItems())
+			{
+				if (item.getDeliveryItemType().equals(DeliveryOrderItemType.BASE))
+				{
+					SalesOrderItem salesItem = genericDao.load(SalesOrderItem.class, item.getDeliveryReferenceItem().getSalesOrderItem().getId());
+					BigDecimal deliveredQty = salesItem.getDelivered();
+					deliveredQty = deliveredQty.subtract(item.getQuantity());
+					salesItem.setDelivered(deliveredQty);
+
+					BigDecimal assignedQty = salesItem.getAssigned();
+					assignedQty = assignedQty.subtract(item.getQuantity());
+					salesItem.setAssigned(assignedQty);
+
+					genericDao.update(salesItem);
+				} else
+				{
+					InventoryItem inventoryItem = inventoryItemDao.getItemBySerial(item.getLot().getSerial(), true);
+					inventoryItem.setReserved(BigDecimal.ZERO);
+
+					genericDao.update(inventoryItem);
+				}
+			}
+		}
 
 		genericDao.update(deliveryOrder);
 	}
