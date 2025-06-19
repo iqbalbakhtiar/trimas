@@ -135,7 +135,7 @@
 					<td colspan="2">&nbsp;</td>
 					<td colspan="4" width="10%"><span style="display:inline-block; width:2em"></span>NPWP</td>
 					<td width="5%" align="center">:</td>
-					<td width="81%"><c:out value="${billing_form.customer.coreTax.npwp}"/></td>
+					<td width="81%"><c:out value="${billing_form.customer.taxCode}"/></td>
 					<td colspan="2">&nbsp;</td>
 				</tr>
 			</table>
