@@ -124,8 +124,15 @@ public class UserService implements UserDetailsService
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> preedit(Long id) throws Exception
 	{
-		ToolForm form = FormHelper.bind(ToolForm.class, load(id));
-
+		ToolForm form = new ToolForm();
+		
+		Profile profile = profileService.loadProfile();
+		
+		if(SiriusValidator.validateLongParam(id))
+			form = FormHelper.bind(ToolForm.class, load(id));
+		else
+			form = FormHelper.bind(ToolForm.class, load(profile.getId()));
+		
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("user_form", form);
 		map.put("user_edit", form.getUser());

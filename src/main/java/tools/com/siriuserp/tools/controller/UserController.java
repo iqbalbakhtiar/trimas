@@ -117,7 +117,7 @@ public class UserController extends ControllerBase
 	}
 
 	@RequestMapping("/userpreeditpassword.htm")
-	public ModelAndView preeditpassword(@RequestParam("id") Long id) throws Exception
+	public ModelAndView preeditpassword(@RequestParam(value = "id", required = false) Long id) throws Exception
 	{
 		return new ModelAndView("/tools/changePassword", userService.preedit(id));
 	}
