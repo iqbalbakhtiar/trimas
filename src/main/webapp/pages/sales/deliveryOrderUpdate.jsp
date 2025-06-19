@@ -8,7 +8,12 @@
 			<span><spring:message code="deliveryorder.sent"/></span>
 		</a>
 	</c:if>
-	<c:if test="${access.print and deliveryOrder_form.deliveryOrder.status ne 'OPEN'}">
+	<c:if test="${access.edit and empty deliveryOrder_form.deliveryOrder.deliveryOrderRealization and deliveryOrder_form.deliveryOrder.status ne 'CANCELED'}">
+		<a class="item-button-cancel">
+			<span><spring:message code="deliveryorder.cancel"/></span>
+		</a>
+	</c:if>
+	<c:if test="${access.print and deliveryOrder_form.deliveryOrder.status ne 'OPEN' and deliveryOrder_form.deliveryOrder.status ne 'CANCELED'}">
 		<a class="item-button-print"><span><spring:message code="sirius.print"/></span></a>
 	</c:if>
 </div>
@@ -105,6 +110,7 @@
 											<c:if test="${deliveryOrder_form.deliveryOrder.status eq 'OPEN'}"><div style="color: red;"><spring:message code="deliveryorder.status.${deliveryOrder_form.deliveryOrder.status.messageName}"/></div></c:if>
 											<c:if test="${deliveryOrder_form.deliveryOrder.status eq 'SENT'}"><div style="color: blue;"><spring:message code="deliveryorder.status.${deliveryOrder_form.deliveryOrder.status.messageName}"/></div></c:if>
 											<c:if test="${deliveryOrder_form.deliveryOrder.status eq 'DELIVERED'}"><div style="color: green;"><spring:message code="deliveryorder.status.${deliveryOrder_form.deliveryOrder.status.messageName}"/></div></c:if>
+											<c:if test="${deliveryOrder_form.deliveryOrder.status eq 'CANCELED'}"><div style="color: red;"><spring:message code="deliveryorder.status.${deliveryOrder_form.deliveryOrder.status.messageName}"/></div></c:if>
 											</h1>
 										</td>
 									</tr>
@@ -291,6 +297,24 @@ $(function(){
 		confirmDialog.dialog('open');
 	});
 
+	$('.item-button-cancel').click(function(){
+		const confirmDialog = $('<div><spring:message code="deliveryorder.notif.cancel"/> ?</div>').dialog(
+		{
+			autoOpen: false, title: '<spring:message code="deliveryorder"/>', modal:true,
+			buttons: {
+				'<spring:message code="sirius.yes"/>': function() {
+					$(this).dialog('close');
+					cancel();
+				},
+				'<spring:message code="sirius.no"/>': function() {
+					$(this).dialog('close');
+				}
+			}
+		});
+
+		confirmDialog.dialog('open');
+	});
+
 	$('.item-button-print').click(function(){
 		printDO();
 	});
@@ -299,6 +323,35 @@ $(function(){
 function sent() {
 	$.ajax({
 		url:"<c:url value='/page/deliveryordersent.htm?id=${deliveryOrder_form.deliveryOrder.id}&status=SENT'/>",
+		type : 'POST',
+		dataType : 'json',
+		beforeSend:function()
+		{
+			$dialog.empty();
+			$dialog.html('<spring:message code="notif.saving"/>');
+			$dialog.dialog('open');
+		},
+		success : function(json) {
+			if(json)
+			{
+				if(json.status === 'OK')
+				{
+					$dialog.dialog('close');
+					window.location="<c:url value='/page/deliveryorderpreedit.htm?id='/>"+json.id;
+				}
+				else
+				{
+					$dialog.empty();
+					$dialog.html('<spring:message code="notif.profailed"/> :<br/>'+json.message);
+				}
+			}
+		}
+	});
+}
+
+function cancel() {
+	$.ajax({
+		url:"<c:url value='/page/deliveryordersent.htm?id=${deliveryOrder_form.deliveryOrder.id}&status=CANCELED'/>",
 		type : 'POST',
 		dataType : 'json',
 		beforeSend:function()

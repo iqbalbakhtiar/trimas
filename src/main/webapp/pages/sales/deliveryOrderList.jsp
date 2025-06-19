@@ -79,6 +79,7 @@
 								<c:if test="${delivery.status eq 'OPEN'}"><div style="color: red;"><spring:message code="deliveryorder.status.${delivery.status.messageName}"/></div></c:if>
 								<c:if test="${delivery.status eq 'SENT'}"><div style="color: blue;"><spring:message code="deliveryorder.status.${delivery.status.messageName}"/></div></c:if>
 								<c:if test="${delivery.status eq 'DELIVERED'}"><div style="color: green;"><spring:message code="deliveryorder.status.${delivery.status.messageName}"/></div></c:if>
+								<c:if test="${delivery.status eq 'CANCELED'}"><div style="color: red;"><spring:message code="deliveryorder.status.${delivery.status.messageName}"/></div></c:if>
 							</td>
 							<td nowrap="nowrap">${delivery.note}</td>
 						</tr>

@@ -132,7 +132,10 @@
 								<td width="47%" align="right"><spring:message code="deliveryorder"/> :</td>
 								<td width="53%">
                                 <c:forEach items="${seq.deliveryOrders}" var="delivery" varStatus="status">
-                                    <a href="<c:url value='/page/deliveryorderpreedit.htm?id=${delivery.id}'/>"><c:out value="${delivery.code}"></c:out></a>
+                                    <a href="<c:url value='/page/deliveryorderpreedit.htm?id=${delivery.id}'/>">
+                                    	<c:out value="${delivery.code}"></c:out>
+                                    	<c:if test="${delivery.status eq 'CANCELED'}">(<x style="color: red;"><spring:message code="deliveryorder.status.${delivery.status.messageName}"/></x>)</c:if>
+                                    </a>
                                     <br>
                                 </c:forEach>
 								</td>

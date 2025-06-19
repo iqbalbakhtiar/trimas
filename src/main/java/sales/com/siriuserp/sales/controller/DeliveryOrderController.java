@@ -157,6 +157,27 @@ public class DeliveryOrderController extends ControllerBase
 		return response;
 	}
 
+	@RequestMapping("/deliveryordercancel.htm")
+	public ModelAndView cancle(@RequestParam("id") Long id, @RequestParam("status") SOStatus soStatus, SessionStatus status) throws Exception
+	{
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			service.updateStatus(id, soStatus);
+			status.setComplete();
+
+			response.store("id", id);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			response.statusError();
+			response.setMessage(e.getLocalizedMessage());
+		}
+
+		return response;
+	}
+
 	@RequestMapping("/deliveryorderprint.htm")
 	public ModelAndView print(@RequestParam("id") Long id, @RequestParam("printType") int printType) throws Exception
 	{

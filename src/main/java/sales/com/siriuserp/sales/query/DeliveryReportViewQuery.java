@@ -27,7 +27,7 @@ public class DeliveryReportViewQuery extends AbstractStandardReportQuery
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT NEW com.siriuserp.sales.adapter.DeliveryReportAdapter(deliveryItem, salesItem, ");
-		builder.append("(SELECT billItem.billing FROM BillingItem billItem WHERE billItem.billingReferenceItem.referenceId = realizationItem.deliveryOrderRealization.id))");
+		builder.append("(SELECT DISTINCT(billItem.billing) FROM BillingItem billItem WHERE billItem.billingReferenceItem.referenceId = realizationItem.deliveryOrderRealization.id AND billItem.billingReferenceItem.referenceName = 'DELIVERY_ORDER_REALIZATION'))");
 		builder.append("FROM DeliveryOrderRealizationItem realizationItem JOIN realizationItem.deliveryOrderItem deliveryItem JOIN deliveryItem.deliveryReferenceItem.salesOrderItem salesItem ");
 		builder.append("WHERE deliveryItem.deliveryItemType = 'BASE' ");
 
