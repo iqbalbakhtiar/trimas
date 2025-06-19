@@ -91,7 +91,7 @@
 				  			<tr>
 				  				<td style="width: 1%;">Attn</td>
 				  				<td style="width: 5px;" align="center">:</td>
-				  				<td align="left" style="width: 40%;">${purchase_edit.supplierPhone.contactName}</td>
+				  				<td align="left" style="width: 40%;">${purchase_edit.contactMechanism.contactName}</td>
 			  				</tr>
 				  			<tr>
 				  				<td style="width: 1%;" valign="top">Alamat</td>
