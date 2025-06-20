@@ -288,12 +288,12 @@
 	            method: 'GET',
 	            dataType: 'json',
 	            success: function (json) {
+					console.log(json)
 	                if (json && json.status === 'OK' &&  json.inventory != null) {
 	                	$('#onHand\\['+index+'\\]').val(parseFloat(json.inventory.onHand).numberFormat('#,##0.00'));
 	                	$('#onhand\\['+index+'\\]').val(parseFloat(json.inventory.onHand).numberFormat('#,##0.00'));
 	                	$('#lotCode\\['+index+'\\]').val(json.inventory.lotCode);
 	                	$('#uom\\['+index+'\\]').val(json.inventory.product.unitOfMeasure.name);
-	                	console.log(json.inventory);
 	                }else{
 	                	$('#onHand\\['+index+'\\]').val(parseFloat(0).numberFormat('#,##0.00'));
 	                	$('#onhand\\['+index+'\\]').val(parseFloat(0).numberFormat('#,##0.00'));
@@ -486,7 +486,8 @@
 	                        if (!isValid) {
 	                            $(this).val(''); // atau bisa juga beri pesan error
 	                        } else {
-	                            // Barcode valid, bisa lanjut proses misalnya checkOnHand
+	                            const $row = $(this).closest('tr');
+	                            const index = $(this).attr('id').match(/\[(\d+)\]/)[1];
 	                            checkOnHand(index);
 	                        }
 	                    });
