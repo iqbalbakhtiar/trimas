@@ -23,6 +23,7 @@ public class ProductFilterCriteria extends AbstractFilterCriteria
 	private String unitOfMeasure;
 	private String categoryName;
 	private String productCategoryType;
+	private String purchaseRequestType;
 	private String type;
 	private String uom;
 	private String serialNo;

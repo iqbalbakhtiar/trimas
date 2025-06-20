@@ -242,15 +242,20 @@
   }
 
   function openProduct(index) {
-    const baseUrl = '<c:url value="/page/popupproductview.htm"/>';
-    const params = {
-      target: 'product['+index+']',
-      index: index,
-      status: true
-    };
 
-    openpopup(buildUrl(baseUrl, params));
-  }
+	    const baseUrl = '<c:url value="/page/popupproductview.htm"/>';
+	    
+	    const purchaseRequestType = document.querySelector('select[name="type"]').value;
+
+	    const params = {
+	        target: 'product[' + index + ']',
+	        index: index,
+	        status: true,
+	        purchaseRequestType: purchaseRequestType
+	    };
+
+	    openpopup(buildUrl(baseUrl, params));
+	}
 
   function checkDuplicate(element) {
     // Memanggil String.duplicate untuk mengecek duplikasi pada kelas 'productInput'
