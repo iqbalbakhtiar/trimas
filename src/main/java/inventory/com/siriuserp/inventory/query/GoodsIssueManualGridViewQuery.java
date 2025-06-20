@@ -1,6 +1,7 @@
 package com.siriuserp.inventory.query;
 
 import com.siriuserp.inventory.criteria.GoodsIssueFilterCriteria;
+import com.siriuserp.inventory.dm.GoodsIssueManualType;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
 import com.siriuserp.sdk.utility.SiriusValidator;
@@ -44,6 +45,14 @@ public class GoodsIssueManualGridViewQuery extends AbstractGridViewQuery {
             builder.append("AND gi.source.name LIKE :source ");
         }
 
+        if (SiriusValidator.validateParam(criteria.getRecipient())) {
+            builder.append("AND gi.recipient.fullName LIKE :recipient ");
+        }
+
+        if (SiriusValidator.validateParam(criteria.getIssueType())) {
+            builder.append("AND gi.issueType = :issueType ");
+        }
+
         builder.append(" ORDER BY gi.id DESC ");
 
         Query query = getSession().createQuery(builder.toString());
@@ -67,6 +76,14 @@ public class GoodsIssueManualGridViewQuery extends AbstractGridViewQuery {
 
         if (SiriusValidator.validateParam(criteria.getSource())) {
             query.setParameter("source", "%" + criteria.getSource() + "%");
+        }
+
+        if (SiriusValidator.validateParam(criteria.getRecipient())) {
+            query.setParameter("recipient", "%" + criteria.getRecipient() + "%");
+        }
+
+        if (SiriusValidator.validateParam(criteria.getIssueType())) {
+            query.setParameter("issueType", GoodsIssueManualType.valueOf(criteria.getIssueType()));
         }
 
         return query;

@@ -64,6 +64,7 @@ public class Form implements SiriusForm
 	private Party requisitioner;
 	private Party approver;
 	private Party forwardTo;
+	private Party recipient;
 	private Party completedBy;
 	private Party createdBy;
 	private Party updatedBy;

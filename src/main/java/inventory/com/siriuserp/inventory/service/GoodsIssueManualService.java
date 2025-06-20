@@ -2,6 +2,7 @@ package com.siriuserp.inventory.service;
 
 import com.siriuserp.inventory.dm.GoodsIssueManual;
 import com.siriuserp.inventory.dm.GoodsIssueManualItem;
+import com.siriuserp.inventory.dm.GoodsIssueManualType;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
 import com.siriuserp.inventory.form.InventoryForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
@@ -44,6 +45,7 @@ public class GoodsIssueManualService {
         FastMap<String, Object> map = new FastMap<String, Object>();
         map.put("filterCriteria", filterCriteria);
         map.put("issues", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
+        map.put("types", GoodsIssueManualType.values());
 
         return map;
     }
@@ -54,6 +56,7 @@ public class GoodsIssueManualService {
     {
         FastMap<String, Object> map = new FastMap<String, Object>();
         map.put("transaction_form", new InventoryForm());
+        map.put("types", GoodsIssueManualType.values());
 
         return map;
     }

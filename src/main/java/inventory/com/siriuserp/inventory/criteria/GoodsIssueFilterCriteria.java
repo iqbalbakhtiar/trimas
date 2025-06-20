@@ -14,7 +14,9 @@ public class GoodsIssueFilterCriteria extends AbstractFilterCriteria {
     private String code;
     private String org;
     private String source;
+    private String recipient;
     private String createdBy;
+    private String issueType;
 
     private Date dateFrom;
     private Date dateTo;

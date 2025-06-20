@@ -20,6 +20,8 @@ import org.hibernate.annotations.Type;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -51,11 +53,21 @@ public class GoodsIssueManual extends Model implements Issueable {
     @Column(name = "note")
     private String note;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private GoodsIssueManualType issueType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_party_organization")
     @LazyToOne(LazyToOneOption.PROXY)
     @Fetch(FetchMode.SELECT)
     private Party organization;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_party_recipient")
+    @LazyToOne(LazyToOneOption.PROXY)
+    @Fetch(FetchMode.SELECT)
+    private Party recipient;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_facility_source")
@@ -92,6 +104,7 @@ public class GoodsIssueManual extends Model implements Issueable {
         return issueds;
     }
 
+    // Override @WarehouseTransaction
     @Override
     public Tax getTax() {
         return Tax.newInstance("1", "Exempt");
@@ -104,11 +117,16 @@ public class GoodsIssueManual extends Model implements Issueable {
 
     @Override
     public Party getParty() {
-        return getOrganization();
+        return getRecipient();
     }
 
     @Override
     public String getRef() {
         return "";
+    }
+
+    @Override
+    public String getSelf() {
+        return "Goods Issue Manual";
     }
 }

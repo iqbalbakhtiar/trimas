@@ -5,6 +5,7 @@ import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.ExchangeType;
 import com.siriuserp.sdk.dm.Grid;
 import com.siriuserp.sdk.dm.Money;
+import com.siriuserp.sdk.dm.Party;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -80,7 +81,8 @@ public class GoodsIssueManualItem extends WarehouseReferenceItem implements Rese
 
     @Override
     public String getRefTo() {
-        return "";
+        Party recipient = getGoodsIssueManual().getRecipient();
+        return recipient != null ? recipient.getFullName() : "";
     }
 
     @Override

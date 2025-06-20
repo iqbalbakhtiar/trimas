@@ -8,6 +8,7 @@ package com.siriuserp.inventory.form;
 import com.siriuserp.accountpayable.dm.InvoiceVerification;
 import com.siriuserp.inventory.dm.GoodsIssue;
 import com.siriuserp.inventory.dm.GoodsIssueManual;
+import com.siriuserp.inventory.dm.GoodsIssueManualType;
 import com.siriuserp.inventory.dm.GoodsReceipt;
 import com.siriuserp.inventory.dm.GoodsReceiptManual;
 import com.siriuserp.inventory.dm.GoodsType;
@@ -61,6 +62,7 @@ public class InventoryForm extends Form
 	private BarcodeGroupType barcodeGroupType;
 	private StatusType statusType;
 	private TransferType transferType;
+	private GoodsIssueManualType issueType;
 
 	private Facility source;
 	private Facility destination;

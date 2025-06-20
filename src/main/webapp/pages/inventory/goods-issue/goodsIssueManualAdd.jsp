@@ -30,6 +30,24 @@
 				<td><input id="date" name="date" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>" class="datepicker"/></td>
 			</tr>
 			<tr>
+				<td nowrap="nowrap" align="right"><spring:message code="sirius.type"/> :</td>
+				<td>
+					<form:select id="issueType" path="issueType" cssClass="combobox-min" onchange="changeType(this);">
+						<c:forEach items="${types}" var="type">
+							<form:option value="${type}" label="${type.capitalizedName}"/>
+						</c:forEach>
+					</form:select>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap" align="right"><spring:message code="goodsissue.recipient"/> :</td>
+				<td>
+					<form:select id="recipient" path="recipient" cssClass="combobox-ext">
+					</form:select>
+					<img src="assets/icons/list_extensions.gif" onclick="openRecipient();" style="CURSOR:pointer;" title="Recipient" />
+				</td>
+			</tr>
+			<tr>
 				<td nowrap="nowrap" align="right"><spring:message code="transferorder.warehousefrom"/> :</td>
 				<td>
 					<form:select id="source" path="source" cssClass="combobox-ext" onchange="populateGrid();">
@@ -143,7 +161,9 @@
 		// OnFocus Section
 		$('#source').focus(resetLineItems);
 
+		// Onchange Section
 		populateWarehouse().then(() => $('#source').change());
+		$('#issueType').change();
 	});
 
 	async function populateWarehouse() {
@@ -400,4 +420,37 @@
 		}
 	}
 
+	function changeType(el) {
+		var type = el.value;
+		var $row = $('#recipient').closest('tr');
+		var $sel = $('#recipient');
+
+		$sel.empty();
+
+		if (type === 'STANDARD') {
+			$row.hide();
+			$sel.prop('disabled', true);
+		} else {
+			$row.show();
+			$sel.prop('disabled', false);
+		}
+	}
+
+	function openRecipient() {
+		const org = $('#org').val()
+		const type = $('#issueType').val();
+		if (!org) {
+			alert('<spring:message code="notif.select1"/> ' + '<spring:message code="organization"/> ' + '<spring:message code="notif.select2"/> !!!');
+			return;
+		}
+		const base = '<c:url value="/page/popuppartyrelationview.htm"/>';
+		const params = {
+			target: 'recipient',
+			organization: org,
+			fromRoleType: type === 'SALES' ? 4 : 5,
+			toRoleType:   type === 'SALES' ? 5 : 4,
+			relationshipType: type === 'SALES' ? 3 : 4
+		};
+		openpopup(buildUrl(base, params));
+	}
 </script>

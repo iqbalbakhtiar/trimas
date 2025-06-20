@@ -4,7 +4,8 @@
 	<a class="item-button-list" href="<c:url value='/page/goodsissuemanualview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<c:if test='${access.add}'>
 		<a class="item-button-save b_save"><span><spring:message code="sirius.save"/></span></a>
-    </c:if>				
+    </c:if>
+	<a class="item-button-print" href="<c:url value='/page/goodsissuemanualprint.htm?id=${transaction_form.id}'/>"><span><spring:message code="sirius.print"/></span></a>
 </div>
 
 <div class="main-box">
@@ -28,6 +29,22 @@
 						<tr>
 							<td nowrap="nowrap" align="right"><spring:message code="sirius.date"/> :</td>
 							<td><input id="date" name="date" class="input-disabled" value="<fmt:formatDate value='${transaction_edit.date}' pattern='dd-MM-yyyy'/>" size="8" disabled/></td>
+						</tr>
+						<tr>
+							<td nowrap="nowrap" align="right"><spring:message code="sirius.type"/> :</td>
+							<td>
+								<select id="issueType" class="combobox-min input-disabled" onchange="changeType(this);" disabled>
+									<option value="${transaction_edit.issueType}" label="${transaction_edit.issueType.capitalizedName}"/>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td nowrap="nowrap" align="right"><spring:message code="goodsissue.recipient"/> :</td>
+							<td>
+								<select id="recipient" class="combobox-ext input-disabled" disabled>
+									<option value="${transaction_edit.recipient.id}"><c:out value="${transaction_edit.recipient.fullName}"/></option>
+								</select>
+							</td>
 						</tr>
 						<tr>
 							<td nowrap="nowrap" align="right"><spring:message code="transferorder.warehousefrom"/> :</td>
@@ -94,7 +111,7 @@
 					<th><spring:message code="transferorder.containerto"/></th>--%>
 					<th><spring:message code="product.uom"/></th>
 					<th><spring:message code="transferorder.qty"/></th>
-					
+					<th><spring:message code="sirius.note"/></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -110,6 +127,7 @@
 						<td nowrap="nowrap"><c:out value="${item.destinationContainer.name}"/></td>--%>
 						<td nowrap="nowrap"><c:out value='${item.product.unitOfMeasure.measureId}'/></td>
 						<td nowrap="nowrap"><fmt:formatNumber value="${item.issued}" pattern="#,##0.00"/></td>
+						<td><input id="note[${idx.index}]" type="text" value="${item.note}" name="goodsIssueManual.items[${status.index}].note" index="${status.index}" next="note" size="40"/></td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -150,5 +168,21 @@
 				});	
 			}
 		});
+
+		$('#issueType').change();
 	});
+
+	function changeType(el) {
+		var type = el.value;
+		var $row = $('#recipient').closest('tr');
+		var $sel = $('#recipient');
+
+		if (type === 'STANDARD') {
+			$row.hide();
+			$sel.prop('disabled', true);
+		} else {
+			$row.show();
+			$sel.prop('disabled', false);
+		}
+	}
 </script>

@@ -25,7 +25,9 @@
             <th width="5%"><spring:message code="sirius.date"/></th>
             <th width="8%"><spring:message code="organization"/></th>
             <th width="8%"><spring:message code="sirius.from"/></th>
+            <th width="8%"><spring:message code="sirius.to"/></th>
             <th width="8%"><spring:message code="sirius.createdby"/></th>
+            <th width="5%"><spring:message code="sirius.type"/></th>
         </tr>
         <c:forEach items="${issues}" var="issue">
             <tr>
@@ -36,7 +38,9 @@
                 <td><fmt:formatDate value='${issue.date}' pattern='dd-MM-yyyy'/></td>
                 <td><c:out value="${issue.organization.fullName}" /></td>
                 <td><c:out value="${issue.source.name}" /></td>
+                <td><c:out value="${issue.recipient.fullName}" /></td>
                 <td><c:out value="${issue.createdBy.fullName}" /></td>
+                <td><c:out value="${issue.issueType.capitalizedName}" /></td>
             </tr>
         </c:forEach>
         <tr class="end-table"><td colspan="10">&nbsp;</td></tr>
