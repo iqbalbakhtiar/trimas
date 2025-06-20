@@ -55,7 +55,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap" align="right"><spring:message code="transferorder.gridfrom"/> :</td>
+				<td nowrap="nowrap" align="right"><spring:message code="goodsissue.area.from"/> :</td>
 				<td>
 					<select id="gridFrom" class="combobox-ext">
 					</select>
@@ -76,13 +76,14 @@
 				<tr>
 					<th width="2%"><input id ="checkline" value="line" class="checkall" type="checkbox"/></th>
 					<th ><spring:message code="product.name"/></th>
-					<th><spring:message code="transferorder.gridfrom"/></th>
+<%--					<th><spring:message code="transferorder.gridfrom"/></th>--%>
 					<th><spring:message code="transferorder.containerfrom"/></th>
 <%--					<th><spring:message code="transferorder.gridto"/></th>--%>
 <%--					<th><spring:message code="transferorder.containerto"/></th>--%>
 					<th width="12%"><spring:message code="product.onhand"/></th>
+					<th width="6%"><spring:message code="product.lot"/></th>
 					<th width="12%"><spring:message code="product.uom"/></th>
-					<th width="12%"><spring:message code="transferorder.qty"/></th>
+					<th width="12%"><spring:message code="goodsissueitem.total.issued"/></th>
 				</tr>
 			</thead>
 			<tfoot>
@@ -271,11 +272,12 @@
 		
 		$tr.append(List.col([checkbox]));
 		$tr.append(List.col([product, productImg]));
-		$tr.append(List.col([gridFrom]));
+		// $tr.append(List.col([gridFrom]));
 		$tr.append(List.col([source]));
 		// $tr.append(List.col([gridTo]));
 		// $tr.append(List.col([container, containerImg]));
 		$tr.append(List.col([onHand, serial]));
+		$tr.append(List.col(['&nbsp;']));
 		$tr.append(List.col([uom]));
 		$tr.append(List.col([quantity]));
 
@@ -360,7 +362,7 @@
 	    $product = List.get('<input class="input" size="12" type="hidden"/>','product['+idx+']', $productId);
 	    $source = List.get('<input class="input" size="12" type="hidden"/>','source['+idx+']', $sourceId);
 	    $container = List.get('<input class="input" size="12" type="hidden"/>','container['+idx+']', $containerId);
-	    $lotCode = List.get('<input class="input" size="12" type="hidden"/>','lotCode['+idx+']');
+	    $lotCode = List.get('<input class="inputbox-small input-disabled" size="12" type="text" readonly/>','lotCode['+idx+']');
 
 	    $barcode = List.get('<select class="combobox barcodes" onchange="calculateAdjust(\'' + idx + '\');"></select>','serial[' + idx + ']');
 		$barcodeImg = List.img('<spring:message code="barcode"/>', idx, 'openBarcode("'+idx+'","'+$productId+'","'+$sourceId+'")');
@@ -370,13 +372,14 @@
 
 		$quantity = List.get('<input class="input-number quantities" size="12"/>','quantity['+idx+']', '0.00');
 		
-		$tr.append(List.col(['&nbsp;']));
+		// $tr.append(List.col(['&nbsp;']));
 		// $tr.append(List.col(['&nbsp;']));
 		// $tr.append(List.col(['&nbsp;']));
 		$tr.append(List.col([$product]));
-		$tr.append(List.col([$source, $lotCode]));
+		$tr.append(List.col([$source]));
 		$tr.append(List.col([$barcode, $barcodeImg], '', 'text-align: right;'));
 		$tr.append(List.col([$onhand]));
+		$tr.append(List.col([$lotCode]));
 		$tr.append(List.col([$uom]));
 		$tr.append(List.col([$quantity]));
 		

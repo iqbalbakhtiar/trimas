@@ -104,13 +104,14 @@
 					<th><spring:message code="product.code"/></th>
 					<th><spring:message code="product.name"/></th>
 					<th><spring:message code="product.barcode"/></th>
+					<th><spring:message code="product.lot"/></th>
 					<th><spring:message code="product.category"/></th>
-					<th><spring:message code="transferorder.gridfrom"/></th>
+					<th><spring:message code="goodsissue.area.from"/></th>
 					<th><spring:message code="transferorder.containerfrom"/></th>
 					<%--<th><spring:message code="transferorder.gridto"/></th>
 					<th><spring:message code="transferorder.containerto"/></th>--%>
 					<th><spring:message code="product.uom"/></th>
-					<th><spring:message code="transferorder.qty"/></th>
+					<th><spring:message code="goodsissueitem.total.issued"/></th>
 					<th><spring:message code="sirius.note"/></th>
 				</tr>
 			</thead>
@@ -120,6 +121,7 @@
 						<td nowrap="nowrap"><c:out value="${item.product.code}"/></td>
 						<td nowrap="nowrap"><c:out value="${item.product.name}"/></td>
 						<td nowrap="nowrap"><c:out value='${item.lot.serial}'/></td>
+						<td nowrap="nowrap"><c:out value='${item.lot.code}'/></td>
 						<td nowrap="nowrap"><c:out value='${item.product.productCategory.name}'/></td>
 						<td nowrap="nowrap"><c:out value="${item.sourceContainer.grid.name}"/></td>
 						<td nowrap="nowrap"><c:out value="${item.sourceContainer.name}"/></td>
