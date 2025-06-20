@@ -8,6 +8,7 @@ import java.util.Date;
 
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.production.dm.CostCenter;
+import com.siriuserp.production.dm.MaterialType;
 import com.siriuserp.sales.dm.DeliveryOrderItemType;
 import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
 import com.siriuserp.sales.dm.SalesType;
@@ -79,6 +80,7 @@ public class Item extends SiriusItem
 	private SalesType salesType = SalesType.STANDARD;
 	private WriteOffType writeOffType;
 	private DeliveryOrderItemType deliveryItemType;
+	private MaterialType materialType;
 
 	private Facility facility;
 	private Grid grid;

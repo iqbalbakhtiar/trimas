@@ -1,11 +1,11 @@
 package com.siriuserp.inventory.query;
 
+import org.hibernate.Query;
+
 import com.siriuserp.inventory.criteria.TransferOrderFilterCriteria;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
-import com.siriuserp.sdk.db.GridViewQuery;
 import com.siriuserp.sdk.utility.SiriusValidator;
-import org.hibernate.Query;
 
 /**
  * @author ferdinand

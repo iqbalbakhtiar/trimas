@@ -11,10 +11,10 @@
 	<title>${title}</title>
 	<%@ include file="/common/filterandpaging.jsp"%>
 	<script type="text/javascript">
-		function setclient(id,name,code,uom)
+		function setclient(id,name,code)
 		{
 			if(id && name) {
-				var _code = self.opener.document.getElementById('productCode[${param.index}]');
+				var _code = self.opener.document.getElementById('costGroupCode[${param.index}]');
 				if(_code)
 					_code.value = code;
 
@@ -30,15 +30,7 @@
 					_client.appendChild(_opt);
 
 					var event = new Event('change');
-					_client.dispatchEvent(event); // Trigger onchange event from selected element.
-				}
-			}
-
-			// Uom
-			if(uom) {
-				var _uom = self.opener.document.getElementById('uom[${param.index}]');
-				if(_uom) {
-					_uom.value = uom;
+					_client.dispatchEvent(event);
 				}
 			}
 
@@ -88,20 +80,18 @@
 						<table class="table-list" cellspacing="0" cellpadding="0" width="80%">
 							<tr>
 								<th width="3%">&nbsp;</th>
-								<th width="3%"><spring:message code="product.code"/></th>
-								<th width="5%"><spring:message code="product.name"/></th>
-								<th width="2%"><spring:message code="sirius.uom"/></th>
-								<th width="4%"><spring:message code="productcategory"/></th>
+								<th width="3%"><spring:message code="costcenter.code"/></th>
+								<th width="5%"><spring:message code="costcenter.name"/></th>
+								<th width="2%"><spring:message code="sirius.type"/></th>
 							</tr>
-							<c:forEach items="${products}" var="product">
+							<c:forEach items="${costGroups}" var="data">
 								<tr>
 									<td class="tools">
-										<a class="item-button-add-row" href="javascript:setclient('${product.id}','${product.name}','${product.code}', '${product.unitOfMeasure.measureId}')"  title="Edit"><span><spring:message code="sirius.edit"/></span></a>
+										<a class="item-button-add-row" href="javascript:setclient('${data.id}','${data.name}','${data.code}')"  title="Edit"><span><spring:message code="sirius.edit"/></span></a>
 									</td>
-									<td nowrap="nowrap">${product.code}</td>
-									<td nowrap="nowrap">${product.name}</td>
-									<td nowrap="nowrap">${product.unitOfMeasure.measureId}</td>
-									<td nowrap="nowrap">${product.productCategory.name}</td>
+									<td nowrap="nowrap">${data.code}</td>
+									<td nowrap="nowrap">${data.name}</td>
+									<td nowrap="nowrap">${data.unitOfMeasure.measureId}</td>
 								</tr>
 							</c:forEach>
 							<tr class="end-table"><td colspan="11">&nbsp;</td></tr>

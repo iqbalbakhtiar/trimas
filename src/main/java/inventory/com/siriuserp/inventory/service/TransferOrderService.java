@@ -91,6 +91,7 @@ public class TransferOrderService
                 transferOrderItem.setQuantity(item.getQuantity());
                 transferOrderItem.setTransferOrder(transferOrder);
                 transferOrderItem.getLot().setSerial(item.getSerial());
+                transferOrderItem.getLot().setCode(item.getLotCode());
                 transferOrderItem.setFacilitySource(transferOrder.getSource());
                 transferOrderItem.setFacilityDestination(transferOrder.getDestination());
                 transferOrderItem.setTransactionItem(ReferenceItemHelper.init(genericDao, item.getQuantity(), WarehouseTransactionType.INTERNAL, transferOrderItem));

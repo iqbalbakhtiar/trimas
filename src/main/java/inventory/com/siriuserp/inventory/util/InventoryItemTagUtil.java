@@ -217,7 +217,7 @@ public class InventoryItemTagUtil
 			case OUT:
 				List<Inventory> invents = inventories(inventory, inventoriable); 
 				
-				Assert.notEmpty(invents, inventoriable.getProduct().getName()+" ["+inventoriable.getContainer().getName()+"]"+ "["+LotHelper.getCompare(inventoriable.getLot())+"]" 
+				Assert.notEmpty(invents, inventoriable.getProduct().getName()+" ["+inventoriable.getContainer().getName()+"]"+ "["+LotHelper.getCompare(inventoriable.getLot())+"] "
 					+ "does not exist, Stock Adjustment/Transfer Order/Goods Receipt first !");
 
 				BigDecimal buffer = inventoriable.getQuantity().abs();
