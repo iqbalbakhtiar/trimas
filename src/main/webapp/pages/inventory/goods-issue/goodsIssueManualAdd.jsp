@@ -360,7 +360,8 @@
 	    $product = List.get('<input class="input" size="12" type="hidden"/>','product['+idx+']', $productId);
 	    $source = List.get('<input class="input" size="12" type="hidden"/>','source['+idx+']', $sourceId);
 	    $container = List.get('<input class="input" size="12" type="hidden"/>','container['+idx+']', $containerId);
-	    
+	    $lotCode = List.get('<input class="input" size="12" type="hidden"/>','lotCode['+idx+']');
+
 	    $barcode = List.get('<select class="combobox barcodes" onchange="calculateAdjust(\'' + idx + '\');"></select>','serial[' + idx + ']');
 		$barcodeImg = List.img('<spring:message code="barcode"/>', idx, 'openBarcode("'+idx+'","'+$productId+'","'+$sourceId+'")');
 		
@@ -373,7 +374,7 @@
 		// $tr.append(List.col(['&nbsp;']));
 		// $tr.append(List.col(['&nbsp;']));
 		$tr.append(List.col([$product]));
-		$tr.append(List.col([$source]));
+		$tr.append(List.col([$source, $lotCode]));
 		$tr.append(List.col([$barcode, $barcodeImg], '', 'text-align: right;'));
 		$tr.append(List.col([$onhand]));
 		$tr.append(List.col([$uom]));

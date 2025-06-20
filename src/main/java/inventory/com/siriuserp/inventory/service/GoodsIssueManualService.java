@@ -76,6 +76,7 @@ public class GoodsIssueManualService {
                 goodsIssueItem.setIssued(item.getQuantity());
                 goodsIssueItem.setGoodsIssueManual(goodsIssue);
                 goodsIssueItem.getLot().setSerial(item.getSerial());
+                goodsIssueItem.getLot().setCode(item.getLotCode());
                 goodsIssueItem.setFacilitySource(goodsIssue.getSource());
                 goodsIssueItem.setTransactionItem(ReferenceItemHelper.init(genericDao, item.getQuantity(), WarehouseTransactionType.OUT, goodsIssueItem));
 
