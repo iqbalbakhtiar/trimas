@@ -71,9 +71,10 @@ public class InventoryItemDaoImpl extends DaoHelper<InventoryItem> implements In
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<InventoryItem> getAllItem(Long productId, Long containerId) {
+	public List<InventoryItem> getAvailableItem(Long productId, Long containerId) {
 		  
-        Query query = getSession().createQuery("FROM InventoryItem item WHERE item.product.id =:productId AND item.container.id =:containerId ");
+        Query query = getSession().createQuery("FROM InventoryItem item WHERE item.product.id =:productId AND item.container.id =:containerId AND item.availableSale > 0 ");
+       
         query.setParameter("productId",productId);
         query.setParameter("containerId",containerId);
         query.setCacheable(true);

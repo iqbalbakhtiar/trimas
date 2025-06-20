@@ -93,10 +93,9 @@ public class OnHandQuantityService
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public List<InventoryItem> loadList(Long productId, Long containerId)
 	{
-		return inventoryItemDao.getAllItem(productId, containerId);
+		return inventoryItemDao.getAvailableItem(productId, containerId);
 	}
 	
-	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public InventoryItem loadBySerial(String barcode)
 	{
 		return inventoryItemDao.getItemBySerial(barcode, true);

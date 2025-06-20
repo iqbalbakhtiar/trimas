@@ -37,7 +37,7 @@ public class OnHandQuantityDetailViewQuery extends AbstractGridViewQuery
 		builder.append("FROM InventoryItem inv WHERE inv.id IS NOT NULL AND inv.product.id =:product ");
 
 		if (SiriusValidator.validateParam(criteria.getLotCode()))
-			builder.append("AND inv.lot.code =:lotCode AND inv.onHand - inv.reserved > 0 ");
+			builder.append("AND inv.lot.code =:lotCode ");
 
 		builder.append("GROUP BY inv.lot.serial, inv.lot.code, inv.container.id, inv.organization.id HAVING SUM(inv.onHand + inv.onTransfer + inv.reserved) > 0 ");
 		builder.append("ORDER BY inv.container.grid.facility.id ASC, inv.container.grid.id ASC, inv.container.id ASC, inv.lot.code ASC, inv.lot.serial ASC");
