@@ -125,4 +125,14 @@ public class CostCenterGroupController extends ControllerBase
 		service.delete(service.load(id));
 		return ViewHelper.redirectTo("costcentergroupview.htm");
 	}
+	
+	@RequestMapping("/popupcostcentergroupview.htm")
+	public ModelAndView popup(HttpServletRequest request, @RequestParam(value = "target", required = false) String target) throws Exception
+	{
+		ModelAndView view = new ModelAndView("/production-popup/costCenterGroupPopup");
+		view.addAllObjects(service.view(criteriaFactory.createPopup(request, MasterDataFilterCriteria.class), CostCenterGroupGridViewQuery.class));
+		view.addObject("target", target);
+
+		return view;
+	}
 }
