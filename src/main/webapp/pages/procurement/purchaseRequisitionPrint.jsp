@@ -8,7 +8,7 @@
 <base href="<%=basePath%>">
 <html>
 <head>
-	<title><spring:message code="salesorder.contract"/></title>
+	<title><spring:message code="purchaserequisition"/> > Print</title>
 	<link rel="icon" type="image/png" href="<c:url value='/assets/images/title-logo.png'/>">
 	<style type="text/css" media="screen">
 		@import url("assets/sirius.css");
