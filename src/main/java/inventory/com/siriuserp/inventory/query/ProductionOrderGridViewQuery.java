@@ -63,7 +63,6 @@ public class ProductionOrderGridViewQuery  extends AbstractGridViewQuery
         if (SiriusValidator.validateDate(criteria.getDateTo()))
             query.setParameter("endDate", criteria.getDateTo());
         
-        System.out.println(query);
         return query;
 	}
 }
