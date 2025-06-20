@@ -101,4 +101,10 @@ public class GoodsIssueManualController extends ControllerBase
 
 		return response;
 	}
+
+	@RequestMapping("/goodsissuemanualprint.htm")
+	public ModelAndView print(@RequestParam("id") Long id) throws Exception
+	{
+		return new ModelAndView("/inventory/goods-issue/goodsIssueManualPrint", service.preedit(id));
+	}
 }

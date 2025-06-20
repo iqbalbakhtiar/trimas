@@ -1,4 +1,4 @@
-<div dojoType="FloatingPane" id="filter" title="Filter" constrainToContainer="true" style="width: 30%; height: 250px; left: 50%; top: 50%; transform: translate(-50%, -50%); display:none;" toggle="explode" bg>
+<div dojoType="FloatingPane" id="filter" title="Filter" constrainToContainer="true" style="width: 30%; height: 300px; left: 50%; top: 50%; transform: translate(-50%, -50%); display:none;" toggle="explode" bg>
     <form id="filterForm" name="filterForm" method="post">
         <table width="100%" cellspacing="0" cellpadding="1" align="right">
             <tr>
@@ -26,9 +26,28 @@
                 <td ><input type="text" id="source" name="source" class="inputbox" value="${filterCriteria.source}"/></td>
             </tr>
             <tr>
+                <td align="right"><spring:message code="sirius.to"/>&nbsp;</td>
+                <td align="center">:</td>
+                <td ><input type="text" id="recipient" name="recipient" class="inputbox" value="${filterCriteria.recipient}"/></td>
+            </tr>
+            <tr>
                 <td align="right"><spring:message code="sirius.createdby"/>&nbsp;</td>
                 <td align="center">:</td>
                 <td ><input type="text" id="createdBy" name="createdBY" class="inputbox" value="${filterCriteria.createdBy}"/></td>
+            </tr>
+            <tr>
+                <td align="right"><spring:message code="sirius.type"/>&nbsp;</td>
+                <td align="center">:</td>
+                <td >
+                    <select id="issueType" name="issueType">
+                        <option value=""><spring:message code="sirius.all"/></option>
+                        <c:forEach items="${types}" var="type">
+                            <option value="${type}" <c:if test="${filterCriteria.issueType eq type}">selected="selected"</c:if>>
+                                    ${type.capitalizedName}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </td>
             </tr>
             <tr><td colspan="3">&nbsp;</td></tr>
             <tr>
