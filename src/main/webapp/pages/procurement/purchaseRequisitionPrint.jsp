@@ -54,7 +54,7 @@
 					  	<div class="main-box">
 					  		<table border="0" width="100%" align="center">
 				  			<tr>
-				  				<td colspan="4" align="center"><h2 style="text-transform: uppercase;"><spring:message code="purchaserequisition"/></h2></td>
+				  				<td colspan="4" align="center"><h2 style="text-transform: uppercase;"><spring:message code="${requisition_edit.type == 'SERVICE' ? 'purchaserequisition.service' : 'purchaserequisition'}"/></h2></td>
 				  			</tr>
 				  			<tr>
 				  				<td width="10%;">&nbsp;</td>

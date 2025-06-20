@@ -31,6 +31,16 @@
               <td><input id="date" name="date" size="10" class="input-disabled" value="<fmt:formatDate value='${requisition_edit.date}' pattern='dd-MM-yyyy'/>"/></td>
             </tr>
             <tr>
+				<td align="right"><spring:message code="sirius.type"/></td>
+				<td width="1%" align="center">:</td>
+				<td>
+					<form:select id="type" path="type" cssClass="combobox input-disabled" disabled='true'>
+						<form:option value="STOCK">STOCK</form:option>
+						<form:option value="SERVICE">SERVICE</form:option>
+					</form:select>
+				</td>							
+			</tr>
+            <tr>
               <td align="right"><spring:message code="purchaserequisition.requisitioner"/></td>
               <td width="1%" align="center">:</td>
               <td>

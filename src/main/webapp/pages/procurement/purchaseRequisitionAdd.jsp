@@ -33,6 +33,17 @@
               <td><input id="date" name="date" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>"/></td>
             </tr>
             <tr>
+				<td align="right"><spring:message code="sirius.type"/></td>
+				<td width="1%" align="center">:</td>
+				<td>
+					<form:select path="type" cssClass="combobox">
+						<form:option value="STOCK">STOCK</form:option>
+						<form:option value="SERVICE">SERVICE</form:option>
+					</form:select>
+				</td>		
+                <td><form:errors path="type"/></td>					
+			</tr>
+            <tr>
               <td align="right"><spring:message code="purchaserequisition.requisitioner"/></td>
               <td width="1%" align="center">:</td>
               <td>

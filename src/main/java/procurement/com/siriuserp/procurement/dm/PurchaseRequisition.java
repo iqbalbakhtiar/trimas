@@ -11,6 +11,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -56,6 +58,10 @@ public class PurchaseRequisition extends Model
 
 	@Column(name = "reason")
 	private String reason;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "type")
+	private PurchaseRequisitionType type;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_department")

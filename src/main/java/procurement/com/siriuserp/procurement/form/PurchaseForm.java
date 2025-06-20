@@ -7,6 +7,7 @@ import com.siriuserp.procurement.dm.POStatus;
 import com.siriuserp.procurement.dm.PurchaseDocumentType;
 import com.siriuserp.procurement.dm.PurchaseOrder;
 import com.siriuserp.procurement.dm.PurchaseRequisition;
+import com.siriuserp.procurement.dm.PurchaseRequisitionType;
 import com.siriuserp.procurement.dm.PurchaseType;
 import com.siriuserp.sdk.dm.Approvable;
 import com.siriuserp.sdk.dm.ContactMechanism;
@@ -39,6 +40,7 @@ public class PurchaseForm extends Form
 	private Department department;
 
 	private PurchaseType purchaseType;
+	private PurchaseRequisitionType type;
 	private PurchaseDocumentType purchaseDocumentType;
 	private POStatus status;
 
