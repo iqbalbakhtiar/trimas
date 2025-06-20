@@ -454,8 +454,7 @@
 	                        class: 'barcode-input',
 	                        name: 'items[' + index + '].serial',
 	                        id: 'serial[' + index + ']',
-	                        placeholder: 'Select Barcode',
-	                        onchange: 'checkOnHand("' + index + '");'
+	                        placeholder: 'Select Barcode'
 	                    });
 
 	                    const datalistEl = $('<datalist/>', { id: datalistId });
@@ -468,16 +467,28 @@
 	                        datalistEl.append($('<option/>', { value: barcode.serial }));
 	                    });
 
-	                    // Tambahkan event listener untuk filter manual
+	                    // Event filter saat mengetik
 	                    input.on('input', function () {
 	                        const keyword = $(this).val().toLowerCase();
-	                        datalistEl.empty(); // hapus semua option
+	                        datalistEl.empty();
 	                        allBarcodes
 	                            .filter(b => b.serial.toLowerCase().includes(keyword))
-	                            .slice(0, 20) // tampilkan hanya 20 hasil yang cocok
+	                            .slice(0, 20)
 	                            .forEach(b => {
 	                                datalistEl.append($('<option/>', { value: b.serial }));
 	                            });
+	                    });
+
+	                    // Validasi saat blur atau change
+	                    input.on('change blur', function () {
+	                        const val = $(this).val();
+	                        const isValid = allBarcodes.some(b => b.serial === val);
+	                        if (!isValid) {
+	                            $(this).val(''); // atau bisa juga beri pesan error
+	                        } else {
+	                            // Barcode valid, bisa lanjut proses misalnya checkOnHand
+	                            checkOnHand(index);
+	                        }
 	                    });
 
 	                    $barcode = $('<div/>').append(input, datalistEl);
