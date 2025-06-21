@@ -122,6 +122,11 @@ public class DeliveryOrder extends Model implements JSONSupport
 	@OrderBy("id")
 	private Set<DeliveryOrderItem> items = new FastSet<DeliveryOrderItem>();
 
+	public String getCode()
+	{
+		return this.code.replace("SJ", "");
+	}
+
 	public Set<SalesOrder> getSalesOrders()
 	{
 		HashSet<SalesOrder> references = new HashSet<SalesOrder>();
