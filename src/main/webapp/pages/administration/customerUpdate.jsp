@@ -457,7 +457,7 @@ function validateForm() {
 		return false;
 	}
 	
-	if(!coreType && nik != 16 ){
+	/* if(!coreType && nik != 16 ){
 		alert('<spring:message code="party.nik"/> <spring:message code="notif.nik"/>');
 		return false;
 	}
@@ -470,7 +470,7 @@ function validateForm() {
 	if(nitku != 6){
 		alert('<spring:message code="party.nitku"/> <spring:message code="notif.nitku"/>');
 		return false;
-	}
+	} */
 	
 	return true;
 }
