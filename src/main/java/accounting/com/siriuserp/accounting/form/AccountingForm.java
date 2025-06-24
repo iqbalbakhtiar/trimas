@@ -15,6 +15,7 @@ import com.siriuserp.accountpayable.dm.Payment;
 import com.siriuserp.accountpayable.dm.PaymentInformation;
 import com.siriuserp.accountpayable.dm.PaymentMethodType;
 import com.siriuserp.accountreceivable.dm.Billing;
+import com.siriuserp.accountreceivable.dm.BillingBatch;
 import com.siriuserp.accountreceivable.dm.CreditMemoReferenceType;
 import com.siriuserp.accountreceivable.dm.Receipt;
 import com.siriuserp.accountreceivable.dm.ReceiptInformation;
@@ -76,6 +77,7 @@ public class AccountingForm extends Form
 
 	//Receivable
 	private Billing billing;
+	private BillingBatch billingBatch;
 	private Receipt receipt;
 	private ReceiptInformation receiptInformation;
 

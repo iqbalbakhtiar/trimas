@@ -6,6 +6,7 @@ package com.siriuserp.sdk.dm;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.siriuserp.accountreceivable.dm.Billing;
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.production.dm.CostCenter;
 import com.siriuserp.production.dm.MaterialType;
@@ -101,6 +102,7 @@ public class Item extends SiriusItem
 	private InvoiceVerificationItem invoiceVerificationItem;
 	private InvoiceVerification invoiceVerification;
 	private CostCenter costCenter;
+	private Billing billing;
 
 	private String code;
 	private String serial;

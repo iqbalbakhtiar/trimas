@@ -26,7 +26,6 @@
 				<tr>
 			</table>
 			<br/>
-
 			<table border="0" width="100%" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="border-top border-bottom border-left border-right">
@@ -40,11 +39,11 @@
 								<td colspan="10" height="15">&nbsp;</td>
 							</tr>
 						</table>
-						<table border="0" width="100%" cellpadding="0" cellspacing="0" id="test">
+						<table border="0" width="100%" cellpadding="3" cellspacing="0" id="test">
 							<tr>
 								<td width="2%" colspan="2">&nbsp;</td>
 								<td width="96%" colspan="3" valign="top">
-									<table width="100%" cellpadding="0" cellspacing="0" align="left">
+									<table width="100%" cellpadding="3" cellspacing="0" align="left">
 										<tr>
 											<td width="10%"><strong>No.</strong></td>
 											<td width="1%"><strong>:</strong></td>
@@ -70,17 +69,13 @@
 										<tr>
 											<td width="10%" style="vertical-align: top;"><strong>Untuk Pembayaran</strong></td>
 											<td width="1%" style="vertical-align: top;"><strong>:</strong></td>
-											<td width="30%" style="vertical-align: top;"><strong><c:out value='${billing_form.billing.code}'/></strong></td>
+											<td width="30%" style="vertical-align: top;"><strong><c:out value='${doCode}'/></strong></td>
 										</tr>
 									</table>
 								</td>
 								<td width="2%" colspan="2">&nbsp;</td>
 							</tr>
-							<tr>
-								<td colspan="10">&nbsp;</td>
-							</tr>
 						</table>
-						<br/>
 						<table border="0" width="100%" cellpadding="0" cellspacing="0" id="test">
 							<tr>
 								<td width="2%" colspan="2">&nbsp;</td>
@@ -107,22 +102,13 @@
 										<tr>
 											<td align="center">
 												<strong>
-													Sumedang,
-													<span style="display:inline-block; width:2em"></span>
-													<fmt:formatDate value='${billing_form.date}' pattern='dd MMMM yyyy'/>
+													Sumedang, <fmt:formatDate value='${billing_form.date}' pattern='dd MMMM yyyy'/>
 												</strong>
 											</td>
 										</tr>
 										<tr><td align="center">PT. SAN STAR MANUNGGAL</td></tr>
 										<tr><td>&nbsp;</td></tr>
 										<tr><td>&nbsp;</td></tr>
-										<!-- <tr><td align="center">.............................................</td></tr>
-                                        <tr>
-                                            <td align="center"><u>Eddy Tjahjadi</u></td>
-                                        </tr>
-                                        <tr>
-                                            <td align="center">Direktur</td>
-                                        </tr> -->
 									</table>
 								</td>
 								<td width="2%" colspan="2">&nbsp;</td>
@@ -134,7 +120,6 @@
 					</td>
 				</tr>
 			</table>
-
 			<br/>
 			<table border="0" width="100%" cellpadding="0" cellspacing="0" class="out">
 				<tr>

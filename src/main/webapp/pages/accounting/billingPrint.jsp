@@ -54,8 +54,8 @@
 					<td width="48%" colspan="3" valign="top">
 						<table width="100%" cellpadding="0" cellspacing="0" align="left">
 							<tr>
-								<td width="25%">&nbsp;</td>
-								<td width="20%">Invoice No</td>
+								<td width="20%">&nbsp;</td>
+								<td width="25%">Invoice No</td>
 								<td width="1%">:</td>
 								<td width="30%"><c:out value='${billing_form.code}'/></td>
 							</tr>
