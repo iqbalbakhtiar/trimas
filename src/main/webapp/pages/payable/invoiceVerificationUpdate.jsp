@@ -141,7 +141,7 @@
                                         <td width="80%" align="right" valign="top"><spring:message code="purchaseorder"/>:&nbsp;</td>
                                         <td width="20%" align="right">
                                             <c:forEach items="${verification_edit.purchaseOrders}" var="purchase" varStatus="status">
-                                                <a href="<c:url value='/page/standardpurchaseorderpreedit.htm?id=${purchase.id}'/>"><c:out value="${purchase.code}"></c:out></a>
+                                                <a href="<c:url value='/page/purchaseorderpreedit.htm?id=${purchase.id}'/>"><c:out value="${purchase.code}"></c:out></a>
                                                 <br>
                                             </c:forEach>
                                         </td>
