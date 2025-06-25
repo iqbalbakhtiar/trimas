@@ -58,13 +58,14 @@
 						<tr>
 							<th width="3%">&nbsp;</th>
 					  	  	<th width="5%"><spring:message code="sirius.id"/></th>
-					  	  	<th width="10%"><spring:message code="salesorder.date"/></th>
-					  	  	<th width="10%"><spring:message code="salesorder.shipping.date"/></th>
+					  	  	<th width="8%"><spring:message code="sirius.date"/></th>
+					  	  	<th width="8%"><spring:message code="salesorder.shipping.date"/></th>
 					  	  	<th width="10%"><spring:message code="customer"/></th>
 					  	  	<th width="5%"><spring:message code="sirius.tax"/></th>
 					  	  	<th width="10%"><spring:message code="salesorder.approvalstatus"/></th>
 							<th width="10%"><spring:message code="sirius.approver"/></th>
 							<th width="10%"><spring:message code="salesorder.total.transaction"/></th>
+							<th width="15%"><spring:message code="sirius.status"/></th>
 						</tr>
 						<c:forEach items="${salesOrders}" var="sales">
 						<tr>
@@ -79,6 +80,11 @@
  							<td nowrap="nowrap">${sales.approvable.approvalDecision.approvalDecisionStatus.normalizedName}</td>
  							<td nowrap="nowrap">${sales.approvable.approvalDecision.forwardTo.fullName}</td>
  							<td nowrap="nowrap"><fmt:formatNumber value='${sales.money.amount}' pattern=',##0.00'/></td>
+ 							<td nowrap="nowrap">
+								<c:if test="${sales.soStatus eq 'CLOSE' or sales.soStatus eq 'CANCELED'}"><div style="color: red;"><spring:message code="salesorder.status.${sales.soStatus.messageName}"/></div></c:if>
+								<c:if test="${sales.soStatus eq 'PLANNING'}"><div style="color: blue;"><spring:message code="salesorder.status.${sales.soStatus.messageName}"/></div></c:if>
+								<c:if test="${sales.soStatus eq 'OPEN'}"><div style="color: green;"><spring:message code="salesorder.status.${sales.soStatus.messageName}"/></div></c:if>
+ 							</td>
 						</tr>
 						</c:forEach>
 						<tr class="end-table"><td colspan="10">&nbsp;</td></tr>

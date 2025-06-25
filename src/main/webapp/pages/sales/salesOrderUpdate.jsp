@@ -5,7 +5,7 @@
 	<a class="item-button-list" href="<c:url value='/page/salesorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
 	<a class="item-button-print"><span><spring:message code="sirius.print"/></span></a>
-	<c:if test="${approvalDecision.approvalDecisionStatus eq 'APPROVE_AND_FINISH' and salesOrder_edit.soStatus ne 'CLOSE'}">
+	<c:if test="${approvalDecision.approvalDecisionStatus eq 'APPROVE_AND_FINISH' and salesOrder_edit.soStatus ne 'CLOSE' and salesOrder_edit.soStatus ne 'CANCELED'}">
 		<a class="item-button-close close"><span><spring:message code="sirius.close"/></span></a>
 	</c:if>
 	<c:if test="${salesOrder_edit.soStatus ne 'CLOSE' and salesOrder_edit.soStatus ne 'CANCELED'}">

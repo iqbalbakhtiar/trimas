@@ -17,7 +17,7 @@
 		<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryplanning.delivered"/>(Kg)</th>
 		<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryplanning.undelivered"/>(Bale)</th>
 		<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="deliveryplanning.undelivered"/>(Kg)</th>
-		<th width="5%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.status"/></th>
+		<!-- <th width="5%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.status"/></th> -->
 	</tr>
 	</thead>
 	<tbody>
@@ -56,11 +56,11 @@
   		<c:if test="${repo.salesOrderItem.salesOrder.salesInternalType eq 'WASTE'}">-</c:if>
   		</td>
   		<td align="right"><fmt:formatNumber value='${repo.undeliveredKg}' pattern=',##0.00'/></td>
-  		<td>
+  		<%-- <td>
 			<c:if test="${repo.salesOrderItem.salesOrder.soStatus eq 'CLOSE' or repo.salesOrderItem.salesOrder.soStatus eq 'CANCELED'}"><div style="color: red;"><spring:message code="salesorder.status.${repo.salesOrderItem.salesOrder.soStatus.messageName}"/></div></c:if>
 			<c:if test="${repo.salesOrderItem.salesOrder.soStatus eq 'PLANNING'}"><div style="color: blue;"><spring:message code="salesorder.status.${repo.salesOrderItem.salesOrder.soStatus.messageName}"/></div></c:if>
 			<c:if test="${repo.salesOrderItem.salesOrder.soStatus eq 'OPEN'}"><div style="color: green;"><spring:message code="salesorder.status.${repo.salesOrderItem.salesOrder.soStatus.messageName}"/></div></c:if>
-  		</td>
+  		</td> --%>
 	</tr>
  	<c:set var='tBale' value='${tBale+repo.bale}'/>
  	<c:set var='tKg' value='${tKg+repo.kg}'/>
@@ -84,7 +84,7 @@
 		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tDeliveredKg}' pattern=',##0.00'/></strong></td>
 		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tUndeliveredBale}' pattern=',##0.00'/></strong></td>
 		<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tUndeliveredKg}' pattern=',##0.00'/></strong></td>
-		<td style="border-top:solid 1px black;" align="right"><strong>&nbsp;</strong></td>
+		<!-- <td style="border-top:solid 1px black;" align="right"><strong>&nbsp;</strong></td> -->
 	</tr>
 	</tfoot>
 </table>
