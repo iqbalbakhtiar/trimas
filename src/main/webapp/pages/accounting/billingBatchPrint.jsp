@@ -99,7 +99,9 @@
 					<td width="96%" colspan="6" align="left">
 						2. Faktur Pajak Asli No.
 						<c:forEach var="it" items="${billing_batch_form.billingBatch.items}" varStatus="vs">
-							<c:out value="${it.billing.invoiceTaxHeader}${it.billing.invoiceTaxNo}"/><c:if test="${!vs.last}">, </c:if>
+							<c:if test="${not empty it.billing.invoiceTaxHeader or not empty it.billing.invoiceTaxNo}">
+								<c:out value="${it.billing.invoiceTaxHeader}${it.billing.invoiceTaxNo}"/><c:if test="${!vs.last}">, </c:if>
+							</c:if>
 						</c:forEach>
 					</td>
 					<td width="2%" colspan="2">&nbsp;</td>

@@ -17,7 +17,12 @@
 </style>
 
 <div class="toolbar">
-	<a class="item-button-back" href="<c:url value='/page/${billing_edit.billing.billingType.url}?id=${billing_form.billing.id}'/>"><span><spring:message code="sirius.back"/></span></a>
+	<c:if test="${empty redirect}">
+		<a class="item-button-back" href="<c:url value='/page/${billing_edit.billing.billingType.url}?id=${billing_form.billing.id}'/>"><span><spring:message code="sirius.back"/></span></a>
+	</c:if>
+	<c:if test="${not empty redirect}">
+		<a class="item-button-back" href="<c:url value='/page/${redirect}?id=${redirectId}'/>"><span><spring:message code="sirius.back"/></span></a>
+	</c:if>
 	<a class="item-button-print" href="javascript:window.print();"><span><spring:message code="sirius.print"/></span></a>
 	<a class="item-button-export-xls" download="invoice.xls" href="#" onclick="return ExcellentExport.excel(this, 'size', 'Invoice');"><span>Export</span></a>
 </div>
