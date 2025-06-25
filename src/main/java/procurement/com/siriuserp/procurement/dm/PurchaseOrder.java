@@ -252,6 +252,12 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 		return "";
 	}
 
+	public ContactMechanism getContactMechanism()
+	{
+
+		return getSupplier().getContactMechanisms().stream().filter(ContactMechanism::isActive).findFirst().orElse(null);
+	}
+
 	public boolean isBarcodeable()
 	{
 		if (getStatus().equals(POStatus.BARCODE))
@@ -267,7 +273,7 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 
 	public boolean isDeleteable()
 	{
-		if (getReceipts().isEmpty() && getInvoiceVerifications().isEmpty())
+		if (getReceipts().isEmpty() && getInvoiceVerifications().isEmpty() && (getApprovable() == null || getApprovable().getApprovalDecision().getApprovalDecisionStatus().equals(ApprovalDecisionStatus.REQUESTED)))
 			return true;
 
 		return false;
@@ -277,13 +283,5 @@ public class PurchaseOrder extends Model implements JSONSupport, ApprovableBridg
 	public String getAuditCode()
 	{
 		return id + "," + code;
-	}
-	
-	public ContactMechanism getContactMechanism() {
-		
-	    return getSupplier().getContactMechanisms().stream()
-	        .filter(ContactMechanism::isActive)
-	        .findFirst()
-	        .orElse(null);
 	}
 }

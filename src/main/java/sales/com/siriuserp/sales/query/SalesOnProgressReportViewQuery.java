@@ -28,7 +28,7 @@ public class SalesOnProgressReportViewQuery extends AbstractStandardReportQuery
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT NEW com.siriuserp.sales.adapter.SalesOnProgressReportAdapter(salesItem) ");
 		builder.append("FROM SalesOrderItem salesItem ");
-		builder.append("WHERE salesItem.id IS NOT NULL ");
+		builder.append("WHERE salesItem.salesOrder.soStatus != 'CLOSE' AND salesItem.salesOrder.soStatus != 'CANCELED' ");
 
 		if (SiriusValidator.validateLongParam(criteria.getOrganization()))
 			builder.append("AND salesItem.salesOrder.organization.id =:organizationId ");
