@@ -497,6 +497,7 @@ function openBarcode(index, productId)
 		index: index,
 		group: false,
 		onHand: true,
+		availableSales: true,
 		ref: '4Serial',
 		organization: org,
 		facility: facilityId,
@@ -505,6 +506,5 @@ function openBarcode(index, productId)
 	};
 	
 	openpopup(buildUrl(baseUrl, params));
-	//openpopup("<c:url value='/page/popupinventoryitemview.htm?ref=4Serial&group=false&onHand=true&target=serial['/>"+index+"]&facility="+facility+"&index="+index+"&organization="+org+"&productId="+productId);
 }
 </script>
