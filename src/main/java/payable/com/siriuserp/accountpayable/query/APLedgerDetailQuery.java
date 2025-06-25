@@ -55,11 +55,8 @@ public class APLedgerDetailQuery extends AbstractStandardReportQuery
 		}
 
 		FastList<Party> supliers = new FastList<Party>();
-		if (criteria.getSupplier() != null)
-			supliers.add(criteria.getSupplier());
-		else
-			supliers.addAll(getSupplier(criteria));
-		
+		supliers.addAll(getSupplier(criteria));
+
 		for (Party supplier : supliers)
 		{
 			BigDecimal opening = getOpening(criteria, supplier).subtract(getPayment(criteria, supplier));
@@ -120,7 +117,7 @@ public class APLedgerDetailQuery extends AbstractStandardReportQuery
 
 		return DecimalHelper.safe(query.uniqueResult());
 	}
-	
+
 	private List<InvoiceVerification> getCredit(APLedgerFilterCriteria criteria, Party suplier)
 	{
 		StringBuilder builder = new StringBuilder();
@@ -164,7 +161,12 @@ public class APLedgerDetailQuery extends AbstractStandardReportQuery
 		builder.append("WHERE relation.relationshipType.id =:relationshipType ");
 		builder.append("AND relation.partyTo.id IN(:orgs) ");
 		builder.append("AND relation.partyRoleTypeFrom.id =:from ");
-		builder.append("AND relation.partyRoleTypeTo.id =:to");
+		builder.append("AND relation.partyRoleTypeTo.id =:to ");
+
+		if (SiriusValidator.validateLongParam(criteria.getSupplierId()))
+			builder.append("AND relation.partyFrom.id =:supplierId ");
+
+		builder.append("ORDER BY relation.partyFrom.fullName ASC");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setCacheable(true);
@@ -172,6 +174,9 @@ public class APLedgerDetailQuery extends AbstractStandardReportQuery
 		query.setParameter("from", Long.valueOf(5));
 		query.setParameter("to", Long.valueOf(4));
 		query.setParameterList("orgs", criteria.getOrganizations());
+
+		if (SiriusValidator.validateLongParam(criteria.getSupplierId()))
+			query.setParameter("supplierId", criteria.getSupplierId());
 
 		return query.list();
 	}

@@ -54,10 +54,7 @@
                                 <tr>
                                     <td nowrap="nowrap" align="right"><spring:message code="supplier"/> :</td>
                                     <td>
-                                        <form:select id="supplier" path="supplier" cssClass="combobox-ext">
-                                            <c:if test='${not empty reportCriteria.supplier}'>
-                                                <form:option value='${reportCriteria.supplier.id}' label='${reportCriteria.supplier.fullName}' />
-                                            </c:if>
+                                        <form:select id="supplier" path="supplierId" cssClass="combobox-ext">
                                         </form:select>
                                         <a class="item-popup" onclick="opensupplier();"  title='<spring:message code="supplier"/>' />
                                     </td>
