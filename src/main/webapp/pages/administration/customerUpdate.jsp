@@ -442,10 +442,10 @@ function validateForm() {
 		return false;
 	}
 	
-	if (salutation == null || salutation.trim() === "") {
+	/* if (salutation == null || salutation.trim() === "") {
 		alert('<spring:message code="party.salutation"/> <spring:message code="notif.empty"/> !');
 		return false;
-	}
+	} */
 	
 	if (fullName == null || fullName.trim() === "") {
 		alert('<spring:message code="customer.name"/> <spring:message code="notif.empty"/> !');
