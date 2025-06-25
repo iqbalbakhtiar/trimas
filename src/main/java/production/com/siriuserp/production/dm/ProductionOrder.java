@@ -85,7 +85,14 @@ public class ProductionOrder extends Model
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@OrderBy("id ASC")
-	private Set<CostCenterGroupProduction> costCenterGroupProductions = new FastSet<CostCenterGroupProduction>();
+	private Set<ProductionCostCenterGroup> productionCostCenterGroups = new FastSet<ProductionCostCenterGroup>();
+	
+//	@OneToMany(mappedBy = "productionOrderDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	@LazyCollection(LazyCollectionOption.EXTRA)
+//	@Fetch(FetchMode.SELECT)
+//	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+//	@OrderBy("id ASC")
+//	private Set<ProductionOrderDetail> details = new FastSet<ProductionOrderDetail>();
 	
 	@Override
 	public String getAuditCode() {

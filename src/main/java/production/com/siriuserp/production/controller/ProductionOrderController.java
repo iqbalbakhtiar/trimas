@@ -19,7 +19,7 @@ import com.siriuserp.inventory.criteria.ProductionOrderFilterCriteria;
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.query.ProductionOrderGridViewQuery;
 import com.siriuserp.production.dm.CostCenterGroup;
-import com.siriuserp.production.dm.CostCenterGroupProduction;
+import com.siriuserp.production.dm.ProductionCostCenterGroup;
 import com.siriuserp.production.dm.MaterialType;
 import com.siriuserp.production.dm.ProductionOrder;
 import com.siriuserp.production.form.ProductionForm;
@@ -50,7 +50,7 @@ public class ProductionOrderController extends ControllerBase
 		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
 		binder.registerCustomEditor(Product.class, modelEditor.forClass(Product.class));
 		binder.registerCustomEditor(CostCenterGroup.class, modelEditor.forClass(CostCenterGroup.class));
-		binder.registerCustomEditor(CostCenterGroupProduction.class, modelEditor.forClass(CostCenterGroupProduction.class));
+		binder.registerCustomEditor(ProductionCostCenterGroup.class, modelEditor.forClass(ProductionCostCenterGroup.class));
 		binder.registerCustomEditor(MaterialType.class, enumEditor.forClass(MaterialType.class));
 	}
 	
