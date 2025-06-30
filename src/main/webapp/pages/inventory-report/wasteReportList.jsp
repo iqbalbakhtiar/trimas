@@ -52,13 +52,13 @@
         </tr>
         <tr>
             <th class="border-top border-left">Unusable Hasil Press</th>
-            <th class="border-top border-left">krg</th>
+            <th class="border-top border-left">Krg</th>
             <th class="border-top border-left">Netto</th>
-            <th class="border-top border-left">krg</th>
+            <th class="border-top border-left">Krg</th>
             <th class="border-top border-left">Netto</th>
-            <th class="border-top border-left">krg</th>
+            <th class="border-top border-left">Krg</th>
             <th class="border-top border-left">Netto</th>
-            <th class="border-top border-left">krg</th>
+            <th class="border-top border-left">Krg</th>
             <th class="border-top border-left border-right">Netto</th>
         </tr>
         </thead>

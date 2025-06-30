@@ -210,6 +210,7 @@ public enum TableType
     PURCHASE_ORDER_FROM_BARCODE("POB"),
     PURCHASE_RETURN_FROM_BARCODE("PRB"),
     PERSON_APPROVER("PA"),
+    PRODUCTION_ORDER_DETAIL("WOD"),
 
     //O
     OUTGOING_PREPAYMENT("OP"),
@@ -290,6 +291,7 @@ public enum TableType
     VEHICLE_MAINTENANCE("VHM"),
 	
 	//W
+    WORK_ISSUE("WI"),
 	WAREHOUSE_CASH("WHC");
 	
 	private String code;

@@ -1,4 +1,4 @@
-<table cellpadding="0" cellspacing="0" width="100%">
+<table cellpadding="3" cellspacing="0" width="100%">
     <tr>
         <td colspan="3"><strong>MUTATION REPORT</strong></td>
     </tr>
@@ -16,7 +16,7 @@
     <tr>
         <td><spring:message code="contactmechanism.department"/></td>
         <td>&nbsp;:</td>
-        <td>&nbsp;</td>
+        <td><c:out value='${container.name}'/></td>
     </tr>
     <tr><td colspan="3">&nbsp;</td></tr>
 </table>

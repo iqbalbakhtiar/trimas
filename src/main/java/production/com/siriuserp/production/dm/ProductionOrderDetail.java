@@ -23,9 +23,7 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
-import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.sdk.dm.Model;
-import com.siriuserp.sdk.dm.Party;
 
 import javolution.util.FastSet;
 import lombok.Getter;
@@ -40,11 +38,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "production_order")
-public class ProductionOrder extends Model
+@Table(name = "production_order_detail")
+public class ProductionOrderDetail extends Model 
 {
-	private static final long serialVersionUID = 4580011173535572775L;
-
+	private static final long serialVersionUID = 6339035064313033812L;
+	
 	@Column(name = "code")
 	private String code;
 	
@@ -57,48 +55,42 @@ public class ProductionOrder extends Model
 	@Column(name = "note")
 	private String note;
 	
-	@Column(name = "lot_number")
-	private String lotNumber;
+	@Column(name = "description")
+	private String description;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
-	private ProductionOrderStatus status = ProductionOrderStatus.OPEN;
+	private ProductionOrderStatus status = ProductionOrderStatus.ON_GOING;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fk_party_organization")
+	@JoinColumn(name = "fk_production_order")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
-	private Party organization;
+	private ProductionOrder productionOrder;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fk_product")
-	@LazyToOne(LazyToOneOption.PROXY)
-	@Fetch(FetchMode.SELECT)
-	private Product product;
-	
-	@OneToMany(mappedBy = "productionOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "productionOrderDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@OrderBy("id ASC")
-	private Set<ProductionOrderItem> items = new FastSet<ProductionOrderItem>();
+	private Set<ProductionOrderDetailItem> items = new FastSet<ProductionOrderDetailItem>();
 	
-	@OneToMany(mappedBy = "productionOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "productionOrderDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@OrderBy("id ASC")
-	private Set<ProductionCostCenterGroup> productionCostCenterGroups = new FastSet<ProductionCostCenterGroup>();
+	private Set<ProductionDetailCostCenterGroup> productionDetailCostCenterGroups = new FastSet<ProductionDetailCostCenterGroup>();
 	
-	@OneToMany(mappedBy = "productionOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "productionOrderDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@OrderBy("id ASC")
-	private Set<ProductionOrderDetail> details = new FastSet<ProductionOrderDetail>();
-	
+	private Set<WorkIssue> workIssues = new FastSet<WorkIssue>();
+
 	@Override
 	public String getAuditCode() {
-		return id + ',' + code;
+		return this.id+","+this.code;
 	}
 }

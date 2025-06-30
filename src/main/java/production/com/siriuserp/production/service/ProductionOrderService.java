@@ -67,6 +67,7 @@ public class ProductionOrderService extends Service
 	{
 		ProductionOrder productionOrder = form.getProductionOrder();
 		productionOrder.setCode(GeneratorHelper.instance().generate(TableType.PRODUCTION_ORDER, codeSequenceDao));
+		productionOrder.setStatus(ProductionOrderStatus.OPEN);
 		
 		for (ProductionCostCenterGroup costGroup : form.getCostCenterGroupProductions())
 			if (costGroup.getCostCenterGroup() != null)
