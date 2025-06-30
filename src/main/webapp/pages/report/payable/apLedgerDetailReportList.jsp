@@ -79,8 +79,8 @@
                                   <th width="10%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.date"/></th>
                                   <th width="15%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="supplier"/></th>
                                   <th width="10%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"></th>
-                               	  <th width="17%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.debit"/></th>
-                               	  <th width="17%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.credit"/></th>
+                               	  <th width="17%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.credit2"/></th>
+                               	  <th width="17%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.debit2"/></th>
                            	  	  <th width="17%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.amount"/></th>
                                 </tr>
                                 <c:forEach items='${reports}' var='report'>

@@ -248,6 +248,7 @@ public class PurchaseOrderService extends Service
 	@AuditTrails(className = PurchaseOrder.class, actionType = AuditTrailsActionType.UPDATE)
 	public void edit(PurchaseOrder purchaseOrder) throws Exception
 	{
+		System.out.println(">> "+purchaseOrder.getForm().getApprovalDecisionStatus());
 		genericDao.update(purchaseOrder);
 	}
 

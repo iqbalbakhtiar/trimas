@@ -92,7 +92,7 @@
 							</tr>
 						</thead>
 						<tbody id="costCenterGroupItem">
-							<c:forEach items="${order_edit.costCenterGroupProductions}" var="costCenter">
+							<c:forEach items="${order_edit.productionCostCenterGroups}" var="costCenter">
 								<tr>
 									<td>&nbsp;</td>
 									<td><c:out value="${costCenter.costCenterGroup.code}"/></td>

@@ -36,7 +36,7 @@ public class APLedgerDetailController extends ControllerBase
 	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
-		initBinderFactory.initBinder(binder, Party.class);
+		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
 	}
 
 	@RequestMapping("/apledgerdetailpre.htm")

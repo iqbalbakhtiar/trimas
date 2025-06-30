@@ -73,7 +73,7 @@ public class CostCenterGroup extends Model implements JSONSupport
     @LazyCollection(LazyCollectionOption.EXTRA)
     @Fetch(FetchMode.SELECT)
     @Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
-	private Set<CostCenterGroupProduction> costCenterGroupProductions = new FastSet<CostCenterGroupProduction>();
+	private Set<ProductionCostCenterGroup> productionCostCenterGroups = new FastSet<ProductionCostCenterGroup>();
 
 	@Override
 	public String getAuditCode() {

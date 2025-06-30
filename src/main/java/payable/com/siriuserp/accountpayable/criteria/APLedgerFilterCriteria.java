@@ -28,6 +28,8 @@ public class APLedgerFilterCriteria extends AbstractReportFilterCriteria
 
 	private Party supplier;
 
+	private Long supplierId;
+
 	private Date dateFrom;
 	private Date dateTo;
 }

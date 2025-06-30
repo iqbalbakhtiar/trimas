@@ -87,16 +87,17 @@ public class BillingController extends ControllerBase
 	{
 		return new ModelAndView("/accounting/billingPrintOption", service.preedit(id));
 	}
-	
+
 	@RequestMapping("/billingprint.htm")
-	public ModelAndView print(@RequestParam("id") Long id, @RequestParam("invType") String invType) throws Exception
+	public ModelAndView print(@RequestParam("id") Long id, @RequestParam("invType") String invType, @RequestParam(value = "redirect", required = false) String redirect, @RequestParam(value = "redirectId", required = false) Long redirectId)
+			throws Exception
 	{
 		if (invType.equals("1"))
-			return new ModelAndView("/accounting/billingPrint", service.preedit(id));
+			return new ModelAndView("/accounting/billingPrint", service.preedit(id)).addObject("redirect", redirect).addObject("redirectId", redirectId);
 		if (invType.equals("2"))
-			return new ModelAndView("/accounting/billingPrint2", service.preedit(id));
+			return new ModelAndView("/accounting/billingPrint2", service.preedit(id)).addObject("redirect", redirect).addObject("redirectId", redirectId);
 		if (invType.equals("3"))
-			return new ModelAndView("/accounting/billingPrint3", service.preedit(id));
+			return new ModelAndView("/accounting/billingPrint3", service.preedit(id)).addObject("redirect", redirect).addObject("redirectId", redirectId);
 		else
 			return ViewHelper.redirectTo("billingview.htm");
 	}

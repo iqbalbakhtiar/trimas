@@ -12,7 +12,7 @@
 </div>
 
 <div class="main-box">
-  <sesform:form id="editForm" name="editForm" method="post" modelAttribute="purchase_form" enctype="multipart/form-data">
+  <sesform:form id="addForm" name="addForm" method="post" modelAttribute="purchase_form" enctype="multipart/form-data">
     <table width="100%" border="0">
       <tr valign="top">
         <td width="60%">
@@ -352,7 +352,7 @@
   function save() {
     $.ajax({
       url:"<c:url value='/page/purchaseorderedit.htm'/>",
-      data:$('#editForm').serialize(),
+      data:$('#addForm').serialize(),
       type : 'POST',
       dataType : 'json',
       beforeSend:function()

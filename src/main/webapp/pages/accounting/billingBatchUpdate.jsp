@@ -43,7 +43,7 @@
                     <table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">
                         <thead>
                         <tr>
-                            <th width="1%" nowrap="nowrap"></th>
+                            <th width="1%" nowrap="nowrap"><div style="width: 45px;">&nbsp;</div></th>
                             <th width="15%" nowrap="nowrap"><spring:message code="sirius.id"/> <spring:message code="billing"/></th>
                             <th width="10%" nowrap="nowrap"><spring:message code="sirius.date"/></th>
                             <th width="20%" nowrap="nowrap"><spring:message code="customer"/></th>
@@ -52,23 +52,16 @@
                         </thead>
                         <tbody id="lineItem">
                         <c:forEach items="${billing_batch_form.billingBatch.items}" var="item" varStatus="idx">
-                            <tr>
-                                <td>&nbsp;</td>
-                                <td>
-                                    <strong>
-                                        <a href="<c:url value='/page/${item.billing.billingType.url}?id=${item.billing.id}'/>"><c:out value='${item.billing.code}'/></a>
-                                    </strong>
-                                </td>
-                                <td>
-                                    <fmt:formatDate value='${item.billing.date}' pattern='dd-MM-yyyy'/>
-                                </td>
-                                <td>
-                                        ${item.billing.customer.fullName}
-                                </td>
-                                <td>
-                                    <fmt:formatNumber value='${item.amount}' pattern=',##0.00'/>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td class="tools">
+								<a class="item-button-print" href="<c:url value='/page/billingprint.htm?id=${item.billing.id}&invType=1&redirectId=${billing_batch_form.billingBatch.id}&redirect=billingbatchpreedit.htm'/>" title="<spring:message code='sirius.print'/>&nbsp;<spring:message code='billing'/>"><span><spring:message code="sirius.print"/>&nbsp;<spring:message code="billing"/></span></a>
+								<a class="item-button-print" href="<c:url value='/page/billingprint.htm?id=${item.billing.id}&invType=2&redirectId=${billing_batch_form.billingBatch.id}&redirect=billingbatchpreedit.htm'/>" title="<spring:message code='billing.printreceipt'/>"><span><spring:message code="billing.printreceipt"/></span></a>
+                            </td>
+                            <td><a href="<c:url value='/page/${item.billing.billingType.url}?id=${item.billing.id}'/>"><c:out value='${item.billing.code}'/></a></td>
+                            <td><fmt:formatDate value='${item.billing.date}' pattern='dd-MM-yyyy'/></td>
+                            <td>${item.billing.customer.fullName}</td>
+                            <td><fmt:formatNumber value='${item.amount}' pattern=',##0.00'/></td>
+                        </tr>
                         </c:forEach>
                         </tbody>
                         <tfoot>

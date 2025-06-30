@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.siriuserp.inventory.dm.UnitOfMeasure;
 import com.siriuserp.production.dm.CostCenterGroup;
-import com.siriuserp.production.dm.CostCenterGroupProduction;
 import com.siriuserp.production.dm.CostCenterType;
+import com.siriuserp.production.dm.ProductionCostCenterGroup;
 import com.siriuserp.production.dm.ProductionOrder;
 import com.siriuserp.sdk.dm.Form;
 
@@ -28,8 +28,9 @@ public class ProductionForm extends Form
 	private CostCenterGroup costCenterGroup;
 	
 	private ProductionOrder productionOrder;
+//	private ProductionOrderDetail productionOrderDetail;
 	
 	private String lotNumber;
 	
-	private List<CostCenterGroupProduction> costCenterGroupProductions = new FastList<CostCenterGroupProduction>();
+	private List<ProductionCostCenterGroup> costCenterGroupProductions = new FastList<ProductionCostCenterGroup>();
 }

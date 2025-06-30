@@ -25,8 +25,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "cost_center_group_production")
-public class CostCenterGroupProduction extends Model 
+@Table(name = "production_cost_center_group")
+public class ProductionCostCenterGroup extends Model 
 {
 	private static final long serialVersionUID = -1680097186095693716L;
 

@@ -87,15 +87,15 @@
                                 <tr>
                                     <th width="31%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="supplier"/></th>
                                	  	<th width="14%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="accreport.opening"/></th>
-                                  	<th width="14%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.debit"/></th>
-                                  	<th width="14%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.credit"/></th>
+                                  	<th width="14%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.credit2"/></th>
+                                  	<th width="14%" align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.debit2"/></th>
                                	  	<th align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="accreport.closing"/></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <c:forEach items='${reports}' var='report'>
                                 <tr>
-                                    <td align="left"><a href="<c:url value='/page/apledgerdetailview.htm?supplier=${report.supplier.id}&organization=${reportCriteria.organization}&dateFrom='/><fmt:formatDate value='${reportCriteria.dateFrom}' pattern='dd-MM-yyyy'/>&dateTo=<fmt:formatDate value='${reportCriteria.dateTo}' pattern='dd-MM-yyyy'/>"><c:out value='${report.supplier.fullName}'/></a></td>
+                                    <td align="left"><a href="<c:url value='/page/apledgerdetailview.htm?organization=${reportCriteria.organization}&supplierId=${report.supplier.id}&dateFrom='/><fmt:formatDate value='${reportCriteria.dateFrom}' pattern='dd-MM-yyyy'/>&dateTo=<fmt:formatDate value='${reportCriteria.dateTo}' pattern='dd-MM-yyyy'/>"><c:out value='${report.supplier.fullName}'/></a></td>
                                     <td align="right"><fmt:formatNumber value='${report.opening}' pattern=',##0.00'/></td>
                                     <td align="right"><fmt:formatNumber value='${report.debet}' pattern=',##0.00'/></td>
                                     <td align="right"><fmt:formatNumber value='${report.credit}' pattern=',##0.00'/></td>

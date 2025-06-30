@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.siriuserp.production.dm.CostCenterGroupProduction;
+import com.siriuserp.production.dm.ProductionCostCenterGroup;
 import com.siriuserp.production.dm.ProductionOrder;
 import com.siriuserp.production.dm.ProductionOrderItem;
 import com.siriuserp.production.dm.ProductionOrderStatus;
@@ -68,11 +68,11 @@ public class ProductionOrderService extends Service
 		ProductionOrder productionOrder = form.getProductionOrder();
 		productionOrder.setCode(GeneratorHelper.instance().generate(TableType.PRODUCTION_ORDER, codeSequenceDao));
 		
-		for (CostCenterGroupProduction costGroup : form.getCostCenterGroupProductions())
+		for (ProductionCostCenterGroup costGroup : form.getCostCenterGroupProductions())
 			if (costGroup.getCostCenterGroup() != null)
 			{
 				costGroup.setProductionOrder(productionOrder);
-				productionOrder.getCostCenterGroupProductions().add(costGroup);
+				productionOrder.getProductionCostCenterGroups().add(costGroup);
 			}
 		
 		for (Item item : form.getItems())
@@ -84,6 +84,7 @@ public class ProductionOrderService extends Service
 				productionItem.setCogsWeight(item.getWeight());
 				productionItem.setMaterialType(item.getMaterialType());
 				productionItem.setProductionOrder(productionOrder);
+				productionItem.setReferenceCode(productionOrder.getCode());
 				
 				productionOrder.getItems().add(productionItem);
 			}
