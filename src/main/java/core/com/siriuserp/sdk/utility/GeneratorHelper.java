@@ -157,6 +157,7 @@ public class GeneratorHelper
 			return sales(codeSequence, codeExt, index, date, tax);
 		case DELIVERY_ORDER:
 		case PURCHASE_ORDER:
+		case BILLING_BATCH:
 		case BILLING:
 			return codeDateCount(tableType, codeSequence, index, date);
 		default:

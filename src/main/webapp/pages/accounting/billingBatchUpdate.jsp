@@ -3,7 +3,8 @@
 <div class="toolbar">
     <a class="item-button-list" href="<c:url value='/page/billingbatchview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
     <a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
-    <a class="item-button-print"  href="<c:url value='/page/billingbatchprint.htm?id=${billing_batch_form.id}'/>"><span><spring:message code="sirius.print"/></span></a>
+    <a class="item-button-print"  href="<c:url value='/page/billingbatchprint.htm?id=${billing_batch_form.id}&invType=1'/>"><span><spring:message code="sirius.print"/></span></a>
+    <a class="item-button-print"  href="<c:url value='/page/billingbatchprint.htm?id=${billing_batch_form.id}&invType=2'/>"><span><spring:message code="billing.printreceipt"/></span></a>
 </div>
 
 <div class="main-box">
@@ -43,7 +44,7 @@
                     <table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">
                         <thead>
                         <tr>
-                            <th width="1%" nowrap="nowrap"><div style="width: 45px;">&nbsp;</div></th>
+                            <th width="1%" nowrap="nowrap"><div style="width: 35px;">&nbsp;</div></th>
                             <th width="15%" nowrap="nowrap"><spring:message code="sirius.id"/> <spring:message code="billing"/></th>
                             <th width="10%" nowrap="nowrap"><spring:message code="sirius.date"/></th>
                             <th width="20%" nowrap="nowrap"><spring:message code="customer"/></th>
@@ -55,7 +56,6 @@
                         <tr>
                             <td class="tools">
 								<a class="item-button-print" href="<c:url value='/page/billingprint.htm?id=${item.billing.id}&invType=1&redirectId=${billing_batch_form.billingBatch.id}&redirect=billingbatchpreedit.htm'/>" title="<spring:message code='sirius.print'/>&nbsp;<spring:message code='billing'/>"><span><spring:message code="sirius.print"/>&nbsp;<spring:message code="billing"/></span></a>
-								<a class="item-button-print" href="<c:url value='/page/billingprint.htm?id=${item.billing.id}&invType=2&redirectId=${billing_batch_form.billingBatch.id}&redirect=billingbatchpreedit.htm'/>" title="<spring:message code='billing.printreceipt'/>"><span><spring:message code="billing.printreceipt"/></span></a>
                             </td>
                             <td><a href="<c:url value='/page/${item.billing.billingType.url}?id=${item.billing.id}'/>"><c:out value='${item.billing.code}'/></a></td>
                             <td><fmt:formatDate value='${item.billing.date}' pattern='dd-MM-yyyy'/></td>
