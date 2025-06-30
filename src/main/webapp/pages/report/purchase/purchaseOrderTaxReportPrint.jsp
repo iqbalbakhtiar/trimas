@@ -15,7 +15,7 @@
 	</thead>
 	<thead>
 	<tr style="height: 30px;text-transform: uppercase;">
-		<th colspan="15" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;border-left:solid 1px black;">PENJUALAN</th>
+		<th colspan="16" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;border-left:solid 1px black;">PENJUALAN</th>
 		<th colspan="3" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;border-left:solid 1px black;border-right:solid 1px black;">CORETAX</th>
 	</tr>
 	<tr style="height: 30px;text-transform: uppercase;">
@@ -66,6 +66,7 @@
 		
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;">${status.index+1}</td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatDate value='${repo.purchaseOrderItem.purchaseOrder.date}' pattern='dd MMM yyyy'/></td>
+		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><c:out value='${repo.purchaseOrderItem.purchaseOrder.purchaseDocumentType.getNormalizedName()}'/></td>
 		
 		<c:forEach var="inv" items="${repo.purchaseOrderItem.invoiceReferences}" varStatus="loop">
 	      <c:if test="${loop.index == 0}">
@@ -89,15 +90,16 @@
 	          <c:set var="rowCount" value="${rowCount + 1}" />
 	        </c:if>
 	      </c:forEach>
+		
+	      <td rowspan="${rowCount}" style="border-bottom:solid 1px black;border-left:solid 1px black;" align="center">
+	        <fmt:formatDate value="${currDate}" pattern="dd MMM yyyy" />
+	      </td>
+	      <td rowspan="${rowCount}" style="border-bottom:solid 1px black;border-left:solid 1px black;" align="center">
+	        ${currTax}
+	      </td>
+	      
 	      <c:set var="lastKey" value="${currKey}" />
 	    </c:if>
-		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><c:out value='${repo.purchaseOrderItem.purchaseOrder.purchaseDocumentType.getNormalizedName()}'/></td>
-      	<td rowspan="${rowCount}" style="border-bottom:solid 1px black;border-left:solid 1px black;" align="center">
-        	<fmt:formatDate value="${currDate}" pattern="dd MMM yyyy" />
-      	</td>
-      	<td rowspan="${rowCount}" style="border-bottom:solid 1px black;border-left:solid 1px black;" align="center">
-        	${currTax}
-      	</td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><c:out value='${repo.purchaseOrderItem.purchaseOrder.supplier.fullName}'/></td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;">&nbsp;</td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><c:out value='${repo.purchaseOrderItem.purchaseOrder.note}'/></td>
@@ -125,7 +127,7 @@
 	</tbody>
 	<tfoot>
 	<tr style="height: 30px">
-		<td align="right" colspan="8"><strong><spring:message code="sirius.total"/></strong></td>
+		<td align="right" colspan="9"><strong><spring:message code="sirius.total"/></strong></td>
 		<td style="border-bottom:solid 1px black;border-left:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tKg}' pattern=',##0.00'/></strong></td>
 		<td style="border-bottom:solid 1px black;border-left:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tPriceKg}' pattern=',##0.00'/></strong></td>
 		<td style="border-bottom:solid 1px black;border-left:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tDpp}' pattern=',##0.00'/></strong></td>
