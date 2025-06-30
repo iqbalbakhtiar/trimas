@@ -74,6 +74,12 @@ public class CostCenterGroup extends Model implements JSONSupport
     @Fetch(FetchMode.SELECT)
     @Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	private Set<ProductionCostCenterGroup> productionCostCenterGroups = new FastSet<ProductionCostCenterGroup>();
+	
+	@OneToMany(mappedBy = "costCenterGroup", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @Fetch(FetchMode.SELECT)
+    @Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	private Set<ProductionDetailCostCenterGroup> productionDetailCostCenterGroups = new FastSet<ProductionDetailCostCenterGroup>();
 
 	@Override
 	public String getAuditCode() {

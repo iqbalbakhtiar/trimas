@@ -234,6 +234,13 @@ function initialize_widget(){
 	}
 	//resize the content body
 	resizeContent();
+	
+	$(".clockpicker").clockpicker({
+		placement: 'bottom', // clock popover placement
+		align: 'left',       // popover arrow align
+		donetext: 'Done',     // done button text
+		autoclose: true    // auto close when minute is selected
+	});
 }
 //DUPLICATE METHOD WITH dialog.js
 /*function showDialog(html){

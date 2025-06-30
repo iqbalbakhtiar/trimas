@@ -1,7 +1,7 @@
 package com.siriuserp.production.dm;
 
-public enum ProductionOrderStatus {
-	OPEN, FINISHED, ON_GOING, CHECK_OUT;
+public enum MaterialSource {
+	WIP, MATERIAL_REQUEST, OUTPUT;
 	
 	public String getNormalizedName()
 	{

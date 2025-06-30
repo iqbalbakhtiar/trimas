@@ -80,7 +80,7 @@
 							<td nowrap="nowrap"><fmt:formatDate value="${order.date}" pattern="dd-MM-yyyy"/></td>
 							<td nowrap="nowrap"><c:out value="${order.organization.fullName}"/></td>
 							<td nowrap="nowrap"><c:out value="${order.lotNumber}"/></td>
-							<td nowrap="nowrap"><c:out value="${order.status}"/></td>
+							<td nowrap="nowrap"><c:out value="${order.status.normalizedName}"/></td>
 							<td nowrap="nowrap"><c:out value="${order.note}"/></td>
 						</tr>
 						</c:forEach>

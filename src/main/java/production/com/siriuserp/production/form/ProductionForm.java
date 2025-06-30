@@ -7,6 +7,7 @@ import com.siriuserp.production.dm.CostCenterGroup;
 import com.siriuserp.production.dm.CostCenterType;
 import com.siriuserp.production.dm.ProductionCostCenterGroup;
 import com.siriuserp.production.dm.ProductionOrder;
+import com.siriuserp.production.dm.ProductionOrderDetail;
 import com.siriuserp.sdk.dm.Form;
 
 import javolution.util.FastList;
@@ -28,7 +29,7 @@ public class ProductionForm extends Form
 	private CostCenterGroup costCenterGroup;
 	
 	private ProductionOrder productionOrder;
-//	private ProductionOrderDetail productionOrderDetail;
+	private ProductionOrderDetail productionOrderDetail;
 	
 	private String lotNumber;
 	
