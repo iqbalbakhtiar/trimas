@@ -31,7 +31,7 @@ public enum TableType
     BANK_TRANSACTION_EXPENSE("BTE"),
     BARCODE_GROUP("BAR"),
     BANK_ACCOUNT("BA"),
-    BILLING_BATCH("BB"),
+    BILLING_BATCH("IN"),
 
 	//C
 	CUSTOMER("CU"),

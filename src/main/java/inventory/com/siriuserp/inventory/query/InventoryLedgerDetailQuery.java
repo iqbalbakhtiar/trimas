@@ -135,6 +135,9 @@ public class InventoryLedgerDetailQuery extends AbstractStandardReportQuery
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getContainer()))
 			builder.append("AND balance.containerId =:container ");
 
+		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getProductCategory()))
+			builder.append("AND cat.id =:productCategory ");
+
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getProduct()))
 			builder.append("AND balance.productId =:product ");
 
@@ -155,6 +158,9 @@ public class InventoryLedgerDetailQuery extends AbstractStandardReportQuery
 
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getContainer()))
 			query.setParameter("container", criteria.getContainer());
+
+		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getProductCategory()))
+			query.setParameter("productCategory", criteria.getProductCategory());
 
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getProduct()))
 			query.setParameter("product", criteria.getProduct());

@@ -32,38 +32,42 @@ import java.util.Date;
 @Controller
 @SessionAttributes(value = "billing_batch_form", types = AccountingForm.class)
 @DefaultRedirect(url = "billingbatchview.htm")
-public class BillingBatchController extends ControllerBase {
-    @Autowired
-    private BillingBatchService service;
+public class BillingBatchController extends ControllerBase
+{
+	@Autowired
+	private BillingBatchService service;
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder, WebRequest request)
-    {
-        initBinderFactory.initBinder(binder, Billing.class, Date.class, Party.class);
-    }
+	@InitBinder
+	public void initBinder(WebDataBinder binder, WebRequest request)
+	{
+		initBinderFactory.initBinder(binder, Billing.class, Date.class, Party.class);
+	}
 
-    @RequestMapping("/billingbatchview.htm")
+	@RequestMapping("/billingbatchview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
 		return new ModelAndView("/accounting/billingBatchList", service.view(criteriaFactory.create(request, BillingFilterCriteria.class), BillingBatchViewQuery.class));
 	}
 
-    @RequestMapping("/billingbatchpreadd.htm")
-    public ModelAndView preadd() throws ServiceException {
-        return new ModelAndView("/accounting/billingBatchAdd", service.preadd());
-    }
+	@RequestMapping("/billingbatchpreadd.htm")
+	public ModelAndView preadd() throws ServiceException
+	{
+		return new ModelAndView("/accounting/billingBatchAdd", service.preadd());
+	}
 
-    @RequestMapping("/billingbatchadd.htm")
+	@RequestMapping("/billingbatchadd.htm")
 	public ModelAndView add(@ModelAttribute("billing_batch_form") AccountingForm form, BindingResult result, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
-		try {
+		try
+		{
 			service.add(FormHelper.create(BillingBatch.class, form));
 			status.setComplete();
 
 			response.store("id", form.getBillingBatch().getId());
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 			response.statusError();
 			response.setMessage(e.getLocalizedMessage());
@@ -73,7 +77,8 @@ public class BillingBatchController extends ControllerBase {
 	}
 
 	@RequestMapping("/billingbatchpreedit.htm")
-	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception {
+	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
+	{
 		return new ModelAndView("/accounting/billingBatchUpdate", service.preedit(id));
 	}
 
@@ -82,7 +87,8 @@ public class BillingBatchController extends ControllerBase {
 	{
 		JSONResponse response = new JSONResponse();
 
-		try {
+		try
+		{
 			service.edit(FormHelper.update(form.getBillingBatch(), form));
 			status.setComplete();
 
@@ -97,8 +103,11 @@ public class BillingBatchController extends ControllerBase {
 	}
 
 	@RequestMapping("/billingbatchprint.htm")
-	public ModelAndView option(@RequestParam("id") Long id) throws Exception
+	public ModelAndView option(@RequestParam("id") Long id, @RequestParam("invType") String invType) throws Exception
 	{
-		return new ModelAndView("/accounting/billingBatchPrint", service.preedit(id));
+		if (invType.equals("1"))
+			return new ModelAndView("/accounting/billingBatchPrint", service.preedit(id));
+		else
+			return new ModelAndView("/accounting/billingBatchPrintReceipt", service.preedit(id));
 	}
 }
