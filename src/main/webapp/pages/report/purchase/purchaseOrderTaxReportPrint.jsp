@@ -21,13 +21,14 @@
 	<tr style="height: 30px;text-transform: uppercase;">
 		<th width="1%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="sirius.number"/></th>
 		<th width="3%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="purchaseorder.arrival.date"/></th>
+		<th width="3%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="sirius.document.type"/></th>
 		<th width="3%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="invoice.tax.date"/></th>
 		<th width="10%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="billing.invoice.tax.no"/></th>
 		<th width="10%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="supplier"/></th>
 		<th width="10%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="receipt.delivery"/></th>
 		<th width="15%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="supplier.note"/></th>
 		<th width="5%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="product.name"/></th>
-		<th width="5%" align="left" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="product.quantity"/></th>
+		<th width="5%" align="left" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="sirius.qty"/></th>
 		<th width="5%" align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="sirius.price"/> / <spring:message code="uom.unit"/></th>
 		<th width="5%" align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="purchaseorder.dpp"/></th>
 		<th width="8%" align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="sirius.discount"/></th>
@@ -88,17 +89,15 @@
 	          <c:set var="rowCount" value="${rowCount + 1}" />
 	        </c:if>
 	      </c:forEach>
-	
-	      <td rowspan="${rowCount}" style="border-bottom:solid 1px black;border-left:solid 1px black;" align="center">
-	        <fmt:formatDate value="${currDate}" pattern="dd MMM yyyy" />
-	      </td>
-	      <td rowspan="${rowCount}" style="border-bottom:solid 1px black;border-left:solid 1px black;" align="center">
-	        ${currTax}
-	      </td>
-	
 	      <c:set var="lastKey" value="${currKey}" />
 	    </c:if>
-		
+		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><c:out value='${repo.purchaseOrderItem.purchaseOrder.purchaseDocumentType.getNormalizedName()}'/></td>
+      	<td rowspan="${rowCount}" style="border-bottom:solid 1px black;border-left:solid 1px black;" align="center">
+        	<fmt:formatDate value="${currDate}" pattern="dd MMM yyyy" />
+      	</td>
+      	<td rowspan="${rowCount}" style="border-bottom:solid 1px black;border-left:solid 1px black;" align="center">
+        	${currTax}
+      	</td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><c:out value='${repo.purchaseOrderItem.purchaseOrder.supplier.fullName}'/></td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;">&nbsp;</td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><c:out value='${repo.purchaseOrderItem.purchaseOrder.note}'/></td>
