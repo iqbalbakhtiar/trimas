@@ -29,6 +29,7 @@ public class PurchaseOrderTaxReportQuery extends AbstractStandardReportQuery
 		builder.append("FROM PurchaseOrderItem purchaseItem JOIN purchaseItem.invoiceReferences invo ");
 		builder.append("WHERE purchaseItem.purchaseOrder.organization.id =:org ");
 		builder.append("AND purchaseItem.purchaseItemType = 'BASE' ");
+		builder.append("AND purchaseItem.tax IS NOT NULL ");
 
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getSupplier()))
 			builder.append("AND purchaseItem.purchaseOrder.supplier.id =:supplier ");
