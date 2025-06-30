@@ -15,13 +15,11 @@
     </tr>
     <tr>
         <td><spring:message code="contactmechanism.department"/></td>
-        <td>: </td>
+        <td>: <c:out value='${container.name}'/></td>
     </tr>
-
     <tr>
         <td>&nbsp;</td>
     </tr>
-
     <tr>
         <th rowspan="2" align="left"><spring:message code="sirius.code"/></th>
         <th rowspan="2" align="left"><spring:message code="product.name"/></th>
@@ -35,7 +33,6 @@
         <th align="center"><spring:message code="sirius.qty"/></th>
         <th align="center"><spring:message code="sirius.price"/></th>
     </tr>
-
     <c:forEach items="${reports}" var="report">
         <tr>
             <td><c:out value="${report.productCode}"/></td>

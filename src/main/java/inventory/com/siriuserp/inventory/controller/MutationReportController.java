@@ -23,26 +23,26 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @SessionAttributes(value = "criteria", types = InventoryLedgerFilterCriteria.class)
-public class MutationReportController extends ControllerBase {
+public class MutationReportController extends ControllerBase
+{
+	@Autowired
+	private MutationReportService service;
 
-    @Autowired
-    private MutationReportService service;
+	@InitBinder
+	public void initBinder(WebDataBinder binder, WebRequest request)
+	{
+		initBinderFactory.initBinder(binder, Product.class, Month.class);
+	}
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder, WebRequest request)
-    {
-        initBinderFactory.initBinder(binder, Product.class, Month.class);
-    }
+	@RequestMapping("/mutationreportpre.htm")
+	public ModelAndView pre() throws ServiceException
+	{
+		return new ModelAndView("inventory-report/mutationReportAdd", service.pre());
+	}
 
-    @RequestMapping("/mutationreportpre.htm")
-    public ModelAndView pre() throws ServiceException
-    {
-        return new ModelAndView("inventory-report/mutationReportAdd", service.pre());
-    }
-
-    @RequestMapping("/mutationreportview.htm")
-    public ModelAndView view(HttpServletRequest request) throws ServiceException
-    {
-        return new ModelAndView("inventory-report/mutationReportList", service.view(service.createMonth((InventoryLedgerFilterCriteria) criteriaFactory.createReport(request, InventoryLedgerFilterCriteria.class))));
-    }
+	@RequestMapping("/mutationreportview.htm")
+	public ModelAndView view(HttpServletRequest request) throws ServiceException
+	{
+		return new ModelAndView("inventory-report/mutationReportList", service.view(service.createMonth((InventoryLedgerFilterCriteria) criteriaFactory.createReport(request, InventoryLedgerFilterCriteria.class))));
+	}
 }

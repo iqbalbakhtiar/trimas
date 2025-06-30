@@ -5,6 +5,7 @@ import com.siriuserp.inventory.query.MutationReportQuery;
 import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.base.Service;
 import com.siriuserp.sdk.dao.GenericDao;
+import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.utility.DateHelper;
@@ -20,57 +21,63 @@ import java.util.Map;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class MutationReportService extends Service {
-    @Autowired
-    private GenericDao genericDao;
+public class MutationReportService extends Service
+{
+	@Autowired
+	private GenericDao genericDao;
 
-    @InjectParty
-    public Map<String, Object> pre() throws ServiceException
-    {
-        FastMap<String, Object> map = new FastMap<String, Object>();
-        map.put("mutationCriteria", new InventoryLedgerFilterCriteria());
+	@InjectParty
+	public Map<String, Object> pre() throws ServiceException
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("mutationCriteria", new InventoryLedgerFilterCriteria());
+		map.put("containers", genericDao.loadAll(Container.class));
+		map.put("years", DateHelper.toYear(DateHelper.today()));
 
-        return map;
-    }
+		return map;
+	}
 
-    public Map<String, Object> view(InventoryLedgerFilterCriteria criteria)
-    {
-        FastMap<String, Object> map = new FastMap<String, Object>();
+	public Map<String, Object> view(InventoryLedgerFilterCriteria criteria)
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
 
-        if (criteria.getDateFrom() == null)
-            criteria.setDateFrom(new DateTime(criteria.getYear(), DateHelper.toIntMonth(criteria.getMonth()), 1, 0, 0, 0, 0).toDate());
+		if (criteria.getDateFrom() == null)
+			criteria.setDateFrom(new DateTime(criteria.getYear(), DateHelper.toIntMonth(criteria.getMonth()), 1, 0, 0, 0, 0).toDate());
 
-        criteria.setDateFrom(DateHelper.toStartDate(criteria.getDateFrom()));
-        criteria.setDateTo(DateHelper.toEndDate(criteria.getDateFrom()));
+		criteria.setDateFrom(DateHelper.toStartDate(criteria.getDateFrom()));
+		criteria.setDateTo(DateHelper.toEndDate(criteria.getDateFrom()));
 
-        MutationReportQuery query = new MutationReportQuery();
-        query.setFilterCriteria(criteria);
+		MutationReportQuery query = new MutationReportQuery();
+		query.setFilterCriteria(criteria);
 
-        if (SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()))
-            map.put("organization", genericDao.load(Party.class, criteria.getOrganization()));
+		if (SiriusValidator.validateLongParam(criteria.getOrganization()))
+			map.put("organization", genericDao.load(Party.class, criteria.getOrganization()));
 
-        map.put("criteria", criteria);
-        map.put("period", DateHelper.toMonthEnum(criteria.getDateFrom()) + " " + DateHelper.toYear(criteria.getDateFrom()));
-        map.put("reports", genericDao.generate(query));
+		if (SiriusValidator.validateLongParam(criteria.getContainer()))
+			map.put("container", genericDao.load(Container.class, criteria.getContainer()));
 
-        return map;
-    }
+		map.put("criteria", criteria);
+		map.put("period", DateHelper.toMonthEnum(criteria.getDateFrom()) + " " + DateHelper.toYear(criteria.getDateFrom()));
+		map.put("reports", genericDao.generate(query));
 
-    public InventoryLedgerFilterCriteria createMonth(InventoryLedgerFilterCriteria criteria)
-    {
-        if (SiriusValidator.validateDate(criteria.getDateFrom()))
-        {
-            criteria.setYear(DateHelper.getYear(criteria.getDateFrom()));
-            criteria.setMonth(DateHelper.toMonthEnum(criteria.getDateFrom()));
-        }
+		return map;
+	}
 
-        Date now = new DateTime(criteria.getYear(), DateHelper.toIntMonth(criteria.getMonth()), 1, 0, 0, 0, 0).toDate();
-        if (criteria.getDateFrom() != null)
-            now = criteria.getDateFrom();
+	public InventoryLedgerFilterCriteria createMonth(InventoryLedgerFilterCriteria criteria)
+	{
+		if (SiriusValidator.validateDate(criteria.getDateFrom()))
+		{
+			criteria.setYear(DateHelper.getYear(criteria.getDateFrom()));
+			criteria.setMonth(DateHelper.toMonthEnum(criteria.getDateFrom()));
+		}
 
-        criteria.setNext(DateHelper.plusOneMonth(now));
-        criteria.setPrev(DateHelper.minusOneMonth(now));
+		Date now = new DateTime(criteria.getYear(), DateHelper.toIntMonth(criteria.getMonth()), 1, 0, 0, 0, 0).toDate();
+		if (criteria.getDateFrom() != null)
+			now = criteria.getDateFrom();
 
-        return criteria;
-    }
+		criteria.setNext(DateHelper.plusOneMonth(now));
+		criteria.setPrev(DateHelper.minusOneMonth(now));
+
+		return criteria;
+	}
 }
