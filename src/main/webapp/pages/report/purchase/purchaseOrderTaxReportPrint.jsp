@@ -101,9 +101,12 @@
 	      <c:set var="lastKey" value="${currKey}" />
 	    </c:if>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><c:out value='${repo.purchaseOrderItem.purchaseOrder.supplier.fullName}'/></td>
-        <c:forEach var="invo" items="${repo.purchaseOrderItem.invoiceReferences}">
-			<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;">${invo.goodsReceiptItem.goodsReceipt.invoiceNo}</td>
-		</c:forEach>
+       	<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;">
+	        <c:forEach var="receipt" items="${repo.purchaseOrderItem.purchaseOrder.receipts}">
+			${receipt.invoiceNo}
+			</c:forEach>
+			&nbsp;
+		</td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><c:out value='${repo.purchaseOrderItem.purchaseOrder.note}'/></td>
 		<td align="left" nowrap="nowrap" style="border-bottom:solid 1px black;border-left:solid 1px black;"><c:out value='${repo.purchaseOrderItem.product.name}'/></td>
   		<td align="right" style="border-bottom:solid 1px black;border-left:solid 1px black;"><fmt:formatNumber value='${repo.purchaseOrderItem.quantity}' pattern=',##0.00'/></td>
