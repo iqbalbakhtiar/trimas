@@ -5,7 +5,7 @@
  		<td colspan="18" align="center"><strong>PT. SAN STAR MANUNGGAL</strong></td>
  	</tr>
 	<tr>
- 		<td colspan="18" align="center"><strong>LAPORAN PENJUALAN</strong></td>
+ 		<td colspan="18" align="center"><strong>LAPORAN PEMBELIAN</strong></td>
  	</tr>
  	<tr>
  		<td colspan="18" align="center">
