@@ -15,7 +15,7 @@
 	</thead>
 	<thead>
 	<tr style="height: 30px;text-transform: uppercase;">
-		<th colspan="16" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;border-left:solid 1px black;">PENJUALAN</th>
+		<th colspan="16" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;border-left:solid 1px black;">PEMBELIAN</th>
 		<th colspan="3" align="center" style="border-top:solid 1px black;border-bottom:solid 1px black;border-left:solid 1px black;border-right:solid 1px black;">CORETAX</th>
 	</tr>
 	<tr style="height: 30px;text-transform: uppercase;">
