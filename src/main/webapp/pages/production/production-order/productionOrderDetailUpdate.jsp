@@ -27,17 +27,31 @@
 							</td>
 						</tr>
 						<tr>
-							<td align="right"><spring:message code="sirius.date"/></td>
+							<td align="right"><spring:message code="productionorder"/></td>
 							<td width="1%" align="center">:</td>
-							<td><input id="date" class="input-disabled" size="8" value="<fmt:formatDate value='${detail_edit.date}' pattern='dd-MM-yyyy'/>" disabled/></td>
+							<td><form:input id="productionOrder" path="productionOrder.code" cssClass="inputbox input-disabled" disabled="true"/></td>
+						</tr>
+						<tr>
+							<td align="right"><spring:message code="productionorder.threadtype"/></td>
+							<td width="1%" align="center">:</td>
+							<td><form:input id="product" path="productionOrder.product.name" cssClass="inputbox input-disabled" disabled="true"/></td>
 						</tr>
 						<tr>
 							<td align="right"><spring:message code="productionorder.lotnumber"/></td>
 							<td width="1%" align="center">:</td>
 							<td>
 								<form:input id="lotNumber" path="productionOrder.lotNumber" cssClass="input-disabled" disabled="true"/>
-								<form:input type="hidden" id="status" path="status"/>
 							</td>
+						</tr>
+						<tr>
+							<td align="right"><spring:message code="sirius.date"/></td>
+							<td width="1%" align="center">:</td>
+							<td><input id="date" class="input-disabled" size="8" value="<fmt:formatDate value='${detail_edit.date}' pattern='dd-MM-yyyy'/>" disabled/></td>
+						</tr>
+						<tr>
+							<td align="right"><spring:message code="sirius.description"/></td>
+							<td width="1%" align="center">:</td>
+							<td><form:input id="description" path="description" cssClass="inputbox"/></td>
 						</tr>
 						<tr>
 							<td align="right"><spring:message code="sirius.note"/></td>
