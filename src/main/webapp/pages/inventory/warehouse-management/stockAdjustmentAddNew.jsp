@@ -267,6 +267,7 @@
 	}
 	
 	function checkOnHand(index) {
+
 		let prodId = $('#product\\['+index+'\\]').val();
 		let conId = $('#container\\['+index+'\\]').val();
 		let serial = $('#serial\\['+index+'\\]').val();
@@ -281,45 +282,6 @@
             serial:serial
         };
 		
-		if (serial) {
-	        $.ajax({
-	            url: "<c:url value='/page/inventoryitembyserialjson.htm'/>",
-	            data: {barcode:serial},
-	            method: 'GET',
-	            dataType: 'json',
-	            success: function (json) {
-					console.log(json)
-	                if (json && json.status === 'OK' &&  json.inventory != null) {
-	                	$('#onHand\\['+index+'\\]').val(parseFloat(json.inventory.onHand).numberFormat('#,##0.00'));
-	                	$('#onhand\\['+index+'\\]').val(parseFloat(json.inventory.onHand).numberFormat('#,##0.00'));
-	                	$('#lotCode\\['+index+'\\]').val(json.inventory.lotCode);
-	                	$('#uom\\['+index+'\\]').val(json.inventory.product.unitOfMeasure.name);
-	                }else{
-	                	$('#onHand\\['+index+'\\]').val(parseFloat(0).numberFormat('#,##0.00'));
-	                	$('#onhand\\['+index+'\\]').val(parseFloat(0).numberFormat('#,##0.00'));
-	                }
-	            }
-	        });
-	    }
-		
-		if (prodId) {
-	        $.ajax({
-	            url: "<c:url value='/page/onhandquantityviewonhandjson.htm'/>",
-	            data: requestData,
-	            method: 'GET',
-	            dataType: 'json',
-	            success: function (json) {
-	                if (json && json.status === 'OK' &&  json.onHand != null) {
-	                	$('#onhand\\['+index+'\\]').val(parseFloat(json.onHand).numberFormat('#,##0.00'));
-	                	$('#bale\\['+index+'\\]').val(parseFloat(json.onHand/181.44).numberFormat('#,##0.00'));
-	                }else{
-	                	$('#onhand\\['+index+'\\]').val(parseFloat(0).numberFormat('#,##0.00'));
-	                	$('#bale\\['+index+'\\]').val(parseFloat(0).numberFormat('#,##0.00'));
-	                }
-	            }
-	        });
-	    }
-		
 		if(prodId) {
 			$.ajax({
 				url:"<c:url value='/page/stockadjustmentbyproductjson.htm'/>",
@@ -331,6 +293,7 @@
 					{
 						if(json.status == 'OK'){
 							let amount = document.getElementsByName('items['+index+'].price')[0];
+							console.log(index);
 							if(amount && json.product != null)
 								amount.value = parseFloat(json.product.price).numberFormat('#,##0.00');
 							else
@@ -442,60 +405,8 @@
 
 	                const container = List.get('<input class="input" size="12" type="hidden"/>', 'container[' + index + ']', $containerId);
 	                const product = List.get('<input class="input" size="12" type="hidden"/>', 'product[' + index + ']', $productId);
-	                
-	                let input = '';
-	                let datalist = '';
-	                let $barcode = '';
-
-	                if (Array.isArray(json.barcodes)) {
-	                    const datalistId = 'barcodeList_' + index;
-	                    const input = $('<input/>', {
-	                        list: datalistId,
-	                        class: 'barcode-input',
-	                        name: 'items[' + index + '].serial',
-	                        id: 'serial[' + index + ']',
-	                        placeholder: 'Select Barcode'
-	                    });
-
-	                    const datalistEl = $('<datalist/>', { id: datalistId });
-
-	                    // Simpan semua barcodes dalam cache JS
-	                    const allBarcodes = json.barcodes;
-
-	                    // Tampilkan hanya 10 pertama
-	                    allBarcodes.slice(0, 10).forEach(barcode => {
-	                        datalistEl.append($('<option/>', { value: barcode.serial }));
-	                    });
-
-	                    // Event filter saat mengetik
-	                    input.on('input', function () {
-	                        const keyword = $(this).val().toLowerCase();
-	                        datalistEl.empty();
-	                        allBarcodes
-	                            .filter(b => b.serial.toLowerCase().includes(keyword))
-	                            .slice(0, 20)
-	                            .forEach(b => {
-	                                datalistEl.append($('<option/>', { value: b.serial }));
-	                            });
-	                    });
-
-	                    // Validasi saat blur atau change
-	                    input.on('change blur', function () {
-	                        const val = $(this).val();
-	                        const isValid = allBarcodes.some(b => b.serial === val);
-	                        if (!isValid) {
-	                            $(this).val(''); // atau bisa juga beri pesan error
-	                        } else {
-	                            const $row = $(this).closest('tr');
-	                            const index = $(this).attr('id').match(/\[(\d+)\]/)[1];
-	                            checkOnHand(index);
-	                        }
-	                    });
-
-	                    $barcode = $('<div/>').append(input, datalistEl);
-	                }
-	                
-	                const $barcodeImg = List.img('<spring:message code="barcode"/>', index, 'openBarcode("' + index + '","' + $productId + '")').css('display', 'none');
+	                const barcode = List.get('<select class="combobox barcodes" onchange="updateQuantity('+$idxRef+','+$productId+');"/>','serial['+index+']');
+	            	const barcodeImg = List.img('<spring:message code="barcode"/>', $index, 'openBarcode("'+index+'","'+$productId+'")');
 	                const $qty = List.get('<input type="text" class="input-number input-disabled" readonly="true" size="12"/>', 'onHand[' + index + ']', '0.00');
 	                const $uomField = List.get('<input type="text" class="input-disabled" disabled="true" size="12"/>', 'uom[' + index + ']', $uom);
 	        		const lotCode = List.get('<input type="text" class="input-disabled" readonly="true" size="5"/>','lotCode[' + index + ']');
@@ -505,7 +416,8 @@
 	                $tr.append(List.col(container));
 	                $tr.append(List.col(product));
 	                $tr.append(List.col($("<span>&nbsp;</span>")));
-	                $tr.append(List.col([$barcode, $barcodeImg], '', 'text-align: right;').attr('colspan', '2'));
+	                $tr.append(List.col($("<span>&nbsp;</span>")));
+	                $tr.append(List.col([barcode, barcodeImg]));
 	                $tr.append(List.col([$uomField]));
 	                $tr.append(List.col([lotCode]));
 	                $tr.append(List.col([$qty]));
@@ -523,6 +435,49 @@
 	            }
 	        });
 	    }
+	}
+
+	function updateQuantity(indexRef) {
+		var qty = 0;
+		$('.qtyRef'+indexRef).each(function()
+		{
+			qty = qty + $(this).val().toNumber();
+		});
+		
+		$('#totalAccepted\\['+indexRef+'\\]').val(qty);
+	}
+	
+	var selectedBarcodes = [];
+	function openBarcode(index, productId)
+	{
+		selectedBarcodes = [];
+		$.each($(".barcodes"), function(i, obj)
+	    {
+	        var idx = obj.getAttribute('index');
+	        if (obj.value != '')
+	        	selectedBarcodes.push(obj.value);
+	    });
+
+		var org = document.getElementById('org').value;
+		var facilityId = document.getElementById('facility').value;
+		
+		const baseUrl = '<c:url value="/page/popupinventoryitemview.htm"/>';
+		const params = {
+			target: 'serial[' + index + ']',
+			index: index,
+			group: false,
+			onHand: true,
+			availableSales: true,
+			ref: '4Serial',
+			organization: org,
+			facility: facilityId,
+			productId: productId,
+			barcodes: Array.from(new Set(selectedBarcodes))
+		};
+		
+		openpopup(buildUrl(baseUrl, params));
+		
+		checkOnHand(index);
 	}
 	
 </script>
