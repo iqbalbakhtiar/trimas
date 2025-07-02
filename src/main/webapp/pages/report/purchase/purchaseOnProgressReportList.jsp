@@ -45,14 +45,14 @@
 						<div class="area" dojoType="Container" id="quick_link_container">
 							<h1 class="page-title">${pageTitle}</h1>
 					  		<div class="toolbar">
-								<a class="item-button-back" href="<c:url value='/page/salesonprogressreportpre.htm'/>"><span><spring:message code="sirius.back"/></span></a>
+								<a class="item-button-back" href="<c:url value='/page/purchaseonprogressreportpre.htm'/>"><span><spring:message code="sirius.back"/></span></a>
 								<a class="item-button-print" href="javascript:window.print();"><span><spring:message code="sirius.print"/></span></a>
-                            	<a class="item-button-export-xls" download="salesonprogressreport.xls" href="#" onclick="return ExcellentExport.excel(this, 'delivery', 'Delivery Report');"><span><spring:message code="sirius.export"/></span></a>
+                            	<a class="item-button-export-xls" download="purchaseonprogressreport.xls" href="#" onclick="return ExcellentExport.excel(this, 'purchaseOnProgress', 'Purchase On Progress');"><span><spring:message code="sirius.export"/></span></a>
 					  		</div>
 						</div>
 						<div class="main-box">
 							<div class="main_container">
-								<%@ include file="salesOnProgressReportPrint.jsp" %>
+								<%@ include file="purchaseOnProgressReportPrint.jsp" %>
 							</div>
 						</div>
 					</div>

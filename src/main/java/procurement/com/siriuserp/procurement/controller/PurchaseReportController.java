@@ -19,6 +19,7 @@ import com.siriuserp.procurement.service.PurchaseReportService;
 import com.siriuserp.sales.criteria.SalesReportFilterCriteria;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.Party;
+import com.siriuserp.sdk.exceptions.ServiceException;
 
 /**
  * @author Iqbal Bakhtiar
@@ -50,15 +51,27 @@ public class PurchaseReportController extends ControllerBase
 		return new ModelAndView("/report/purchase/purchaseReportList", service.view(criteriaFactory.createReport(request, PurchaseReportFilterCriteria.class)));
 	}
 
+	@RequestMapping("/purchasetaxreportpre.htm")
+	public ModelAndView preTax() throws ServiceException
+	{
+		return new ModelAndView("/report/purchase/purchaseTaxReportAdd", service.pre());
+	}
+
+	@RequestMapping("/purchasetaxreportview.htm")
+	public ModelAndView viewTax(HttpServletRequest request) throws Exception
+	{
+		return new ModelAndView("/report/purchase/purchaseTaxReportList", service.viewTax(criteriaFactory.createReport(request, PurchaseReportFilterCriteria.class)));
+	}
+
 	@RequestMapping("/purchaseonprogressreportpre.htm")
 	public ModelAndView preProgress() throws Exception
 	{
-		return new ModelAndView("/report/sales/purchaseOnProgressReportAdd", service.pre());
+		return new ModelAndView("/report/purchase/purchaseOnProgressReportAdd", service.pre());
 	}
 
 	@RequestMapping("/purchaseonprogressreportview.htm")
 	public ModelAndView viewProgress(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/report/sales/purchaseOnProgressReportList", service.view(criteriaFactory.createReport(request, SalesReportFilterCriteria.class)));
+		return new ModelAndView("/report/purchase/purchaseOnProgressReportList", service.viewOnProgress(criteriaFactory.createReport(request, SalesReportFilterCriteria.class)));
 	}
 }

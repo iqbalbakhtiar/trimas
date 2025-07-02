@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.siriuserp.procurement.criteria.PurchaseReportFilterCriteria;
 import com.siriuserp.procurement.dm.PurchaseDocumentType;
+import com.siriuserp.procurement.query.PurchaseOnProgressReportViewQuery;
 import com.siriuserp.procurement.query.PurchaseOrderTaxReportQuery;
 import com.siriuserp.procurement.query.PurchaseReportQuery;
 import com.siriuserp.sdk.annotation.InjectParty;
@@ -62,12 +63,28 @@ public class PurchaseReportService
 
 		return map;
 	}
-	
+
 	public Map<String, Object> viewTax(PurchaseReportFilterCriteria criteria)
 	{
 		Party organization = genericDao.load(Party.class, criteria.getOrganization());
 
 		PurchaseOrderTaxReportQuery query = new PurchaseOrderTaxReportQuery();
+		query.setFilterCriteria(criteria);
+
+		Map<String, Object> map = new FastMap<String, Object>();
+		map.put("organization", organization);
+		map.put("supplier", criteria.getSupplier() != null ? genericDao.load(Party.class, criteria.getSupplier()) : null);
+		map.put("criteria", criteria);
+		map.put("reports", genericDao.generateReport(query));
+
+		return map;
+	}
+
+	public Map<String, Object> viewOnProgress(PurchaseReportFilterCriteria criteria)
+	{
+		Party organization = genericDao.load(Party.class, criteria.getOrganization());
+
+		PurchaseOnProgressReportViewQuery query = new PurchaseOnProgressReportViewQuery();
 		query.setFilterCriteria(criteria);
 
 		Map<String, Object> map = new FastMap<String, Object>();

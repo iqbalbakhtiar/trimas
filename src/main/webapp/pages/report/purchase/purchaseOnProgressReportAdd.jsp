@@ -69,10 +69,10 @@
 								<tr>
 									<td align="right"><spring:message code="salesorder.type"/> :</td>
 									<td>
-										<select id="salesInternalType" name="salesInternalType" class="combobox-min">
-											<option value="" selected="true"><spring:message code="sirius.all"/></option>
-											<option value="YARN"><spring:message code="salesorder.type.yarn"/></option>
-											<option value="WASTE"><spring:message code="salesorder.type.waste"/></option>
+										<select id="documentType" name="documentType" class="combobox-min">
+											<c:forEach var="type" items="${documentTypes}">
+							                    <option value="${type}">${type.normalizedName}</option>
+							                </c:forEach>
 										</select>
 									</td>
 								</tr>

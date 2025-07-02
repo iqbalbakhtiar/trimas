@@ -8,10 +8,12 @@ import com.siriuserp.sdk.adapter.AbstractUIAdapter;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class PurchaseReportAdapter extends AbstractUIAdapter
 {
@@ -42,5 +44,19 @@ public class PurchaseReportAdapter extends AbstractUIAdapter
 	public BigDecimal getTotal()
 	{
 		return getNettPrice().add(getTaxAmount());
+	}
+
+	public BigDecimal getReceiptedQty()
+	{
+		BigDecimal qty = BigDecimal.ZERO;
+
+		if (!getPurchaseOrderItem().getSerials().isEmpty())
+		{
+			for (PurchaseOrderItem serial : getPurchaseOrderItem().getSerials())
+				qty = qty.add(serial.getTransactionItem().getReceipted());
+		} else
+			qty = qty.add(getPurchaseOrderItem().getTransactionItem().getReceipted());
+
+		return qty;
 	}
 }
