@@ -25,7 +25,7 @@
 		<th width="3%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="invoice.tax.date"/></th>
 		<th width="10%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="billing.invoice.tax.no"/></th>
 		<th width="10%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="supplier"/></th>
-		<th width="10%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="receipt.delivery"/></th>
+		<th width="10%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="goodsreceipt.do.no"/></th>
 		<th width="15%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="supplier.note"/></th>
 		<th width="5%" align="center" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="product.name"/></th>
 		<th width="5%" align="left" style="border-bottom:solid 1px black;border-left:solid 1px black;"><spring:message code="sirius.qty"/></th>

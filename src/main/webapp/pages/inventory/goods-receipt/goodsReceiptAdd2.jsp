@@ -53,7 +53,7 @@
                 <td width="74%"><input value="${ref.referenceFrom}" class='input-disabled' size='25'/></td>
             </tr>
             <tr>
-                <td width="26%" nowrap="nowrap" align="right"><spring:message code="goodsreceipt.supplier.invoice"/> :</td>
+                <td width="26%" nowrap="nowrap" align="right"><spring:message code="goodsreceipt.do.no"/> :</td>
                 <td width="74%"><input size='25' id="invoiceNo" name="invoiceNo"/></td>
             </tr>
 			<tr>
