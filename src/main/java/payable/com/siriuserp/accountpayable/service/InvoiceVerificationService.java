@@ -76,7 +76,7 @@ public class InvoiceVerificationService
 
 		return map;
 	}
-	
+
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> viewJson(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws ServiceException
 	{
@@ -96,9 +96,9 @@ public class InvoiceVerificationService
 		// Set Due Date by Load active Credit Term from Supplier
 		PartyRelationship relationship = partyRelationshipDao.load(invoiceVerification.getSupplier().getId(), invoiceVerification.getOrganization().getId(), PartyRelationshipType.SUPPLIER_RELATIONSHIP);
 		CreditTerm creditTerm = creditTermDao.loadByRelationship(relationship.getId(), true, invoiceVerification.getDate());
-		if (creditTerm == null) {
+		if (creditTerm == null)
 			throw new ServiceException("Supplier doesn't have active Credit Term, please set it first on supplier page.");
-		}
+
 		invoiceVerification.setDueDate(DateHelper.plusDays(invoiceVerification.getDate(), creditTerm.getTerm()));
 
 		genericDao.add(invoiceVerification);

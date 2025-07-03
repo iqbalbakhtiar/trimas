@@ -145,6 +145,14 @@
                       <td width="20%">:&nbsp;&nbsp;<input id="totalSales" value="<fmt:formatNumber value='${adapter.totalItemAmount}' pattern=',##0.00'/>" class="number-disabled" readonly="readonly" size="20"/></td>
                     </tr>
                     <tr>
+                      <td width="80%" align="right"><spring:message code="purchaseorder.discount"/></td>
+                      <td width="20%">:&nbsp;&nbsp;<input id="totalDiscount" value="<fmt:formatNumber value='${adapter.totalDiscount}' pattern=',##0.00'/>" class="number-disabled" readonly="readonly" size="20"/></td>
+                    </tr>
+                    <tr>
+                      <td width="80%" align="right"><spring:message code="purchaseorder.afterdiscount"/></td>
+                      <td width="20%">:&nbsp;&nbsp;<input id="totalAfterDiscount" value="<fmt:formatNumber value='${adapter.totalAfterDiscount}' pattern=',##0.00'/>" class="number-disabled" readonly="readonly" size="20"/></td>
+                    </tr>
+                    <tr>
                       <td width="80%" align="right"><spring:message code="purchaseorder.tax"/></td>
                       <td width="20%">:&nbsp;&nbsp;<input id="totalTax" value="<fmt:formatNumber value='${adapter.taxAmount}' pattern=',##0.00'/>" class="number-disabled" readonly="readonly" size="20"/></td>
                     </tr>
@@ -295,7 +303,7 @@
                 <td><input id="amount[${idx.index}]" size="12" value="<fmt:formatNumber value='${item.money.amount}' pattern=',##0.00'/>" class="input-disabled input-decimal" name="items[${idx.index}].amount" index="${idx.index}" next="amount" disabled/></td>
                 <td><input id="discountPercent[${idx.index}]" size="8" value="<fmt:formatNumber value='${item.discountPercent}' pattern=',##0.00'/>" class="input-disabled input-decimal" name="items[${idx.index}].discountPercent" index="${idx.index}" next="discountPercent" disabled/></td>
                 <td><input id="discount[${idx.index}]" size="12" value="<fmt:formatNumber value='${item.discount}' pattern=',##0.00'/>" class="input-disabled input-decimal" name="items[${idx.index}].discount" index="${idx.index}" next="discount" disabled/></td>
-                <td><input id="totalAmount[${idx.index}]" size="12" class="input-number input-disabled" disabled value="<fmt:formatNumber value='${item.totalAmount}' pattern=',##0.00'/>"/></td>
+                <td><input id="totalAmount[${idx.index}]" size="12" class="input-number input-disabled" disabled value="<fmt:formatNumber value='${item.totalAmount-item.discount}' pattern=',##0.00'/>"/></td>
                 <td><input id="note[${idx.index}]" type="text" value="${item.note}" name="purchaseOrder.items[${idx.index}].note"index="${idx.index}" next="note" size="40"/></td>
                 <td><a href="<c:url value='/page/purchaserequisitionpreedit.htm?id=${item.requisitionItem.purchaseRequisition.id}'/>"><c:out value="${item.requisitionItem.purchaseRequisition.code}"></c:out></a></td>
               </tr>

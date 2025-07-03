@@ -122,9 +122,9 @@
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="product"/></th>
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.qty"/></th>
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 10%"><spring:message code="sirius.uom"/></th>
-					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.unitprice"/></th>
+					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 17%"><spring:message code="sirius.unitprice"/></th>
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 5%"><spring:message code="purchaseorderitem.discount"/></th>
-					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="purchaserequisition.discount"/></th>
+					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 15%"><spring:message code="purchaserequisition.discount"/></th>
 					  				<th style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;width: 20%"><spring:message code="sirius.total"/></th>
 					  			</tr>
 					            <c:forEach items="${purchase_edit.items}" var="item">
@@ -136,15 +136,27 @@
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.money.amount}' pattern='${pattern}'/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.discountPercent}' pattern='${pattern}'/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.discount}' pattern='${pattern}'/></td>
-					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.totalAmount}' pattern='${pattern}'/></td>
+					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.totalAmount-item.discount}' pattern='${pattern}'/></td>
 					  			</tr>
 					  			</c:if>
 					  			</c:forEach>
 					  			<tr style="font-weight: bold;">
 					  				<td align="right" colspan="5">&nbsp;</td>
 					  				<td align="right"><spring:message code="purchaseorderitem.subtotal"/></td>
-					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalItemAmount}' pattern='${pattern}'/></td>
+					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalItemAmount-adapter.totalDiscount}' pattern='${pattern}'/></td>
 					  			</tr>
+					  			<c:if test="${adapter.totalDiscount gt 0}">
+						  			<tr style="font-weight: bold;display: none;">
+						  				<td align="right" colspan="5">&nbsp;</td>
+						  				<td align="right"><spring:message code="purchaseorder.discount"/></td>
+						  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalDiscount}' pattern='${pattern}'/></td>
+						  			</tr>
+						  			<tr style="font-weight: bold;display: none;">
+						  				<td align="right" colspan="5">&nbsp;</td>
+						  				<td align="right"><spring:message code="purchaseorder.afterdiscount"/></td>
+						  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${adapter.totalAfterDiscount}' pattern='${pattern}'/></td>
+						  			</tr>
+					  			</c:if>
 					  			<tr style="font-weight: bold;">
 					  				<td align="right" colspan="5">&nbsp;</td>
 					  				<td align="right"><spring:message code="salesorder.tax.amount"/></td>

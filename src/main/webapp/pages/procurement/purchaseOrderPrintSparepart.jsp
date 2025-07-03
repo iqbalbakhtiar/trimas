@@ -130,7 +130,7 @@
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.money.amount}' pattern='${pattern}'/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.discountPercent}' pattern='${pattern}'/></td>
 					  				<td align="right" style="border-bottom:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.discount}' pattern='${pattern}'/></td>
-					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.totalAmount}' pattern='${pattern}'/></td>
+					  				<td align="right" style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;"><fmt:formatNumber value='${item.totalAmount-item.discount}' pattern='${pattern}'/></td>
 					  			</tr>
 					  			</c:if>
 					  			</c:forEach>

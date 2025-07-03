@@ -17,6 +17,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -59,6 +60,7 @@ public class InvoiceVerification extends Payable
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	@OrderBy("id")
 	private Set<InvoiceVerificationItem> items = new FastSet<InvoiceVerificationItem>();
 
 	public Set<GoodsReceipt> getGoodsReceipts()

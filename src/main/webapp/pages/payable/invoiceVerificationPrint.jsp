@@ -8,7 +8,7 @@
 
 <div class="main-box">
     <div class="main_container">
-        <table border="0" width="100%" cellpadding="0" cellspacing="0" class="in">
+        <table border="0" width="100%" cellpadding="3" cellspacing="0" class="in">
             <tr>
                 <td style="background: black" width="1%">&nbsp;</td>
                 <td width="1%">&nbsp;</td>
@@ -17,7 +17,7 @@
                 <td style="background: black" width="1%">&nbsp;</td>
             <tr>
         </table>
-        <table border="0" width="100%" cellpadding="0" cellspacing="0">
+        <table border="0" width="100%" cellpadding="3" cellspacing="0">
             <tr>
                 <td width="2%" colspan="2">&nbsp;</td>
                 <td width="52%" colspan="3" align="left"><strong><c:out value=' ${verification_edit.organization.initial} ${verification_edit.organization.fullName}'/></strong><br/>
@@ -34,11 +34,11 @@
             </tr>
             <tr><td colspan="10" height="20">&nbsp;</td></tr>
         </table>
-        <table border="0" width="100%" cellpadding="0" cellspacing="0">
+        <table border="0" width="100%" cellpadding="3" cellspacing="0">
             <tr>
                 <td width="2%" colspan="2">&nbsp;</td>
                 <td width="48%" colspan="3" valign="top">
-                    <table width="100%" cellpadding="0" cellspacing="0" align="left">
+                    <table width="100%" cellpadding="3" cellspacing="0" align="left">
                         <tr>
                             <td width="20%" valign="top">ID</td>
                             <td width="3%" valign="top">:</td>
@@ -72,7 +72,7 @@
                     </table>
                 </td>
                 <td width="48%" colspan="3" valign="top">
-                    <table width="100%" cellpadding="0" cellspacing="0" align="left">
+                    <table width="100%" cellpadding="3" cellspacing="0" align="left">
                         <tr>
                             <td width="35%">No. Invoice</td>
                             <td width="3%">:</td>
@@ -98,12 +98,13 @@
             <tr>
                 <td colspan="2">&nbsp;</td>
                 <td colspan="6">
-                    <table width="100%"  border="0" cellpadding="0" cellspacing="0">
+                    <table width="100%"  border="0" cellpadding="3" cellspacing="0">
                         <tr>
                             <th align="left" class="bordered">&nbsp;No.</th>
                             <th align="center" class="border-right border-top border-bottom">Nama Barang</th>
                             <th colspan="2" align="center" class="border-right border-top border-bottom">Jumlah</th>
                             <th align="center" class="border-right border-top border-bottom">Harga Satuan</th>
+                            <th align="center" class="border-right border-top border-bottom">Diskon</th>
                             <th align="center" class="border-right border-top border-bottom">Total</th>
                         </tr>
                         <c:forEach items="${verification_edit.items}" var="item" varStatus='status'>
@@ -112,12 +113,13 @@
                                 <td width="47%" class="border-bottom border-right" style="padding-left:5px;"><c:out value='${item.product.code}'/> <c:out value='${item.product.name}'/></td>
                                 <td colspan="2" width="15%" class="border-bottom border-right" align="center" style="padding-right:5px;"><fmt:formatNumber value='${item.quantity}' pattern=',##0'/></td>
                                 <td width="15%" class="border-bottom border-right" align="right" style="padding-right:5px;"><fmt:formatNumber value='${item.money.amount}' pattern=',##0.00'/></td>
-                                <td width="19%" class="border-bottom border-right" align="right" style="padding-right:5px;"><fmt:formatNumber value='${(item.money.amount * item.quantity)}' pattern=',##0.00'/></td>
+                                <td width="15%" class="border-bottom border-right" align="right" style="padding-right:5px;"><fmt:formatNumber value='${item.discount}' pattern=',##0.00'/></td>
+                                <td width="19%" class="border-bottom border-right" align="right" style="padding-right:5px;"><fmt:formatNumber value='${(item.money.amount * item.quantity) - item.discount}' pattern=',##0.00'/></td>
                             </tr>
                         </c:forEach>
                         <tr>
                             <td colspan="2">&nbsp;</td>
-                            <td colspan="3" align="left" class="border-right">Sub Total</td>
+                            <td colspan="4" align="left" class="border-right">Sub Total</td>
                             <td align="right" class="border-right" style="padding-right:5px;">
                                 <fmt:formatNumber value='${adapter.subTotal}' pattern=',##0.00'/>
                             </td>
@@ -125,13 +127,13 @@
                         <c:if test='${adapter.taxAmount > 0}'>
                             <tr>
                                 <td colspan="2">&nbsp;</td>
-                                <td colspan="3" align="left" class="border-right">Pajak Pertambahan Nilai (PPN)</td>
+                                <td colspan="4" align="left" class="border-right">Pajak Pertambahan Nilai (PPN)</td>
                                 <td align="right" class="border-top border-right" style="padding-right:5px;"><fmt:formatNumber value='${adapter.taxAmount}' pattern=',##0.00'/></td>
                             </tr>
                         </c:if>
                         <tr>
                             <td colspan="2">&nbsp;</td>
-                            <td colspan="3" align="left" class="border-right">Total</td>
+                            <td colspan="4" align="left" class="border-right">Total</td>
                             <td align="right" class="border-top border-bottom border-right" style="padding-right:5px;">
                                 <fmt:formatNumber value='${adapter.totalAfterTax}' pattern=',##0.00'/>
                             </td>

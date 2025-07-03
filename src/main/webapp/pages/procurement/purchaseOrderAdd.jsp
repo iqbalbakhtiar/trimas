@@ -127,6 +127,14 @@
                       <td width="20%">:&nbsp;&nbsp;<input id="totalSales" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
                     </tr>
                     <tr>
+                      <td width="80%" align="right"><spring:message code="purchaseorder.discount"/></td>
+                      <td width="20%">:&nbsp;&nbsp;<input id="totalDiscount" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
+                    </tr>
+                    <tr>
+                      <td width="80%" align="right"><spring:message code="purchaseorder.afterdiscount"/></td>
+                      <td width="20%">:&nbsp;&nbsp;<input id="totalAfterDiscount" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
+                    </tr>
+                    <tr>
                       <td width="80%" align="right"><spring:message code="purchaseorder.tax"/></td>
                       <td width="20%">:&nbsp;&nbsp;<input id="totalTax" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
                     </tr>
@@ -278,6 +286,8 @@ function updateDisplay() {
 
   // Inisialisasi total
   var totalSales = 0;
+  var totalDisc = 0;
+  var totalAfterDisc = 0;
 
   // Fungsi helper untuk mendapatkan nilai numerik
   function getNumericValue($input) {
@@ -296,7 +306,9 @@ function updateDisplay() {
     var discAmount = Math.round(amount * disc / 100);
     var afterDisc = amount - discAmount;
 
-    totalSales += afterDisc;
+    totalSales += amount;
+    totalDisc += discAmount;
+    totalAfterDisc += afterDisc;
 
     // Update Buying Price per-line Item
     $row.find('input[id^="totalAmount["]').val(afterDisc.numberFormat('#,##0.00'));
@@ -304,11 +316,13 @@ function updateDisplay() {
   });
 
   // Menghitung totalTax dan totalTransaction
-  var totalTax = totalSales * (taxRate / 100);
-  var totalTransaction = totalSales + totalTax;
+  var totalTax = totalAfterDisc * (taxRate / 100);
+  var totalTransaction = totalAfterDisc + totalTax;
 
   // Memperbarui field recapitulation dengan nilai yang diformat
   $('#totalSales').val(totalSales.numberFormat('#,##0.00'));
+  $('#totalDiscount').val(totalDisc.numberFormat('#,##0.00'));
+  $('#totalAfterDiscount').val(totalAfterDisc.numberFormat('#,##0.00'));
   $('#totalTax').val(totalTax.numberFormat('#,##0.00'));
   $('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
 

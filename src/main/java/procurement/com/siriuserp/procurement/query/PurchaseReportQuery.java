@@ -25,13 +25,21 @@ public class PurchaseReportQuery extends AbstractStandardReportQuery
 	public Object execute()
 	{
 		PurchaseReportFilterCriteria criteria = (PurchaseReportFilterCriteria) getFilterCriteria();
+		List<Long> noApprovableIds = getNoApprovable(criteria);
+		List<Long> withApprovableIds = getWithApprovable(criteria);
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT NEW com.siriuserp.procurement.adapter.PurchaseReportAdapter(purchaseItem) ");
 		builder.append("FROM PurchaseOrderItem purchaseItem ");
 		builder.append("WHERE purchaseItem.purchaseOrder.organization.id =:org ");
 		builder.append("AND purchaseItem.purchaseItemType = 'BASE' ");
-		builder.append("AND (purchaseItem.id IN(:noApprovable) OR purchaseItem.id IN(:withApprovable)) ");
+
+		if (!noApprovableIds.isEmpty() && !withApprovableIds.isEmpty())
+			builder.append("AND (purchaseItem.id IN(:noApprovable) OR purchaseItem.id IN(:withApprovable)) ");
+		else if (!noApprovableIds.isEmpty())
+			builder.append("AND purchaseItem.id IN(:noApprovable) ");
+		else if (!withApprovableIds.isEmpty())
+			builder.append("AND purchaseItem.id IN(:withApprovable) ");
 
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getSupplier()))
 			builder.append("AND purchaseItem.purchaseOrder.supplier.id =:supplier ");
@@ -48,13 +56,17 @@ public class PurchaseReportQuery extends AbstractStandardReportQuery
 		} else if (SiriusValidator.validateDate(criteria.getDateTo()))
 			builder.append("AND purchaseItem.purchaseOrder.date <= :to ");
 
-		builder.append("ORDER BY purchaseItem.purchaseOrder.purchaseDocumentType ASC, purchaseItem.purchaseOrder.date ASC, purchaseItem.purchaseOrder.id ASC");
+		builder.append("ORDER BY purchaseItem.purchaseOrder.purchaseDocumentType ASC, purchaseItem.purchaseOrder.date ASC, purchaseItem.product.name ASC");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);
 		query.setParameter("org", criteria.getOrganization());
-		query.setParameterList("noApprovable", getNoApprovable(criteria));
-		query.setParameterList("withApprovable", getWithApprovable(criteria));
+
+		if (!noApprovableIds.isEmpty())
+			query.setParameterList("noApprovable", noApprovableIds);
+
+		if (!withApprovableIds.isEmpty())
+			query.setParameterList("withApprovable", withApprovableIds);
 
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getSupplier()))
 			query.setParameter("supplier", criteria.getSupplier());
@@ -95,8 +107,6 @@ public class PurchaseReportQuery extends AbstractStandardReportQuery
 				builder.append("AND purchaseItem.purchaseOrder.date >= :from ");
 		} else if (SiriusValidator.validateDate(criteria.getDateTo()))
 			builder.append("AND purchaseItem.purchaseOrder.date <= :to ");
-
-		builder.append("ORDER BY purchaseItem.purchaseOrder.purchaseDocumentType ASC, purchaseItem.purchaseOrder.date ASC, purchaseItem.purchaseOrder.id ASC");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);
@@ -141,8 +151,6 @@ public class PurchaseReportQuery extends AbstractStandardReportQuery
 				builder.append("AND purchaseItem.purchaseOrder.date >= :from ");
 		} else if (SiriusValidator.validateDate(criteria.getDateTo()))
 			builder.append("AND purchaseItem.purchaseOrder.date <= :to ");
-
-		builder.append("ORDER BY purchaseItem.purchaseOrder.purchaseDocumentType ASC, purchaseItem.purchaseOrder.date ASC, purchaseItem.purchaseOrder.id ASC");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);

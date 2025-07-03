@@ -185,6 +185,18 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td width="80%" align="right"><spring:message code="purchaseorder.discount"/>:&nbsp;</td>
+                                            <td width="20%">
+                                                <input id="purchase" value="<fmt:formatNumber value='${adapter.discount}' pattern=',##0.00'/>" class="number-disabled" readonly="readonly" size="20" disabled/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="80%" align="right"><spring:message code="purchaseorder.afterdiscount"/>:&nbsp;</td>
+                                            <td width="20%">
+                                                <input id="purchase" value="<fmt:formatNumber value='${adapter.subTotal}' pattern=',##0.00'/>" class="number-disabled" readonly="readonly" size="20" disabled/>
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td width="80%" align="right"><spring:message code="sirius.tax"/>:&nbsp;</td>
                                             <td width="20%">
                                                 <input id="taxAmount" value="<fmt:formatNumber value='${adapter.taxAmount}' pattern=',##0.00'/>" class="number-disabled" readonly="readonly" size="20" disabled/>
@@ -214,6 +226,7 @@
                 <th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
                 <th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
                 <th width="8%" nowrap="nowrap"><spring:message code="sirius.price"/></th>
+                <th width="5%" nowrap="nowrap"><spring:message code="sirius.discount"/></th>
                 <th nowrap="nowrap"><spring:message code="sirius.amount"/></th>
             </tr>
             </thead>
@@ -225,7 +238,8 @@
                     <td><input value="<fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/>" size="8" class="number-disabled" disabled/></td>
                     <td><input value="${item.product.unitOfMeasure.measureId}" class="input-disabled" size="5" disabled/></td>
                     <td><input value="<fmt:formatNumber value='${item.money.amount}' pattern=',##0.00'/>" size="12" class="number-disabled" disabled/></td>
-                    <td><input value="<fmt:formatNumber value='${(item.money.amount-item.discount)*item.quantity}' pattern=',##0.00'/>" size="15" class="number-disabled" disabled/></td>
+                    <td><input value="<fmt:formatNumber value='${item.discount}' pattern=',##0.00'/>" size="10" class="number-disabled" disabled/></td>
+                    <td><input value="<fmt:formatNumber value='${(item.money.amount*item.quantity)-item.discount}' pattern=',##0.00'/>" size="15" class="number-disabled" disabled/></td>
                 </tr>
             </c:forEach>
             </tbody>

@@ -106,14 +106,14 @@
 				return
 			}
 		
-			document.reportForm.action = "<c:url value='/page/purchaseordertaxreportview.htm'/>";
+			document.reportForm.action = "<c:url value='/page/purchasetaxreportview.htm'/>";
 			document.reportForm.submit();
 		});
 	});
 	
 	function resetform()
 	{
-		window.location = "<c:url value='/page/purchasereportpre.htm'/>";
+		window.location = "<c:url value='/page/purchasetaxreportpre.htm'/>";
 	}
 
 	function openfacility(target)

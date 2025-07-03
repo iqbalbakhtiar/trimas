@@ -34,14 +34,32 @@ public class PurchaseOrderAdapter extends AbstractUIAdapter
 		return total;
 	}
 
-	public BigDecimal getTaxAmount()
+	public BigDecimal getTotalDiscount()
 	{
-		return getTotalItemAmount().multiply(getPurchaseOrder().getTax().getTaxRate().divide(BigDecimal.valueOf(100)));
+		BigDecimal discount = BigDecimal.ZERO;
+
+		for (PurchaseOrderItem item : purchaseOrder.getItems())
+		{
+			if (item.getPurchaseItemType().equals(PurchaseOrderItemType.BASE))
+				discount = discount.add(item.getDiscount());
+		}
+
+		return discount;
 	}
 
-	// Used in Direct Purchase Order (TotalItemAmount + taxAmount)
+	public BigDecimal getTotalAfterDiscount()
+	{
+		return getTotalItemAmount().subtract(getTotalDiscount());
+	}
+
+	public BigDecimal getTaxAmount()
+	{
+		return getTotalAfterDiscount().multiply(getPurchaseOrder().getTax().getTaxRate().divide(BigDecimal.valueOf(100)));
+	}
+
+	// Used in Direct Purchase Order (TotalAfterDiscount + taxAmount)
 	public BigDecimal getTotalTransaction()
 	{
-		return getTotalItemAmount().add(getTaxAmount());
+		return getTotalAfterDiscount().add(getTaxAmount());
 	}
 }

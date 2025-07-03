@@ -124,7 +124,7 @@ public class PurchaseOrderItem extends WarehouseReferenceItem implements JSONSup
 	// (Qty * Amount)
 	public BigDecimal getTotalAmount()
 	{
-		return this.quantity.multiply(this.getMoney().getAmount()).subtract(getDiscount());
+		return this.quantity.multiply(this.getMoney().getAmount());
 	}
 
 	@Override
