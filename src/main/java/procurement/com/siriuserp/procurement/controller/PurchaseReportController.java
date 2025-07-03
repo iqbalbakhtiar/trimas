@@ -16,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.procurement.criteria.PurchaseReportFilterCriteria;
 import com.siriuserp.procurement.service.PurchaseReportService;
-import com.siriuserp.sales.criteria.SalesReportFilterCriteria;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.exceptions.ServiceException;
@@ -72,6 +71,6 @@ public class PurchaseReportController extends ControllerBase
 	@RequestMapping("/purchaseonprogressreportview.htm")
 	public ModelAndView viewProgress(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/report/purchase/purchaseOnProgressReportList", service.viewOnProgress(criteriaFactory.createReport(request, SalesReportFilterCriteria.class)));
+		return new ModelAndView("/report/purchase/purchaseOnProgressReportList", service.viewOnProgress(criteriaFactory.createReport(request, PurchaseReportFilterCriteria.class)));
 	}
 }

@@ -50,7 +50,7 @@
                                         <a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupcompanystructurerolebasedview.htm?target=org'/>');"  title="Company Structure" />
                                     </td>
                                 </tr>
-								<tr>
+								<tr style="display: none;">
 									<td nowrap="nowrap" align="right"><spring:message code='facility'/> :</td>
 									<td>
 										<select id="facility" name="facility" class="combobox-ext">
@@ -70,13 +70,14 @@
 									<td align="right"><spring:message code="salesorder.type"/> :</td>
 									<td>
 										<select id="documentType" name="documentType" class="combobox-min">
+						                    <option value=""></option>
 											<c:forEach var="type" items="${documentTypes}">
 							                    <option value="${type}">${type.normalizedName}</option>
 							                </c:forEach>
 										</select>
 									</td>
 								</tr>
-								<tr>
+								<tr style="display: none;">
 									<td align="right"><spring:message code="sirius.status"/> :</td>
 									<td>
 										<select id="status" name="status" class="combobox-min">

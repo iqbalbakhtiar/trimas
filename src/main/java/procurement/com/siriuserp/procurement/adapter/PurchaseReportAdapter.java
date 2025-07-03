@@ -19,7 +19,13 @@ public class PurchaseReportAdapter extends AbstractUIAdapter
 {
 	private static final long serialVersionUID = 6487977149021666750L;
 
+	private BigDecimal standardBale = BigDecimal.valueOf(181.44);
 	private PurchaseOrderItem purchaseOrderItem;
+
+	public PurchaseReportAdapter(PurchaseOrderItem purchaseOrderItem)
+	{
+		this.purchaseOrderItem = purchaseOrderItem;
+	}
 
 	public BigDecimal getPrice()
 	{
@@ -46,7 +52,7 @@ public class PurchaseReportAdapter extends AbstractUIAdapter
 		return getNettPrice().add(getTaxAmount());
 	}
 
-	public BigDecimal getReceiptedQty()
+	public BigDecimal getReceipted()
 	{
 		BigDecimal qty = BigDecimal.ZERO;
 
@@ -54,7 +60,7 @@ public class PurchaseReportAdapter extends AbstractUIAdapter
 		{
 			for (PurchaseOrderItem serial : getPurchaseOrderItem().getSerials())
 				qty = qty.add(serial.getTransactionItem().getReceipted());
-		} else
+		} else if (getPurchaseOrderItem().getTransactionItem() != null)
 			qty = qty.add(getPurchaseOrderItem().getTransactionItem().getReceipted());
 
 		return qty;
