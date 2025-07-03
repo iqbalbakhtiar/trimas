@@ -26,6 +26,7 @@ public class SalesReportFilterCriteria extends AbstractReportFilterCriteria
 
 	private Long facility;
 	private Long customer;
+	private Long product;
 
 	private String code;
 	private String salesOrderCode;

@@ -43,6 +43,9 @@ public class DeliveryReportViewQuery extends AbstractStandardReportQuery
 		if (SiriusValidator.validateParam(criteria.getSalesInternalType()))
 			builder.append("AND salesItem.salesOrder.salesInternalType =:salesInternalType ");
 
+		if (SiriusValidator.validateLongParam(criteria.getProduct()))
+			builder.append("AND salesItem.product.id =:productId ");
+
 		if (criteria.getTaxReport() != null)
 		{
 			if (criteria.getTaxReport())
@@ -74,6 +77,9 @@ public class DeliveryReportViewQuery extends AbstractStandardReportQuery
 
 		if (SiriusValidator.validateParam(criteria.getSalesInternalType()))
 			query.setParameter("salesInternalType", SalesInternalType.valueOf(criteria.getSalesInternalType()));
+
+		if (SiriusValidator.validateLongParam(criteria.getProduct()))
+			query.setParameter("productId", criteria.getProduct());
 
 		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 			query.setParameter("dateFrom", criteria.getDateFrom());

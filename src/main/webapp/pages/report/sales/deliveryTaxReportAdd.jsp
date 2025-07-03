@@ -51,6 +51,16 @@
                                     </td>
                                 </tr>
 								<tr>
+									<td align="right"><spring:message code="salesorder.type"/> :</td>
+									<td>
+										<select id="salesInternalType" name="salesInternalType">
+											<option value="" selected="true"><spring:message code="sirius.all"/></option>
+											<option value="YARN"><spring:message code="salesorder.type.yarn"/></option>
+											<option value="WASTE"><spring:message code="salesorder.type.waste"/></option>
+										</select>
+									</td>
+								</tr>
+								<tr>
 									<td nowrap="nowrap" align="right"><spring:message code='facility'/> :</td>
 									<td>
 										<select id="facility" name="facility" class="combobox-ext">
@@ -64,6 +74,14 @@
                                         <select id="customer" name="customer" class="combobox-ext">
                                         </select>
                                         <a class="item-popup" onclick="opencustomer();"  title='<spring:message code="customer"/>' />
+                                    </td>
+                                </tr>
+								<tr>
+                                    <td><div align="right"><spring:message code="product"/> :</div></td>
+                                    <td>
+                                        <select id="product" name="product" class="combobox-ext">
+                                        </select>
+                                        <a class="item-popup" onclick="openProduct();"  title='<spring:message code="product"/>' />
                                     </td>
                                 </tr>
                                 <tr>
@@ -135,5 +153,33 @@
 		}
 		
 		openpopup("<c:url value='/page/popupcustomerview.htm?target=customer&organization='/>"+org.value);
+	}
+
+	function openProduct()
+	{
+		var salesType = document.getElementById('salesInternalType');
+		if(salesType.value == '')
+		{
+			alert('<spring:message code="notif.select1"/> <spring:message code="salesorder.type"/> <spring:message code="notif.select2"/> !!!');
+			return;
+		}
+		
+		var exclCat = "";
+		var cat = "";
+	  
+	  	if(salesType.value == 'YARN')
+	  		exclCat = "WASTE";
+	  	else
+	  		cat = "WASTE";
+		
+		const baseUrl = '<c:url value="/page/popupproductview.htm"/>';
+		const params = {
+			target: 'product',
+			excludeCategoryType: exclCat,
+			categoryName: cat,
+			saleable: true,
+			status: true
+		};
+		openpopup(buildUrl(baseUrl, params));
 	}
 </script>
