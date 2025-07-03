@@ -31,6 +31,7 @@ public class PurchaseReportFilterCriteria extends AbstractReportFilterCriteria
 	private String sortBy;
 	private String process;
 	private String documentType;
+	private String status;
 
 	private Date dateFrom;
 	private Date dateTo;

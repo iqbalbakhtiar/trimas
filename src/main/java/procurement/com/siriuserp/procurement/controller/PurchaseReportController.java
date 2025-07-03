@@ -39,7 +39,7 @@ public class PurchaseReportController extends ControllerBase
 	}
 
 	@RequestMapping("/purchasereportpre.htm")
-	public ModelAndView pre() throws ServiceException
+	public ModelAndView pre() throws Exception
 	{
 		return new ModelAndView("/report/purchase/purchaseReportAdd", service.pre());
 	}
@@ -48,5 +48,29 @@ public class PurchaseReportController extends ControllerBase
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
 		return new ModelAndView("/report/purchase/purchaseReportList", service.view(criteriaFactory.createReport(request, PurchaseReportFilterCriteria.class)));
+	}
+
+	@RequestMapping("/purchasetaxreportpre.htm")
+	public ModelAndView preTax() throws ServiceException
+	{
+		return new ModelAndView("/report/purchase/purchaseTaxReportAdd", service.pre());
+	}
+
+	@RequestMapping("/purchasetaxreportview.htm")
+	public ModelAndView viewTax(HttpServletRequest request) throws Exception
+	{
+		return new ModelAndView("/report/purchase/purchaseTaxReportList", service.viewTax(criteriaFactory.createReport(request, PurchaseReportFilterCriteria.class)));
+	}
+
+	@RequestMapping("/purchaseonprogressreportpre.htm")
+	public ModelAndView preProgress() throws Exception
+	{
+		return new ModelAndView("/report/purchase/purchaseOnProgressReportAdd", service.pre());
+	}
+
+	@RequestMapping("/purchaseonprogressreportview.htm")
+	public ModelAndView viewProgress(HttpServletRequest request) throws Exception
+	{
+		return new ModelAndView("/report/purchase/purchaseOnProgressReportList", service.viewOnProgress(criteriaFactory.createReport(request, PurchaseReportFilterCriteria.class)));
 	}
 }

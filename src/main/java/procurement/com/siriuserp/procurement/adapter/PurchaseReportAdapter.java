@@ -8,16 +8,24 @@ import com.siriuserp.sdk.adapter.AbstractUIAdapter;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class PurchaseReportAdapter extends AbstractUIAdapter
 {
 	private static final long serialVersionUID = 6487977149021666750L;
 
+	private BigDecimal standardBale = BigDecimal.valueOf(181.44);
 	private PurchaseOrderItem purchaseOrderItem;
+
+	public PurchaseReportAdapter(PurchaseOrderItem purchaseOrderItem)
+	{
+		this.purchaseOrderItem = purchaseOrderItem;
+	}
 
 	public BigDecimal getPrice()
 	{
@@ -42,5 +50,19 @@ public class PurchaseReportAdapter extends AbstractUIAdapter
 	public BigDecimal getTotal()
 	{
 		return getNettPrice().add(getTaxAmount());
+	}
+
+	public BigDecimal getReceipted()
+	{
+		BigDecimal qty = BigDecimal.ZERO;
+
+		if (!getPurchaseOrderItem().getSerials().isEmpty())
+		{
+			for (PurchaseOrderItem serial : getPurchaseOrderItem().getSerials())
+				qty = qty.add(serial.getTransactionItem().getReceipted());
+		} else if (getPurchaseOrderItem().getTransactionItem() != null)
+			qty = qty.add(getPurchaseOrderItem().getTransactionItem().getReceipted());
+
+		return qty;
 	}
 }
