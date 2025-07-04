@@ -20,6 +20,7 @@ import javolution.util.FastList;
  * www.siriuserp.com
  * Version 1.5
  */
+
 @SuppressWarnings("unchecked")
 public class InventoryLedgerSummaryReportQuery extends AbstractStandardReportQuery
 {
@@ -27,9 +28,7 @@ public class InventoryLedgerSummaryReportQuery extends AbstractStandardReportQue
 	public Object execute()
 	{
 		FastList<InventoryLedgerAdapter> list = new FastList<InventoryLedgerAdapter>();
-
 		InventoryLedgerFilterCriteria criteria = (InventoryLedgerFilterCriteria) getFilterCriteria();
-
 		InventoryLedgerAdapter adapter = null;
 
 		for (InventoryLedgerAdapter detail : getAdapters(criteria))
@@ -82,7 +81,13 @@ public class InventoryLedgerSummaryReportQuery extends AbstractStandardReportQue
 		if (SiriusValidator.validateParam(criteria.getLotCode()))
 			builder.append("AND balance.lotCode =:lotCode ");
 
-		builder.append("GROUP BY balance.facilityId, balance.containerId, balance.lotCode, balance.productId ");
+		builder.append("GROUP BY balance.facilityId, balance.containerId, ");
+
+		if (criteria.getShowLot() != null && criteria.getShowLot() == true)
+			builder.append("balance.lotCode, balance.productId ");
+		else
+			builder.append("balance.productId ");
+
 		builder.append("ORDER BY balance.containerName ASC, balance.productName ASC, balance.lotCode ASC, balance.productCategoryName ASC");
 
 		Query query = getSession().createQuery(builder.toString());
