@@ -67,7 +67,7 @@
 						            </td>
 								</tr>
 								<tr>
-									<td align="right"><spring:message code="salesorder.type"/> :</td>
+									<td align="right"><spring:message code="sirius.document.type"/> :</td>
 									<td>
 										<select id="documentType" name="documentType" class="combobox-min">
 						                    <option value=""></option>
