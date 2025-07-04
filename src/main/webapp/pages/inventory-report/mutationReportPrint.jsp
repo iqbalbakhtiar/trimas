@@ -23,13 +23,15 @@
 
 <table cellpadding="3" cellspacing="0" width="100%" style="border-spacing:0;">
     <colgroup>
-        <col width="12%"/>  <%-- Code --%>
-        <col width="32%"/>  <%-- Product Name --%>
-        <col width="11%"/>   <%-- In Qty --%>
-        <col width="11%"/>   <%-- In Price --%>
-        <col width="11%"/>   <%-- Out Qty --%>
-        <col width="11%"/>   <%-- Out Price --%>
-        <col width="12%"/>  <%-- Note --%>
+        <col width="8%"/>  <%-- Code --%>
+        <col width="15%"/>  <%-- Product Name --%>
+        <col width="5%"/>   <%-- In Qty --%>
+        <col width="8%"/>   <%-- In Price --%>
+        <col width="10%"/>   <%-- In Total --%>
+        <col width="5%"/>   <%-- Out Qty --%>
+        <col width="8%"/>   <%-- Out Price --%>
+        <col width="10%"/>   <%-- Out Total --%>
+        <col width="20%"/>  <%-- Note --%>
     </colgroup>
 
     <thead>
@@ -54,7 +56,7 @@
             padding: 4px;">
             <spring:message code="product.name"/>
         </th>
-        <th colspan="2" align="center"
+        <th colspan="3" align="center"
             style="
             border-top:    1px solid #000;
             border-right:  1px solid #000;
@@ -62,7 +64,7 @@
             padding: 4px;">
             <spring:message code="sirius.in"/>
         </th>
-        <th colspan="2" align="center"
+        <th colspan="3" align="center"
             style="
             border-top:    1px solid #000;
             border-right:  1px solid #000;
@@ -100,6 +102,13 @@
             border-right:  1px solid #000;
             border-bottom: 1px solid #000;
             padding: 4px;">
+            <spring:message code="sirius.total"/>
+        </th>
+        <th align="center"
+            style="
+            border-right:  1px solid #000;
+            border-bottom: 1px solid #000;
+            padding: 4px;">
             <spring:message code="sirius.qty"/>
         </th>
         <th align="center"
@@ -108,6 +117,13 @@
             border-bottom: 1px solid #000;
             padding: 4px;">
             <spring:message code="sirius.price"/>
+        </th>
+        <th align="center"
+            style="
+            border-right:  1px solid #000;
+            border-bottom: 1px solid #000;
+            padding: 4px;">
+            <spring:message code="sirius.total"/>
         </th>
     </tr>
     </thead>
@@ -144,6 +160,12 @@
               border-right:  1px solid #000;
               border-bottom: 1px solid #000;
               padding: 4px;">
+                <fmt:formatNumber value="${report.in > 0 ? report.cogs * report.in : 0.00}" pattern=",##0.00"/>
+            </td>
+            <td align="right" style="
+              border-right:  1px solid #000;
+              border-bottom: 1px solid #000;
+              padding: 4px;">
                 <fmt:formatNumber value="${report.out}" pattern=",##0.00"/>
             </td>
             <td align="right" style="
@@ -151,6 +173,12 @@
               border-bottom: 1px solid #000;
               padding: 4px;">
                 <fmt:formatNumber value="${report.out > 0 ? report.cogs : 0.00}" pattern=",##0.00"/>
+            </td>
+            <td align="right" style="
+              border-right:  1px solid #000;
+              border-bottom: 1px solid #000;
+              padding: 4px;">
+                <fmt:formatNumber value="${report.out > 0 ? report.cogs * report.out : 0.00}" pattern=",##0.00"/>
             </td>
             <td style="
               border-right:  1px solid #000;

@@ -37,10 +37,11 @@ public class MutationReportQuery extends AbstractStandardReportQuery
 		builder.append("SUM(balance.cogs), ");
 		builder.append("balance.productCode, ");
 		builder.append("balance.productName) ");
-		builder.append("FROM DWInventoryItemBalanceDetail balance ");
-		builder.append("WHERE balance.date >= :start ");
+		builder.append("FROM DWInventoryItemBalanceDetail balance, ProductCategory cat ");
+		builder.append("WHERE cat.id = balance.productCategoryId ");
+		builder.append("AND balance.date >= :start ");
 		builder.append("AND balance.date <= :end ");
-		builder.append("AND (balance.productCategoryId = 1 OR UPPER(balance.productCategoryName) = 'SPAREPART') ");
+		builder.append("AND cat.categoryType = 'SPAREPART' ");
 
 		if (SiriusValidator.validateLongParam(criteria.getOrganization()))
 			builder.append("AND balance.organizationId =:org ");
@@ -48,7 +49,8 @@ public class MutationReportQuery extends AbstractStandardReportQuery
 		if (SiriusValidator.validateLongParam(criteria.getContainer()))
 			builder.append("AND balance.containerId =:containerId ");
 
-		builder.append("GROUP BY balance.productId, balance.productCode, balance.productName");
+		builder.append("GROUP BY balance.productId, balance.cogs ");
+		builder.append("ORDER BY balance.productName ASC");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);
