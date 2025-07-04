@@ -93,8 +93,14 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td nowrap="nowrap" align="right"><spring:message code="product.lot"/>&nbsp;:</td>
-                                    <td><input id="lotCode" name="lotCode" size="5"/></td>
+                                    <td nowrap="nowrap" align="right"><spring:message code="product.lot.view"/>&nbsp;:</td>
+                                    <td>
+                                    	<select id="showLot" name="showLot" class="combobox-min3">
+                                        	<option value="true" selected="true"><spring:message code="sirius.yes"/></option>
+                                        	<option value="no"><spring:message code="sirius.no"/></option>
+                                        </select>
+                                    	<input id="lotCode" name="lotCode" size="6"/>
+                                    </td>
                                 </tr>
                                 <tr>
                                 	<td nowrap="nowrap" align="right"><spring:message code="sirius.datefrom2"/>&nbsp;:</td>

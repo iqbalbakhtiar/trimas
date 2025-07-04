@@ -42,7 +42,11 @@ public class InventoryLedgerDetailQuery extends AbstractStandardReportQuery
 			BigDecimal out = BigDecimal.ZERO;
 			BigDecimal sum = adapter.getIn().subtract(adapter.getOut());
 
-			for (InventoryLedgerAdapter detail : getTransactionsLong(adapter, criteria))
+			//Reset Lot if showLot = false and lotCode is empty
+			if (criteria.getShowLot() == false && !SiriusValidator.validateParam(criteria.getLotCode()))
+				adapter.setLotCode(null);
+
+			for (InventoryLedgerAdapter detail : getTransactionsLog(adapter, criteria))
 				if (detail.getIn().add(detail.getOut()).compareTo(BigDecimal.ZERO) != 0)
 				{
 					sum = sum.add(detail.getIn().subtract(detail.getOut()));
@@ -144,7 +148,12 @@ public class InventoryLedgerDetailQuery extends AbstractStandardReportQuery
 		if (SiriusValidator.validateParam(criteria.getLotCode()))
 			builder.append("AND balance.lotCode =:lotCode ");
 
-		builder.append("GROUP BY balance.containerId, balance.lotCode, balance.productId");
+		builder.append("GROUP BY balance.containerId, ");
+
+		if (criteria.getShowLot() != null && criteria.getShowLot() == true)
+			builder.append("balance.lotCode, balance.productId");
+		else
+			builder.append("balance.productId");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);
@@ -173,7 +182,7 @@ public class InventoryLedgerDetailQuery extends AbstractStandardReportQuery
 		return adapters;
 	}
 
-	private FastList<InventoryLedgerAdapter> getTransactionsLong(InventoryLedgerAdapter adapter, InventoryLedgerFilterCriteria criteria)
+	private FastList<InventoryLedgerAdapter> getTransactionsLog(InventoryLedgerAdapter adapter, InventoryLedgerFilterCriteria criteria)
 	{
 		FastList<InventoryLedgerAdapter> list = new FastList<InventoryLedgerAdapter>();
 		StringBuilder builder = new StringBuilder();

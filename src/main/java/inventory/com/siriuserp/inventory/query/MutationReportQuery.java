@@ -31,7 +31,7 @@ public class MutationReportQuery extends AbstractStandardReportQuery
 		FastList<InventoryLedgerAdapter> list = new FastList<>();
 
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT new com.siriuserp.inventory.adapter.InventoryLedgerAdapter(");
+		builder.append("SELECT NEW com.siriuserp.inventory.adapter.InventoryLedgerAdapter(");
 		builder.append("SUM(balance.in), ");
 		builder.append("SUM(balance.out), ");
 		builder.append("SUM(balance.cogs), ");

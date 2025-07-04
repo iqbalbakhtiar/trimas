@@ -48,6 +48,7 @@ public class InventoryLedgerFilterCriteria extends AbstractReportFilterCriteria
 	private boolean transfer = false;
 	private boolean onhand = false;
 
+	private Boolean showLot = true;
 	private Boolean showBale = false;
 	private Boolean status;
 

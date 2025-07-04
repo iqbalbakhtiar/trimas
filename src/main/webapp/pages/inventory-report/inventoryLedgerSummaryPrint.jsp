@@ -52,10 +52,15 @@
 <tbody>
 <c:forEach items='${repo.adapters}' var='adapter'>
     <c:if test='${adapter.quantity > 0 || adapter.in > 0 || adapter.out > 0 || adapter.sum > 0}'>
+    	<c:set var="dateFrom"><fmt:formatDate value='${criteria.dateFrom}' pattern='dd-MM-yyyy'/></c:set>
+    	<c:set var="dateTo"><fmt:formatDate value='${criteria.dateTo}' pattern='dd-MM-yyyy'/></c:set>
         <tr>
         	<td style="border-left:solid 1px #000000;border-bottom:solid 1px #000000;border-right:solid 1px #000000;"><c:out value='${adapter.containerName}'/></td>
             <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;">
-            	<a href="<c:url value='/page/inventoryledgerdetailview.htm?organization=${organization.id}&facility=${criteria.facility}&showBale=${criteria.showBale}&containerId=${adapter.containerId}&product=${adapter.productId}&lotCode=${adapter.lotCode}&dateFrom='/><fmt:formatDate value='${criteria.dateFrom}' pattern='dd-MM-yyyy'/>"><c:out value='${adapter.productName}'/> <c:if test="${not empty adapter.lotCode}"> LOT <c:out value='${adapter.lotCode}'/></c:if></a>
+            	<a href="<c:url value='/page/inventoryledgerdetailview.htm?organization=${organization.id}&facility=${criteria.facility}&showLot=${criteria.showLot}&showBale=${criteria.showBale}&containerId=${adapter.containerId}&product=${adapter.productId}&lotCode=${criteria.showLot ? adapter.lotCode : ""}&dateFrom=${dateFrom}&dateTo=${dateTo}'/>">
+            		<c:out value='${adapter.productName}'/>
+           			<c:if test="${not empty adapter.lotCode and criteria.showLot}"> LOT <c:out value='${adapter.lotCode}'/></c:if>
+            	</a>
             </td>
             <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="center"><c:out value='${adapter.categoryName}'/></td>
             <td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="center"><c:out value='${adapter.uom}'/></td>
