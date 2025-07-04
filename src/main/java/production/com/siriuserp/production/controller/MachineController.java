@@ -25,6 +25,7 @@ import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
+import com.siriuserp.sdk.springmvc.ModelReferenceView;
 import com.siriuserp.sdk.springmvc.ResponseStatus;
 import com.siriuserp.sdk.springmvc.view.ViewHelper;
 
@@ -108,5 +109,11 @@ public class MachineController extends ControllerBase
 	{
 		service.delete(service.load(id));
 		return ViewHelper.redirectTo("machineview.htm");
+	}
+	
+	@RequestMapping("/popupmachineview.htm")
+	public ModelAndView popup(HttpServletRequest request) throws ServiceException
+	{
+		return new ModelReferenceView("/production-popup/machinePopup", request.getParameter("ref"), service.view(criteriaFactory.createPopup(request, MasterDataFilterCriteria.class), MachineGridViewQuery.class));
 	}
 }

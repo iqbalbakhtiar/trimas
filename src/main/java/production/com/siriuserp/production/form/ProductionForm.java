@@ -5,9 +5,13 @@ import java.util.List;
 import com.siriuserp.inventory.dm.UnitOfMeasure;
 import com.siriuserp.production.dm.CostCenterGroup;
 import com.siriuserp.production.dm.CostCenterType;
+import com.siriuserp.production.dm.Machine;
 import com.siriuserp.production.dm.ProductionCostCenterGroup;
 import com.siriuserp.production.dm.ProductionOrder;
 import com.siriuserp.production.dm.ProductionOrderDetail;
+import com.siriuserp.production.dm.ProductionOrderDetailMaterialRequest;
+import com.siriuserp.sdk.dm.Container;
+import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Form;
 
 import javolution.util.FastList;
@@ -30,6 +34,12 @@ public class ProductionForm extends Form
 	
 	private ProductionOrder productionOrder;
 	private ProductionOrderDetail productionOrderDetail;
+	private ProductionOrderDetailMaterialRequest productionOrderDetailMaterialRequest;
+	
+	private Machine machine;
+	private Facility source;
+	private Facility destination;
+	private Container container;
 	
 	private String lotNumber;
 	

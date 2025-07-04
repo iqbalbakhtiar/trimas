@@ -85,7 +85,6 @@ public class ProductionOrderService extends Service
 				productionItem.setCogsWeight(item.getWeight());
 				productionItem.setMaterialType(item.getMaterialType());
 				productionItem.setProductionOrder(productionOrder);
-				productionItem.setReferenceCode(productionOrder.getCode());
 				
 				productionOrder.getItems().add(productionItem);
 			}

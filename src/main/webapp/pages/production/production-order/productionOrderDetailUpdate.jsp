@@ -4,6 +4,9 @@
 	<c:if test="${access.edit}">
 		<a class="item-button-save"><span><spring:message code="sirius.save"/></span></a>
 	</c:if>
+	<c:if test="${access.add}">
+		<a class="item-button-new-row" href="<c:url value='/page/productionorderdetailmaterialrequestpreadd.htm?id=${detail_edit.id}'/>"><span><spring:message code="materialrequest.new"/></span></a>
+	</c:if>
 </div>
 <div class="main-box">
 	<sesform:form id="editForm" name="editForm" method="post" modelAttribute="detail_edit" enctype="multipart/form-data">
@@ -79,10 +82,28 @@
                          <tr>
                         	<td>
                             	<fieldset>
-										<legend><strong><spring:message code="sirius.reference"/></strong></legend>
-										<table width="100%" border="0" cellpadding="0">
-											<tr></tr>
-										</table>
+									<legend><strong><spring:message code="sirius.reference"/></strong></legend>
+									<table width="100%" style="border:none">
+										<tr>
+										    <th align="right" class="highlight"><spring:message code="materialrequest"/></th>
+										</tr>
+										<c:forEach items="${detail_edit.productionOrderDetailMaterialRequests}" var="materialRequest" varStatus="status">
+											<tr>
+											    <td align="right"><a href="<c:url value='/page/productionorderdetailmaterialrequestpreedit.htm?id=${materialRequest.id}'/>"><c:out value="${materialRequest.code}"/></a></td>
+											</tr>
+										</c:forEach>
+										<tr><td colspan="2">&nbsp;</td></tr>
+										<%-- <tr>
+										    <th width="50%" align="right" class="highlight"><spring:message code="goodsissue.refdoc"/></th>
+										</tr>
+										<c:forEach items="${goodsIssue_edit.reference}" var="message" varStatus="status">
+											<tr>
+											    <td align="right">
+											            ${message}
+											    </td>
+											</tr>
+										</c:forEach> --%>
+									</table>
 								</fieldset>
                              </td>
                          </tr>
@@ -140,7 +161,7 @@
 								<c:if test="${item.materialType eq 'INPUT'}">
 									<tr>
 										<td>&nbsp;</td>
-										<td><c:out value="${item.materialSource}"/></td>
+										<td><c:out value="${item.materialSource.normalizedName}"/></td>
 										<td><c:out value="${item.product.code}"/></td>
 										<td><c:out value="${item.product.name}"/></td>
 										<td><fmt:formatNumber value="${item.quantity}" pattern=",##0.00"/></td>

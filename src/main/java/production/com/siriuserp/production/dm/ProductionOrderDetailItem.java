@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -17,6 +18,7 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
 import com.siriuserp.inventory.dm.Product;
+import com.siriuserp.inventory.dm.WarehouseReferenceItem;
 import com.siriuserp.sdk.dm.Model;
 
 import lombok.Getter;
@@ -50,17 +52,17 @@ public class ProductionOrderDetailItem extends Model
 	@Column(name = "material_source")
 	private MaterialSource materialSource;
 	
-//	@OneToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "fk_reference_item")
-//	@LazyToOne(LazyToOneOption.PROXY)
-//	@Fetch(FetchMode.SELECT)
-//	private ProductionReferenceItem referenceItem;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_product")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private Product product;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_reference_item")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	protected WarehouseReferenceItem referenceItem;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_production_order_detail")
