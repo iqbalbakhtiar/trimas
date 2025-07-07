@@ -2,6 +2,7 @@ package com.siriuserp.procurement.criteria;
 
 import java.util.Date;
 
+import com.siriuserp.sdk.dm.Month;
 import com.siriuserp.sdk.filter.AbstractReportFilterCriteria;
 
 import lombok.Getter;
@@ -35,4 +36,7 @@ public class PurchaseReportFilterCriteria extends AbstractReportFilterCriteria
 
 	private Date dateFrom;
 	private Date dateTo;
+
+	private Month month;
+	private Integer year;
 }

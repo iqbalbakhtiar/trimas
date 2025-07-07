@@ -24,24 +24,24 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @SessionAttributes(value = "criteria", types = WasteReportFilterCriteria.class)
 public class WasteReportController extends ControllerBase {
-    @Autowired
-    private WasteReportService service;
+	@Autowired
+	private WasteReportService service;
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder, WebRequest request)
-    {
-        initBinderFactory.initBinder(binder, Product.class, Month.class);
-    }
+	@InitBinder
+	public void initBinder(WebDataBinder binder, WebRequest request)
+	{
+		initBinderFactory.initBinder(binder, Product.class, Month.class);
+	}
 
-    @RequestMapping("/wastereportpre.htm")
-    public ModelAndView pre() throws ServiceException
-    {
-        return new ModelAndView("inventory-report/wasteReportAdd", service.pre());
-    }
+	@RequestMapping("/wastereportpre.htm")
+	public ModelAndView pre() throws ServiceException
+	{
+		return new ModelAndView("inventory-report/wasteReportAdd", service.pre());
+	}
 
-    @RequestMapping("/wastereportview.htm")
-    public ModelAndView view(HttpServletRequest request) throws ServiceException
-    {
-        return new ModelAndView("inventory-report/wasteReportList", service.view(service.createMonth((WasteReportFilterCriteria) criteriaFactory.createReport(request, WasteReportFilterCriteria.class))));
-    }
+	@RequestMapping("/wastereportview.htm")
+	public ModelAndView view(HttpServletRequest request) throws ServiceException
+	{
+		return new ModelAndView("inventory-report/wasteReportList", service.view(service.createMonth((WasteReportFilterCriteria) criteriaFactory.createReport(request, WasteReportFilterCriteria.class))));
+	}
 }
