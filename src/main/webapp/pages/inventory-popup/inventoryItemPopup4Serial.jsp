@@ -47,8 +47,8 @@
 					if (_client.tagName === 'SELECT') {
 						_client.options.length = 0;
 						var _opt = document.createElement('option');
-						_opt.value = inventory.product.productId;
-						_opt.text = inventory.product.productName;
+						_opt.value = inventory.product.id;
+						_opt.text = inventory.product.name;
 						_client.appendChild(_opt);
 					}
 				}
@@ -82,11 +82,39 @@
 				
 				var _productId = self.opener.document.getElementById('productId[${param.index}]');
 				if(_productId)
-					_productId.value = inventory.productId;
+					_productId.value = inventory.product.id;
 				
 				var _productCode = self.opener.document.getElementById('productCode[${param.index}]');
 				if(_productCode)
-					_productCode.value = inventory.productCode;
+					_productCode.value = inventory.product.code;
+				
+				let requestData = {
+		            productId: inventory.product.id,
+		            containerId: inventory.container.containerId,
+		            serial:inventory.serial
+		        };
+				
+				var _price = self.opener.document.getElementById('price[${param.index}]');
+				if(_price) {
+					$.ajax({
+						url:"<c:url value='/page/stockadjustmentbyproductjson.htm'/>",
+						data:requestData,
+						method : 'GET',
+						dataType : 'json',
+						success : function(json) {
+							if(json)
+							{
+								if(json.status == 'OK'){
+									if(json.product != null)
+										_price.value = parseFloat(json.product.price).numberFormat('#,##0.00');
+									else
+										_price.value = parseFloat(0).numberFormat('#,##0.00');
+								}
+							}
+						}
+					});
+				}
+				
 				
 				if(self.opener.calculateTotals)
 					self.opener.calculateTotals();

@@ -92,10 +92,10 @@
 		        }
 		    });
 		    
-		    let allBarcodes = document.querySelectorAll('input.barcode-input');
+		    let allBarcodes = document.querySelectorAll('select.combobox.barcodes');
 		    for (let i = 0; i < allBarcodes.length; i++) {
 		        if (!allBarcodes[i].value.trim()) {
-		            alert("Barcode tidak boleh kosong di baris ke-" + (i + 1));
+		            alert("Barcode belum dipilih di baris ke-" + (i + 1));
 		            allBarcodes[i].focus();
 		            return false;
 		        }
@@ -188,7 +188,7 @@
 		const uom = List.get('<input class="input-disabled" disabled="true" size="5"/>','uom['+index+']');
 		const onHand = List.get('<input class="number-disabled" disabled="true" size="12"/>','onhand['+index+']', '0.00');
 		const bale = List.get('<input class="number-disabled" disabled="true" size="12"/>','bale['+index+']', '0.00');
-		const quantity = List.get('<input class="input-number negative" onkeyup='+"checkQuantity(this);"+' size="12"/>','quantity['+index+']', '0');
+		const quantity = List.get('<input class="input-number negative" onchange='+"checkQuantity(this);"+' size="12"/>','quantity['+index+']', '0');
 		const price = List.get('<input class="input-number" size="12" colspan="2"/>','price['+index+']', '0.00');
 		const serial = List.get('<input disabled="true" size="12" type="hidden"/>','serialCheck['+index+']');
 		/* const currency = List.get('<select hidden="hidden"/>','currency['+index+']');
@@ -276,35 +276,6 @@
 		
 		$('#onhand\\['+index+'\\]').val(0.00);
 		
-		let requestData = {
-            productId: prodId,
-            containerId: conId,
-            serial:serial
-        };
-		
-		if(prodId) {
-			$.ajax({
-				url:"<c:url value='/page/stockadjustmentbyproductjson.htm'/>",
-				data:requestData,
-				method : 'GET',
-				dataType : 'json',
-				success : function(json) {
-					if(json)
-					{
-						if(json.status == 'OK'){
-							let amount = document.getElementsByName('items['+index+'].price')[0];
-							console.log(index);
-							if(amount && json.product != null)
-								amount.value = parseFloat(json.product.price).numberFormat('#,##0.00');
-							else
-								amount.value = parseFloat(0).numberFormat('#,##0.00');
-						}
-					}
-				}
-			});
-		}
-		
-		
 		if(serialCheck.toLowerCase() === "true"){
 			$('#iBody' + index + ' tr.barcodeGroup'+0).remove();
 			
@@ -367,8 +338,9 @@
 		if(serialCheck.toLowerCase() === "true"){
 			$('#iBody' + idxRef + ' tr.barcodeGroup'+idxRef).remove();
 			
-			for (let i = 0; i < element.value; i++) { 
-				addLine(idxRef, $index);
+			let qty = parseInt(element.value);
+			for (let i = 0; i < qty; i++) {
+				addLine(idxRef, index);
 				$('#iBody' + idxRef + ' tr:last').addClass('barcode');
 			}
 			

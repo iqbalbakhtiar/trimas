@@ -167,4 +167,9 @@ public class StockAdjustmentController extends ControllerBase
 
 		return response;
 	}
+	
+	@ModelAttribute("adjustment_add")
+	public InventoryForm createAdjustmentAdd() {
+		return new InventoryForm();
+	}
 }
