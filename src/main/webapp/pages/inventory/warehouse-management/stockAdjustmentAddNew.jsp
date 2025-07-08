@@ -382,7 +382,7 @@
 	                const $qty = List.get('<input type="text" class="input-number input-disabled" readonly="true" size="12"/>', 'onHand[' + index + ']', '0.00');
 	                const $uomField = List.get('<input type="text" class="input-disabled" disabled="true" size="12"/>', 'uom[' + index + ']', $uom);
 	        		const lotCode = List.get('<input type="text" class="input-disabled" readonly="true" size="5"/>','lotCode[' + index + ']');
-	                const quantity = List.get('<input class="input-number negative totals' + $idxRef + '" size="12" onchange="calculateAdjust(\'' + index + '\', \'' + $idxRef + '\');"/>', 'quantity[' + index + ']', '1');
+	                const quantity = List.get('<input class="input-decimal negative totals' + $idxRef + '" size="12" onchange="calculateAdjust(\'' + index + '\', \'' + $idxRef + '\');"/>', 'quantity[' + index + ']', '1');
 	                const cogs = List.get('<input class="input-number negative" size="12"/>', 'price[' + index + ']', '0.00');
 
 	                $tr.append(List.col(container));
