@@ -1,9 +1,24 @@
 package com.siriuserp.accountpayable.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.siriuserp.accountpayable.criteria.InvoiceVerificationFilterCriteria;
 import com.siriuserp.accountpayable.dm.InvoiceVerification;
 import com.siriuserp.accountpayable.dm.PaymentMethodType;
-import com.siriuserp.accountpayable.form.PaymentForm;
+import com.siriuserp.accountpayable.form.PayablesForm;
 import com.siriuserp.accountpayable.query.ManualInvoiceVerificationGridViewQuery;
 import com.siriuserp.accountpayable.service.ManualInvoiceVerificationService;
 import com.siriuserp.inventory.dm.GoodsReceiptItem;
@@ -18,20 +33,6 @@ import com.siriuserp.sdk.dm.Tax;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.ResponseStatus;
 import com.siriuserp.sdk.utility.FormHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Rama Almer Felix
@@ -40,7 +41,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 @Controller
-@SessionAttributes(value = "verification_form", types = PaymentForm.class)
+@SessionAttributes(value = "verification_form", types = PayablesForm.class)
 @DefaultRedirect(url = "manualinvoiceverificationview.htm")
 public class ManualInvoiceVerificationController extends ControllerBase
 {
@@ -73,7 +74,7 @@ public class ManualInvoiceVerificationController extends ControllerBase
 	}
 
 	@RequestMapping("/manualinvoiceverificationadd.htm")
-	public ModelAndView add(@ModelAttribute("verification_form") PaymentForm form, BindingResult result, SessionStatus status) throws Exception
+	public ModelAndView add(@ModelAttribute("verification_form") PayablesForm form, BindingResult result, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
@@ -100,7 +101,7 @@ public class ManualInvoiceVerificationController extends ControllerBase
 	}
 
 	@RequestMapping("/manualinvoiceverificationedit.htm")
-	public ModelAndView edit(@ModelAttribute("verification_form") PaymentForm form, SessionStatus status) throws Exception
+	public ModelAndView edit(@ModelAttribute("verification_form") PayablesForm form, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 

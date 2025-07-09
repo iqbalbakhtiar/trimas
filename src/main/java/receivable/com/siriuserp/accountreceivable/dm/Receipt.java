@@ -8,6 +8,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -15,8 +17,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
@@ -40,10 +40,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "receipt")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Receipt extends Model
 {
-
 	private static final long serialVersionUID = 7666523877294333288L;
 
 	@Column(name = "code")

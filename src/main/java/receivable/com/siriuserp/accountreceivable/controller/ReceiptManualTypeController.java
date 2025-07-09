@@ -55,13 +55,13 @@ public class ReceiptManualTypeController extends ControllerBase
 	@RequestMapping("/receiptmanualtypeview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/ar/receiptManualTypeList", service.view(criteriaFactory.create(request, ReceiptFilterCriteria.class), ReceiptManualTypeViewQuery.class));
+		return new ModelAndView("/receivable/receiptManualTypeList", service.view(criteriaFactory.create(request, ReceiptFilterCriteria.class), ReceiptManualTypeViewQuery.class));
 	}
 
 	@RequestMapping("/receiptmanualtypepreadd.htm")
 	public ModelAndView preadd1() throws Exception
 	{
-		return new ModelAndView("/ar/receiptManualTypeAdd", service.preadd());
+		return new ModelAndView("/receivable/receiptManualTypeAdd", service.preadd());
 	}
 
 	@RequestMapping("/receiptmanualtypeadd.htm")
@@ -88,7 +88,7 @@ public class ReceiptManualTypeController extends ControllerBase
 	@RequestMapping("/receiptmanualtypepreedit.htm")
 	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
 	{
-		return new ModelAndView("/ar/receiptManualTypeUpdate", service.preedit(id));
+		return new ModelAndView("/receivable/receiptManualTypeUpdate", service.preedit(id));
 	}
 
 	@RequestMapping("/receiptmanualtypeedit.htm")
@@ -122,6 +122,6 @@ public class ReceiptManualTypeController extends ControllerBase
 	@RequestMapping("/popupreceiptmanualtypeview.htm")
 	public ModelAndView viewItem(HttpServletRequest request) throws ServiceException
 	{
-		return new ModelAndView("/ar-popup/receiptManualTypePopup", service.view(criteriaFactory.create(request, ReceiptFilterCriteria.class), ReceiptManualTypeViewQuery.class));
+		return new ModelAndView("/receivable-popup/receiptManualTypePopup", service.view(criteriaFactory.create(request, ReceiptFilterCriteria.class), ReceiptManualTypeViewQuery.class));
 	}
 }

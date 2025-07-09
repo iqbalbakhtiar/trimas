@@ -23,9 +23,9 @@ import com.siriuserp.accounting.dm.BankAccount;
 import com.siriuserp.accountpayable.dm.PaymentMethodType;
 import com.siriuserp.accountreceivable.criteria.ReceiptFilterCriteria;
 import com.siriuserp.accountreceivable.dm.Billing;
+import com.siriuserp.accountreceivable.dm.ReceiptManual;
 import com.siriuserp.accountreceivable.dm.ReceiptManualType;
 import com.siriuserp.accountreceivable.dm.WriteOffType;
-import com.siriuserp.accountreceivable.form.ReceiptManual;
 import com.siriuserp.accountreceivable.form.ReceivablesForm;
 import com.siriuserp.accountreceivable.query.ReceiptManualViewQuery;
 import com.siriuserp.accountreceivable.service.ReceiptManualService;
@@ -75,13 +75,13 @@ public class ReceiptManualController extends ControllerBase
 	@RequestMapping("/receiptmanualview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/ar/receiptManualList", service.view(criteriaFactory.create(request, ReceiptFilterCriteria.class), ReceiptManualViewQuery.class));
+		return new ModelAndView("/receivable/receiptManualList", service.view(criteriaFactory.create(request, ReceiptFilterCriteria.class), ReceiptManualViewQuery.class));
 	}
 
 	@RequestMapping("/receiptmanualpreadd.htm")
 	public ModelAndView preadd() throws Exception
 	{
-		return new ModelAndView("/ar/receiptManualAdd", service.preadd());
+		return new ModelAndView("/receivable/receiptManualAdd", service.preadd());
 	}
 
 	@RequestMapping("/receiptmanualadd.htm")
@@ -108,7 +108,7 @@ public class ReceiptManualController extends ControllerBase
 	@RequestMapping("/receiptmanualpreedit.htm")
 	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
 	{
-		return new ModelAndView("/ar/receiptManualUpdate", service.preedit(id));
+		return new ModelAndView("/receivable/receiptManualUpdate", service.preedit(id));
 	}
 
 	@RequestMapping("/receiptmanualedit.htm")

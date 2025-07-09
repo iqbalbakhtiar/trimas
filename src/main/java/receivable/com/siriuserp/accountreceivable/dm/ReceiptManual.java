@@ -3,7 +3,7 @@
  * Created On : Dec 5, 2023
  * Email	  : iqbal@siriuserp.com
  */
-package com.siriuserp.accountreceivable.form;
+package com.siriuserp.accountreceivable.dm;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,9 +15,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
-
-import com.siriuserp.accountreceivable.dm.Receipt;
-import com.siriuserp.accountreceivable.dm.ReceiptManualType;
 
 import lombok.Getter;
 import lombok.Setter;

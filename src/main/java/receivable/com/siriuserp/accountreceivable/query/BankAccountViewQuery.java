@@ -8,7 +8,8 @@ import com.siriuserp.sdk.db.ExecutorType;
 import com.siriuserp.sdk.dm.AccountType;
 import com.siriuserp.sdk.utility.SiriusValidator;
 
-public class BankAccountViewQuery extends AbstractGridViewQuery {
+public class BankAccountViewQuery extends AbstractGridViewQuery
+{
 	@Override
 	public Query getQuery(ExecutorType executorType)
 	{
@@ -24,7 +25,7 @@ public class BankAccountViewQuery extends AbstractGridViewQuery {
 		builder.append("FROM BankAccount acc ");
 		builder.append("WHERE acc.code IS NOT NULL ");
 
-		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()))
+		if (SiriusValidator.validateLongParam(criteria.getOrganization()))
 			builder.append("AND acc.holder.id =:org ");
 
 		if (SiriusValidator.validateParam(criteria.getCode()))
@@ -37,9 +38,7 @@ public class BankAccountViewQuery extends AbstractGridViewQuery {
 			builder.append("AND acc.bankName LIKE :bankName ");
 
 		if (SiriusValidator.validateParam(criteria.getHolderName()))
-		{
 			builder.append("AND (acc.holder.fulltName LIKE :holderName ");
-		}
 
 		if (SiriusValidator.validateParam(criteria.getType()))
 			builder.append("AND acc.accountType =:accountType ");
@@ -50,7 +49,7 @@ public class BankAccountViewQuery extends AbstractGridViewQuery {
 		Query query = getSession().createQuery(builder.toString());
 		query.setReadOnly(true);
 
-		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()))
+		if (SiriusValidator.validateLongParam(criteria.getOrganization()))
 			query.setParameter("org", criteria.getOrganization());
 
 		if (SiriusValidator.validateParam(criteria.getCode()))

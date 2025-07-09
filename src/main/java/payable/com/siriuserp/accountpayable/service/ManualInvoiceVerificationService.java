@@ -1,10 +1,19 @@
 package com.siriuserp.accountpayable.service;
 
+import java.math.RoundingMode;
+import java.util.Map;
+
+import org.apache.commons.lang.WordUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.siriuserp.accountpayable.adapter.InvoiceVerificationAdapter;
 import com.siriuserp.accountpayable.dm.InvoiceVerification;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationItem;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationType;
-import com.siriuserp.accountpayable.form.PaymentForm;
+import com.siriuserp.accountpayable.form.PayablesForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.InjectParty;
@@ -29,15 +38,8 @@ import com.siriuserp.sdk.utility.EnglishNumberHelper;
 import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
-import javolution.util.FastMap;
-import org.apache.commons.lang.WordUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.math.RoundingMode;
-import java.util.Map;
+import javolution.util.FastMap;
 
 /**
  * @author Rama Almer Felix
@@ -77,14 +79,15 @@ public class ManualInvoiceVerificationService
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	@InjectParty(keyName = "verification_form")
-	public FastMap<String, Object> preadd() {
+	public FastMap<String, Object> preadd()
+	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("verification_form", new PaymentForm());
+		map.put("verification_form", new PayablesForm());
 		map.put("taxes", genericDao.loadAll(Tax.class));
 
 		return map;
 	}
-	
+
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> viewJson(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws ServiceException
 	{
@@ -97,15 +100,17 @@ public class ManualInvoiceVerificationService
 	@AuditTrails(className = InvoiceVerification.class, actionType = AuditTrailsActionType.CREATE)
 	public void add(InvoiceVerification invoiceVerification) throws Exception
 	{
-		PaymentForm form = (PaymentForm) invoiceVerification.getForm();
+		PayablesForm form = (PayablesForm) invoiceVerification.getForm();
 		invoiceVerification.setCode(GeneratorHelper.instance().generate(TableType.INVOICE_VERIFICATION, codeSequenceDao, invoiceVerification.getOrganization()));
 		invoiceVerification.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
 		invoiceVerification.getMoney().setAmount(form.getAmount());
 		invoiceVerification.setInvoiceType(InvoiceVerificationType.MANUAL);
 		invoiceVerification.setUnpaid(form.getAmount());
 
-		for (Item item : form.getItems()) {
-			if (item.getProduct() != null) {
+		for (Item item : form.getItems())
+		{
+			if (item.getProduct() != null)
+			{
 				InvoiceVerificationItem invoiceItem = new InvoiceVerificationItem();
 				invoiceItem.setProduct(item.getProduct());
 				invoiceItem.setQuantity(item.getQuantity());
@@ -120,26 +125,27 @@ public class ManualInvoiceVerificationService
 		// Set Due Date by Load active Credit Term from Supplier
 		PartyRelationship relationship = partyRelationshipDao.load(invoiceVerification.getSupplier().getId(), invoiceVerification.getOrganization().getId(), PartyRelationshipType.SUPPLIER_RELATIONSHIP);
 		CreditTerm creditTerm = creditTermDao.loadByRelationship(relationship.getId(), true, invoiceVerification.getDate());
-		if (creditTerm == null) {
+		if (creditTerm == null)
+		{
 			throw new ServiceException("Supplier doesn't have active Credit Term, please set it first on supplier page.");
 		}
 		invoiceVerification.setDueDate(DateHelper.plusDays(invoiceVerification.getDate(), creditTerm.getTerm()));
 
-//		throw new ServiceException("not implemented yet!");
+		//		throw new ServiceException("not implemented yet!");
 		genericDao.add(invoiceVerification);
 
-//		if (form.getGoodsReceipt() != null)
-//		{
-//			GoodsReceipt goodsReceipt = form.getGoodsReceipt();
-//			goodsReceipt.setVerificated(true);
-//			genericDao.update(goodsReceipt);
-//		}
+		//		if (form.getGoodsReceipt() != null)
+		//		{
+		//			GoodsReceipt goodsReceipt = form.getGoodsReceipt();
+		//			goodsReceipt.setVerificated(true);
+		//			genericDao.update(goodsReceipt);
+		//		}
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> preedit(Long id) throws Exception
 	{
-		PaymentForm form = FormHelper.bind(PaymentForm.class, genericDao.load(InvoiceVerification.class, id));
+		PayablesForm form = FormHelper.bind(PayablesForm.class, genericDao.load(InvoiceVerification.class, id));
 		InvoiceVerificationAdapter adapter = new InvoiceVerificationAdapter(form.getInvoiceVerification());
 
 		String said = EnglishNumberHelper.convert(adapter.getTotalAfterTax().setScale(2, RoundingMode.HALF_UP));

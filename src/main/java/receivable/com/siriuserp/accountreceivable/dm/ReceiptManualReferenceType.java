@@ -3,7 +3,7 @@
  * Created On : Dec 5, 2023
  * Email	  : iqbal@siriuserp.com
  */
-package com.siriuserp.accountreceivable.form;
+package com.siriuserp.accountreceivable.dm;
 
 import com.siriuserp.sdk.dm.SiriusEnum;
 

@@ -49,13 +49,13 @@ public class ReceiptController extends ControllerBase
 	@RequestMapping("/receiptview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/accounting/receiptList", service.view(criteriaFactory.create(request, ReceiptFilterCriteria.class), ReceiptViewQuery.class));
+		return new ModelAndView("/receivable/receiptList", service.view(criteriaFactory.create(request, ReceiptFilterCriteria.class), ReceiptViewQuery.class));
 	}
 
 	@RequestMapping("/receiptpreadd.htm")
 	public ModelAndView preadd(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/accounting/receiptAdd", service.preadd());
+		return new ModelAndView("/receivable/receiptAdd", service.preadd());
 	}
 
 	@RequestMapping("/receiptadd.htm")
@@ -82,7 +82,7 @@ public class ReceiptController extends ControllerBase
 	@RequestMapping("/receiptpreedit.htm")
 	public ModelAndView preedit(@RequestParam("id") Long id, @RequestParam(value = "redirecturi", required = false) String redirectUri) throws Exception
 	{
-		return new ModelAndView("/accounting/receiptUpdate", service.preedit(id, redirectUri));
+		return new ModelAndView("/receivable/receiptUpdate", service.preedit(id, redirectUri));
 	}
 
 	@RequestMapping("/receiptedit.htm")

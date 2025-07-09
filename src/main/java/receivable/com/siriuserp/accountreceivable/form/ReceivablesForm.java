@@ -7,6 +7,8 @@ import com.siriuserp.accountreceivable.dm.CreditMemo;
 import com.siriuserp.accountreceivable.dm.CreditMemoReferenceType;
 import com.siriuserp.accountreceivable.dm.Receipt;
 import com.siriuserp.accountreceivable.dm.ReceiptInformation;
+import com.siriuserp.accountreceivable.dm.ReceiptManual;
+import com.siriuserp.accountreceivable.dm.ReceiptManualReferenceType;
 import com.siriuserp.accountreceivable.dm.ReceiptManualType;
 import com.siriuserp.sdk.dm.Form;
 

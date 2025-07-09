@@ -8,7 +8,7 @@ package com.siriuserp.accountreceivable.query;
 import org.hibernate.Query;
 
 import com.siriuserp.accountreceivable.criteria.ReceiptFilterCriteria;
-import com.siriuserp.accountreceivable.form.ReceiptManualReferenceType;
+import com.siriuserp.accountreceivable.dm.ReceiptManualReferenceType;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
 import com.siriuserp.sdk.utility.SiriusValidator;

@@ -46,13 +46,13 @@ public class BillingController extends ControllerBase
 	@RequestMapping("/billingview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/accounting/billingList", service.view(criteriaFactory.create(request, BillingFilterCriteria.class), BillingViewQuery.class));
+		return new ModelAndView("/receivable/billingList", service.view(criteriaFactory.create(request, BillingFilterCriteria.class), BillingViewQuery.class));
 	}
 
 	@RequestMapping("/billingpreedit.htm")
 	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
 	{
-		return new ModelAndView("/accounting/billingUpdate", service.preedit(id));
+		return new ModelAndView("/receivable/billingUpdate", service.preedit(id));
 	}
 
 	@RequestMapping("/billingedit.htm")
@@ -85,7 +85,7 @@ public class BillingController extends ControllerBase
 	@RequestMapping("/billingprintoption.htm")
 	public ModelAndView option(@RequestParam("id") Long id) throws Exception
 	{
-		return new ModelAndView("/accounting/billingPrintOption", service.preedit(id));
+		return new ModelAndView("/receivable/billingPrintOption", service.preedit(id));
 	}
 
 	@RequestMapping("/billingprint.htm")
@@ -93,11 +93,11 @@ public class BillingController extends ControllerBase
 			throws Exception
 	{
 		if (invType.equals("1"))
-			return new ModelAndView("/accounting/billingPrint", service.preedit(id)).addObject("redirect", redirect).addObject("redirectId", redirectId);
+			return new ModelAndView("/receivable/billingPrint", service.preedit(id)).addObject("redirect", redirect).addObject("redirectId", redirectId);
 		if (invType.equals("2"))
-			return new ModelAndView("/accounting/billingPrint2", service.preedit(id)).addObject("redirect", redirect).addObject("redirectId", redirectId);
+			return new ModelAndView("/receivable/billingPrint2", service.preedit(id)).addObject("redirect", redirect).addObject("redirectId", redirectId);
 		if (invType.equals("3"))
-			return new ModelAndView("/accounting/billingPrint3", service.preedit(id)).addObject("redirect", redirect).addObject("redirectId", redirectId);
+			return new ModelAndView("/receivable/billingPrint3", service.preedit(id)).addObject("redirect", redirect).addObject("redirectId", redirectId);
 		else
 			return ViewHelper.redirectTo("billingview.htm");
 	}

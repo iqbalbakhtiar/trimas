@@ -124,4 +124,16 @@ public class PaymentController extends ControllerBase
 
 		return ViewHelper.redirectTo("paymentview.htm");
 	}
+
+	@RequestMapping("/paymentprint.htm")
+	public ModelAndView print(@RequestParam("id") Long id, @RequestParam("invType") String invType) throws ServiceException
+	{
+		if (id != null && invType != null)
+		{
+			if (invType.equals("1"))
+				return new ModelAndView("/payable/paymentPrint", service.preedit(id));
+		}
+
+		return ViewHelper.redirectTo("paymentview.htm");
+	}
 }

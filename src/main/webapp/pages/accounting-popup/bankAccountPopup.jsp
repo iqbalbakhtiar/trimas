@@ -19,6 +19,7 @@
 
 			if(!jQuery.isEmptyObject(bank))
 			{
+				var target = '${param.target}';
 				var _client = self.opener.document.getElementById('${param.target}');
 				if(_client)
 				{
@@ -30,31 +31,56 @@
 
 					_client.appendChild(_opt);
 				}
-
-				var accountName = self.opener.document.getElementById('accountName');
-				if(accountName)
-					accountName.value = bank.bankAccountName;
-
-				var bankName = self.opener.document.getElementById('bankName');
-				if(bankName)
-					bankName.value = bank.bankName;
-
-				// For now bank_branch is not filled
-				// var bankBranch = self.opener.document.getElementById('bankBranch');
-				// if(bankBranch)
-				// 	bankBranch.value = bank.bankBranch;
-
-				var accountNo = self.opener.document.getElementById('accountNo');
-				if(accountNo)
-					accountNo.value = bank.bankAccountNo;
-
-				var accountHolder = self.opener.document.getElementById('accountHolder');
-				if(accountHolder)
-					accountHolder.value = bank.bankAcountHolder.partyName;
-
-				var gl = self.opener.document.getElementById('glAccount');
-				if(gl)
-					gl.value = bank.glAccount.accountCode+" - "+bank.glAccount.accountCode;
+				
+				if(target == 'account') {
+					var accountName = self.opener.document.getElementById('accountName');
+					if(accountName)
+						accountName.value = bank.bankAccountName;
+	
+					var bankName = self.opener.document.getElementById('bankName');
+					if(bankName)
+						bankName.value = bank.bankName;
+	
+					var bankBranch = self.opener.document.getElementById('bankBranch');
+					if(bankBranch)
+					 	bankBranch.value = bank.bankBranch;
+	
+					var accountNo = self.opener.document.getElementById('accountNo');
+					if(accountNo)
+						accountNo.value = bank.bankAccountNo;
+	
+					var accountHolder = self.opener.document.getElementById('accountHolder');
+					if(accountHolder)
+						accountHolder.value = bank.bankAcountHolder.partyName;
+	
+					var gl = self.opener.document.getElementById('glAccount');
+					if(gl)
+						gl.value = bank.glAccount.accountCode+" - "+bank.glAccount.accountCode;
+				} else {
+					var accountName = self.opener.document.getElementById('accountNameTo');
+					if(accountName)
+						accountName.value = bank.bankAccountName;
+	
+					var bankName = self.opener.document.getElementById('bankNameTo');
+					if(bankName)
+						bankName.value = bank.bankName;
+	
+					var bankBranch = self.opener.document.getElementById('bankBranchTo');
+					if(bankBranch)
+					 	bankBranch.value = bank.bankBranch;
+	
+					var accountNo = self.opener.document.getElementById('accountNoTo');
+					if(accountNo)
+						accountNo.value = bank.bankAccountNo;
+	
+					var accountHolder = self.opener.document.getElementById('accountHolderTo');
+					if(accountHolder)
+						accountHolder.value = bank.bankAcountHolder.partyName;
+	
+					var gl = self.opener.document.getElementById('glAccountTo');
+					if(gl)
+						gl.value = bank.glAccount.accountCode+" - "+bank.glAccount.accountCode;
+				}
 
 				window.close();
 			} else {

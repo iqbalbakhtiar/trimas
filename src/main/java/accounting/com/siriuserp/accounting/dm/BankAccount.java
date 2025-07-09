@@ -109,7 +109,7 @@ public class BankAccount extends Model implements JSONSupport
 		map.put("bankId", getId());
 		map.put("bankCode", getCode());
 		map.put("bankName", getBankName());
-
+		map.put("bankBranch", getBankBranch());
 		map.put("bankAccountNo", getAccountNo());
 		map.put("bankAccountName", getAccountName());
 		map.put("bankAcountHolder", getHolder());

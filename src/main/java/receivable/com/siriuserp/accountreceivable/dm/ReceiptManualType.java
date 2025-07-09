@@ -26,8 +26,6 @@ import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
 import com.siriuserp.accounting.dm.GLAccount;
-import com.siriuserp.accountreceivable.form.ReceiptManual;
-import com.siriuserp.accountreceivable.form.ReceiptManualReferenceType;
 import com.siriuserp.sdk.dm.Model;
 
 import javolution.util.FastSet;

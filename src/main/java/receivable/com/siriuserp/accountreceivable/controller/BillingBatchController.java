@@ -46,13 +46,13 @@ public class BillingBatchController extends ControllerBase
 	@RequestMapping("/billingbatchview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/accounting/billingBatchList", service.view(criteriaFactory.create(request, BillingFilterCriteria.class), BillingBatchViewQuery.class));
+		return new ModelAndView("/receivable/billingBatchList", service.view(criteriaFactory.create(request, BillingFilterCriteria.class), BillingBatchViewQuery.class));
 	}
 
 	@RequestMapping("/billingbatchpreadd.htm")
 	public ModelAndView preadd() throws ServiceException
 	{
-		return new ModelAndView("/accounting/billingBatchAdd", service.preadd());
+		return new ModelAndView("/receivable/billingBatchAdd", service.preadd());
 	}
 
 	@RequestMapping("/billingbatchadd.htm")
@@ -79,7 +79,7 @@ public class BillingBatchController extends ControllerBase
 	@RequestMapping("/billingbatchpreedit.htm")
 	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
 	{
-		return new ModelAndView("/accounting/billingBatchUpdate", service.preedit(id));
+		return new ModelAndView("/receivable/billingBatchUpdate", service.preedit(id));
 	}
 
 	@RequestMapping("/billingbatchedit.htm")
@@ -106,8 +106,8 @@ public class BillingBatchController extends ControllerBase
 	public ModelAndView option(@RequestParam("id") Long id, @RequestParam("invType") String invType) throws Exception
 	{
 		if (invType.equals("1"))
-			return new ModelAndView("/accounting/billingBatchPrint", service.preedit(id));
+			return new ModelAndView("/receivable/billingBatchPrint", service.preedit(id));
 		else
-			return new ModelAndView("/accounting/billingBatchPrintReceipt", service.preedit(id));
+			return new ModelAndView("/receivable/billingBatchPrintReceipt", service.preedit(id));
 	}
 }

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.siriuserp.accountreceivable.dm.ReceiptManualReferenceType;
 import com.siriuserp.accountreceivable.dm.ReceiptManualType;
-import com.siriuserp.accountreceivable.form.ReceiptManualReferenceType;
 import com.siriuserp.accountreceivable.form.ReceivablesForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;

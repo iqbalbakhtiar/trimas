@@ -18,6 +18,11 @@
                             <td width="1%"><form:errors path="code"/></td>
                         </tr>
                         <tr>
+                            <td align="right"><spring:message code="sirius.date"/></td>
+                            <td width="1%" align="center">:</td>
+                            <td><input id="date" name="date" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>"/></td>
+                        </tr>
+                        <tr>
                             <td align="right"><spring:message code="organization"/></td>
                             <td width="1%" align="center">:</td>
                             <td>
@@ -39,9 +44,22 @@
                             </td>
                         </tr>
                         <tr>
-                            <td align="right"><spring:message code="sirius.date"/></td>
-                            <td width="1%" align="center">:</td>
-                            <td><input id="date" name="date" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>"/></td>
+                            <td width="24%" align="right"><spring:message code="currencymanagement"/> : </td>
+              				<td>
+                                <form:select id='currency' path='currency'>
+                                    <c:forEach items='${currencys}' var='currency'>
+                                        <form:option value='${currency.id}' label='${currency.symbol}'/>
+                                    </c:forEach>
+                                </form:select>
+                                <form:input id='exchange' path='exchange' type="hidden"/>
+                                <%-- <form:select id='type' path='exchangeType'>
+                                    <form:option value='SPOT' label='SPOT'/>
+                                    <form:option value='MIDDLE' label='MIDDLE'/>
+                                    <form:option value='TAX' label='TAX'/>
+                                </form:select> --%>
+                                <form:input id="trxrate" path='rate' cssClass="input-number" value="1" size="10"/>
+                                <input id="default" type="hidden" value="${defaultCurrency.id}"/>
+                            </td>				
                         </tr>
                         <tr>
                             <td align="right"><spring:message code="sirius.note"/></td>
@@ -86,52 +104,143 @@
         </table>
         <br/>
         <div id="mainTab" dojoType="TabContainer" style="width:100% ; height: 400px;">
-            <div id="paymentInformation" dojoType="ContentPane" label="<spring:message code='payment.information'/>" class="tab-pages" refreshOnShow="true" selected="true">
-                <table width="100%">
-                    <tr>
-                        <td width="25%" align="right"><spring:message code="sirius.type"/> : </td>
-                        <td width="75%">
-                            <form:select id='methodType' path='paymentInformation.paymentMethodType' onchange="paymentTypeChange(this)">
-                                <c:forEach items='${types}' var='type' varStatus="status">
-                                    <spring:message var="src" code="receipt.${type.message}"/>
-                                    <form:option value='${type}' label='${fn:toUpperCase(src)}'/>
-                                </c:forEach>
-                            </form:select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="right"><spring:message code="receipt.reference"/> : </td>
-                        <td><form:input id='clearing' path='paymentInformation.reference' size='30' disabled='true' cssClass='input-disabled'/></td>
-                    </tr>
-                    <tr>
-                        <td align="right"><spring:message code="bankaccount"/> : </td>
-                        <td>
-                            <form:select id='account' path='paymentInformation.bankAccount' cssClass="combobox">
-                                <c:if test='${not empty payment_add.paymentInformation.bankAccount}'>
-                                    <form:option value='${payment_add.paymentInformation.bankAccount.id}' label='${payment_add.paymentInformation.bankAccount.code}' />
-                                </c:if>
-                            </form:select>
-                            <a class="item-popup" onclick="openBankAccount();" title='<spring:message code="bankaccount"/>'/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td nowrap="nowrap" align="right"><spring:message code="payment.amount"/> : </td>
-                        <td>
-                            <form:input id='amount' path='paymentInformation.amount' value="0.00" cssClass='applied input-number' onchange="updateDisplay()"/>
-                        </td>
-                    </tr>
-                    <tr style="display: none"><%--This Field Hidden because used in addLineItem function--%>
-                        <td colspan="2">
-                            <select id="wtype" style="display: none;">
-                                <c:forEach items='${writes}' var='type' varStatus="status">
-                                    <option value='${type}'>${type}</option>
-                                </c:forEach>
-                            </select>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
+            <div id="info" dojoType="ContentPane" label='<spring:message code="payment.information"/>' class="tab-pages" refreshOnShow="true">
+				<table width="100%">
+				<tr>
+					<td width="53%" align="left" valign="top">
+						<table width="100%">
+	                   	<tr>
+	                   		<td width="27%" align="right"><spring:message code="payment.payment.type"/> : </td>
+      	  	  		  		<td width="73%">
+      	  	  		  			<form:select id='methodType' path='paymentInformation.paymentMethodType'>
+                                	<form:option value='CASH' label='CASH' selected="true"/>
+                                	<form:option value='TRANSFER' label='TRANSFER'/>
+                                	<%-- <form:option value='CLEARING' label='CLEARING'/> --%>
+                           		</form:select>
+                      	  	</td>
+                       	</tr>
+                       	<tr>
+                           	<td align="right">Transfer/Clearing No : </td>
+                           	<td><input id='ref' name='paymentInformation.reference' disabled='true' class='input-disabled' size="30"/></td>
+                       	</tr>
+                       	<tr>
+                           	<td align="right"><spring:message code="bankaccount"/> : </td>
+                           	<td>
+                               	<form:select id='account' path='paymentInformation.bankAccount' cssClass='combobox'>
+                                   <c:if test='${not empty paymentManual_form.paymentInformation.bankAccount}'>
+                                       <form:option value='${paymentManual_form.paymentInformation.bankAccount.id}' label='${paymentManual_form.paymentInformation.bankAccount.code}' />
+                                   </c:if>
+                               	</form:select>
+                              	<a class="item-popup" onclick="openaccount();" title="Bank Account" />
+                           	</td>
+                       	</tr>
+                       	<tr>
+                           	<td nowrap="nowrap" align="right"><spring:message code="bankaccount.accountname"/> : </td>
+                           	<td><input id='accountName' disabled='true' class='input-disabled' size="30"/></td>
+                       	</tr>
+                       	<tr>
+                           	<td nowrap="nowrap" align="right"><spring:message code="bankaccount.bankname"/> : </td>
+                           	<td><input id='bankName' disabled='true' class='input-disabled' size="30"/></td>
+                       	</tr>
+                       	<tr>
+                           	<td nowrap="nowrap" align="right"><spring:message code="bankaccount.branch"/> : </td>
+                           	<td><input id='bankBranch' disabled='true' class='input-disabled' size="30"/></td>
+                       	</tr>
+                       	<tr>
+                           	<td nowrap="nowrap" align="right"><spring:message code="bankaccount.accountno"/> : </td>
+                           	<td><input id='accountNo' disabled='true' class='input-disabled' size="30"/></td>
+                       	</tr>
+	                    <tr style="display: none"><%--This Field Hidden because used in addLineItem function--%>
+	                        <td colspan="2">
+	                            <select id="wtype" style="display: none;">
+	                                <c:forEach items='${writes}' var='type' varStatus="status">
+	                                    <option value='${type}'>${type}</option>
+	                                </c:forEach>
+	                            </select>
+	                        </td>
+	                    </tr>
+						</table>
+					</td>
+					<td width="47%" align="left" valign="top">
+					<table width="100%">
+						<tr>
+	                           <td width="39%" align="right" nowrap="nowrap"><spring:message code="payment.duedate"/> :</td>
+	                           <td width="61%">
+	                               <input type="text" id="dueDate" name="paymentInformation.dueDate" class="datepicker"/>
+	                           </td>
+	                   	</tr>
+	                       <tr>
+	                         	<td nowrap="nowrap" align="right"><spring:message code="payment.amount"/> : </td>
+	                           <td>
+	                         		<input id='amount' name='paymentInformation.amount' class="input-currency" value="<fmt:formatNumber value='0.00' pattern=',##0.00'/>" onchange="updateDisplay()"/>                
+	                           </td>
+	                       </tr>
+	                       <tr>
+	                         	<td nowrap="nowrap" align="right"><spring:message code="payment.bankcharge"/> : </td>
+	                           <td><input id='bankCharges' name='paymentInformation.bankCharges' class="number-disabled" readonly="true" value="<fmt:formatNumber value='0' pattern=',##0'/>"/></td>
+	                       </tr>
+	                       <tr>
+	                           <td align="right"><spring:message code="sirius.note"/> :&nbsp; </td>
+	                           <td><form:textarea path='paymentInformation.note' cols='40' rows='6'/></td>					
+	                       </tr>
+						</table>
+					</td>
+				</tr>
+				</table>
+			</div>
+			<div id="infoTo" dojoType="ContentPane" label='<spring:message code="payment.information"/> <spring:message code="sirius.to"/>' class="tab-pages" refreshOnShow="true">
+				<table width="100%">
+				<tr>
+					<td width="53%" align="left" valign="top">
+						<table width="100%">
+                    	<tr>
+                            <td width="27%" align="right"><spring:message code="payment.payment.type"/> : </td>
+       	  	  		  		<td width="73%">
+       	  	  		  			<form:select id='methodTypeTo' path='paymentInformation.paymentMethodTypeTo'>
+       	  	  		  				<form:option value='CASH' label='CASH' selected="true"/>
+       	  	  		  				<form:option value='TRANSFER' label='TRANSFER'/>
+       	  	  		  				<%-- <form:option value='CLEARING' label='CLEARING'/> --%>
+                            	</form:select>
+                       	  	</td>
+                        </tr>
+                        <tr>
+                            <td align="right">Transfer/Clearing No : </td>
+                            <td><input id='refTo' name='paymentInformation.referenceTo' disabled='true' class='input-disabled' size="30"/></td>
+                        </tr>
+                        <tr>
+                            <td align="right"><spring:message code="bankaccount"/> : </td>
+                            <td>
+                                <form:select id='accountTo' path='paymentInformation.bankAccountTo' cssClass='combobox'>
+                                    <c:if test='${not empty payment_add.paymentInformation.bankAccountTo}'>
+                                        <form:option value='${payment_add.paymentInformation.bankAccountTo.id}' label='${payment_add.paymentInformation.bankAccountTo.code}' />
+                                    </c:if>
+                                </form:select>
+                               	<a class="item-popup" onclick="openaccountto();" title="Bank Account" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td nowrap="nowrap" align="right"><spring:message code="bankaccount.accountname"/> : </td>
+                            <td><input id='accountNameTo' disabled='true' class='input-disabled' size="30"/></td>
+                        </tr>
+                        <tr>
+                            <td nowrap="nowrap" align="right"><spring:message code="bankaccount.bankname"/> : </td>
+                            <td><input id='bankNameTo' disabled='true' class='input-disabled' size="30"/></td>
+                        </tr>
+                        <tr>
+                            <td nowrap="nowrap" align="right"><spring:message code="bankaccount.branch"/> : </td>
+                            <td><input id='bankBranchTo' disabled='true' class='input-disabled' size="30"/></td>
+                        </tr>
+                        <tr>
+                            <td nowrap="nowrap" align="right"><spring:message code="bankaccount.accountno"/> : </td>
+                            <td><input id='accountNoTo' disabled='true' class='input-disabled' size="30"/></td>
+                        </tr>
+						</table>
+					</td>
+					<td width="47%" align="left" valign="top">
+					</td>
+				</tr>
+				</table>
+			</div>
             <div id="receiptApplication" dojoType="ContentPane" label="<spring:message code='payment.application'/>" class="tab-pages" refreshOnShow="true" selected="true">
                 <div class="toolbar-clean">
                     <table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center" width="100%">
@@ -197,6 +306,15 @@
         });
 
         $('#methodType').trigger('change');
+        $('#methodTypeTo').trigger('change');
+
+        $('#methodType').change(function(e){
+            checkInfo('');
+        });
+
+        $('#methodTypeTo').change(function(e){
+            checkInfo('To');
+        });
 
         updateDisplay();
     });
@@ -214,22 +332,84 @@
         }
     }
 
-    function openBankAccount() {
-        $org = $('#org').val();
-        if(!$org)
+	function openaccount()
+	{
+		var org = document.getElementById('org');
+		if(org.value == '')
+		{
+			alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
+			return;
+		}
+	
+		var methodType = document.getElementById('methodType');
+		var method = 'CASH';
+		
+		if(methodType.value != 'CASH')
+			method = 'BANK';
+		
+		openpopup("<c:url value='/page/popupbankaccountview.htm?target=account&organization='/>"+org.value+'&type='+method);
+	}
+
+	function openaccountto()
+	{
+		var supplier = document.getElementById('supplier');
+		if(supplier.value == '')
+		{
+			alert('<spring:message code="notif.select1"/> <spring:message code="supplier"/> <spring:message code="notif.select2"/> !!!');
+			return;
+		}
+	
+		var methodType = document.getElementById('methodTypeTo');
+		var method = 'CASH';
+		
+		if(methodType.value != 'CASH')
+			method = 'BANK';
+		
+		openpopup("<c:url value='/page/popupbankaccountview.htm?target=accountTo&organization='/>"+supplier.value+'&type='+method);
+	}
+
+	function openPaymentType()
+	{
+		var referenceType = document.getElementById('paymentRefType');
+		openpopup("<c:url value='/page/popuppaymentmanualtypeview.htm?target=paymentManualType&status=true&referenceType='/>"+referenceType.value);
+	}
+	
+	function checkInfo(info)
+	{
+		$class = 'input-disabled';
+        $class2 = 'input-disabled';
+        $status = true;
+
+        if($('#methodType'+info).val() != 'CASH')
         {
-            alert('<spring:message code="organization"/> <spring:message code="notif.empty"/> !!!');
-            return;
+            $class = 'input-currency';
+         	$class2 = '';
+            $status = false;
         }
 
-        var methodType = document.getElementById('methodType');
-        var method = 'CASH';
+        if(info == '') {
+	        $('#bankCharges').attr('class', $class);
+	        $('#bankCharges').attr('disabled', $status);
+	
+	        $('#duedate').attr('disabled', $status);
+	        $("#bankCharges").val("0");
+        }
+        
+        $('#ref'+info).attr('class', $class2);
+        $('#ref'+info).attr('disabled', $status);
 
-        if(methodType.value !== 'CASH')
-            method = 'BANK';
+        $('#clearing'+info).attr('class', $class);
+        $('#clearing'+info).attr('disabled', $status);
 
-        openpopup("<c:url value='/page/popupbankaccountview.htm?&target=account&organization='/>" + $org + '&type=' + method);
-    }
+        $("#account"+info).html("");   
+        $("#accountName"+info).val("");  
+        $("#bankName"+info).val(""); 
+        $("#bankBranch"+info).val("");   
+        $("#accountNo"+info).val("");
+        $('#ref'+info).val("");
+        
+	    $(".input-decimal").bind(inputFormat);
+	}
 
     function validateForm() {
         // Validasi organisasi (sudah ada sebelumnya)

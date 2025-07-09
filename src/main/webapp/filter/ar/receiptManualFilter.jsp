@@ -9,7 +9,7 @@
         <tr>
 			<td align="right"><spring:message code='customer'/> / <spring:message code='supplier'/>&nbsp;&nbsp;</td>
 			<td>:&nbsp;</td>
-			<td><input type="text" id="customer" name="customer" value="${filterCriteria.customer}" size="30" class="inputbox"/></td>
+			<td><input type="text" id="customerName" name="customerName" value="${filterCriteria.customerName}" size="30" class="inputbox"/></td>
 		</tr>
         <tr>
 			<td align="right"><spring:message code='sirius.reference'/>&nbsp;&nbsp;</td>

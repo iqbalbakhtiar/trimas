@@ -58,7 +58,7 @@ public class PaymentManualController extends ControllerBase
 	private PaymentManualService service;
 
 	@InitBinder
-	public void initBinder(WebDataBinder binder, WebRequest request)
+	public void initUserBinder(WebDataBinder binder, WebRequest request)
 	{
 		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
 		binder.registerCustomEditor(Payable.class, modelEditor.forClass(Payable.class));
@@ -121,7 +121,7 @@ public class PaymentManualController extends ControllerBase
 			service.edit(FormHelper.update(form.getPaymentManual(), form));
 			status.setComplete();
 
-			response.store("id", form.getPaymentManualType().getId());
+			response.store("id", form.getPaymentManual().getId());
 		} catch (Exception e)
 		{
 			e.printStackTrace();

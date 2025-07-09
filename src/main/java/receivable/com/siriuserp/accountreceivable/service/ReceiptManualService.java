@@ -15,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.siriuserp.accountpayable.dm.PaymentMethodType;
 import com.siriuserp.accountreceivable.dm.ReceiptApplication;
 import com.siriuserp.accountreceivable.dm.ReceiptInformation;
+import com.siriuserp.accountreceivable.dm.ReceiptManual;
+import com.siriuserp.accountreceivable.dm.ReceiptManualReferenceType;
 import com.siriuserp.accountreceivable.dm.WriteOffType;
-import com.siriuserp.accountreceivable.form.ReceiptManual;
-import com.siriuserp.accountreceivable.form.ReceiptManualReferenceType;
 import com.siriuserp.accountreceivable.form.ReceivablesForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
@@ -107,7 +107,7 @@ public class ReceiptManualService
 	@AuditTrails(className = ReceiptManual.class, actionType = AuditTrailsActionType.CREATE)
 	public void add(ReceiptManual receiptManual) throws Exception
 	{
-		receiptManual.setCode(GeneratorHelper.instance().generate(TableType.RECEIPT_MANUAL, codeSequenceDao, receiptManual.getFacility().getCode()));
+		receiptManual.setCode(GeneratorHelper.instance().generate(TableType.RECEIPT_MANUAL, codeSequenceDao));
 
 		ReceiptApplication application = new ReceiptApplication();
 		application.setPaidAmount(receiptManual.getReceiptInformation().getAmount().subtract(receiptManual.getReceiptInformation().getBankCharges()));

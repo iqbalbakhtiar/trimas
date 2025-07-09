@@ -5,8 +5,10 @@
  */
 package com.siriuserp.accountpayable.service;
 
+import java.math.RoundingMode;
 import java.util.Map;
 
+import org.apache.commons.lang.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -34,6 +36,7 @@ import com.siriuserp.sdk.dm.User;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.DateHelper;
+import com.siriuserp.sdk.utility.EnglishNumber;
 import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
@@ -85,7 +88,6 @@ public class PaymentManualService
 	@InjectParty(keyName = "paymentManual_form")
 	public Map<String, Object> preadd() throws Exception
 	{
-		FastMap<String, Object> map = new FastMap<String, Object>();
 		PaymentMethodType[] types = new PaymentMethodType[]
 		{ PaymentMethodType.CASH, PaymentMethodType.TRANSFER };
 
@@ -93,6 +95,7 @@ public class PaymentManualService
 		payment.setDate(DateHelper.now());
 		payment.setPaymentInformation(new PaymentInformation());
 
+		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("paymentManual_form", payment);
 		map.put("currencys", genericDao.loadAll(Currency.class));
 		map.put("defaultCurrency", currencyDao.loadDefaultCurrency());
@@ -106,7 +109,7 @@ public class PaymentManualService
 	@AuditTrails(className = PaymentManual.class, actionType = AuditTrailsActionType.CREATE)
 	public void add(PaymentManual paymentManual) throws Exception
 	{
-		paymentManual.setCode(GeneratorHelper.instance().generate(TableType.PAYMENT_MANUAL, codeSequenceDao, paymentManual.getFacility().getCode()));
+		paymentManual.setCode(GeneratorHelper.instance().generate(TableType.PAYMENT_MANUAL, codeSequenceDao));
 
 		genericDao.add(paymentManual);
 	}
@@ -116,10 +119,12 @@ public class PaymentManualService
 	{
 		PaymentManual paymentManual = load(id);
 		PayablesForm form = FormHelper.bind(PayablesForm.class, paymentManual);
+		String saidId = EnglishNumber.convertIdComma(paymentManual.getPaymentInformation().getAmount().setScale(2, RoundingMode.HALF_UP));
 
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("paymentManual_form", form);
 		map.put("paymentManual_edit", paymentManual);
+		map.put("saidId", WordUtils.capitalizeFully(saidId));
 
 		return map;
 	}
