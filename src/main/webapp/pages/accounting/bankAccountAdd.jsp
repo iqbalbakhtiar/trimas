@@ -52,7 +52,7 @@
 			 				<table width="100%" style="border:none" class="space">
 							<tr>
 								<td width="29%" align="right"><spring:message code="bankaccount.code"/> :</td>
-					 		  	<td width="70%"><form:input id="code" path="code" maxlength="30" cssClass="inputbox"/></td>
+					 		  	<td width="70%"><input id="code" value="Auto Generated" class="inputbox input-disabled" disabled="true"/></td>
 							</tr>
 							<tr>
 								<td align="right"><spring:message code="bankaccount.bankname"/> :</td>
@@ -111,7 +111,7 @@
 										<form:option value='${bankAccount_form.organization.id}' label='${bankAccount_form.organization.fullName}' />
 									</c:if>
 									</form:select>
-									<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupcompanystructurerolebasedview.htm?target=org'/>');"  title='<spring:message code="organization.structure"/>' />
+									<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popuppartyview.htm?target=org'/>');"  title='<spring:message code="organization.structure"/>' />
                                 </td>
 							</tr>
                             <tr>
@@ -138,11 +138,11 @@
 		var $dialog = $('<div></div>').dialog({autoOpen: false,title: '<spring:message code="bankaccount"/>',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
 		$('.item-button-save').click(function(e)
 		{
-			if(!$('#code').val())
+			/* if(!$('#code').val())
 			{
 				alert('<spring:message code="bankaccount.code"/> <spring:message code="notif.empty"/> !!!');
 				return;
-			}
+			} */
 
 			if(!$('#bankName').val())
 			{

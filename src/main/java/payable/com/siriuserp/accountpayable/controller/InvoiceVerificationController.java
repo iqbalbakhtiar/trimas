@@ -21,7 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.accountpayable.criteria.InvoiceVerificationFilterCriteria;
 import com.siriuserp.accountpayable.dm.PaymentMethodType;
-import com.siriuserp.accountpayable.form.PaymentForm;
+import com.siriuserp.accountpayable.form.PayablesForm;
 import com.siriuserp.accountpayable.query.InvoiceVerificationGridViewQuery;
 import com.siriuserp.accountpayable.service.InvoiceVerificationService;
 import com.siriuserp.inventory.dm.GoodsReceiptItem;
@@ -43,7 +43,7 @@ import com.siriuserp.sdk.utility.FormHelper;
  */
 
 @Controller
-@SessionAttributes(value = "verification_form", types = PaymentForm.class)
+@SessionAttributes(value = "verification_form", types = PayablesForm.class)
 @DefaultRedirect(url = "invoiceverificationview.htm")
 public class InvoiceVerificationController extends ControllerBase
 {
@@ -75,7 +75,7 @@ public class InvoiceVerificationController extends ControllerBase
 	}
 
 	@RequestMapping("/invoiceverificationedit.htm")
-	public ModelAndView edit(@ModelAttribute("verification_form") PaymentForm form, SessionStatus status) throws Exception
+	public ModelAndView edit(@ModelAttribute("verification_form") PayablesForm form, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 

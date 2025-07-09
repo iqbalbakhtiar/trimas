@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
 
+import org.apache.commons.lang.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -179,14 +180,15 @@ public class PaymentService
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> preedit(Long id) throws ServiceException
 	{
-		FastMap<String, Object> map = new FastMap<String, Object>();
-
 		PaymentUIAdapter adapter = new PaymentUIAdapter();
 		adapter.setPayment(load(id));
+		String saidId = EnglishNumber.convertIdComma(adapter.getPayment().getPaymentInformation().getAmount().setScale(2, RoundingMode.HALF_UP));
 
+		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("payment_edit", adapter.getPayment());
 		map.put("said", EnglishNumber.convertIdComma(adapter.getPayment().getPaymentInformation().getAmount().add((adapter.getPayment().getPaymentInformation().getBankCharges()).setScale(5, RoundingMode.UP))));
 		map.put("adapter", adapter);
+		map.put("saidId", WordUtils.capitalizeFully(saidId));
 
 		return map;
 	}

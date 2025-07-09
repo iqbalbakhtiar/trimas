@@ -7,9 +7,9 @@
 			<td><input type="text" id="code" name="code" value="${filterCriteria.code}" size="30" class="inputbox"/></td>
 		</tr>
         <tr>
-			<td align="right"><spring:message code='supplier'/> / <spring:message code='customer'/>&nbsp;&nbsp;</td>
+			<td align="right"><spring:message code='supplier'/>&nbsp;&nbsp;</td>
 			<td>:&nbsp;</td>
-			<td><input type="text" id="supplier" name="supplier" value="${filterCriteria.supplier}" size="30" class="inputbox"/></td>
+			<td><input type="text" id="supplier" name="supplierName" value="${filterCriteria.supplierName}" size="30" class="inputbox"/></td>
 		</tr>
         <tr>
 			<td align="right"><spring:message code='sirius.reference'/>&nbsp;&nbsp;</td>

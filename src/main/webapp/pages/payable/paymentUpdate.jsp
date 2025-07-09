@@ -4,6 +4,9 @@
 <div class="toolbar">
     <a class="item-button-list" href="<c:url value='/page/paymentview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
     <a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
+	<c:if test="${access.print}">
+		<a class="item-button-print" href="<c:url value='/page/paymentprint.htm?id=${payment_edit.id}&invType=1'/>"><span><spring:message code="sirius.print"/></span></a>
+	</c:if>
 </div>
 
 <div class="main-box">
@@ -132,7 +135,57 @@
                     </tr>
                 </table>
             </div>
-
+        	<div id="infoTo" dojoType="ContentPane" label="<spring:message code='payment.information'/> <spring:message code='sirius.to'/>" class="tab-pages" refreshOnShow="true">
+                <table width="100%">
+                <tr>
+                	<td width="53%" align="left" valign="top">
+                   	  <table width="100%">
+                    	<tr>
+                            <td width="27%" align="right"><spring:message code="payment.payment.type"/> : </td>
+               	  	  		<td width="73%">
+								<form:select id='methodTypeTo' path='paymentInformation.paymentMethodTypeTo' cssClass="input-disabled" disabled='true'>
+                                    <spring:message var="src" code="payment.${payment_edit.paymentInformation.paymentMethodTypeTo.message}"/>
+                                    <form:option value='${payment_edit.paymentInformation.paymentMethodTypeTo}' label='${fn:toUpperCase(src)}'/>
+                                </form:select>
+                       	    </td>
+                        </tr>
+                        <tr>
+                            <td align="right"><spring:message code="payment.reference"/> : </td>
+                            <td><form:input path='paymentInformation.referenceTo' size='30' disabled='true' cssClass='input-disabled'/></td>
+                        </tr>
+                        <tr>
+                            <td align="right"><spring:message code="bankaccount"/> : </td>
+                            <td>
+                                <form:select id='account' path='paymentInformation.bankAccount' cssClass='combobox input-disabled' disabled='true'>
+                                    <c:if test='${not empty payment_edit.paymentInformation.bankAccountTo}'>
+                                        <form:option value='${payment_edit.paymentInformation.bankAccountTo.id}' label='${payment_edit.paymentInformation.bankAccountTo.code}' />
+                                    </c:if>
+                                </form:select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td nowrap="nowrap" align="right"><spring:message code="bankaccount.accountname"/> : </td>
+                            <td><input id='accountName' value="${payment_edit.paymentInformation.bankAccountTo.accountName}" disabled='true' class='input-disabled' size="30"/></td>
+                        </tr>
+                        <tr>
+                            <td nowrap="nowrap" align="right"><spring:message code="bankaccount.bankname"/> : </td>
+                            <td><input id='bankName' value="${payment_edit.paymentInformation.bankAccountTo.bankName}" disabled='true' class='input-disabled' size="30"/></td>
+                        </tr>
+                        <tr>
+                            <td nowrap="nowrap" align="right"><spring:message code="bankaccount.branch"/> : </td>
+                            <td><input id='bankBranch' value="${payment_edit.paymentInformation.bankAccountTo.bankBranch}" disabled='true' class='input-disabled' size="30"/></td>
+                        </tr>
+                        <tr>
+                            <td nowrap="nowrap" align="right"><spring:message code="bankaccount.accountno"/> : </td>
+                            <td><input id='accountNo' value="${payment_edit.paymentInformation.bankAccountTo.accountNo}" disabled='true' class='input-disabled' size="30"/></td>
+                        </tr>
+                        </table>
+                    </td>
+                 	<td width="47%" align="left" valign="top">
+                    </td>
+                </tr>
+                </table>
+        	</div>
             <div id="receiptApplication" dojoType="ContentPane" label="<spring:message code='payment.application'/>" class="tab-pages" refreshOnShow="true" selected="true">
                 <div class="toolbar-clean">
                     <table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center" width="100%">

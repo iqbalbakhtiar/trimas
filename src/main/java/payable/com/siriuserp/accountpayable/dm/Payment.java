@@ -106,10 +106,14 @@ public class Payment extends Model implements Siblingable, CashBankTransactionRe
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	private Set<PaymentApplication> applications = new FastSet<PaymentApplication>();
 
-	@Override
-	public String getAuditCode()
+	public PaymentManualType getPaymentManualType()
 	{
-		return id + "," + code;
+		return null;
+	}
+
+	public String getReferenceType()
+	{
+		return "PAYMENT";
 	}
 
 	@Override
@@ -194,5 +198,11 @@ public class Payment extends Model implements Siblingable, CashBankTransactionRe
 	public BankAccount getBankAccount()
 	{
 		return getPaymentInformation().getBankAccount();
+	}
+
+	@Override
+	public String getAuditCode()
+	{
+		return id + "," + code;
 	}
 }

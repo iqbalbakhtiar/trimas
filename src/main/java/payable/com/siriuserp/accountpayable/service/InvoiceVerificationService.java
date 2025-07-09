@@ -8,7 +8,6 @@ package com.siriuserp.accountpayable.service;
 import java.math.RoundingMode;
 import java.util.Map;
 
-import com.siriuserp.accountpayable.dm.InvoiceVerificationType;
 import org.apache.commons.lang.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,7 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.siriuserp.accountpayable.adapter.InvoiceVerificationAdapter;
 import com.siriuserp.accountpayable.dm.InvoiceVerification;
-import com.siriuserp.accountpayable.form.PaymentForm;
+import com.siriuserp.accountpayable.dm.InvoiceVerificationType;
+import com.siriuserp.accountpayable.form.PayablesForm;
 import com.siriuserp.inventory.dm.GoodsReceipt;
 import com.siriuserp.inventory.form.InventoryForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
@@ -114,7 +114,7 @@ public class InvoiceVerificationService
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> preedit(Long id) throws Exception
 	{
-		PaymentForm form = FormHelper.bind(PaymentForm.class, genericDao.load(InvoiceVerification.class, id));
+		PayablesForm form = FormHelper.bind(PayablesForm.class, genericDao.load(InvoiceVerification.class, id));
 		InvoiceVerificationAdapter adapter = new InvoiceVerificationAdapter(form.getInvoiceVerification());
 
 		String said = EnglishNumberHelper.convert(adapter.getTotalAfterTax().setScale(2, RoundingMode.HALF_UP));
