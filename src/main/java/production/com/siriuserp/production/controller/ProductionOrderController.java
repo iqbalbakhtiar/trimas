@@ -17,12 +17,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.inventory.criteria.ProductionOrderFilterCriteria;
 import com.siriuserp.inventory.dm.Product;
-import com.siriuserp.inventory.query.ProductionOrderGridViewQuery;
 import com.siriuserp.production.dm.CostCenterGroup;
 import com.siriuserp.production.dm.ProductionCostCenterGroup;
 import com.siriuserp.production.dm.MaterialType;
 import com.siriuserp.production.dm.ProductionOrder;
 import com.siriuserp.production.form.ProductionForm;
+import com.siriuserp.production.query.ProductionOrderGridViewQuery;
 import com.siriuserp.production.service.ProductionOrderService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
