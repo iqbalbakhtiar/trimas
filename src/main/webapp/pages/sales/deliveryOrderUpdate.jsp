@@ -153,6 +153,42 @@
 							</fieldset>
 						</td>
 					</tr>
+					<tr>
+						<td>
+							<c:set var="totalRoll" value="0"/>
+							<c:forEach items="${deliveryOrder_form.deliveryOrder.items}" var="item">
+								<c:set var="totalRoll" value="${totalRoll + fn:length(item.serials)}"/>
+							</c:forEach>
+							<fieldset disabled>
+								<legend><strong><spring:message code="barcode.info"/></strong></legend>
+								<table width="100%" style="border:none">
+									<tr>
+										<td align="right"><spring:message code="barcode.quantity"/> : </td>
+										<td><input id="totalRoll" value="<fmt:formatNumber value='${totalRoll}' pattern=',##0'/>" class="number-disabled" disabled size="5"/></td>
+									</tr>
+									<tr style="font-weight: bold;">
+										<td width="30%;">&nbsp;</td>
+										<td width="70%;"><spring:message code="sirius.total"/></td>
+									</tr>
+									<c:forEach items="${deliveryOrder_form.deliveryOrder.items}" var="item">
+										<c:if test="${item.deliveryItemType eq 'BASE'}">
+											<c:set var="itemTotal" value="0"/>
+											<c:forEach items="${item.serials}" var="serial">
+												<c:set var="itemTotal" value="${itemTotal + serial.quantity}"/>
+											</c:forEach>
+											<tr>
+												<td align="right">${item.product.name} :</td>
+												<td>
+													<input value="<fmt:formatNumber value='${itemTotal}' pattern=',##0.00'/> ${item.product.unitOfMeasure.measureId}"
+													       class="number-disabled" disabled size="15"/>
+												</td>
+											</tr>
+										</c:if>
+									</c:forEach>
+								</table>
+							</fieldset>
+						</td>
+					</tr>
 				</table>
 			</td>
 

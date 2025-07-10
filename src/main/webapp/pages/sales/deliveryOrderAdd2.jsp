@@ -143,18 +143,22 @@
 					</td>
 					<td><input id="onhand[${stat.index}]" size="12" value="0.00" class="input-disabled input-decimal" name="items[${stat.index}].onhand" index="${stat.index}" next="onhand" disabled/></td>
 					<td><input id="referenceQuantity[${stat.index}]" size="11" value="<fmt:formatNumber value='${item.deliveryReferenceItem.quantity}' pattern=',##0.00'/>" class="input-disabled input-decimal" index="${stat.index}" next="referenceQuantity" disabled/></td>
+					<%--Bukan Barang Serial--%>
 					<c:if test="${!item.deliveryReferenceItem.product.serial}">
 						<td><input id="delivered[${stat.index}]" size="10" value="0.00" class="input-decimal quantities" name="items[${stat.index}].quantity" index="${stat.index}" next="delivered" onchange="checkQuantity(${stat.index})" producttype="nonserial"/></td>
 						<td><input id="uom[${stat.index}]" size="6" value="${item.deliveryReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${stat.index}].uom" index="${stat.index}" next="uom" disabled/></td>
 						<td>&nbsp;</td>
 						<td><select id="container[${stat.index}]" name="items[${stat.index}].container" index="${stat.index}" onchange="updateOnHand(this, ${stat.index});" next="container" class="combobox"></select><a class="item-popup" onclick="openContainer(${stat.index});" title="Container"></a></td>
 					</c:if>
+					<%--Barang Serial--%>
 					<c:if test="${item.deliveryReferenceItem.product.serial}">
 						<td>
 							<input id="qtySerial[${stat.index}]" size="10" value="0.00" class="input-number" index="${stat.index}" onChange="addBarcode(this);" reference="${item.deliveryReferenceItem.id}" next="qtySerial"/>
-							<input id="delivered[${stat.index}]" size="10" value="0.00" class="input-number quantities" name="items[${stat.index}].quantity" index="${stat.index}" next="delivered" style="display: none;" producttype="serial"/>
 						</td>
-						<td><input id="uom[${stat.index}]" size="6" value="${item.deliveryReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${stat.index}].uom" index="${stat.index}" next="uom" disabled style="display: none;"/></td>
+						<td>
+							<input id="uom[${stat.index}]" size="6" value="${item.deliveryReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled" name="items[${stat.index}].uom" index="${stat.index}" next="uom" disabled style="display: none;"/>
+							<input id="delivered[${stat.index}]" size="10" value="0.00" class="input-disabled input-decimal quantities" name="items[${stat.index}].quantity" index="${stat.index}" next="delivered" producttype="serial" readonly/>
+						</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
 					</c:if>
@@ -216,18 +220,18 @@ function validateForm() {
         var idx = obj.getAttribute('index');
     	var product = $('#product\\['+idx+'\\]');
     	var productType = obj.getAttribute('producttype');
-    	if(productType == 'serial') {
+        var referenceQty = parseFloat($('#referenceQuantity\\['+idx+'\\]').val());
+        var quantity = parseFloat($('#delivered\\['+idx+'\\]').val());
+        if(productType == 'serial') {
 			var productName = product.text();
-			var quantity =  $('#qtySerial\\['+idx+'\\]').val().toNumber();
-	
-			if (quantity <= 0) {
-				alert('<strong>' + productName + '</strong> - <spring:message code="deliveryorder.quantity"/> <spring:message code="notif.greater.zero"/> !');
-				isValid = false;
-				return false;
-			}
-    	} else {
+
+            if (quantity !== referenceQty) {
+                alert('<strong>' + productName + '</strong> - ' + '<spring:message code="deliveryorder.quantity"/> ' + '<spring:message code="notif.different"/> ' + '<spring:message code="deliveryorder.reference.qty"/> !');
+                isValid = false;
+                return false;
+            }
+    	} else { // product type non serial
 			var productName = product.text();
-			var quantity =  $('#delivered\\['+idx+'\\]').val().toNumber();
 	
 			if (quantity <= 0) {
 				alert('<strong>' + productName + '</strong> - <spring:message code="deliveryorder.quantity"/> <spring:message code="notif.greater.zero"/> !');
