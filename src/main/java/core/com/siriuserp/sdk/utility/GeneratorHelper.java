@@ -160,6 +160,8 @@ public class GeneratorHelper
 		case BILLING_BATCH:
 		case BILLING:
 			return codeDateCount(tableType, codeSequence, index, date);
+		case PURCHASE_REQUISITION:
+			return purchaseRequisition(codeSequence, index, date);
 		default:
 			return format(codeSequence, index);
 		}
@@ -282,6 +284,18 @@ public class GeneratorHelper
 
 		sb.append(index);
 
+		return sb.toString();
+	}
+
+	//CODE|YEAR|MONTH|SEQ EX:PRQ - 2508001
+	private String purchaseRequisition(CodeSequence codeSequence, int index, Date date) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(codeSequence.getType().getCode()).append(" - ");
+		String yy = String.valueOf(codeSequence.getYear()).substring(2);
+		int mm = Integer.parseInt(DateHelper.getMonth(date));
+		sb.append(yy)
+				.append(String.format("%02d", mm))
+				.append(String.format("%0" + codeSequence.getType().getLength() + "d", index));
 		return sb.toString();
 	}
 

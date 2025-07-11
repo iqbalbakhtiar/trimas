@@ -76,7 +76,7 @@ public class PurchaseRequisitionService
 	public void add(PurchaseRequisition requisition) throws Exception
 	{
 		PurchaseForm form = (PurchaseForm) requisition.getForm();
-		requisition.setCode(GeneratorHelper.instance().generate(TableType.PURCHASE_REQUISITION, codeSequenceDao));
+		requisition.setCode(GeneratorHelper.instance().generate(TableType.PURCHASE_REQUISITION, codeSequenceDao, requisition.getDate()));
 
 		for (Item item : form.getItems())
 		{
