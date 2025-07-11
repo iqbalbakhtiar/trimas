@@ -37,14 +37,22 @@
 	<tr>
 		<td align="right"><spring:message code="sirius.status"/>&nbsp;</td>
 		<td align="center">:</td>
-		<td >
-			<select id="status" name="status">
-				<option value=""><spring:message code="sirius.all"/></option>
-				<option value="true" ${not empty filterCriteria.status and filterCriteria.status ? "selected" : ""}><spring:message code="sirius.active"/></option>
-				<option value="false" ${not empty filterCriteria.status and !filterCriteria.status ? "selected" : ""}><spring:message code="sirius.inactive"/></option>
-			</select>
-        </td>
+		<td>
+			<label>
+				<input type="radio" id="statusAll" name="status" value="" ${empty filterCriteria.status ? 'checked="checked"' : ''}/>
+				<spring:message code="sirius.all"/>
+			</label>
+			<label>
+				<input type="radio" id="statusActive" name="status" value="true" ${not empty filterCriteria.status and filterCriteria.status ? 'checked="checked"' : ''}/>
+				<spring:message code="sirius.active"/>
+			</label>
+			<label>
+				<input type="radio" id="statusInactive" name="status" value="false" ${not empty filterCriteria.status and !filterCriteria.status ? 'checked="checked"' : ''}/>
+				<spring:message code="sirius.inactive"/>
+			</label>
+		</td>
 	</tr>
+
 	<tr><td colspan="3">&nbsp;</td></tr>
 	<tr>
 		<td colspan="2">&nbsp;</td>
