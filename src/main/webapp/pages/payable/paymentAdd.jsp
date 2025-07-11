@@ -44,7 +44,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td width="24%" align="right"><spring:message code="currencymanagement"/> : </td>
+                            <td width="24%" align="right"><spring:message code="currencymanagement"/></td>
+                            <td width="1%" align="center">:</td>
               				<td>
                                 <form:select id='currency' path='currency'>
                                     <c:forEach items='${currencys}' var='currency'>
