@@ -3,6 +3,7 @@ package com.siriuserp.accountreceivable.form;
 import com.siriuserp.accounting.dm.GLAccount;
 import com.siriuserp.accountpayable.dm.PaymentMethodType;
 import com.siriuserp.accountreceivable.dm.Billing;
+import com.siriuserp.accountreceivable.dm.BillingBatch;
 import com.siriuserp.accountreceivable.dm.CreditMemo;
 import com.siriuserp.accountreceivable.dm.CreditMemoReferenceType;
 import com.siriuserp.accountreceivable.dm.Receipt;
@@ -22,6 +23,7 @@ public class ReceivablesForm extends Form
 	private static final long serialVersionUID = -7116283893872931004L;
 
 	private Billing billing;
+	private BillingBatch billingBatch;
 	private Receipt receipt;
 	private ReceiptInformation receiptInformation;
 	private GLAccount account;

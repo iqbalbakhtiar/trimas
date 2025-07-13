@@ -3,7 +3,7 @@
  * Created On : Feb 5, 2025
  * Email	  : iqbal@siriuserp.com
  */
-package com.siriuserp.sdk.dao;
+package com.siriuserp.sales.dao;
 
 import com.siriuserp.sales.dm.SalesOrderItem;
 import com.siriuserp.sdk.base.Dao;
