@@ -69,8 +69,8 @@
                         <c:forEach items="${accounts}" var="account">
                         <tr>
                             <td class="tools">
-                                <a class="item-button-edit"  href="<c:url value='/page/bankaccountpreedit.htm?id=${account.id}'/>"  title="Edit"><span>Edit</span></a>
-                                <c:if test='${empty account.partys}'>
+                                <a class="item-button-edit" href="<c:url value='/page/bankaccountpreedit.htm?id=${account.id}'/>"  title="Edit"><span>Edit</span></a>
+                                <c:if test='${account.deleteable}'>
                                 	<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/bankaccountdelete.htm?id=${account.id}'/>', '<spring:message code="notif.delete"/>');" title="Delete"><span>Delete</span></a>
                                 </c:if>
                             </td>

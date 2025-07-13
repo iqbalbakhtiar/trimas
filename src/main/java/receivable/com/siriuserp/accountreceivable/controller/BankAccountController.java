@@ -24,8 +24,8 @@ import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.PartyBankAccount;
-import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
+import com.siriuserp.sdk.springmvc.view.ViewHelper;
 import com.siriuserp.sdk.utility.FormHelper;
 
 import javolution.util.FastMap;
@@ -33,11 +33,12 @@ import javolution.util.FastMap;
 @Controller
 @SessionAttributes(value = "bankAccount_form", types = AccountingForm.class)
 @DefaultRedirect(url = "bankaccountview.htm")
-public class BankAccountController extends ControllerBase {
+public class BankAccountController extends ControllerBase
+{
 
 	@Autowired
-	private BankAccountService bankAccountService;
-	
+	private BankAccountService service;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
@@ -45,19 +46,19 @@ public class BankAccountController extends ControllerBase {
 		binder.registerCustomEditor(PartyBankAccount.class, modelEditor.forClass(PartyBankAccount.class));
 		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
 	}
-	
+
 	@RequestMapping("/bankaccountview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/accounting/bankAccountList", bankAccountService.view(criteriaFactory.create(request, BankAccountFilterCriteria.class), BankAccountViewQuery.class));
+		return new ModelAndView("/accounting/bankAccountList", service.view(criteriaFactory.create(request, BankAccountFilterCriteria.class), BankAccountViewQuery.class));
 	}
-	
+
 	@RequestMapping("/bankaccountpreadd.htm")
 	public ModelAndView preadd()
 	{
-		return new ModelAndView("/accounting/bankAccountAdd", bankAccountService.preadd());
+		return new ModelAndView("/accounting/bankAccountAdd", service.preadd());
 	}
-	
+
 	@RequestMapping("/bankaccountadd.htm")
 	public ModelAndView add(@ModelAttribute("bankAccount_form") AccountingForm form, BindingResult result, SessionStatus status) throws Exception
 	{
@@ -65,7 +66,7 @@ public class BankAccountController extends ControllerBase {
 
 		try
 		{
-			bankAccountService.add(FormHelper.create(BankAccount.class, form));
+			service.add(FormHelper.create(BankAccount.class, form));
 			status.setComplete();
 		} catch (Exception e)
 		{
@@ -76,13 +77,13 @@ public class BankAccountController extends ControllerBase {
 
 		return response;
 	}
-	
+
 	@RequestMapping("/bankaccountpreedit.htm")
 	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
 	{
-		return new ModelAndView("/accounting/bankAccountUpdate", bankAccountService.preedit(id));
+		return new ModelAndView("/accounting/bankAccountUpdate", service.preedit(id));
 	}
-	
+
 	@RequestMapping("/bankaccountedit.htm")
 	public ModelAndView edit(@ModelAttribute("bankAccount_form") AccountingForm form, BindingResult result, SessionStatus status) throws Exception
 	{
@@ -90,7 +91,7 @@ public class BankAccountController extends ControllerBase {
 
 		try
 		{
-			bankAccountService.edit(FormHelper.update(form.getBankAccount(), form));
+			service.edit(FormHelper.update(form.getBankAccount(), form));
 			status.setComplete();
 		} catch (Exception e)
 		{
@@ -101,24 +102,32 @@ public class BankAccountController extends ControllerBase {
 
 		return response;
 	}
-	
-	@RequestMapping("/popupbankaccountview.htm")
-	public ModelAndView show(HttpServletRequest request, @RequestParam("target") String target) throws ServiceException
+
+	@RequestMapping("/bankaccountdelete.htm")
+	public ModelAndView delete(@RequestParam("id") Long id) throws Exception
 	{
-		FastMap<String, Object> map = bankAccountService.view(criteriaFactory.createPopup(request, BankAccountFilterCriteria.class), BankAccountViewQuery.class);
+		service.delete(service.load(id));
+
+		return ViewHelper.redirectTo("bankaccountview.htm");
+	}
+
+	@RequestMapping("/popupbankaccountview.htm")
+	public ModelAndView show(HttpServletRequest request, @RequestParam("target") String target) throws Exception
+	{
+		FastMap<String, Object> map = service.view(criteriaFactory.createPopup(request, BankAccountFilterCriteria.class), BankAccountViewQuery.class);
 		map.put("target", target);
 
 		return new ModelAndView("/accounting-popup/bankAccountPopup", map);
 	}
 
 	@RequestMapping("/popupbankaccountjson.htm")
-	public ModelAndView view(@RequestParam("id") Long id) throws ServiceException
+	public ModelAndView view(@RequestParam("id") Long id) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
 		try
 		{
-			response.store("bank", bankAccountService.load(id));
+			response.store("bank", service.load(id));
 		} catch (Exception e)
 		{
 			response.statusError();

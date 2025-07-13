@@ -19,7 +19,6 @@ import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.PartyBankAccount;
 import com.siriuserp.sdk.dm.TableType;
-import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.FormHelper;
@@ -39,7 +38,7 @@ public class BankAccountService extends Service
 	private GenericDao genericDao;
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws ServiceException
+	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("filterCriteria", filterCriteria);
@@ -63,7 +62,7 @@ public class BankAccountService extends Service
 	}
 
 	@AuditTrails(className = BankAccount.class, actionType = AuditTrailsActionType.CREATE)
-	public void add(BankAccount bankAccount) throws ServiceException
+	public void add(BankAccount bankAccount) throws Exception
 	{
 		bankAccount.setCode(GeneratorHelper.instance().generate(TableType.BANK_ACCOUNT, codeSequenceDao));
 		genericDao.add(bankAccount);
@@ -94,9 +93,16 @@ public class BankAccountService extends Service
 	}
 
 	@AuditTrails(className = BankAccount.class, actionType = AuditTrailsActionType.UPDATE)
-	public void edit(BankAccount account) throws ServiceException
+	public void edit(BankAccount account) throws Exception
 	{
 		genericDao.update(account);
+	}
+
+	@AuditTrails(className = BankAccount.class, actionType = AuditTrailsActionType.DELETE)
+	public void delete(BankAccount bankAccount) throws Exception
+	{
+		if (bankAccount.isDeleteable())
+			genericDao.delete(bankAccount);
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
