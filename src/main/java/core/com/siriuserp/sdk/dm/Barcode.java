@@ -45,12 +45,18 @@ public class Barcode extends Model implements JSONSupport
 
 	@Column(name = "lot_code")
 	private String lotCode;
+	
+	@Column(name = "cone_mark")
+	private String coneMark;
 
 	@Column(name = "quantity")
 	private BigDecimal quantity = BigDecimal.ZERO;
 
 	@Column(name = "quantity_real")
 	private BigDecimal quantityReal = BigDecimal.ZERO;
+	
+	@Column(name = "quantity_cone")
+	private BigDecimal quantityCone = BigDecimal.ZERO;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_barcode_group")

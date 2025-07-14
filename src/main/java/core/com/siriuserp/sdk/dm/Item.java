@@ -41,6 +41,7 @@ public class Item extends SiriusItem
 
 	private BigDecimal quantity = BigDecimal.ZERO;
 	private BigDecimal quantityReal = BigDecimal.ZERO;
+	private BigDecimal quantityCone = BigDecimal.ZERO;
 	private BigDecimal assigned = BigDecimal.ZERO;
 	private BigDecimal price = BigDecimal.ZERO;
 	private BigDecimal rate = BigDecimal.ZERO;
@@ -112,6 +113,7 @@ public class Item extends SiriusItem
 	private String legend;
 	private String referenceCode;
 	private String referenceType;
+	private String coneMark;
 
 	private boolean enabled;
 	private boolean actived;

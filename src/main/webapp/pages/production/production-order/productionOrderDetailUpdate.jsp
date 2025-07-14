@@ -6,6 +6,7 @@
 	</c:if>
 	<c:if test="${access.add}">
 		<a class="item-button-new-row" href="<c:url value='/page/productionorderdetailmaterialrequestpreadd.htm?id=${detail_edit.id}'/>"><span><spring:message code="materialrequest.new"/></span></a>
+		<a class="item-button-new-row" href="<c:url value='/page/productionorderdetailbarcodepreadd.htm?id=${detail_edit.id}'/>"><span><spring:message code="barcoding.new"/></span></a>
 	</c:if>
 </div>
 <div class="main-box">
@@ -93,16 +94,15 @@
 											</tr>
 										</c:forEach>
 										<tr><td colspan="2">&nbsp;</td></tr>
-										<%-- <tr>
-										    <th width="50%" align="right" class="highlight"><spring:message code="goodsissue.refdoc"/></th>
+										<tr>
+										    <th align="right" class="highlight"><spring:message code="barcoding"/></th>
 										</tr>
-										<c:forEach items="${goodsIssue_edit.reference}" var="message" varStatus="status">
+										<c:forEach items="${detail_edit.barcodes}" var="barcode" varStatus="status">
 											<tr>
-											    <td align="right">
-											            ${message}
-											    </td>
+											    <td align="right"><a href="<c:url value='/page/productionorderdetailbarcodepreedit.htm?id=${barcode.id}'/>"><c:out value="${barcode.code}"/></a></td>
 											</tr>
-										</c:forEach> --%>
+										</c:forEach>
+										<tr><td colspan="2">&nbsp;</td></tr>
 									</table>
 								</fieldset>
                              </td>

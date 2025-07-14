@@ -159,10 +159,10 @@ public class BarcodeGroupService
 	}
 
 	@AuditTrails(className = BarcodeGroup.class, actionType = AuditTrailsActionType.CREATE)
-	public void add(BarcodeGroup barcodeGroup) throws Exception
+	public BarcodeGroup add(BarcodeGroup barcodeGroup) throws Exception
 	{
 		InventoryForm form = (InventoryForm) barcodeGroup.getForm();
-		barcodeGroup.setCode(GeneratorHelper.instance().generate(TableType.BARCODE_GROUP, codeSequenceDao, barcodeGroup.getFacility().getCode()));
+		barcodeGroup.setCode(GeneratorHelper.instance().generate(TableType.BARCODE_GROUP, codeSequenceDao));
 
 		for (Item item : barcodeGroup.getForm().getItems())
 		{
@@ -180,6 +180,8 @@ public class BarcodeGroupService
 				barcode.setLotCode(item.getLotCode());
 				barcode.setProduct(item.getProduct());
 				barcode.setQuantity(item.getQuantity());
+				barcode.setConeMark(item.getConeMark());
+				barcode.setQuantityCone(item.getQuantityCone());
 
 				if (SiriusValidator.gz(item.getQuantityReal()))
 					barcode.setQuantityReal(item.getQuantityReal());
@@ -197,6 +199,8 @@ public class BarcodeGroupService
 
 		if (form.getPurchaseOrder() != null)
 			purchaseOrderService.addItem(form.getPurchaseOrder().getId(), barcodeGroup.getForm().getItems());
+		
+		return barcodeGroup;
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)

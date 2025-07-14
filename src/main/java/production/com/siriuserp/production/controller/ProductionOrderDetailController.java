@@ -1,5 +1,7 @@
 package com.siriuserp.production.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -13,8 +15,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.siriuserp.inventory.criteria.ProductionOrderFilterCriteria;
 import com.siriuserp.production.dm.ProductionOrderDetail;
 import com.siriuserp.production.form.ProductionForm;
+import com.siriuserp.production.query.ProductionOrderDetailGridViewQuery;
 import com.siriuserp.production.service.ProductionOrderDetailService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
@@ -104,5 +108,15 @@ public class ProductionOrderDetailController extends ControllerBase
 		service.delete(service.load(id));
 
 		return ViewHelper.redirectTo("productionorderpreedit.htm?id="+poId);
+	}
+	
+	@RequestMapping("/popupproductionorderdetail.htm")
+	public ModelAndView popup(HttpServletRequest request, @RequestParam("target") String target) throws Exception
+	{
+		ModelAndView view = new ModelAndView("/production-popup/productionOrderDetailPopup");
+		view.addAllObjects(service.view(criteriaFactory.createPopup(request, ProductionOrderFilterCriteria.class), ProductionOrderDetailGridViewQuery.class));
+		view.addObject("target", target);
+
+		return view;
 	}
 }

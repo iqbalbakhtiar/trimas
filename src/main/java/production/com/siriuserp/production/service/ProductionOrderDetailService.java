@@ -21,9 +21,13 @@ import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.base.Service;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
+import com.siriuserp.sdk.db.GridViewQuery;
 import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.exceptions.ServiceException;
+import com.siriuserp.sdk.filter.GridViewFilterCriteria;
+import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.GeneratorHelper;
+import com.siriuserp.sdk.utility.QueryFactory;
 
 import javolution.util.FastMap;
 
@@ -40,6 +44,17 @@ public class ProductionOrderDetailService extends Service
 	
 	@Autowired
 	private ProductionOrderService productionOrderService;
+	
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws ServiceException
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		
+		map.put("filterCriteria", filterCriteria);
+		map.put("details", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
+
+		return map;
+	}
 	
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> preadd(Long id)

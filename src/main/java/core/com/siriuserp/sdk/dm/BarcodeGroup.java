@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
@@ -25,6 +26,8 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
+
+import com.siriuserp.production.dm.ProductionOrderDetailBarcode;
 
 import javolution.util.FastSet;
 import lombok.Getter;
@@ -82,6 +85,11 @@ public class BarcodeGroup extends Model
 	@Type(type = "yes_no")
 	private boolean active = false;
 
+	@OneToOne(mappedBy = "barcodeGroup", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private ProductionOrderDetailBarcode productionOrderDetailBarcode;
+	
 	@OneToMany(mappedBy = "barcodeGroup", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)

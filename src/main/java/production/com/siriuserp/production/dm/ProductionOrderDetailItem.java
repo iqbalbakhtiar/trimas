@@ -74,5 +74,4 @@ public class ProductionOrderDetailItem extends Model
 	public String getAuditCode() {
 		return this.id+"";
 	}
-
 }

@@ -95,6 +95,13 @@ public class ProductionOrderDetail extends Model
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@OrderBy("id ASC")
 	private Set<ProductionOrderDetailMaterialRequest> productionOrderDetailMaterialRequests = new FastSet<ProductionOrderDetailMaterialRequest>();
+	
+	@OneToMany(mappedBy = "productionOrderDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	@OrderBy("id ASC")
+	private Set<ProductionOrderDetailBarcode> barcodes = new FastSet<ProductionOrderDetailBarcode>();
 
 	@Override
 	public String getAuditCode() {
