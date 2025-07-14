@@ -13,7 +13,7 @@
 	<sesform:form id="editForm" name="editForm" method="post" modelAttribute="detail_edit" enctype="multipart/form-data">
 	    <table width="100%" border="0">
 			<tr>
-				<td width="60%">
+				<td width="60%" valign="top">
 					<table style="border:none" width="100%">
 						<tr>
 							<td width="34%" align="right"><spring:message code="sirius.id"/></td>
