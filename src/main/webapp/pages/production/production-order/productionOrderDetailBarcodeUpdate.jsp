@@ -122,7 +122,7 @@
 										</c:if>
 									</td>
 									<td><input value="${barcode.code}" class="input-disabled" disabled/></td>
-									<td><input value="${fn:substring(barcode.code, 6, 9)}" class="input-disabled" size="4" disabled/></td>
+									<td><input value="${fn:substring(barcode.code, fn:length(barcode.code) - 3, fn:length(barcode.code))}" class="input-disabled" size="4" disabled/></td>
 									<td><input id="lotCode[${status.index}]" class="input-disabled inputbox" value="${barcode.lotCode}" disabled/></td>
 									<td>
 										<select id="product[${status.index}]" class="input-disabled combobox" disabled>

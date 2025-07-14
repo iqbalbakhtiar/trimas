@@ -16,23 +16,23 @@
 		                </tr>
 		                <tr>
 		                	<td align="right" class="border-left border-bottom">Barcode ID</td>
-		                	<td align="left" class="border-left border-right border-bottom"><c:out value='${item.code}'/></td>
+		                	<td align="right" class="border-left border-right border-bottom"><c:out value='${item.code}'/></td>
 		                </tr>
 		                <tr>
 		                	<td align="right" class="border-left border-bottom">No Karung</td>
-		                	<td align="left" class="border-left border-right border-bottom"><c:out value='${fn:substring(item.code, 6, 9)}'/></td>
+		                	<td align="right" class="border-left border-right border-bottom"><c:out value='${fn:substring(item.code, fn:length(item.code) - 3, fn:length(item.code))}'/></td>
 		                </tr>
 		                <tr>
 		                	<td align="right" class="border-left border-bottom"><spring:message code="barcoding.lotno"/></td>
-		                	<td align="left" class="border-left border-right border-bottom"><c:out value='${item.lotCode}'/></td>
+		                	<td align="right" class="border-left border-right border-bottom"><c:out value='${item.lotCode}'/></td>
 		                </tr>
 		                <tr>
 		                	<td align="right" class="border-left border-bottom"><spring:message code="productionorder.threadtype"/></td>
-		                	<td align="left" class="border-left border-right border-bottom"><c:out value='${item.product.name}'/></td>
+		                	<td align="right" class="border-left border-right border-bottom"><c:out value='${item.product.name}'/></td>
 		                </tr>
 		                <tr>
 		                	<td align="right" class="border-left border-bottom"><spring:message code="barcoding.conemark"/></td>
-		                	<td align="left" class="border-left border-right border-bottom"><c:out value='${item.coneMark}'/></td>
+		                	<td align="right" class="border-left border-right border-bottom"><c:out value='${item.coneMark}'/></td>
 		                </tr>
 		                <tr>
 		                	<td align="right" class="border-left border-bottom"><spring:message code="barcoding.coneqty"/></td>
@@ -48,11 +48,11 @@
 		                </tr>
 		                <tr>
 		                	<td align="right" class="border-left border-bottom">Penimbang</td>
-		                	<td align="left" class="border-left border-right border-bottom"><c:out value='${item.barcodeGroup.productionOrderDetailBarcode.pic}'/></td>
+		                	<td align="right" class="border-left border-right border-bottom"><c:out value='${item.barcodeGroup.productionOrderDetailBarcode.pic}'/></td>
 		                </tr>
 		                <tr>
 		                	<td align="right" class="border-left border-bottom"><spring:message code="sirius.date"/></td>
-		                	<td align="left" class="border-left border-right border-bottom"><fmt:formatDate value='${item.barcodeGroup.productionOrderDetailBarcode.date}' pattern='dd-MM-yyyy'/></td>
+		                	<td align="right" class="border-left border-right border-bottom"><fmt:formatDate value='${item.barcodeGroup.productionOrderDetailBarcode.date}' pattern='dd-MM-yyyy'/></td>
 		                </tr>
 		            </table>
 	           	</div>
