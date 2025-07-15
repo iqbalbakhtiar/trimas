@@ -57,7 +57,7 @@
                                 <thead>
                                 <tr>
                                     <th width="3%">&nbsp;</th>
-                                    <th width="10%"><spring:message code="organization"/></th>
+                                    <th width="10%"><spring:message code="organization"/>sss</th>
                                     <th colspan="2"><spring:message code="goodsreceipt.refdoc"/> / <spring:message code="goodsreceiptitem"/></th>
                                     <th width="10%"><spring:message code="goodsreceipt.date"/></th>
                                     <th width="10%"><spring:message code="makloonandsteam.deliverydate"/></th>

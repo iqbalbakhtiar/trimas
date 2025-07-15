@@ -157,19 +157,19 @@
 						<c:set var="index" value="${index+1}"/>
 						</c:if>
 						<c:forEach items="${item.serials}" var="serial" varStatus="idxSerial">
-						<tr>
-							<td><input style="display: none;" id="reference[${index}]" size="10" value="${serial.id}" name="items[${index}].reference" readonly="true"/></td>
-							<td style="text-align: right;">
-								<input id="serial[${index}]" size="15" value="${serial.lot.serial}" name="items[${index}].serial" class="input-disabled" readonly="true"/>
-								<input style="display: none;" id="lotCode[${index}]" size="10" value="${serial.lot.code}" name="items[${index}].lotCode" class="input-disabled" readonly="true"/>
-							</td>
-							<td><input size="8" value="<fmt:formatNumber value='${serial.quantity}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
-							<td><input id="accepted[${index}]" size="10" value="<fmt:formatNumber value='${serial.quantity}' pattern=',##0.00'/>" class="input-decimal qtyRef${status.index}" onchange="updateQuantity(${status.index});" name="items[${index}].accepted" index="${index}" next="accepted"/></td>
-							<td><input id="returned[${index}]" size="10" value="0.00" class="input-number" onchange="calculateQty(this)" name="items[${index}].returned" index="${index}" next="returned"/></td>
-							<td><input size="5" value="${serial.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
-							<td><%-- <input type="text" size="35" value="${item.note}"/> --%></td>
-						</tr>
-						<c:set var="index" value="${index+1}"/>
+							<tr>
+								<td><input style="display: none;" id="reference[${index}]" size="10" value="${serial.id}" name="items[${index}].reference" readonly="true"/></td>
+								<td style="text-align: right;">
+									<input id="serial[${index}]" size="15" value="${serial.lot.serial}" name="items[${index}].serial" class="input-disabled" readonly="true"/>
+									<input style="display: none;" id="lotCode[${index}]" size="10" value="${serial.lot.code}" name="items[${index}].lotCode" class="input-disabled" readonly="true"/>
+								</td>
+								<td><input size="8" value="<fmt:formatNumber value='${serial.quantity}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
+								<td><input id="accepted[${index}]" size="10" value="<fmt:formatNumber value='${serial.quantity}' pattern=',##0.00'/>" class="input-decimal qtyRef${status.index}" onchange="updateQuantity(${status.index});" name="items[${index}].accepted" index="${index}" next="accepted"/></td>
+								<td><input id="returned[${index}]" size="10" value="0.00" class="input-number" onchange="calculateQty(this)" name="items[${index}].returned" index="${index}" next="returned"/></td>
+								<td><input size="5" value="${serial.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
+								<td><%-- <input type="text" size="35" value="${item.note}"/> --%></td>
+							</tr>
+							<c:set var="index" value="${index+1}"/>
 						</c:forEach>
 					</c:forEach>
 					</tbody>
