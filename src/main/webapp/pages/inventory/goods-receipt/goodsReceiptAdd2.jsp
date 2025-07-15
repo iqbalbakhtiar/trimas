@@ -262,4 +262,21 @@
             $('#receipted\\[' + index + '\\]').val(avVal);
         }
     }
+    
+    $(document).on('input', '.receipt', function () {
+
+        const $input = $(this);
+        const index = $input.attr('index');
+
+        const priceText = $('#price\\[' + index + '\\]').val().replace(/,/g, '');
+        const amount = parseFloat(priceText) || 0;
+
+        const qtyText = $input.val().replace(/,/g, '');
+        const qty = parseFloat(qtyText) || 0;
+
+        const total = qty * amount;
+
+        $('#total\\[' + index + '\\]').val(total.toLocaleString('en-US'));
+        
+    });
 </script>
