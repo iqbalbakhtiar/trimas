@@ -3,7 +3,12 @@
 <div class="toolbar">
 	<a class="item-button-back" href="<c:url value='/page/purchasereportpre.htm'/>"><span><spring:message code="sirius.back"/></span></a>
 	<a class="item-button-print" href="javascript:window.print();"><span><spring:message code="sirius.print"/></span></a>
-	<a class="item-button-export-xls" download="purchasereport.xls" href="#" onclick="return ExcellentExport.excel(this, 'purchaseExport', 'Purchase Report');"><span><spring:message code="sirius.export"/></span></a>
+	<a class="item-button-export-xls"
+	   download="purchasereport.xlsx"
+	   href="#"
+	   onclick="return SheetJS.excel(this, 'purchase', 'Laporan Pembelian');">
+		<span><spring:message code="sirius.export"/></span>
+	</a>
 </div>
 
 <div class="main-box">
@@ -32,28 +37,28 @@
 			<td colspan="15" align="center"><strong>LAPORAN PEMBELIAN</strong></td>
 		</tr>
 		<tr style="height: 30px">
-			<th width="1%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.number"/></th>
-			<th width="5%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.date"/></th>
-			<th width="10%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="contactmechanism.department"/></th>
-			<th width="5%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.document.type"/></th>
-			<th width="5%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;">No PO</th>
-			<th width="10%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="supplier"/></th>
-			<th width="15%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="product.name"/></th>
-			<th width="5%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.uom"/></th>
-			<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.qty"/></th>
-			<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="purchaseorderitem.unitprice"/></th>
-			<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="purchaseorderitem.subtotal"/></th>
-			<th width="8%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.discount"/></th>
-			<th width="8%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="purchaseorder.afterdiscount"/></th>
-			<th width="8%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="purchaseorder.tax"/></th>
-			<th width="8%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="purchaseorder.total"/></th>
+			<th width="1%" align="center" class="border-top border-bottom"><strong><spring:message code="sirius.number"/></strong></th>
+			<th width="5%" align="left" class="border-top border-bottom"><strong><spring:message code="sirius.date"/></strong></th>
+			<th width="10%" align="left" class="border-top border-bottom"><strong><spring:message code="contactmechanism.department"/></strong></th>
+			<th width="5%" align="left" class="border-top border-bottom"><strong><spring:message code="sirius.document.type"/></strong></th>
+			<th width="5%" align="left" class="border-top border-bottom"><strong>No PO</strong></th>
+			<th width="10%" align="left" class="border-top border-bottom"><strong><spring:message code="supplier"/></strong></th>
+			<th width="15%" align="left" class="border-top border-bottom"><strong><spring:message code="product.name"/></strong></th>
+			<th width="5%" align="left" class="border-top border-bottom"><strong><spring:message code="sirius.uom"/></strong></th>
+			<th width="5%" align="right" class="border-top border-bottom"><strong><spring:message code="sirius.qty"/></strong></th>
+			<th width="5%" align="right" class="border-top border-bottom"><strong><spring:message code="purchaseorderitem.unitprice"/></strong></th>
+			<th width="5%" align="right" class="border-top border-bottom"><strong><spring:message code="purchaseorderitem.subtotal"/></strong></th>
+			<th width="8%" align="right" class="border-top border-bottom"><strong><spring:message code="sirius.discount"/></strong></th>
+			<th width="8%" align="right" class="border-top border-bottom"><strong><spring:message code="purchaseorder.afterdiscount"/></strong></th>
+			<th width="8%" align="right" class="border-top border-bottom"><strong><spring:message code="purchaseorder.tax"/></strong></th>
+			<th width="8%" align="right" class="border-top border-bottom"><strong><spring:message code="purchaseorder.total"/></strong></th>
 		</tr>
 		</thead>
 		<tbody>
 		<c:set var='tTotal' value='0'/>
 		<c:forEach items='${reports}' var='repo' varStatus="status">
 			<tr>
-				<td align="left" nowrap="nowrap"><c:out value='${status.index+1}'/></td>
+				<td align="center" nowrap="nowrap"><c:out value='${status.index+1}'/></td>
 				<td align="left" nowrap="nowrap"><fmt:formatDate value='${repo.purchaseOrderItem.purchaseOrder.date}' pattern='dd MMM yyyy'/></td>
 				<td align="left" nowrap="nowrap"><c:out value='${repo.purchaseOrderItem.requisitionItem.purchaseRequisition.department.name}'/></td>
 				<td align="left" nowrap="nowrap"><c:out value="${repo.purchaseOrderItem.purchaseOrder.purchaseDocumentType.normalizedName}"/></td>
@@ -74,83 +79,8 @@
 		</tbody>
 		<tfoot>
 		<tr style="height: 30px">
-			<td align="left" colspan="14" style="border-top:solid 1px black;"><strong><spring:message code="sirius.total"/></strong></td>
-			<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tTotal}' pattern=',##0.00'/></strong></td>
-		</tr>
-		</tfoot>
-	</table>
-</div>
-<%--For Export Excell--%>
-<div hidden="hidden">
-	<table id="purchaseExport" style="border:none;" width="100%" cellspacing="0" cellpadding="5">
-		<thead>
-		<tr>
-			<td colspan="2"><spring:message code="organization"/></td>
-			<td colspan="13">: ${organization.fullName}</td>
-		</tr>
-		<tr>
-			<td colspan="2"><spring:message code="sirius.document.type"/></td>
-			<td colspan="13">:
-				<c:if test="${empty criteria.documentType}"><spring:message code='sirius.all'/></c:if>
-				<c:if test="${not empty criteria.documentType}">${criteria.documentType}</c:if>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2"><spring:message code="supplier"/></td>
-			<td colspan="13">: ${supplier.fullName}</td>
-		</tr>
-		<tr>
-			<td colspan="2"><spring:message code="sirius.date"/></td>
-			<td colspan="13">: <fmt:formatDate value='${criteria.dateFrom}' pattern='dd MMM yyyy'/> - <fmt:formatDate value='${criteria.dateTo}' pattern='dd MMM yyyy'/></td>
-		</tr>
-		<tr>
-			<td colspan="15" align="center"><strong>LAPORAN PEMBELIAN</strong></td>
-		</tr>
-		<tr style="height: 30px">
-			<th width="1%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.number"/></th>
-			<th width="5%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.date"/></th>
-			<th width="10%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="contactmechanism.department"/></th>
-			<th width="5%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;">No SJ</th>
-			<th width="5%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;">No PO</th>
-			<th width="10%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="supplier"/></th>
-			<th width="15%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="product.name"/></th>
-			<th width="5%" align="left" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.uom"/></th>
-			<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.qty"/></th>
-			<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="purchaseorderitem.unitprice"/></th>
-			<th width="5%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="purchaseorderitem.subtotal"/></th>
-			<th width="8%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="sirius.discount"/></th>
-			<th width="8%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="purchaseorder.afterdiscount"/></th>
-			<th width="8%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="purchaseorder.tax"/></th>
-			<th width="8%" align="right" style="border-top:solid 1px black;border-bottom:solid 1px black;"><spring:message code="purchaseorder.total"/></th>
-		</tr>
-		</thead>
-		<tbody>
-		<c:set var='tTotal' value='0'/>
-		<c:forEach items='${reports}' var='repo' varStatus="status">
-			<tr>
-				<td align="left" nowrap="nowrap"><c:out value='${status.index+1}'/></td>
-				<td align="left" nowrap="nowrap"><fmt:formatDate value='${repo.purchaseOrderItem.purchaseOrder.date}' pattern='dd MMM yyyy'/></td>
-				<td align="left" nowrap="nowrap"><c:out value='${repo.purchaseOrderItem.requisitionItem.purchaseRequisition.department.name}'/></td>
-				<td align="left" nowrap="nowrap"><c:out value="${repo.purchaseOrderItem.purchaseOrder.purchaseDocumentType.normalizedName}"/></td>
-				<td align="left" nowrap="nowrap"><a href="<c:url value='/page/purchaseorderpreedit.htm?id=${repo.purchaseOrderItem.purchaseOrder.id}'/>">${repo.purchaseOrderItem.purchaseOrder.code}</a></td>
-				<td align="left" nowrap="nowrap"><c:out value='${repo.purchaseOrderItem.purchaseOrder.supplier.fullName}'/></td>
-				<td align="left" nowrap="nowrap"><c:out value='${repo.purchaseOrderItem.product.name}'/></td>
-				<td align="left" nowrap="nowrap"><c:out value='${repo.purchaseOrderItem.product.unitOfMeasure.measureId}'/></td>
-				<td align="right"><fmt:formatNumber value='${repo.purchaseOrderItem.quantity}' pattern='##0.00'/></td>
-				<td align="right"><fmt:formatNumber value='${repo.price}' pattern='##0.00'/></td>
-				<td align="right"><fmt:formatNumber value='${repo.dpp}' pattern='##0.00'/></td>
-				<td align="right"><fmt:formatNumber value='${repo.purchaseOrderItem.discount}' pattern='##0.00'/></td>
-				<td align="right"><fmt:formatNumber value='${repo.nettPrice}' pattern='##0.00'/></td>
-				<td align="right"><fmt:formatNumber value='${repo.taxAmount}' pattern='##0.00'/></td>
-				<td align="right"><fmt:formatNumber value='${repo.total}' pattern='##0.00'/></td>
-			</tr>
-			<c:set var='tTotal' value='${tTotal+repo.total}'/>
-		</c:forEach>
-		</tbody>
-		<tfoot>
-		<tr style="height: 30px">
-			<td align="left" colspan="14" style="border-top:solid 1px black;"><strong><spring:message code="sirius.total"/></strong></td>
-			<td style="border-top:solid 1px black;" align="right"><strong><fmt:formatNumber value='${tTotal}' pattern='##0.00'/></strong></td>
+			<td align="right" colspan="14" class="border-top"><strong><spring:message code="sirius.total"/></strong></td>
+			<td class="border-top" align="right"><strong><fmt:formatNumber value='${tTotal}' pattern=',##0.00'/></strong></td>
 		</tr>
 		</tfoot>
 	</table>
