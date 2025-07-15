@@ -1,7 +1,9 @@
 package com.siriuserp.inventory.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,6 +44,7 @@ import com.siriuserp.sdk.dao.PartyRelationshipDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.GridViewQuery;
 import com.siriuserp.sdk.dm.CodeSequence;
+import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.CreditTerm;
 import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.Facility;
@@ -400,6 +403,35 @@ public class GoodsReceiptService extends Service
 
 		return map;
 	}
+	
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public Map<String, Object> print(Long id, Long container) throws Exception
+	{
+		InventoryForm form = FormHelper.bind(InventoryForm.class, load(id));
+
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		
+		if(container == null) {
+			List<Container> containers = form.getGoodsReceipt().getItems().stream()
+				    .map(GoodsReceiptItem::getContainer)      
+				    .distinct()                             
+				    .collect(Collectors.toList());
+			
+			map.put("containers", containers);
+		}
+		else {
+			
+			List<GoodsReceiptItem> filteredItems = form.getGoodsReceipt().getItems().stream()
+		            .filter(it -> it.getContainer() != null           // jaga‑jaga null
+		                       && it.getContainer().getId().equals(container))
+		            .collect(Collectors.toList());
+		    map.put("items", filteredItems);
+		}
+	    
+		return map;
+	}
+	
+	
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public GoodsReceipt load(Long id)

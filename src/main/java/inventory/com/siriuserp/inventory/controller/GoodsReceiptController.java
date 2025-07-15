@@ -118,8 +118,14 @@ public class GoodsReceiptController extends ControllerBase
 	}
 
 	@RequestMapping("/goodsreceiptprint.htm")
-	public ModelAndView print(@RequestParam("id") Long id) throws Exception
+	public ModelAndView print(@RequestParam("id") Long id, @RequestParam("container") Long container) throws Exception
 	{
-		return new ModelAndView("/inventory/goods-receipt/goodsReceiptPrint", service.preedit(id));
+		return new ModelAndView("/inventory/goods-receipt/goodsReceiptPrint", service.print(id, container));
+	}
+	
+	@RequestMapping("/goodsreceiptprintoption.htm")
+	public ModelAndView option(@RequestParam("id") Long id) throws Exception
+	{
+		return new ModelAndView("/inventory/goods-receipt/goodsReceiptPrintOption", service.print(id, null));
 	}
 }

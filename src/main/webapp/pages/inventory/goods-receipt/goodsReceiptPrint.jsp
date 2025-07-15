@@ -90,7 +90,7 @@
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 5%">SESUAI</th>
 					  				<th style="border-bottom:1px solid black;border-left:1px solid black;width: 5%">TIDAK SESUAI</th>
 					  			</tr>
-					  			<c:forEach items="${goodsReceipt_edit.items}" var="item" varStatus="idx">
+					  			<c:forEach items="${items}" var="item" varStatus="idx">
 					  			<tr style="height: 20px;">
 					  				<td style="border-bottom:1px solid black;border-left:1px solid black;">${item.product.name}</td>
 					  				<td style="border-bottom:1px solid black;border-left:1px solid black;">${item.lot.serial}</td>
