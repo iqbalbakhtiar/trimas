@@ -62,18 +62,29 @@
 			  		  	  	<th width="10%">Category</th>
                           	<th width="7%">Available</th>
 				  		</tr>
-						<c:forEach items="${products}" var="product">
-						<tr>
-					  		<td class="tools">
-					  			<a class="item-button-add-row" href="javascript:setclient('${product.id}','${product.code}','${fn:replace(product.name, '\"','*')}','${com.qtyToBase}','${com.onHand}','${product.unitOfMeasure.measureId}','${com.buyingPrice}','${product.productCategory.name}','${product.serial}')"  title="Edit"><span>Edit</span></a>
-					  		</td>
-							<td nowrap="nowrap"><c:out value='${product.code}'/></td> 
-							<td nowrap="nowrap"><c:out value='${product.name}'/></td>
-							<td nowrap="nowrap"><c:out value='${product.productCategory.name}'/></td>
-                            <td><fmt:formatNumber value='' pattern=',##0.00000'/></td>
-                        </tr>
-						</c:forEach>
-					  	<tr class="end-table"><td colspan="6">&nbsp;</td></tr>
+							<c:forEach items="${products}" var="com">
+								<tr>
+									<td class="tools">
+										<a class="item-button-add-row"
+										   href="javascript:setclient(
+							                   '${com.product.id}',
+							                   '${com.product.code}',
+							                   '${com.product.name}',
+							                   '${com.product.qtyToBase}',
+							                   '${com.onHand}',
+							                   '${com.product.unitOfMeasure.measureId}',
+							                   '${com1.buyingPrice}',
+							                   '${com.product.productCategory.name}',
+							                   '${com.product.serial}')"
+										   title="Edit"><span>Edit</span></a>
+									</td>
+									<td nowrap="nowrap"><c:out value='${com.product.code}'/></td>
+									<td nowrap="nowrap"><c:out value='${com.product.name}'/></td>
+									<td nowrap="nowrap"><c:out value='${com.product.productCategory.name}'/></td>
+									<td><fmt:formatNumber value='${com.onHand}' pattern=',##0.00000'/></td>
+								</tr>
+							</c:forEach>
+							<tr class="end-table"><td colspan="6">&nbsp;</td></tr>
 					  	</table>
 						<table border="0" cellpadding="0" cellspacing="0" width="99%" align="center" height="20">
 						<tr>

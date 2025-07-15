@@ -42,7 +42,7 @@ public class ProductPopupController extends ControllerBase
 	@RequestMapping("/popupproductforadjustmentview.htm")
 	public ModelAndView foradjustment(HttpServletRequest request, @RequestParam("target") String target, @RequestParam("index") String index) throws Exception
 	{
-		FastMap<String, Object> map = service.view(criteriaFactory.createPopup(request, ProductFilterCriteria.class), ProductGridViewQuery.class);
+		FastMap<String, Object> map = service.view(criteriaFactory.createPopup(request, ProductFilterCriteria.class), ProductPopup4TransferGridViewQuery.class);
 		map.put("target", target);
 		map.put("index", index);
 

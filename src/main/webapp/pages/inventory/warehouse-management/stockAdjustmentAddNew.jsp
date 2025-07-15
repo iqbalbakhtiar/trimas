@@ -241,27 +241,27 @@
 	{
 		openpopup("<c:url value='/page/popupcontainerview.htm?target=container['/>"+index+"]");
 	}
-	
-	function openproduct(index)
-	{
-		const con = document.getElementById('container['+index+']');
-		if(!con.value)
-		{
-			alert('<spring:message code="container"/> <spring:message code="notif.empty"/> !');
-			return;
-		}
-		
-		const org = document.getElementById('org');
-		if(!org.value)
-		{
-			alert('<spring:message code="organization"/> <spring:message code="notif.empty"/> !');
-			return;
-		}
-		
-		openpopup("<c:url value='/page/popupproductforadjustmentview.htm?target=product['/>"+index+"]&index="+index+"&container="+con.value+"&organization="+org.value);
-	}
-	
-	function changeGrid(index) {
+
+    function openproduct(index) {
+        const containerVal = $('#container\\[' + index + '\\]').val();
+        if (!containerVal) {
+            alert('<spring:message code="container"/> <spring:message code="notif.empty"/> !');
+            return;
+        }
+        const orgVal = $('#org').val();
+        if (!orgVal) {
+            alert('<spring:message code="organization"/> <spring:message code="notif.empty"/> !');
+            return;
+        }
+        openpopup(buildUrl('<c:url value="/page/popupproductforadjustmentview.htm"/>', {
+            target: 'product[' + index + ']',
+            index,
+            container: containerVal,
+            organization: orgVal
+        }));
+    }
+
+    function changeGrid(index) {
 		document.getElementById("container["+index+"]").innerHTML = "";
 		$('#onhand\\['+index+'\\]').val(0.00);
 	}
@@ -273,8 +273,6 @@
 		let serial = $('#serial\\['+index+'\\]').val();
 		let serialCheckEl = document.getElementById('serialCheck[' + index + ']');
 		let serialCheck = serialCheckEl ? serialCheckEl.value : "false";
-		
-		$('#onhand\\['+index+'\\]').val(0.00);
 		
 		if(serialCheck.toLowerCase() === "true"){
 			$('#iBody' + index + ' tr.barcodeGroup'+0).remove();
