@@ -41,6 +41,7 @@ import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.dao.PartyRelationshipDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.GridViewQuery;
+import com.siriuserp.sdk.dm.CodeSequence;
 import com.siriuserp.sdk.dm.CreditTerm;
 import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.Facility;
@@ -153,7 +154,8 @@ public class GoodsReceiptService extends Service
 			item.setProduct(transactionItem.getProduct());
 			item.setWarehouseTransactionItem(transactionItem);
 			item.setBuffer(itemAdapter.getIssued());
-
+			item.setAmount(transactionItem.getMoney().getAmount());
+			
 			form.getItems().add(item);
 
 			if (!transactionItem.getType().equals(WarehouseTransactionType.OUT) && !transactionItem.getTransactionCode().contains(builder))
@@ -192,7 +194,7 @@ public class GoodsReceiptService extends Service
 		InventoryConfiguration configuration = genericDao.load(InventoryConfiguration.class, Long.valueOf(1));
 		Assert.notNull(configuration, "Inventory configuration doesnot exist!");
 
-		goodsReceipt.setCode(GeneratorHelper.instance().generate(TableType.GOODS_RECEIPT, codeSequenceDao, goodsReceipt.getOrganization()));
+		goodsReceipt.setCode(GeneratorHelper.instance().generate(TableType.GOODS_RECEIPT,codeSequenceDao,goodsReceipt.getOrganization().getCode(),null,null,CodeSequence.MONTH,null));
 
 		boolean createInvoice = false;
 		for (Item item : goodsReceipt.getForm().getItems())

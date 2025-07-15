@@ -77,7 +77,9 @@
                     <th width="5%"><spring:message code="goodsreceiptitem.uom"/></th>
                     <th width="5%"><spring:message code="barcode"/></th>
                     <th width="5%"><spring:message code="grid"/></th>
-                    <th><spring:message code="container"/></th>
+                    <th width="5%"><spring:message code="container"/></th>
+                    <th width="5%"><spring:message code="pricecategory.price"/></th>
+                    <th width="5%"><spring:message code="sirius.total"/></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -124,6 +126,12 @@
                             <c:if test="${empty item.warehouseTransactionItem.destinationContainer}">
                                 <a class="item-popup" onclick="opencontainerall('${status.index}');" title='<spring:message code="container"/>'/>
                             </c:if>
+                        </td>
+                        <td>
+                            <input id="price[${status.index}]" size="10" class="input-disabled" value="<fmt:formatNumber value='${item.amount}' pattern=',##0'/>" disabled/>
+                        </td>
+                        <td>
+                            <input id="total[${status.index}]" size="10" class="input-disabled" value="<fmt:formatNumber value='${item.amount*item.warehouseTransactionItem.unreceipted}' pattern=',##0'/>" disabled/>
                         </td>
                     </tr>
                 </c:forEach>

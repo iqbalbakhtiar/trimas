@@ -54,7 +54,7 @@
                 <td width="74%"><input value="${ref.referenceFrom}" class='input-disabled' size='25' disabled/></td>
             </tr>
             <tr>
-                <td width="26%" nowrap="nowrap" align="right"><spring:message code="goodsreceipt.supplier.invoice"/> :</td>
+                <td width="26%" nowrap="nowrap" align="right"><spring:message code="goodsreceipt.do.no"/> :</td>
                 <td width="74%"><input size='25' id="invoiceNo" name="invoiceNo" value="${goodsReceipt_edit.invoiceNo}"/></td>
             </tr>
         </table>
@@ -64,11 +64,13 @@
                 <thead>
                 <tr>
                     <th width="10%"><spring:message code="product"/></th>
-                    <th width="5%" style="white-space: normal; line-height: 10px; text-align: center"><spring:message code="invoiceverificationitem.receivedqty"/></th>
+                    <th width="10%" style="white-space: normal; line-height: 10px; text-align: center"><spring:message code="invoiceverificationitem.receivedqty"/></th>
                     <th width="5%"><spring:message code="goodsreceiptitem.uom"/></th>
                     <th width="5%"><spring:message code="barcode"/></th>
                     <th width="5%"><spring:message code="container"/></th>
-                    <th><spring:message code="grid"/></th>
+                    <th width="5%"><spring:message code="grid"/></th>
+                    <th width="5%"><spring:message code="pricecategory.price"/></th>
+                    <th width="5%"><spring:message code="sirius.total"/></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -102,6 +104,12 @@
                                     <option value="${item.grid.id}"><c:out value='${item.grid.name}'/></option>
                                 </c:if>
                             </form:select>
+                        </td>
+                        <td>
+                            <input class="input-disabled" size='6' value="<fmt:formatNumber value='${item.warehouseTransactionItem.money.amount}' pattern=',##0'/>" disabled/>
+                        </td>
+                        <td>
+                            <input class="input-disabled" size='6' value="<fmt:formatNumber value='${item.receipted*item.warehouseTransactionItem.money.amount}' pattern=',##0'/>" disabled/>
                         </td>
                     </tr>
                 </c:forEach>
