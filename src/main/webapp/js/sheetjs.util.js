@@ -33,7 +33,7 @@
                         var raw = cellObj.v + '';
                         var cleanVal = raw.replace(/,/g, '');
                         var isNum = /^-?\d+(\.\d+)?$/.test(cleanVal);
-                        var styleObj = { font: { name: 'Liberation Sans', sz: 10 } };
+                        var styleObj = { font: { name: 'Liberation Serif', sz: 10 } };
 
                         if ($(cellEl).find('strong').length) styleObj.font.bold = true;
 
@@ -66,6 +66,7 @@
             }
 
             worksheet['!merges'] = merges;
+            propagateMergeBorders(worksheet, merges);
             XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
             XLSX.writeFile(workbook, fileName);
             return false;
@@ -74,3 +75,27 @@
 
     window.SheetJS = SheetJSUtil;
 })(window, jQuery);
+
+function propagateMergeBorders(ws, merges) {
+    merges.forEach(function(m){
+        var sr=m.s.r, er=m.e.r, sc=m.s.c, ec=m.e.c;
+        var master = ws[XLSX.utils.encode_cell({r:sr,c:sc})];
+        if (!master || !master.s || !master.s.border) return;
+        var B = master.s.border;
+        for (var r=sr; r<=er; r++) {
+            for (var c=sc; c<=ec; c++) {
+                var addr = XLSX.utils.encode_cell({r:r,c:c});
+                var cell = ws[addr];
+                if (!cell) {
+                    cell = ws[addr] = { t:'s', v:'', s:{} };
+                }
+                cell.s = cell.s || {};
+                cell.s.border = cell.s.border || {};
+                if (r===sr && B.top)    cell.s.border.top    = B.top;
+                if (r===er && B.bottom) cell.s.border.bottom = B.bottom;
+                if (c===sc && B.left)   cell.s.border.left   = B.left;
+                if (c===ec && B.right)  cell.s.border.right  = B.right;
+            }
+        }
+    });
+}
