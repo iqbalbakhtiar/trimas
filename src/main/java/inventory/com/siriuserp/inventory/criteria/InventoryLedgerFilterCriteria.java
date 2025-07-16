@@ -1,15 +1,14 @@
 package com.siriuserp.inventory.criteria;
 
-import java.util.Date;
-import java.util.List;
-
 import com.siriuserp.sdk.dm.Month;
 import com.siriuserp.sdk.filter.AbstractReportFilterCriteria;
-
 import javolution.util.FastList;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,6 +29,7 @@ public class InventoryLedgerFilterCriteria extends AbstractReportFilterCriteria
 	private Long periode;
 	private Long productCategory;
 	private Long supplierId;
+	private Long supplier;
 	private Long tax;
 	private Long colourId;
 
