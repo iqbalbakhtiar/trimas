@@ -7,7 +7,7 @@ package com.siriuserp.accountpayable.query;
 
 import org.hibernate.Query;
 
-import com.siriuserp.accountpayable.criteria.InvoiceVerificationFilterCriteria;
+import com.siriuserp.accountpayable.criteria.FundApplicationFilterCriteria;
 import com.siriuserp.accountpayable.dm.FundApplicationStatus;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.db.ExecutorType;
@@ -24,49 +24,41 @@ public class FundApplicationViewQuery extends AbstractGridViewQuery
 	@Override
 	public Query getQuery(ExecutorType type)
 	{
-		InvoiceVerificationFilterCriteria criteria = (InvoiceVerificationFilterCriteria) getFilterCriteria();
+		FundApplicationFilterCriteria criteria = (FundApplicationFilterCriteria) getFilterCriteria();
 
 		StringBuilder builder = new StringBuilder();
 
 		if (type.compareTo(ExecutorType.COUNT) == 0)
-			builder.append("SELECT COUNT(DISTINCT ver)");
-		else
-			builder.append("SELECT DISTINCT item.invoiceVerification");
+			builder.append("SELECT COUNT(DISTINCT fund) ");
 
 		builder.append("FROM FundApplication fund ");
 		builder.append("WHERE fund.id IS NOT NULL ");
 
 		if (SiriusValidator.validateParam(criteria.getCode()))
-			builder.append("AND ver.code LIKE :code ");
-
-		if (SiriusValidator.validateParam(criteria.getSupplierName()))
-			builder.append("AND ver.supplier.fullName LIKE :supplierName ");
+			builder.append("AND fund.code LIKE :code ");
 
 		if (SiriusValidator.validateParam(criteria.getStatus()))
-			builder.append("AND ver.status =:status ");
+			builder.append("AND fund.status =:status ");
 
 		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 		{
 			if (SiriusValidator.validateDate(criteria.getDateTo()))
-				builder.append("AND ver.date BETWEEN :startDate AND :endDate ");
+				builder.append("AND fund.date BETWEEN :startDate AND :endDate ");
 			else
-				builder.append("AND ver.date >= :startDate ");
+				builder.append("AND fund.date >= :startDate ");
 		}
 
 		if (SiriusValidator.validateDate(criteria.getDateTo()))
-			builder.append("AND ver.date <= :endDate ");
+			builder.append("AND fund.date <= :endDate ");
 
 		if (type.compareTo(ExecutorType.HQL) == 0)
-			builder.append("ORDER BY ver.id DESC");
+			builder.append("ORDER BY fund.id DESC");
 
 		Query query = getSession().createQuery(builder.toString());
 		query.setCacheable(true);
 
 		if (SiriusValidator.validateParam(criteria.getCode()))
 			query.setParameter("code", "%" + criteria.getCode() + "%");
-
-		if (SiriusValidator.validateParam(criteria.getSupplierName()))
-			query.setParameter("supplierName", "%" + criteria.getSupplierName() + "%");
 
 		if (SiriusValidator.validateParam(criteria.getStatus()))
 			query.setParameter("status", FundApplicationStatus.valueOf(criteria.getStatus()));

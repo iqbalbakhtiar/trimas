@@ -81,7 +81,7 @@ public class Party extends Model implements JSONSupport
 
 	@Column(name = "tax_code", length = 50)
 	private String taxCode;
-	
+
 	@Column(name = "permit_code", length = 50)
 	private String permitCode;
 
@@ -91,7 +91,7 @@ public class Party extends Model implements JSONSupport
 	@Column(name = "active")
 	@Type(type = "yes_no")
 	private boolean active = Boolean.TRUE;
-	
+
 	// Untuk membedakan Customer Group atau bukan
 	// True = Group & False = Non Group
 	@Column(name = "base")
@@ -112,23 +112,23 @@ public class Party extends Model implements JSONSupport
 
 	@Column(name = "note")
 	private String note;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_party_group")
 	@LazyToOne(LazyToOneOption.NO_PROXY)
 	@Fetch(FetchMode.SELECT)
 	private Party partyGroup; // Relasi Customer dengan Customer Group
-	
+
 	@OneToOne(mappedBy = "party", fetch = FetchType.LAZY)
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private CoreTax coreTax;
-	
+
 	@OneToOne(mappedBy = "party", fetch = FetchType.LAZY)
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private PaymentMethod paymentMethod;
-	
+
 	@OneToMany(mappedBy = "partyGroup", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
@@ -156,14 +156,14 @@ public class Party extends Model implements JSONSupport
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@OrderBy("id")
 	private Set<ContactMechanism> contactMechanisms = new FastSet<ContactMechanism>();
-	
+
 	@OneToMany(mappedBy = "holder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@OrderBy("id")
 	private Set<BankAccount> bankAccounts = new FastSet<BankAccount>();
-	
+
 	@OneToMany(mappedBy = "party", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
@@ -173,6 +173,15 @@ public class Party extends Model implements JSONSupport
 
 	@Transient
 	private Party organization;
+
+	public BankAccount getDefaultBankAccount()
+	{
+		for (PartyBankAccount partyBankAccount : getPartyBankAccounts())
+			if (partyBankAccount.isSelected())
+				return partyBankAccount.getBankAccount();
+
+		return null;
+	}
 
 	@Override
 	public String getAuditCode()

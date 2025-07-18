@@ -3,6 +3,7 @@ package com.siriuserp.accountpayable.form;
 import java.util.Date;
 
 import com.siriuserp.accounting.dm.GLAccount;
+import com.siriuserp.accountpayable.dm.FundApplication;
 import com.siriuserp.accountpayable.dm.InvoiceVerification;
 import com.siriuserp.accountpayable.dm.Payment;
 import com.siriuserp.accountpayable.dm.PaymentInformation;
@@ -29,6 +30,7 @@ public class PayablesForm extends Form
 	private PaymentManual paymentManual;
 	private GLAccount account;
 	private InvoiceVerification invoiceVerification;
+	private FundApplication fundApplication;
 
 	private PaymentMethodType paymentMethodType;
 	private PaymentManualReferenceType referenceType;

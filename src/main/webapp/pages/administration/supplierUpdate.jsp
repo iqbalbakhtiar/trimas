@@ -171,6 +171,7 @@
 				<th width="10%"><spring:message code="bankaccount.name"/></th>
 				<th width="10%"><spring:message code="bankaccount.account.holder"/></th>
 				<th width="10%"><spring:message code="bankaccount.accountno"/></th>
+	  	  	  	<th width="5%"><spring:message code="sirius.default"/></th>
 				<th width="10%"><spring:message code="sirius.status"/></th>
 				<th width="10%"><spring:message code="sirius.note"/></th>
 			</tr>
@@ -182,7 +183,11 @@
 				</td>
 				<td>${bank.bankAccount.bankName}</td> 
 				<td>${bank.bankAccount.holder.fullName}</td>
-				<td>${bank.bankAccount.accountNo}</td>          
+				<td>${bank.bankAccount.accountNo}</td>
+				<td>
+					<c:if test='${bank.selected}'><spring:message code="sirius.yes"/></c:if>
+					<c:if test='${!bank.selected}'><spring:message code="sirius.no"/></c:if>
+				</td>
 				<td>
 					<c:if test='${bank.enabled}'><spring:message code="sirius.active"/></c:if>
 					<c:if test='${!bank.enabled}'><spring:message code="sirius.inactive"/></c:if>
@@ -190,7 +195,7 @@
 				<td>${bank.bankAccount.note}</td>
 			</tr>
 			</c:forEach>
-			<tr class="end-table"><td colspan="6">&nbsp;</td></tr>
+			<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
 			</table>
 		</div>
 

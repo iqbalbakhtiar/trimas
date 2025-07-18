@@ -1,6 +1,7 @@
 <%@ include file="/common/sirius-general-top.jsp"%>
 
 <div class="toolbar">
+  	<a class="item-button-list" href="<c:url value='/page/fundapplicationview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
     <a class="item-button-next" href="javascript:next();"><span><spring:message code="sirius.generate"/></span></a>
 </div>
 
@@ -38,7 +39,7 @@
    	    	return false;
    	  	}
 
-        submit("addForm","<c:url value='/page/fundapplicationadd2.htm'/>");
+        submit("addForm","<c:url value='/page/fundapplicationpreadd2.htm'/>");
     }
 
 </script>

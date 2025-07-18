@@ -1,64 +1,172 @@
 <%@ include file="/common/sirius-general-top.jsp"%>
 <div class="toolbar">
-  <a class="item-button-list" href="<c:url value='/page/purchaseorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
-  <a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
+  <a class="item-button-back" href="<c:url value='/page/fundapplicationpreadd1.htm'/>"><span><spring:message code="sirius.back"/></span></a>
+  <a class="item-button-save"><span><spring:message code="sirius.save"/></span></a>
 </div>
 <div class="main-box">
-	<sesform:form id="addForm" name="addForm" method="post" modelAttribute="purchase_form" enctype="multipart/form-data">
+	<sesform:form id="addForm" name="addForm" method="post" modelAttribute="fundApplication_form">
 	<table width="100%" border="0">
-	<tr>
-        <td colspan="5" class="pageTitle">AR Ledger Summary</td>
-    </tr>
     <tr>
-        <td colspan="5" class="pageTitle">&nbsp;</td>
+        <td width="40%" style="text-align: left;">
+		    <table style="border:none" width="100%">
+		        <tr>
+		            <td width="34%" align="right"><spring:message code="sirius.code"/></td>
+		            <td width="1%" align="center">:</td>
+		            <td width="64%"><input class="inputbox input-disabled" value="Auto Number" disabled/></td>
+		        </tr>
+		        <tr>
+		            <td align="right"><spring:message code="organization"/></td>
+		            <td width="1%" align="center">:</td>
+		            <td>
+		                <form:select id="org" path="organization" cssClass="combobox-ext">
+		                    <c:if test='${not empty organization}'>
+		                        <form:option value='${organization.id}' label='${organization.fullName}'/>
+		                    </c:if>
+		                </form:select>
+		            </td>
+		        </tr>
+		        <tr>
+		            <td align="right"><spring:message code="sirius.date"/></td>
+		            <td width="1%" align="center">:</td>
+		            <td><input id="date" name="date" class="input-disabled" readonly="true" size="10" value="<fmt:formatDate value='${criteria.date}' pattern='dd-MM-yyyy'/>"/></td>
+		        </tr>
+		        <tr>
+		            <td align="right"><spring:message code="sirius.note"/></td>
+		            <td width="1%" align="center">:</td>
+		            <td><form:textarea path="note" rows="6" cols="45"/></td>
+		        </tr>
+		    </table>
+	    </td>
+        <td width="60%" style="text-align: left;"></td>
     </tr>
+    </table>
+    <div>&nbsp;</div>
+	<c:set var='totalAmount' value='${0}'/>
+    <table width="100%"  cellpadding="5" cellspacing="0">
+    <thead>
     <tr>
-        <td ><spring:message code="organization"/></td>
-        <td >:&nbsp;<c:out value='${organization.fullName}'/></td>
+		<th width="1%" style="border-bottom:1px solid black;border-top:1px solid black;"><input class="checkall" type="checkbox" index=""/></th>
+		<th width="50%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="supplier"/></th>
+   	  	<th align="right" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="sirius.unpaid"/></th>
     </tr>
+    </thead>
+    <tbody>
+    <c:forEach items='${reports}' var='report' varStatus="stat">
     <tr>
-        <td ><spring:message code="sirius.date"/></td>
-        <td >:&nbsp;<fmt:formatDate value='${report.dateFrom}' pattern='dd MMM yyyy' /> - <fmt:formatDate value='${report.dateTo}' pattern='dd MMM yyyy' /></td>
+		<td><input id="check${stat.index}" type="checkbox" class="check" onchange="checkSelected(this);" index="${stat.index}"/></td>
+        <td align="left"><c:out value='${report.supplier.fullName}'/></a></td>
+        <td align="right"><fmt:formatNumber value='${report.amount}' pattern=',##0.00'/></td>
+        <td style="display: none;">
+        	<input id="enabled${stat.index}" name="items[${stat.index}].enabled" value="false" class="enables" readonly="true"/>
+        	<input id="reference${stat.index}" name="items[${stat.index}].reference" value="${report.supplier.id}" readonly="true"/>
+        	<input id="amount${stat.index}" name="items[${stat.index}].amount" value="${report.amount}" readonly="true"/>
+        </td>
     </tr>
-    <tr>
-        <td colspan="5" class="pageTitle">&nbsp;</td>
-    </tr>
-    <tr height="28">
-    	<td><input class="checkall" type="checkbox" index=""/></td>
-        <td width="28%" align="center" valign="middle" style="height:28px;" class="bordered"><strong>Customer</strong></td>
-        <td width="18%" align="center" valign="middle" class="border-top border-bottom border-right"><strong>Opening Balance</strong></td>
-        <td width="17%" align="center" valign="middle" class="border-top border-bottom border-right"><strong>Debit</strong></td>
-        <td width="18%" align="center" valign="middle" class="border-top border-bottom border-right"><strong>Credit</strong></td>
-        <td width="19%" align="center" valign="middle" class="border-top border-bottom border-right"><strong>Closing Balance</strong></td>
-    </tr>
-    <c:set var="totalOpeningBalance" value="0"/>
-    <c:set var="totalDebit" value="0"/>
-    <c:set var="totalCredit" value="0"/>
-    <c:set var="totalClosingBalance" value="0"/>
-    <c:forEach items='${report.details}' var='detail' varStatus="stat">
-        <c:if test='${detail.openingBalance > 0 || detail.debit > 0 || detail.credit > 0}'>
-        <tr>
-        	<td><input id="check${stat.index}" type="checkbox" class="check"/></td>
-            <td align="left" valign="top" class="border-bottom border-right border-left"><a href="<c:url value='/page/ledgerdetailreportview.htm?customer=${detail.customer.id}&organization=${criteria.organization}&date='/><fmt:formatDate value='${report.dateTo}' pattern='dd-MM-yyyy'/>"><c:out value='${detail.customer.fullName}'/></a></td>
-            <td align="right" valign="top" class="border-bottom border-right"><fmt:formatNumber value='${detail.openingBalance}' pattern=',##0.00' groupingUsed='true'/></td>
-            <td align="right" valign="top" class="border-bottom border-right"><fmt:formatNumber value='${detail.debit}' pattern=',##0.00' groupingUsed='true'/></td>
-            <td align="right" valign="top" class="border-bottom border-right"><fmt:formatNumber value='${detail.supremeCredit}' pattern=',##0.00' groupingUsed='true'/></td>
-            <td align="right" valign="top" class="border-bottom border-right"><fmt:formatNumber value='${detail.closingBalance}' pattern=',##0.00' groupingUsed='true'/></td>
-        </tr>
-        <c:set var="totalOpeningBalance" value="${totalOpeningBalance+detail.openingBalance}"/>
-        <c:set var="totalDebit" value="${totalDebit+detail.debit}"/>
-        <c:set var="totalCredit" value="${totalCredit+detail.supremeCredit}"/>
-        <c:set var="totalClosingBalance" value="${totalClosingBalance+detail.closingBalance}"/>
-        </c:if>
+    <c:set var='totalAmount' value='${totalAmount+report.amount}'/>
     </c:forEach>
+    </tbody>
+    <tfoot>
     <tr>
-        <td align="right" valign="top" class="border-bottom border-right border-left"><strong><spring:message code="sirius.total"/></strong></td>
-        <td align="right" valign="top" class="border-bottom border-right"><strong><fmt:formatNumber value='${totalOpeningBalance}' pattern=',##0.00' groupingUsed='true'/></strong></td>
-        <td align="right" valign="top" class="border-bottom border-right"><strong><fmt:formatNumber value='${totalDebit}' pattern=',##0.00' groupingUsed='true'/></strong></td>
-        <td align="right" valign="top" class="border-bottom border-right"><strong><fmt:formatNumber value='${totalCredit}' pattern=',##0.00' groupingUsed='true'/></strong></td>
-        <td align="right" valign="top" class="border-bottom border-right"><strong><fmt:formatNumber value='${totalClosingBalance}' pattern=',##0.00' groupingUsed='true'/></strong></td>
+      	<td colspan="2" align="left" style="border-top:1px solid black;border-bottom:1px solid black;"><strong><spring:message code="sirius.total"/></strong></td>
+        <td align="right" style="border-top:1px solid black;border-bottom:1px solid black;">
+            <strong>
+            <fmt:formatNumber value='${totalAmount}' pattern=',##0.00'/>
+            <c:remove var='totalAmount'/>
+          </strong>
+        </td>
     </tr>
-	</table>
+    <tr>
+      	<td colspan="2" align="left" style="border-bottom:1px solid black;"><strong><spring:message code="sirius.total"/>&nbsp;<spring:message code="fundapplication"/></strong></td>
+        <td align="right" style="border-bottom:1px solid black;">
+            <strong>
+            <div id="totalFund"><fmt:formatNumber value='${0}' pattern=',##0.00'/></div>
+          </strong>
+        </td>
+    </tr>
+    </tfoot>
+    </table>
 	</sesform:form>
 
 <%@ include file="/common/sirius-general-bottom.jsp"%>
+<script type="text/javascript">
+	$(function(){
+		$('.item-button-save').click(function(){
+			validation();
+		});
+		
+		$('.checkall').click(function () {
+	        $('.check').prop("checked", this.checked);
+	        
+	        if(this.checked)
+	        	$('.enables').val(true);
+	        else
+	        	$('.enables').val(false);
+	        
+	        calculateFund();
+	    });
+	});
+	
+	function checkSelected(element) {
+		var idx = element.getAttribute('index');
+		document.getElementById('enabled'+idx).value = element.checked;
+		calculateFund();
+	}
+	
+	function calculateFund() {
+		var total = 0.00;
+		$('.check').each(function(){
+			if(this.checked) {
+				var idx = this.getAttribute('index');
+				total = total + document.getElementById('amount'+idx).value.toNumber();
+			}
+        });
+		
+		$('#totalFund').text(total.numberFormat('#,##0.00'));
+	}
+	
+	function validation() {
+		var totalCheck = 0;
+		$('.check').each(function(){
+			if(this.checked)
+				totalCheck++;
+        });
+		
+		if(totalCheck > 0)
+			save();
+		else {
+			alert('<spring:message code="notif.select1"/> <spring:message code="fundapplication"/> <spring:message code="notif.select2"/> !');
+	        return;
+		}
+	}
+
+    function save() {
+        $.ajax({
+            url:"<c:url value='/page/fundapplicationadd.htm'/>",
+            data:$('#addForm').serialize(),
+            type : 'POST',
+            dataType : 'json',
+            beforeSend:function()
+            {
+                $dialog.empty();
+                $dialog.html('<spring:message code="notif.saving"/>');
+                $dialog.dialog('open');
+            },
+            success : function(json) {
+                if(json)
+                {
+                    if(json.status === 'OK')
+                    {
+                        $dialog.dialog('close');
+                        window.location="<c:url value='/page/fundapplicationpreedit.htm?id='/>"+json.id;
+                    }
+                    else
+                    {
+                        $dialog.empty();
+                        $dialog.html('<spring:message code="notif.profailed"/> :<br/>'+json.message);
+                    }
+                }
+            }
+        });
+    }
+
+</script>

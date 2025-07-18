@@ -45,7 +45,7 @@ public class FundApplicationItem extends Model
 	private BigDecimal amount = BigDecimal.ZERO;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fk_party_customer")
+	@JoinColumn(name = "fk_party_supplier")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private Party supplier;

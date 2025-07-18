@@ -28,6 +28,13 @@
 								<form:radiobutton path="enabled" value="false" label="Inactive"/>
 							</td>
 						</tr>
+                        <tr>
+                            <td align="right"><spring:message code="sirius.default"/> :</td>
+                            <td>
+                                <form:radiobutton path="selected" value='true' label='Yes'/>
+                                <form:radiobutton path="selected" value='false' label='No'/>
+                            </td>
+                        </tr>
  						</table>
 						</sesform:form>
 					</div>
@@ -38,12 +45,6 @@
 		var $dialog = $('<div></div>').dialog({autoOpen: false, title: '${title}',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
 		$('.item-button-save').click(function()
 		{
-			if(!$('#bank').val())
-			{
-				alert('Bank Account cannot be empty!');
-				return;
-			}
-				
 			$.ajax({
 				url:"<c:url value='/page/partybankaccountedit.htm'/>",
 				data:$('#addForm').serialize(),

@@ -22,17 +22,18 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.siriuserp.accountpayable.criteria.InvoiceVerificationFilterCriteria;
+import com.siriuserp.accountpayable.criteria.APLedgerFilterCriteria;
+import com.siriuserp.accountpayable.criteria.FundApplicationFilterCriteria;
+import com.siriuserp.accountpayable.dm.FundApplication;
+import com.siriuserp.accountpayable.form.PayablesForm;
 import com.siriuserp.accountpayable.query.FundApplicationViewQuery;
 import com.siriuserp.accountpayable.service.FundApplicationService;
-import com.siriuserp.accountreceivable.dm.Billing;
-import com.siriuserp.accountreceivable.dm.BillingBatch;
-import com.siriuserp.accountreceivable.form.ReceivablesForm;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.ResponseStatus;
+import com.siriuserp.sdk.springmvc.view.ViewHelper;
 import com.siriuserp.sdk.utility.FormHelper;
 
 /**
@@ -42,7 +43,7 @@ import com.siriuserp.sdk.utility.FormHelper;
  */
 
 @Controller
-@SessionAttributes(value = "fundApplication_form", types = ReceivablesForm.class)
+@SessionAttributes(value = "fundApplication_form", types = PayablesForm.class)
 @DefaultRedirect(url = "fundapplicationview.htm")
 public class FundApplicationController extends ControllerBase
 {
@@ -52,13 +53,13 @@ public class FundApplicationController extends ControllerBase
 	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
-		initBinderFactory.initBinder(binder, Billing.class, Date.class, Party.class);
+		initBinderFactory.initBinder(binder, Date.class, Party.class);
 	}
 
 	@RequestMapping("/fundapplicationview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/payable/fundApplicationList", service.view(criteriaFactory.create(request, InvoiceVerificationFilterCriteria.class), FundApplicationViewQuery.class));
+		return new ModelAndView("/payable/fundApplicationList", service.view(criteriaFactory.create(request, FundApplicationFilterCriteria.class), FundApplicationViewQuery.class));
 	}
 
 	@RequestMapping("/fundapplicationpreadd1.htm")
@@ -68,22 +69,22 @@ public class FundApplicationController extends ControllerBase
 	}
 
 	@RequestMapping("/fundapplicationpreadd2.htm")
-	public ModelAndView preadd2() throws Exception
+	public ModelAndView preadd2(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/payable/fundApplicationAdd1", service.preadd1());
+		return new ModelAndView("/payable/fundApplicationAdd2", service.preadd2(criteriaFactory.createReport(request, APLedgerFilterCriteria.class)));
 	}
 
 	@RequestMapping("/fundapplicationadd.htm")
-	public ModelAndView add(@ModelAttribute("fundApplication_form") ReceivablesForm form, BindingResult result, SessionStatus status) throws Exception
+	public ModelAndView add(@ModelAttribute("fundApplication_form") PayablesForm form, BindingResult result, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
 		try
 		{
-			service.add(FormHelper.create(BillingBatch.class, form));
+			service.add(FormHelper.create(FundApplication.class, form));
 			status.setComplete();
 
-			response.store("id", form.getBillingBatch().getId());
+			response.store("id", form.getFundApplication().getId());
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -97,20 +98,20 @@ public class FundApplicationController extends ControllerBase
 	@RequestMapping("/fundapplicationpreedit.htm")
 	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
 	{
-		return new ModelAndView("/receivable/billingBatchUpdate", service.preedit(id));
+		return new ModelAndView("/payable/fundApplicationUpdate", service.preedit(id));
 	}
 
 	@RequestMapping("/fundapplicationedit.htm")
-	public ModelAndView edit(@ModelAttribute("fundApplication_form") ReceivablesForm form, SessionStatus status) throws Exception
+	public ModelAndView edit(@ModelAttribute("fundApplication_form") PayablesForm form, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
 		try
 		{
-			service.edit(FormHelper.update(form.getBillingBatch(), form));
+			service.edit(FormHelper.update(form.getFundApplication(), form));
 			status.setComplete();
 
-			response.store("id", form.getBillingBatch().getId());
+			response.store("id", form.getFundApplication().getId());
 		} catch (Exception e)
 		{
 			response.setStatus(ResponseStatus.ERROR);
@@ -120,9 +121,20 @@ public class FundApplicationController extends ControllerBase
 		return response;
 	}
 
+	@RequestMapping("/fundapplicationdelete.htm")
+	public ModelAndView delete(@RequestParam("id") Long id) throws Exception
+	{
+		service.delete(id);
+		return ViewHelper.redirectTo("fundapplicationview.htm");
+	}
+
 	@RequestMapping("/fundapplicationprint.htm")
 	public ModelAndView option(@RequestParam("id") Long id, @RequestParam("invType") String invType) throws Exception
 	{
-		return new ModelAndView("/receivable/billingBatchPrint", service.preedit(id));
+		if (invType.equals("2"))
+			return new ModelAndView("/payable/fundApplicationItemPrint", service.preeditItem(id));
+		
+		return new ModelAndView("/payable/fundApplicationPrint", service.preedit(id));
+
 	}
 }
