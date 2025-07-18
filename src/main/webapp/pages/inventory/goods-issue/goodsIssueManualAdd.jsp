@@ -32,7 +32,7 @@
 			<tr>
 				<td nowrap="nowrap" align="right"><spring:message code="sirius.type"/> :</td>
 				<td>
-					<form:select id="issueType" path="issueType" cssClass="combobox-min" onchange="changeType(this);">
+					<form:select id="issueType" path="issueType" cssClass="combobox-min">
 						<c:forEach items="${types}" var="type">
 							<form:option value="${type}" label="${type.capitalizedName}"/>
 						</c:forEach>
@@ -433,7 +433,7 @@
 		}
 	}
 
-	function changeType(el) {
+	/* function changeType(el) {
 		var type = el.value;
 		var $row = $('#recipient').closest('tr');
 		var $sel = $('#recipient');
@@ -447,7 +447,7 @@
 			$row.show();
 			$sel.prop('disabled', false);
 		}
-	}
+	} */
 
 	function openRecipient() {
 		const org = $('#org').val()
