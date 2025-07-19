@@ -5,6 +5,7 @@
  */
 package com.siriuserp.accountpayable.criteria;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.siriuserp.sdk.dm.Party;
@@ -29,6 +30,9 @@ public class APLedgerFilterCriteria extends AbstractReportFilterCriteria
 	private Party supplier;
 
 	private Long supplierId;
+	private Long currencyId;
+
+	private BigDecimal rate;
 
 	private Date dateFrom;
 	private Date dateTo;

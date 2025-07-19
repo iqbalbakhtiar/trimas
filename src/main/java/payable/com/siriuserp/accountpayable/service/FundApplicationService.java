@@ -23,9 +23,12 @@ import com.siriuserp.accountpayable.query.FundApplicationAddQuery;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
+import com.siriuserp.sdk.dao.CurrencyDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.GridViewQuery;
+import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.Item;
+import com.siriuserp.sdk.dm.Money;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
@@ -54,6 +57,9 @@ public class FundApplicationService
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
 
+	@Autowired
+	private CurrencyDao currencyDao;
+
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
 	{
@@ -70,6 +76,8 @@ public class FundApplicationService
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("filterCriteria", new APLedgerFilterCriteria());
 		map.put("organization", UserHelper.activeUser().getProfile().getOrganization());
+		map.put("currencys", genericDao.loadAll(Currency.class));
+		map.put("defaultCurrency", currencyDao.loadDefaultCurrency());
 
 		return map;
 	}
@@ -77,14 +85,18 @@ public class FundApplicationService
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> preadd2(APLedgerFilterCriteria criteria) throws Exception
 	{
+		PayablesForm form = new PayablesForm();
+		form.setOrganization(genericDao.load(Party.class, criteria.getOrganization()));
+		form.setCurrency(genericDao.load(Currency.class, criteria.getCurrencyId()));
+		form.setRate(criteria.getRate());
+		form.setDate(criteria.getDate());
+
 		FundApplicationAddQuery query = new FundApplicationAddQuery();
 		query.setFilterCriteria(criteria);
 
 		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("fundApplication_form", new PayablesForm());
-		map.put("organization", genericDao.load(Party.class, criteria.getOrganization()));
+		map.put("fundApplication_form", form);
 		map.put("reports", genericDao.generate(query));
-		map.put("criteria", criteria);
 
 		return map;
 	}
@@ -95,6 +107,10 @@ public class FundApplicationService
 		PayablesForm form = (PayablesForm) fundApplication.getForm();
 
 		fundApplication.setCode(GeneratorHelper.instance().generate(TableType.FUND_APPLICATION, codeSequenceDao));
+
+		Money money = new Money();
+		Currency currency = genericDao.load(Currency.class, 1L);
+		money.setCurrency(currency);
 
 		BigDecimal amount = BigDecimal.ZERO;
 
@@ -113,7 +129,9 @@ public class FundApplicationService
 			}
 		}
 
-		fundApplication.setAmount(amount);
+		money.setAmount(amount);
+		fundApplication.setMoney(money);
+
 		genericDao.add(fundApplication);
 	}
 
@@ -122,7 +140,7 @@ public class FundApplicationService
 	{
 		FundApplication fundApplication = genericDao.load(FundApplication.class, id);
 		PayablesForm form = FormHelper.bind(PayablesForm.class, fundApplication);
-		String saidId = EnglishNumber.convertIdComma(form.getFundApplication().getAmount().setScale(2, RoundingMode.HALF_UP));
+		String saidId = EnglishNumber.convertIdComma(form.getFundApplication().getMoney().getAmount().setScale(2, RoundingMode.HALF_UP));
 
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("fundApplication_form", form);

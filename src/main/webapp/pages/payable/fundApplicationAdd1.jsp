@@ -6,7 +6,7 @@
 </div>
 
 <div class="main-box">
-    <sesform:form name="addForm" id="addForm" method="post" modelAttribute="ledgerCriteria">
+    <sesform:form name="addForm" id="addForm" method="post" modelAttribute="filterCriteria">
         <table width="100%" style="border:none">
             <tr>
                 <td width="22%" align="right"><spring:message code="organization"/></td>
@@ -24,6 +24,17 @@
                 <td>
                     <input id="date" name="date" class="datepicker"/>
                 </td>
+            </tr>
+            <tr>
+                <td width="24%" align="right"><spring:message code="currencymanagement"/> :</td>
+  				<td>
+                    <form:select id='currency' path='currencyId'>
+                        <c:forEach items='${currencys}' var='currency'>
+                            <form:option value='${currency.id}' label='${currency.symbol}'/>
+                        </c:forEach>
+                    </form:select>
+                    <form:input id="trxrate" path='rate' cssClass="input-number" value="1" size="10"/>
+                </td>				
             </tr>
         </table>
     </sesform:form>

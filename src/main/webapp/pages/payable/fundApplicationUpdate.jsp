@@ -46,6 +46,7 @@
 		<th width="1%" style="border-bottom:1px solid black;border-top:1px solid black;">&nbsp;</th>
 		<th width="50%" align="left" style="border-bottom:1px solid black;border-top:1px solid black;"><spring:message code="supplier"/></th>
    	  	<th style="border-bottom:1px solid black;border-top:1px solid black;text-align: right;"><spring:message code="sirius.unpaid"/></th>
+   	  	<th style="border-bottom:1px solid black;border-top:1px solid black;padding-left: 5px;"><spring:message code="sirius.note"/></th>
     </tr>
     </thead>
     <tbody>
@@ -56,6 +57,7 @@
 		</td>
         <td align="left"><c:out value='${item.supplier.fullName}'/></a></td>
         <td style="text-align: right;"><fmt:formatNumber value='${item.amount}' pattern=',##0.00'/></td>
+        <td align="left" style="padding-left: 5px;"><form:input path="fundApplication.items[${stat.index}].note" size="50"/></td>
     </tr>
     <c:set var='totalAmount' value='${totalAmount+item.amount}'/>
     </c:forEach>
@@ -71,7 +73,7 @@
           </strong>
         </td>
     </tr>
-    <tr><td colspan="3">&nbsp;</td></tr>
+    <tr><td colspan="4">&nbsp;</td></tr>
     </tfoot>
     </table>
 	</sesform:form>

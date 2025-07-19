@@ -5,6 +5,7 @@
  */
 package com.siriuserp.accountpayable.controller;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,7 +54,7 @@ public class FundApplicationController extends ControllerBase
 	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
-		initBinderFactory.initBinder(binder, Date.class, Party.class);
+		initBinderFactory.initBinder(binder, Date.class, Party.class, BigDecimal.class);
 	}
 
 	@RequestMapping("/fundapplicationview.htm")
@@ -133,7 +134,7 @@ public class FundApplicationController extends ControllerBase
 	{
 		if (invType.equals("2"))
 			return new ModelAndView("/payable/fundApplicationItemPrint", service.preeditItem(id));
-		
+
 		return new ModelAndView("/payable/fundApplicationPrint", service.preedit(id));
 
 	}

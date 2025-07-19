@@ -19,17 +19,25 @@
 		            <td width="1%" align="center">:</td>
 		            <td>
 		                <form:select id="org" path="organization" cssClass="combobox-ext">
-		                    <c:if test='${not empty organization}'>
-		                        <form:option value='${organization.id}' label='${organization.fullName}'/>
-		                    </c:if>
+	                        <form:option value='${fundApplication_form.organization.id}' label='${fundApplication_form.organization.fullName}'/>
 		                </form:select>
 		            </td>
 		        </tr>
 		        <tr>
 		            <td align="right"><spring:message code="sirius.date"/></td>
 		            <td width="1%" align="center">:</td>
-		            <td><input id="date" name="date" class="input-disabled" readonly="true" size="10" value="<fmt:formatDate value='${criteria.date}' pattern='dd-MM-yyyy'/>"/></td>
+		            <td><input id="date" name="date" class="input-disabled" readonly="true" size="10" value="<fmt:formatDate value='${fundApplication_form.date}' pattern='dd-MM-yyyy'/>"/></td>
 		        </tr>
+	            <tr>
+	                <td width="24%" align="right"><spring:message code="currencymanagement"/></td>
+	                <td width="1%" align="center">:</td>
+	  				<td>
+	                    <form:select id='currency' path='currency'>
+                            <form:option value='${fundApplication_form.currency.id}' label='${fundApplication_form.currency.symbol}'/>
+	                    </form:select>
+	                    <form:input id="trxrate" path='rate' cssClass="number-disabled" value="${fundApplication_form.rate}" size="10" readonly="true"/>
+	                </td>				
+	            </tr>
 		        <tr>
 		            <td align="right"><spring:message code="sirius.note"/></td>
 		            <td width="1%" align="center">:</td>

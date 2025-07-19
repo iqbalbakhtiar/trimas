@@ -44,6 +44,9 @@ public class FundApplicationItem extends Model
 	@Column(name = "amount")
 	private BigDecimal amount = BigDecimal.ZERO;
 
+	@Column(name = "note")
+	private String note;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_party_supplier")
 	@LazyToOne(LazyToOneOption.PROXY)

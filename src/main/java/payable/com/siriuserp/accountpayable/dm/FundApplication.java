@@ -5,12 +5,12 @@
  */
 package com.siriuserp.accountpayable.dm;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -31,6 +31,7 @@ import org.hibernate.annotations.Type;
 
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Model;
+import com.siriuserp.sdk.dm.Money;
 import com.siriuserp.sdk.dm.Party;
 
 import javolution.util.FastSet;
@@ -62,8 +63,8 @@ public class FundApplication extends Model
 	@Column(name = "note")
 	private String note;
 
-	@Column(name = "amount")
-	private BigDecimal amount = BigDecimal.ZERO;
+	@Embedded
+	private Money money = new Money();
 
 	@Column(name = "fund_application_status")
 	@Enumerated(EnumType.STRING)

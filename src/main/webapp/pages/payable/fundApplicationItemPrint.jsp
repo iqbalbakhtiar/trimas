@@ -97,10 +97,10 @@
 											<td class="border-bottom border-right"></td>
 											<td class="border-bottom border-right" colspan="4" valign="middle">
 												<table border="0" width="100%" cellpadding="3" cellspacing="0">
-												<c:if test="${not empty applicationItem.fundApplication.note}">
+												<c:if test="${not empty applicationItem.note}">
 												<tr>
 													<td width="5%">&nbsp;</td>
-													<td width="95%" style="padding-left: 10px;">${applicationItem.fundApplication.note}</td>
+													<td width="95%" style="padding-left: 10px;">${applicationItem.note}</td>
 												</tr>
 												<tr style="height: 50px;">
 													<td colspan="2">&nbsp;</td>
@@ -120,8 +120,8 @@
 										</tr>
 										<tr>
 											<td class="border-bottom border-right">Terbilang</td>
-											<td class="border-bottom border-right" colspan="4"><c:out value='${saidId}'/> Rupiah</td>
-											<td class="border-bottom" align="center"><strong>Rp <fmt:formatNumber value="${applicationItem.amount}" pattern=",##0.00"/></strong></td>
+											<td class="border-bottom border-right" colspan="4"><c:out value='${saidId}'/> <c:out value="${applicationItem.fundApplication.money.currency.alias}"/></td>
+											<td class="border-bottom" align="center"><strong><c:out value="${applicationItem.fundApplication.money.currency.symbol}"/> <fmt:formatNumber value="${applicationItem.amount}" pattern=",##0.00"/></strong></td>
 										</tr>
 										<tr style="height:20px;">
 											<td class="border-bottom border-right" align="center">Tanggal</td>
