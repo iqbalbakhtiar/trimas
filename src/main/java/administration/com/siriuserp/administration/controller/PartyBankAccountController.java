@@ -23,27 +23,29 @@ import com.siriuserp.sdk.springmvc.view.ViewHelper;
 
 @Controller
 @SessionAttributes(value = { "partyBankAccount_add", "partyBankAccount_edit" }, types = PartyBankAccount.class)
-public class PartyBankAccountController extends ControllerBase {
+public class PartyBankAccountController extends ControllerBase
+{
 
 	@Autowired
 	private PartyBankAccountService service;
-	
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
 		binder.registerCustomEditor(Party.class, modelEditor.forClass(Party.class));
 		binder.registerCustomEditor(BankAccount.class, modelEditor.forClass(BankAccount.class));
 	}
-	
+
 	@RequestMapping("/partybankaccountpreadd.htm")
-	public ModelAndView preadd(@RequestParam("party") Long party, @RequestParam(value = "relationshipId", required = false) Long relationshipId, @RequestParam(value = "uri", required = false) String uri) {
+	public ModelAndView preadd(@RequestParam("party") Long party, @RequestParam(value = "relationshipId", required = false) Long relationshipId, @RequestParam(value = "uri", required = false) String uri)
+	{
 		ModelAndView view = new ModelAndView("/administration/partyBankAccountAdd", service.preadd(party));
 		view.addObject("redirectURL", uri);
 		view.addObject("relationshipId", relationshipId);
 
 		return view;
 	}
-	
+
 	@RequestMapping("/partybankaccountadd.htm")
 	public ModelAndView add(@ModelAttribute("partyBankAccount_add") PartyBankAccount partyBankAccount, SessionStatus status)
 	{
@@ -63,7 +65,7 @@ public class PartyBankAccountController extends ControllerBase {
 
 		return response;
 	}
-	
+
 	@RequestMapping("/partybankaccountpreedit.htm")
 	public ModelAndView preedit(@RequestParam("id") Long id, @RequestParam(value = "relationshipId", required = false) Long relationshipId, @RequestParam(value = "uri", required = false) String uri)
 	{
@@ -73,7 +75,7 @@ public class PartyBankAccountController extends ControllerBase {
 
 		return view;
 	}
-	
+
 	@RequestMapping("/partybankaccountedit.htm")
 	public ModelAndView edit(@ModelAttribute("partyBankAccount_edit") PartyBankAccount partyBankAccount, SessionStatus status)
 	{
@@ -91,7 +93,7 @@ public class PartyBankAccountController extends ControllerBase {
 
 		return response;
 	}
-	
+
 	@RequestMapping("/partybankaccountdelete.htm")
 	public ModelAndView delete(@RequestParam("id") Long id, @RequestParam("party") Long party, @RequestParam(value = "relationshipId", required = false) Long relationshipId, @RequestParam(value = "uri", required = false) String uri) throws Exception
 	{

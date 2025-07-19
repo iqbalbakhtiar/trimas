@@ -3,13 +3,13 @@
  * Created On : Feb 5, 2025
  * Email	  : iqbal@siriuserp.com
  */
-package com.siriuserp.administration.dao.impl;
+package com.siriuserp.sales.dao.impl;
 
 import org.hibernate.Query;
 import org.springframework.stereotype.Component;
 
+import com.siriuserp.sales.dao.SalesOrderItemDao;
 import com.siriuserp.sales.dm.SalesOrderItem;
-import com.siriuserp.sdk.dao.SalesOrderItemDao;
 import com.siriuserp.sdk.db.DaoHelper;
 
 /**
@@ -18,7 +18,7 @@ import com.siriuserp.sdk.db.DaoHelper;
  * www.siriuserp.com
  */
 
-@Component("salesReferenceItemDao")
+@Component
 public class SalesOrderItemDaoImpl extends DaoHelper<SalesOrderItem> implements SalesOrderItemDao
 {
 	@Override

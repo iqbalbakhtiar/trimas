@@ -77,7 +77,12 @@
       <tr>
       		<td style="border-left:solid 1px #000000;border-bottom:solid 1px #000000;border-right:solid 1px #000000;"><fmt:formatDate value='${criteria.dateFrom}' pattern='dd-MM-yyyy'/></td>
           	<td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" colspan='4'><spring:message code="accreport.opening"/></td>
-          	<td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${report.opening}' pattern=',##0.00'/></td>
+          	<td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right">
+          		<fmt:formatNumber value='${report.opening}' pattern=',##0.00'/>
+          		<c:if test="${criteria.showBale}">
+	          		<strong>(<fmt:formatNumber value='${report.openingBale}' pattern=',##0.00'/> BALE)</strong>
+	          	</c:if>
+          </td>
           	<%-- <c:if test="${criteria.showBale}">
 	          	<td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" colspan='2'>&nbsp;</td>
 	          	<td style="border-bottom:solid 1px #000000;border-right:solid 1px #000000;" align="right"><fmt:formatNumber value='${report.openingBale}' pattern=',##0.00'/></td>

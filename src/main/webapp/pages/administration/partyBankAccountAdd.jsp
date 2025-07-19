@@ -27,6 +27,13 @@
 								<form:radiobutton path="enabled" value="false" label="Inactive"/>
 							</td>
 						</tr>
+                        <tr>
+                            <td align="right"><spring:message code="sirius.default"/> :</td>
+                            <td>
+                                <form:radiobutton path="selected" value='true' label='Yes'/>
+                                <form:radiobutton path="selected" value='false' label='No'/>
+                            </td>
+                        </tr>
  						</table>
 						</sesform:form>
 					</div>

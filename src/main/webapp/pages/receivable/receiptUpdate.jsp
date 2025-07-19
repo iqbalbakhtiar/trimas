@@ -21,7 +21,7 @@
                 <td width="60%">
                     <table style="border:none" width="100%">
                         <tr>
-                            <td width="34%" align="right">Sales Order ID</td>
+                            <td width="34%" align="right"><spring:message code="sirius.code"/></td>
                             <td width="1%" align="center">:</td>
                             <td width="64%"><input class="inputbox input-disabled" value="${receipt_form.code}" disabled/></td>
                         </tr>

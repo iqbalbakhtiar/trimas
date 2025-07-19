@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.siriuserp.sales.adapter.SalesOrderAdapter;
+import com.siriuserp.sales.dao.SalesOrderItemDao;
 import com.siriuserp.sales.dm.ApprovableType;
 import com.siriuserp.sales.dm.DeliveryPlanning;
 import com.siriuserp.sales.dm.SOStatus;
@@ -23,7 +24,6 @@ import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.base.Service;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.GenericDao;
-import com.siriuserp.sdk.dao.SalesOrderItemDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
 import com.siriuserp.sdk.dm.Currency;

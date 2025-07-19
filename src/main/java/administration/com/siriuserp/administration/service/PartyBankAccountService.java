@@ -18,31 +18,50 @@ import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class PartyBankAccountService extends Service {
-	
+public class PartyBankAccountService extends Service
+{
 	@Autowired
 	private GenericDao genericDao;
-	
+
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> preadd(Long party)
 	{
 		PartyBankAccount partyBankAccount = new PartyBankAccount();
 		partyBankAccount.setParty(genericDao.load(Party.class, party));
-		
+
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("partyBankAccount_add", partyBankAccount);
 
 		return map;
 	}
-	
+
 	@AuditTrails(className = PartyBankAccount.class, actionType = AuditTrailsActionType.CREATE)
-	public void add(PartyBankAccount bankAccount) throws ServiceException {
-		bankAccount.setCreatedDate(DateHelper.now());
-		bankAccount.setCreatedBy(getPerson());
-		
-		genericDao.add(bankAccount);
+	public void add(PartyBankAccount partyBankAccount) throws ServiceException
+	{
+		partyBankAccount.setCreatedDate(DateHelper.now());
+		partyBankAccount.setCreatedBy(getPerson());
+
+		genericDao.add(partyBankAccount);
+
+		Party party = partyBankAccount.getParty();
+		party.setUpdatedBy(getPerson());
+		party.setUpdatedDate(DateHelper.now());
+
+		genericDao.update(party);
+
+		for (PartyBankAccount bankAccount : party.getPartyBankAccounts())
+		{
+			if (bankAccount.isSelected())
+			{
+				if (!bankAccount.getId().equals(partyBankAccount.getId()))
+				{
+					bankAccount.setSelected(false);
+					genericDao.update(bankAccount);
+				}
+			}
+		}
 	}
-	
+
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> preedit(Long id)
 	{
@@ -51,15 +70,37 @@ public class PartyBankAccountService extends Service {
 
 		return map;
 	}
-	
+
 	@AuditTrails(className = PartyBankAccount.class, actionType = AuditTrailsActionType.UPDATE)
 	public void edit(PartyBankAccount partyBankAccount) throws ServiceException
 	{
+		if (!partyBankAccount.isEnabled())
+			partyBankAccount.setSelected(false);
+
 		partyBankAccount.setUpdatedBy(getPerson());
 		partyBankAccount.setUpdatedDate(DateHelper.now());
+
 		genericDao.update(partyBankAccount);
+
+		Party party = partyBankAccount.getParty();
+		party.setUpdatedBy(getPerson());
+		party.setUpdatedDate(DateHelper.now());
+
+		genericDao.update(party);
+
+		for (PartyBankAccount bankAccount : party.getPartyBankAccounts())
+		{
+			if (bankAccount.isSelected())
+			{
+				if (!bankAccount.getId().equals(partyBankAccount.getId()))
+				{
+					bankAccount.setSelected(false);
+					genericDao.update(bankAccount);
+				}
+			}
+		}
 	}
-	
+
 	@AuditTrails(className = PartyBankAccount.class, actionType = AuditTrailsActionType.DELETE)
 	public void delete(Long id) throws ServiceException
 	{

@@ -148,6 +148,9 @@ public class InventoryLedgerDetailQuery extends AbstractStandardReportQuery
 		if (SiriusValidator.validateParam(criteria.getLotCode()))
 			builder.append("AND balance.lotCode =:lotCode ");
 
+		if (criteria.getShowLot() != null && criteria.getShowLot() == Boolean.TRUE)
+			builder.append("AND balance.lotCode IS NOT NULL ");
+
 		builder.append("GROUP BY balance.containerId, ");
 
 		if (criteria.getShowLot() != null && criteria.getShowLot() == true)
