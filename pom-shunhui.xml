@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>siriuserp-1.5-sanstar</groupId>
-  <artifactId>siriuserp-1.5-sanstar</artifactId>
+  <groupId>siriuserp-1.5-shunhui</groupId>
+  <artifactId>siriuserp-1.5-shunhui</artifactId>
   <version>1.5</version>
   <packaging>war</packaging>
-  <name>siriuserp-1.5-sanstar</name>
-  <description>siriuserp-1.5-sanstar</description>
+  <name>siriuserp-1.5-shunhui</name>
+  <description>siriuserp-1.5-shunhui</description>
 
 	<dependencies>
 	
@@ -83,7 +83,7 @@
         <version>3.2.3</version>
         <configuration>
           <warSourceDirectory>src/main/webapp</warSourceDirectory>
-          <warName>sanstar</warName>
+          <warName>shunhui</warName>
           <archive>
 		    <addMavenDescriptor>false</addMavenDescriptor>
 		  </archive>
@@ -110,7 +110,7 @@
 	               <deployable>
 	                   <location>${project.build.directory}/${project.build.finalName}</location>
 	                   <properties>
-	                       <context>/sanstar</context>
+	                       <context>/shunhui</context>
 	                   </properties>
 	               </deployable>
 	           </deployables>
