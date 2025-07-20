@@ -1,4 +1,4 @@
-package com.siriuserp.inventory.query;
+package com.siriuserp.accountreceivable.query;
 
 import com.siriuserp.accountreceivable.criteria.BillingFilterCriteria;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;

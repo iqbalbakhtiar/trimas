@@ -21,7 +21,7 @@ import com.siriuserp.accountreceivable.criteria.BillingFilterCriteria;
 import com.siriuserp.accountreceivable.dm.Billing;
 import com.siriuserp.accountreceivable.dm.BillingBatch;
 import com.siriuserp.accountreceivable.form.ReceivablesForm;
-import com.siriuserp.inventory.query.BillingBatchViewQuery;
+import com.siriuserp.accountreceivable.query.BillingBatchViewQuery;
 import com.siriuserp.inventory.service.BillingBatchService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
