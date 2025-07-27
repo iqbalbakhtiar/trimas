@@ -1,5 +1,7 @@
 /**
- * 
+ * File Name  : StockAdjustmentController.java
+ * Created On : Jul 26, 2025
+ * Email	  : iqbal@siriuserp.com
  */
 package com.siriuserp.inventory.controller;
 
@@ -17,13 +19,11 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.siriuserp.inventory.criteria.BarcodeGroupFilterCriteria;
 import com.siriuserp.inventory.criteria.OnHandQuantityFilterCriteria;
 import com.siriuserp.inventory.criteria.StockAdjustmentFilterCriteria;
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.dm.StockAdjustment;
 import com.siriuserp.inventory.form.InventoryForm;
-import com.siriuserp.inventory.query.BarcodeGroupGridViewQuery;
 import com.siriuserp.inventory.query.StockAdjustmentGridViewQuery;
 import com.siriuserp.inventory.service.StockAdjustmentService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
@@ -35,18 +35,18 @@ import com.siriuserp.sdk.dm.ExchangeType;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Grid;
 import com.siriuserp.sdk.dm.Party;
-import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.springmvc.ResponseStatus;
 import com.siriuserp.sdk.utility.FormHelper;
 
 /**
- * @author ferdinand
- * @author Rama Almer Felix
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
  */
 
 @Controller
-@SessionAttributes(value = { "adjustment_add", "adjustment_edit" }, types = { StockAdjustment.class, InventoryForm.class })
+@SessionAttributes(value = "adjustment_form", types = InventoryForm.class)
 @DefaultRedirect(url = "stockadjustmentview.htm")
 public class StockAdjustmentController extends ControllerBase
 {
@@ -67,19 +67,19 @@ public class StockAdjustmentController extends ControllerBase
 	}
 
 	@RequestMapping("/stockadjustmentview.htm")
-	public ModelAndView view(HttpServletRequest request) throws ServiceException
+	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
 		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentList", service.view(criteriaFactory.create(request, StockAdjustmentFilterCriteria.class), StockAdjustmentGridViewQuery.class));
 	}
 
 	@RequestMapping("/stockadjustmentpreadd.htm")
-	public ModelAndView preadd() throws ServiceException
+	public ModelAndView preadd() throws Exception
 	{
-		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentAddNew", service.preadd());
+		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentAdd", service.preadd());
 	}
 
 	@RequestMapping("/stockadjustmentadd.htm")
-	public ModelAndView add(@ModelAttribute("adjustment_add") InventoryForm form, SessionStatus status) throws Exception
+	public ModelAndView add(@ModelAttribute("adjustment_form") InventoryForm form, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
@@ -100,22 +100,22 @@ public class StockAdjustmentController extends ControllerBase
 	}
 
 	@RequestMapping("/stockadjustmentpreedit.htm")
-	public ModelAndView preedit(@RequestParam("id") Long id) throws ServiceException
+	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
 	{
 		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentUpdate", service.preedit(id));
 	}
 
 	@RequestMapping("/stockadjustmentedit.htm")
-	public ModelAndView edit(@ModelAttribute("adjustment_edit") StockAdjustment stockAdjustment, SessionStatus status) throws ServiceException
+	public ModelAndView edit(@ModelAttribute("adjustment_form") InventoryForm form, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 
 		try
 		{
-			service.edit(stockAdjustment);
+			service.edit(FormHelper.update(form.getStockAdjustment(), form));
 			status.setComplete();
 
-			response.store("id", stockAdjustment.getId());
+			response.store("id", form.getStockAdjustment().getId());
 		} catch (Exception e)
 		{
 			response.setStatus(ResponseStatus.ERROR);
@@ -126,50 +126,8 @@ public class StockAdjustmentController extends ControllerBase
 	}
 
 	@RequestMapping("/stockadjustmentbyproductjson.htm")
-	public ModelAndView viewJson(HttpServletRequest request) throws ServiceException
+	public ModelAndView viewJson(HttpServletRequest request) throws Exception
 	{
 		return new JSONResponse(service.loadInOut((OnHandQuantityFilterCriteria) criteriaFactory.create(request, OnHandQuantityFilterCriteria.class)));
-	}
-
-	@RequestMapping("/stockadjustmentbarcodepreadd1.htm")
-	public ModelAndView barcodePreAdd1(HttpServletRequest request) throws Exception
-	{
-		BarcodeGroupFilterCriteria criteria = (BarcodeGroupFilterCriteria) criteriaFactory.create(request, BarcodeGroupFilterCriteria.class);
-		criteria.setBarcodeGroupType("STOCK_ADJUSTMENT");
-		criteria.setStatus("CREATED");
-
-		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentBarcodeAdd1", service.preaddBarcodes(criteria, BarcodeGroupGridViewQuery.class));
-	}
-
-	@RequestMapping("/stockadjustmentbarcodepreadd2.htm")
-	public ModelAndView barcodePreAdd2(@RequestParam("id") Long id) throws Exception
-	{
-		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentBarcodeAdd2", service.barcodePreadd2(id));
-	}
-
-	@RequestMapping("/stockadjustmentbarcodeadd.htm")
-	public ModelAndView barcodeAdd(@ModelAttribute("adjustment_add") InventoryForm form, SessionStatus status) throws Exception
-	{
-		JSONResponse response = new JSONResponse();
-
-		try
-		{
-			service.add(FormHelper.create(StockAdjustment.class, form));
-			status.setComplete();
-
-			response.store("id", form.getStockAdjustment().getId());
-		} catch (Exception e)
-		{
-			response.setStatus(ResponseStatus.ERROR);
-			response.setMessage(e.getLocalizedMessage());
-			e.printStackTrace();
-		}
-
-		return response;
-	}
-	
-	@ModelAttribute("adjustment_add")
-	public InventoryForm createAdjustmentAdd() {
-		return new InventoryForm();
 	}
 }

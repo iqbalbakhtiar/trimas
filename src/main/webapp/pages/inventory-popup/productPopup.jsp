@@ -10,43 +10,7 @@
 <head>
 	<title>${title}</title>
 	<%@ include file="/common/filterandpaging.jsp"%>
-	<script type="text/javascript">
-		function setclient(id,name,code,uom)
-		{
-			if(id && name) {
-				var _code = self.opener.document.getElementById('productCode[${param.index}]');
-				if(_code)
-					_code.value = code;
-
-				var _client = self.opener.document.getElementById('${param.target}');
-				if(_client) {
-					_client.remove(_client.selectedIndex);
-
-					var _opt = document.createElement('option');
-					_opt.value = id;
-					_opt.text = name;
-					_opt.setAttribute('code', code);
-
-					_client.appendChild(_opt);
-
-					var event = new Event('change');
-					_client.dispatchEvent(event); // Trigger onchange event from selected element.
-				}
-			}
-
-			// Uom
-			if(uom) {
-				var _uom = self.opener.document.getElementById('uom[${param.index}]');
-				if(_uom) {
-					_uom.value = uom;
-				}
-			}
-
-			window.close();
-		}
-	</script>
 </head>
-
 <body>
 <div id="se-containers_pick">
 	<div id="se-r00">
@@ -96,7 +60,7 @@
 							<c:forEach items="${products}" var="product">
 								<tr>
 									<td class="tools">
-										<a class="item-button-add-row" href="javascript:setclient('${product.id}','${product.name}','${product.code}', '${product.unitOfMeasure.measureId}')"  title="Edit"><span><spring:message code="sirius.edit"/></span></a>
+										<a class="item-button-add-row" href="javascript:setclient('${product.id}')"  title="Edit"><span><spring:message code="sirius.edit"/></span></a>
 									</td>
 									<td nowrap="nowrap">${product.code}</td>
 									<td nowrap="nowrap">${product.name}</td>
@@ -116,13 +80,67 @@
 				</div>
 			</div>
 		</div>
-	</div><!-- /rounded -->
-
-	<!-- footer -->
+	</div>
 	<%@ include file="/common/sirius-footer.jsp"%>
-
-	<!-- /footer -->
-</div><!-- /main containers -->
+</div>
 </body>
-<!-- END OF BODY -->
 </html>
+<script type="text/javascript">
+
+	function setclient(id)
+	{
+		Product.load(id);
+		var product = Product.data;
+	
+		if(!jQuery.isEmptyObject(product))
+		{
+			var _client = self.opener.document.getElementById('${param.target}');
+			if(_client)
+			{
+				_client.remove(_client.selectedIndex);
+				var _opt = document.createElement('option');
+				_opt.value = product.productId;
+				_opt.text = product.productName;
+
+				_client.appendChild(_opt);
+				_client.setAttribute("serial", product.isSerial);
+				_client.setAttribute("lot", product.isLot);
+			}
+
+			var _code = self.opener.document.getElementById('productCode[${param.index}]');
+			if(_code)
+				_code.value = product.productCode;
+
+			var _id = self.opener.document.getElementById('productId${param.index}');
+			if(_id)
+				_id.value = product.productId;
+
+			var _name = self.opener.document.getElementById('productName${param.index}');
+			if(_name)
+				_name.value = product.productName;
+
+			var _packaging = self.opener.document.getElementById('packaging[${param.index}]');
+			if(_packaging)
+				_packaging.value = product.factoryCode;
+
+			var _cat = self.opener.document.getElementById('productCategory[${param.index}]');
+			if(_cat)
+			{	
+				_cat.setAttribute("lot",product.isLot);
+				_cat.value = product.categoryName;
+			}
+				
+			var _uom = self.opener.document.getElementById('uom[${param.index}]');
+			if(_uom)
+				_uom.value = product.uomSymbol;
+			
+			//Call after all set
+			if(_client) {
+				var event = new Event('change');
+				_client.dispatchEvent(event);
+			}
+		}
+
+		window.close();
+	}
+</script>

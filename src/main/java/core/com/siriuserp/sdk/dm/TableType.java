@@ -24,6 +24,7 @@ public enum TableType
 	BUDGET("BU"),
 	BARCODE_PRODUCT(""),
 	BARCODE_MOVING(""),
+	BRAND("BR"),
 	BILLING("INV"),
 	BUNDLE_ORDER("BDO"),
 	BILL_OF_MATERIAL("BOM"),

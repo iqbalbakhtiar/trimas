@@ -7,7 +7,6 @@
 			<div class="toolbar-clean">
 				<c:if test='${access.add}'>
 					<a class="item-button-new" href="<c:url value='/page/stockadjustmentpreadd.htm'/>"><span><spring:message code="stockadjustment.new"/></span></a>
-					<a class="item-button-new" href="<c:url value='/page/stockadjustmentbarcodepreadd1.htm'/>"><span><spring:message code="stockadjustment.new"/>&nbsp;<spring:message code="sirius.from"/>&nbsp;<spring:message code="barcode"/></span></a>
 				</c:if>
 				<div dojoType="Toggler" targetId="filter">
 					<a class="item-button-search"><span><spring:message code="sirius.filter"/></span></a>

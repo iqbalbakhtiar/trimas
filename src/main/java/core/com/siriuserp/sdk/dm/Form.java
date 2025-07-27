@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.siriuserp.inventory.dm.Brand;
 import com.siriuserp.inventory.dm.Product;
 
 import javolution.util.FastList;
@@ -71,6 +72,7 @@ public class Form implements SiriusForm
 
 	private PostalAddress postalAddress;
 	private Product product;
+	private Brand brand;
 
 	private Tax tax;
 	private Tax extTax1;

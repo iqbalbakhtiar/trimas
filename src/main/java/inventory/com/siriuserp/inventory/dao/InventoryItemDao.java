@@ -19,5 +19,5 @@ public interface InventoryItemDao extends Dao<InventoryItem>, Filterable
 {
 	public BigDecimal getOnHand(OnHandQuantityFilterCriteria criteria);
 	public InventoryItem getItemBySerial(String serial, boolean available);
-	public List<InventoryItem> getAvailableItem(Long productId, Long containerId);
+	public List<InventoryItem> getAllItem(Long productId, Long containerId, boolean availableOnly);
 }

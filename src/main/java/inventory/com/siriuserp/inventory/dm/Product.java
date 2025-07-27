@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -23,6 +25,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Where;
 
 import com.siriuserp.sdk.dm.Model;
 
@@ -104,11 +107,46 @@ public class Product extends Model
 	@Fetch(FetchMode.SELECT)
 	private ProductCategory productCategory;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_brand")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Brand brand;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_product_parent")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Product parent;
+
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	@Where(clause = "product_standard_price_type = 'SELLING'")
+	@OrderBy("dateFrom DESC")
+	private Set<ProductStandardPrice> sellingPrices = new FastSet<ProductStandardPrice>();
+
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	@Where(clause = "product_standard_price_type = 'BUYING'")
+	@OrderBy("dateFrom DESC")
+	private Set<ProductStandardPrice> buyingPrices = new FastSet<ProductStandardPrice>();
+
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	private Set<InventoryItem> items = new FastSet<InventoryItem>();
+
+	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	@OrderBy("id ASC")
+	private Set<Product> variants = new FastSet<Product>();
 
 	public boolean isDeleteable()
 	{
@@ -125,10 +163,17 @@ public class Product extends Model
 	public Map<String, Object> val()
 	{
 		Map<String, Object> map = new FastMap<String, Object>();
-		map.put("id", getId());
-		map.put("name", getName());
-		map.put("productCategory", getProductCategory());
-		map.put("unitOfMeasure", getUnitOfMeasure());
+		map.put("productId", getId());
+		map.put("productName", getName());
+		map.put("productCode", getCode());
+		map.put("barcode", getBarcode());
+		map.put("isSerial", isSerial());
+		map.put("parent", getParent());
+		map.put("categoryName", getProductCategory().getName());
+		map.put("uomId", getUnitOfMeasure().getId());
+		map.put("uomSymbol", getUnitOfMeasure().getMeasureId());
+		map.put("factoryCode", getFactoryCode());
+		map.put("qtyToBase", getQtyToBase());
 
 		return map;
 	}

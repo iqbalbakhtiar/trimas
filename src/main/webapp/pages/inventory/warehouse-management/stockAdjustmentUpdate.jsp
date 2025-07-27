@@ -11,16 +11,6 @@
 		<tr>
 			<td width="20%" nowrap="nowrap" align="right"><spring:message code="sirius.code"/> :</td>
 			<td width="52%"><input value="${adjustment_edit.code}" disabled class='input-disabled' size='30'/></td>
-			<%-- <td width="28%" rowspan="2" valign="top">
-				<fieldset>
-					<legend><strong>Journal</strong></legend>
-					<a href="<c:url value='/page/journalentrypreview.htm?id=${adjustment_edit.journalEntry.id}'/>"><c:out value='${adjustment_edit.journalEntry.code}'/></a>
-				</fieldset>
-			</td> --%>
-		</tr>
-		<tr>
-			<td nowrap="nowrap" align="right"><spring:message code="sirius.date"/> :</td>
-			<td><input class="input-disabled" size="10" disabled value="<fmt:formatDate value='${adjustment_edit.date}' pattern='dd-MM-yyyy'/>"/></td>
 		</tr>
 		<tr>
 			<td nowrap="nowrap" align="right"><spring:message code="organization"/> :</td>
@@ -31,6 +21,10 @@
 					</c:if>
 				</form:select>
 			</td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" align="right"><spring:message code="sirius.date"/> :</td>
+			<td><input class="input-disabled" size="10" disabled value="<fmt:formatDate value='${adjustment_edit.date}' pattern='dd-MM-yyyy'/>"/></td>
 		</tr>
 		<tr>
 			<td nowrap="nowrap" align="right"><spring:message code="facility"/> :</td>
@@ -52,33 +46,35 @@
 	</div>
 	<table class="table-list" id="lineItemTable" cellspacing="0" cellpadding="0" align="center" width="100%">
 	<thead>
-		<tr>
-			<th width="10%" nowrap="nowrap"><spring:message code="grid"/></th>
-			<th width="10%" nowrap="nowrap"><spring:message code="container"/></th>
-			<th width="15%" nowrap="nowrap"><spring:message code="product.code"/></th>
-			<th width="20%" nowrap="nowrap"><spring:message code="product.name"/></th>
-			<th width="15%" nowrap="nowrap"><spring:message code="product.category"/></th>
-			<th width="5%" nowrap="nowrap"><spring:message code="product.uom"/></th>
-			<th width="8%" nowrap="nowrap"><spring:message code="barcode"/></th>
-			<th width="5%" nowrap="nowrap"><spring:message code="product.lot"/></th>
-			<th width="10%" nowrap="nowrap"><spring:message code="product.quantity"/></th>
-			<th width="15%" nowrap="nowrap"><spring:message code="sirius.price"/></th>
-		</tr>
+	<tr>
+		<th width="1%">&nbsp;</th>
+		<th width="10%" nowrap="nowrap"><spring:message code="container"/></th>
+		<th width="10%" nowrap="nowrap"><spring:message code="product.code"/></th>
+		<th width="15%" nowrap="nowrap"><spring:message code="product.name"/></th>
+		<th width="8%" nowrap="nowrap"><spring:message code="product.category"/></th>
+		<th width="5%" nowrap="nowrap"><spring:message code="product.uom"/></th>
+		<th width="5%" nowrap="nowrap"><spring:message code="barcode"/></th>
+		<%-- <th width="5%" nowrap="nowrap"><spring:message code="product.lot"/></th> --%>
+		<th width="10%" nowrap="nowrap" style="text-align: right;"><spring:message code="product.quantity"/></th>
+		<th width="10%" nowrap="nowrap" style="text-align: right;"><spring:message code="sirius.price"/></th>
+		<th width="30%">&nbsp;</th>
+	</tr>
 	</thead>
 	<tbody>
 	<c:forEach items='${adjustment_edit.items}' var='item'>
-		<tr>
-			<td nowrap="nowrap"><c:out value='${item.grid.name}'/></td>
-			<td nowrap="nowrap"><c:out value='${item.container.name}'/></td>
-			<td nowrap="nowrap"><c:out value='${item.product.code}'/></td>
-			<td nowrap="nowrap"><c:out value='${item.product.name}'/></td>
-			<td nowrap="nowrap"><c:out value='${item.product.productCategory.name}'/></td>
-			<td nowrap="nowrap"><c:out value='${item.product.unitOfMeasure.measureId}'/></td>
-			<td nowrap="nowrap"><c:out value='${item.lot.serial}'/></td>
-			<td nowrap="nowrap"><c:out value='${item.lot.code}'/></td>
-			<td nowrap="nowrap"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
-			<td nowrap="nowrap"><fmt:formatNumber value='${item.money.amount}' pattern=',##0.00'/></td>
-		</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td nowrap="nowrap"><c:out value='${item.container.name}'/></td>
+		<td nowrap="nowrap"><c:out value='${item.product.code}'/></td>
+		<td nowrap="nowrap"><c:out value='${item.product.name}'/></td>
+		<td nowrap="nowrap"><c:out value='${item.product.productCategory.name}'/></td>
+		<td nowrap="nowrap"><c:out value='${item.product.unitOfMeasure.measureId}'/></td>
+		<td nowrap="nowrap"><c:out value='${item.lot.serial}'/></td>
+		<%-- <td nowrap="nowrap"><c:out value='${item.lot.code}'/></td> --%>
+		<td nowrap="nowrap" style="text-align: right;"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
+		<td nowrap="nowrap" style="text-align: right;"><fmt:formatNumber value='${item.money.amount}' pattern=',##0.00'/></td>
+		<td>&nbsp;</td>
+	</tr>
 	</c:forEach>
 	</tbody>
 	<tfoot>

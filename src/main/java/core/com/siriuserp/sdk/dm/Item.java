@@ -114,6 +114,7 @@ public class Item extends SiriusItem
 	private String referenceCode;
 	private String referenceType;
 	private String coneMark;
+	private String variantName;
 
 	private boolean enabled;
 	private boolean actived;

@@ -87,7 +87,7 @@
 										<td align="right" ><spring:message code="sirius.type"/>&nbsp;</td>
 										<td width="5%" align="center">:</td>
 										<td >
-											<select id="type" name="type" class="combobox-ext">
+											<select id="type" name="type">
 												<option value=""><spring:message code="sirius.all"/></option>
 							                    <option value="STOCK" ${not empty filterCriteria.type and filterCriteria.type == "STOCK"? "selected" : ""}>STOCK</option>
 												<option value="NONSTOCK" ${not empty filterCriteria.type and filterCriteria.type != "STOCK"? "selected" : ""}>NON STOCK</option>

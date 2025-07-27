@@ -16,6 +16,8 @@ import com.siriuserp.inventory.query.ProductGridViewQuery;
 import com.siriuserp.inventory.query.ProductPopup4TransferGridViewQuery;
 import com.siriuserp.inventory.service.ProductService;
 import com.siriuserp.sdk.base.ControllerBase;
+import com.siriuserp.sdk.exceptions.ServiceException;
+import com.siriuserp.sdk.springmvc.JSONResponse;
 
 import javolution.util.FastMap;
 
@@ -57,5 +59,24 @@ public class ProductPopupController extends ControllerBase
 		map.put("index", index);
 
 		return new ModelAndView("/inventory-popup/product4TransferPopup", map);
+	}
+
+	@RequestMapping("/popupproductjson.htm")
+	public ModelAndView view(@RequestParam("id") Long id) throws ServiceException
+	{
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			response.store("product", service.load(id));
+		}
+		catch (Exception e)
+		{
+			response.statusError();
+			response.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+
+        return response;
 	}
 }

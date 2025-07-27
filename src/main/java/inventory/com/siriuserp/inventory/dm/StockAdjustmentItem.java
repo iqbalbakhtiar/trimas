@@ -74,43 +74,47 @@ public class StockAdjustmentItem extends Model implements TransactionItem
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private StockAdjustment stockAdjustment;
-	
-	@OneToOne(mappedBy = "stockAdjustmentItem", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+
+	@OneToOne(mappedBy = "stockAdjustmentItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private StockAdjustmentItemStockableBridge stockableBridge;
-	
-	@OneToOne(mappedBy = "stockAdjustmentItem", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+
+	@OneToOne(mappedBy = "stockAdjustmentItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private StockAdjustmentItemControllableBridge controllableBridge;
-	
+
 	@Embedded
 	private Money money = new Money();
-	
+
 	@Embedded
 	private Lot lot = new Lot();
-	
+
 	@Transient
 	private Tag tag = new Tag();
 
 	@Override
-	public String getAuditCode() {
-		return this.id + "";
-	}
-
-	@Override
-	public Long getTransactionId() {
+	public Long getTransactionId()
+	{
 		return getStockAdjustment().getId();
 	}
 
 	@Override
-	public String getTransactionCode() {
+	public String getTransactionCode()
+	{
 		return getStockAdjustment().getCode();
 	}
 
 	@Override
-	public WarehouseTransactionSource getTransactionSource() {
+	public WarehouseTransactionSource getTransactionSource()
+	{
 		return WarehouseTransactionSource.STOCK_ADJUSTMENT;
+	}
+
+	@Override
+	public String getAuditCode()
+	{
+		return this.id + "";
 	}
 }

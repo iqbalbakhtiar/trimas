@@ -23,30 +23,29 @@ import com.siriuserp.sdk.utility.SiriusValidator;
 public class InventoryItemDaoImpl extends DaoHelper<InventoryItem> implements InventoryItemDao
 {
 	@Override
-	public BigDecimal getOnHand(OnHandQuantityFilterCriteria criteria) 
+	public BigDecimal getOnHand(OnHandQuantityFilterCriteria criteria)
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT SUM(item.onHand) FROM InventoryItem item ");
 		builder.append("WHERE item.onHand > 0 ");
 		builder.append("AND item.container.id =:container ");
 		builder.append("AND item.product.id =:product ");
-		
-		if(SiriusValidator.validateParam(criteria.getSerial()))
+
+		if (SiriusValidator.validateParam(criteria.getSerial()))
 			builder.append("AND item.lot.serial =:serial ");
-		
+
 		Query query = getSession().createQuery(builder.toString());
 		query.setCacheable(true);
 		query.setParameter("product", criteria.getProductId());
 		query.setParameter("container", criteria.getContainerId());
-		
-		if(SiriusValidator.validateParam(criteria.getSerial()))
+
+		if (SiriusValidator.validateParam(criteria.getSerial()))
 			query.setParameter("serial", criteria.getSerial());
 
-		 Object obj = query.uniqueResult();
-		 
-		 return obj != null ? (BigDecimal) obj : BigDecimal.ZERO;
-	}
+		Object obj = query.uniqueResult();
 
+		return obj != null ? (BigDecimal) obj : BigDecimal.ZERO;
+	}
 
 	@Override
 	public InventoryItem getItemBySerial(String serial, boolean available)
@@ -68,18 +67,28 @@ public class InventoryItemDaoImpl extends DaoHelper<InventoryItem> implements In
 
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<InventoryItem> getAvailableItem(Long productId, Long containerId) {
-		  
-        Query query = getSession().createQuery("FROM InventoryItem item WHERE item.product.id =:productId AND item.container.id =:containerId AND item.availableSale > 0 ");
-       
-        query.setParameter("productId",productId);
-        query.setParameter("containerId",containerId);
-        query.setCacheable(true);
-        query.setReadOnly(true);
-        
-        return query.list();
-    }
+	public List<InventoryItem> getAllItem(Long productId, Long containerId, boolean availableOnly)
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("FROM InventoryItem item ");
+		builder.append("WHERE item.product.id =:productId ");
+		builder.append("AND item.container.id =:containerId ");
+
+		if (availableOnly)
+			builder.append("AND item.availableSale > 0 ");
+
+		builder.append("ORDER BY item.lot.serial ASC");
+
+		Query query = getSession().createQuery(builder.toString());
+
+		query.setParameter("productId", productId);
+		query.setParameter("containerId", containerId);
+		query.setCacheable(true);
+		query.setReadOnly(true);
+
+		return query.list();
+	}
 }

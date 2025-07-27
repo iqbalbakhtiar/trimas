@@ -16,6 +16,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.inventory.criteria.ProductFilterCriteria;
+import com.siriuserp.inventory.dm.Brand;
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.dm.ProductCategory;
 import com.siriuserp.inventory.dm.ProductType;
@@ -45,6 +46,7 @@ public class ProductController extends ControllerBase
 		binder.registerCustomEditor(ProductType.class, enumEditor.forClass(ProductType.class));
 		binder.registerCustomEditor(ProductCategory.class, modelEditor.forClass(ProductCategory.class));
 		binder.registerCustomEditor(UnitOfMeasure.class, modelEditor.forClass(UnitOfMeasure.class));
+		binder.registerCustomEditor(Brand.class, modelEditor.forClass(Brand.class));
 	}
 
 	@RequestMapping("/productview.htm")

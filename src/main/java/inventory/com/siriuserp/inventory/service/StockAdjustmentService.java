@@ -4,10 +4,8 @@
 package com.siriuserp.inventory.service;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -35,13 +33,13 @@ import com.siriuserp.inventory.util.InventoryBalanceUtil;
 import com.siriuserp.inventory.util.InventoryItemTagUtil;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
+import com.siriuserp.sdk.annotation.AutomaticReverseSibling;
 import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.CurrencyDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.dao.ProductInOutTransactionDao;
 import com.siriuserp.sdk.db.GridViewQuery;
-import com.siriuserp.sdk.dm.Barcode;
 import com.siriuserp.sdk.dm.BarcodeGroup;
 import com.siriuserp.sdk.dm.BarcodeStatus;
 import com.siriuserp.sdk.dm.Currency;
@@ -50,7 +48,6 @@ import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Item;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.TableType;
-import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.DecimalHelper;
@@ -58,7 +55,6 @@ import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
 import com.siriuserp.sdk.utility.SiriusValidator;
 
-import javolution.util.FastList;
 import javolution.util.FastMap;
 
 /**
@@ -94,7 +90,7 @@ public class StockAdjustmentService
 	private InventoryBalanceDetailUtil balanceDetailUtil;
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws ServiceException
+	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 
@@ -121,58 +117,19 @@ public class StockAdjustmentService
 	}
 
 	@Transactional(propagation = Propagation.NOT_SUPPORTED)
-	@InjectParty(keyName = "adjustment_add")
-	public Map<String, Object> preadd() throws ServiceException
+	@InjectParty(keyName = "adjustment_form")
+	public Map<String, Object> preadd() throws Exception
 	{
 		Map<String, Object> map = new FastMap<String, Object>();
-
-		map.put("adjustment_add", new InventoryForm());
+		map.put("adjustment_form", new InventoryForm());
 		map.put("currencies", genericDao.loadAll(Currency.class));
-
-		return map;
-	}
-
-	@Transactional(propagation = Propagation.NOT_SUPPORTED)
-	@InjectParty(keyName = "adjustment_add")
-	public Map<String, Object> barcodePreadd2(Long id) throws ServiceException
-	{
-		InventoryForm form = new InventoryForm();
-		form.setBarcodeGroup(genericDao.load(BarcodeGroup.class, id));
-
-		List<Item> items = new FastList<Item>();
-
-		for (Barcode barcode : form.getBarcodeGroup().getBarcodes())
-		{
-			Item item = new Item();
-			BeanUtils.copyProperties(barcode, item);
-			item.setSerial(barcode.getCode());
-			
-			
-			OnHandQuantityFilterCriteria criteria = new OnHandQuantityFilterCriteria();
-			criteria.setProductId(barcode.getProduct().getId());	
-			
-			Map<String, Object> result = loadInOut(criteria);
-			ProductInOutTransaction inOut = (ProductInOutTransaction) result.get("product");
-
-			if (inOut != null) 
-			    item.setPrice(inOut.getPrice());
-			
-
-
-			items.add(item);
-		}
-
-		FastMap<String, Object> map = new FastMap<String, Object>();
-		map.put("items", items);
-		map.put("adjustment_add", form);
-		map.put("barcodeGroup", form.getBarcodeGroup());
 
 		return map;
 	}
 
 	@AuditTrails(className = StockAdjustment.class, actionType = AuditTrailsActionType.CREATE)
 	//	@AutomaticPosting(roleClasses = StockAdjustmentPostingRole.class)
-	// @AutomaticReverseSibling(roles = "StockAdjustmentGenerateBarcodeSiblingRole")
+	@AutomaticReverseSibling(roles = "StockAdjustmentGenerateBarcodeSiblingRole")
 	public void add(StockAdjustment stockAdjustment) throws Exception
 	{
 		InventoryForm form = (InventoryForm) stockAdjustment.getForm();
@@ -257,7 +214,7 @@ public class StockAdjustmentService
 				bridgeItem.getStockControls().addAll(stockControlService.get(ProductInOutTransaction.class, item.getStockableBridge(), bridgeItem, configuration.getTransactionType()));
 
 				if (bridgeItem.getStockControls().isEmpty())
-					throw new ServiceException("Stock control does not exist!");
+					throw new Exception("Stock control does not exist!");
 
 				balanceUtil.out(DWInventoryItemBalance.class, item.getStockableBridge(), DecimalHelper.positive(item.getQuantity()));
 
@@ -270,7 +227,7 @@ public class StockAdjustmentService
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> preedit(Long id) throws ServiceException
+	public Map<String, Object> preedit(Long id) throws Exception
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("adjustment_edit", load(id));
@@ -279,7 +236,7 @@ public class StockAdjustmentService
 	}
 
 	@AuditTrails(className = StockAdjustment.class, actionType = AuditTrailsActionType.UPDATE)
-	public void edit(StockAdjustment stockAdjustment) throws ServiceException
+	public void edit(StockAdjustment stockAdjustment) throws Exception
 	{
 		genericDao.update(stockAdjustment);
 	}
@@ -291,7 +248,7 @@ public class StockAdjustmentService
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> loadInOut(OnHandQuantityFilterCriteria criteria) throws ServiceException
+	public Map<String, Object> loadInOut(OnHandQuantityFilterCriteria criteria) throws Exception
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("product", productInOutTransactionDaoImpl.loadByProduct(criteria));

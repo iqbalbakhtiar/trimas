@@ -56,15 +56,15 @@ public class InventoryItemPopupController extends ControllerBase
 
 		return response;
 	}
-	
+
 	@RequestMapping("/popupinventoryitemlistjson.htm")
-	public ModelAndView viewList(@RequestParam("productId") Long productId, @RequestParam("containerId") Long containerId) throws ServiceException
+	public ModelAndView viewList(@RequestParam("productId") Long productId, @RequestParam("containerId") Long containerId, @RequestParam(value = "availabled", required = false) Boolean available) throws ServiceException
 	{
 		JSONResponse response = new JSONResponse();
 
 		try
 		{
-			response.store("barcodes", service.loadList(productId, containerId));
+			response.store("barcodes", service.loadList(productId, containerId, available));
 		} catch (Exception e)
 		{
 			response.statusError();
@@ -74,7 +74,7 @@ public class InventoryItemPopupController extends ControllerBase
 
 		return response;
 	}
-	
+
 	@RequestMapping("/inventoryitembyserialjson.htm")
 	public ModelAndView view(@RequestParam("barcode") String barcode) throws ServiceException
 	{
@@ -92,5 +92,5 @@ public class InventoryItemPopupController extends ControllerBase
 
 		return response;
 	}
-	
+
 }

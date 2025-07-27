@@ -48,6 +48,17 @@
 		</td>
 	</tr>
 	<tr>
+		<td align="right"><spring:message code="brand"/> :</td>
+		<td>
+			<form:select id="brand" path="brand" cssClass="combobox-min">
+				<form:option value="" label=""/>
+				<c:forEach items="${brands}" var="brand">
+					<form:option value="${brand.id}" label="${brand.name}"/>
+				</c:forEach>
+			</form:select>
+		</td>
+	</tr>
+	<tr>
 		<td align="right"><spring:message code="product.saleable"/> :</td>
 		<td>
 			<form:radiobutton path="saleable" value="true"/><spring:message code="sirius.yes"/>
@@ -61,12 +72,20 @@
 			<form:radiobutton path="enabled" value="false"/><spring:message code="sirius.inactive"/>	
 		</td>
 	</tr>
-	<tr class="forHideSerial">
+	<tr>
 		<td align="right"><spring:message code="product.serial"/> :</td>
 		<td>
 			<form:radiobutton path="serial" value="true"/><spring:message code="sirius.yes"/>
 			<form:radiobutton path="serial" value="false"/><spring:message code="sirius.no"/>	
 		</td>
+	</tr>
+	<tr style=" display: none;">
+			<td align="right"><spring:message code="product.base"/> :</td>
+		<td>
+			<form:radiobutton path="base" value="true" selected="true"/><spring:message code="sirius.yes"/>
+			<form:radiobutton path="base" value="false"/><spring:message code="sirius.no"/>										
+		</td>
+		<td><form:errors path="base"/></td>
 	</tr>
 	<tr>
 		<td align="right"><spring:message code="product.picture"/> :</td>
