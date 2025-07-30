@@ -20,12 +20,12 @@
 </div>
 <table width="100%" cellpadding="0" cellspacing="0" class="table-list">
 <tr>
-	<th width="1%" nowrap="nowrap"><div style="width: 45px">&nbsp;</div></th>
-	<th width="6%" nowrap="nowrap">Date</th>
-	<th width="8%" nowrap="nowrap">ID</th>
-	<th width="8%" nowrap="nowrap">Organization</th>
-	<th width="8%" nowrap="nowrap">Facility</th>
-	<th width="40%" nowrap="nowrap">Note</th>
+	<th width="1%"><div style="width:45px"></div></th>
+	<th width="8%"><spring:message code="sirius.date"/></th>
+	<th width="10%"><spring:message code="sirius.code"/></th>
+	<th width="15%"><spring:message code="organization"/></th>
+	<th width="15%"><spring:message code="facility"/></th>
+	<th width="50%"><spring:message code="sirius.note"/></th>
 </tr>
 <c:forEach items="${receipts}" var="rec">
 <tr valign="top">

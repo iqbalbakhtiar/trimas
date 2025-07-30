@@ -1,5 +1,7 @@
 /**
- * 
+ * File Name  : StockAdjustment.java
+ * Created On : Jul 26, 2025
+ * Email	  : iqbal@siriuserp.com
  */
 package com.siriuserp.inventory.dm;
 
@@ -37,7 +39,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * @author ferdinand
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
  */
 
 @Getter

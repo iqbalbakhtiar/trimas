@@ -64,7 +64,7 @@
                 </tr>
                 </table>
             </td>
-            <td width="47%" valign="top" align="left">
+            <td width="47%" valign="top" align="left" style="display: none;">
                 <fieldset>
                     <legend><strong><spring:message code="sirius.transaction.recap"/></strong></legend>
                     <table width="100%">
@@ -112,17 +112,15 @@
         <table id="lineItemTable" width="100%" cellpadding="0" cellspacing="0" class="table-list">
         <thead>
             <tr>
-                <th width="2%">&nbsp;</th>
-                <th width="8%"><spring:message code="grid"/></th>
+                <th width="1%">&nbsp;</th>
+                <th width="8%" style="display: none;"><spring:message code="grid"/></th>
 				<th width="8%"><spring:message code="container"/></th>
                 <th width="8%"><spring:message code="sirius.code" /></th>
                 <th width="8%"><spring:message code="sirius.name" /></th>
-                <th width="8%"><spring:message code="product.category" /></th>
+                <th width="8%" style="display: none;"><spring:message code="product.category" /></th>
                 <th width="8%"><spring:message code="barcode" /></th>
                 <th width="6%"><spring:message code="product.uom" /></th>
                 <th width="6%"><spring:message code="sirius.qty"/></th>
-                <th width="6%"><spring:message code="sirius.qty"/> (Pcs)</th>
-                <th width="6%"><spring:message code="sirius.price"/> (Pcs)</th>
                 <th width="6%"><spring:message code="goodsreceiptitem.priceadjust"/></th>
             </tr>
         </thead>
@@ -130,16 +128,14 @@
             <c:forEach items="${receiptManual_edit.items}" var="item">
             <tr>
                 <td></td>
-                <td>${item.container.grid.name}</td>
+                <td style="display: none;">${item.container.grid.name}</td>
                 <td>${item.container.name}</td>
                 <td>${item.product.code}</td>
                 <td>${item.product.name}</td>
-                <td>${item.product.productCategory.name}</td>
+                <td style="display: none;">${item.product.productCategory.name}</td>
                 <td>${item.lot.serial}</td>
                 <td>${item.product.unitOfMeasure.measureId}</td>
                 <td><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
-                <td><fmt:formatNumber value='${item.product.qtyToBase * item.quantity}' pattern=',##0.00'/></td>
-                <td><fmt:formatNumber value='${item.amount / item.product.qtyToBase}' pattern=',##0.00'/></td>
                 <td><fmt:formatNumber value='${item.amount}' pattern=',##0.00'/></td>
             </tr>
             </c:forEach>

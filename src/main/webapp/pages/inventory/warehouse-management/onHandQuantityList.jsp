@@ -6,7 +6,7 @@
 		<tr>
 			<td width="30%" height="30" align="left" valign="middle">
 				<div class="toolbar-clean">
-					<a class="item-button-back" href="<c:url value='/page/onhandquantitygroupview.htm'/>"><span><spring:message code="sirius.back"/></span></a>
+					<%-- <a class="item-button-back" href="<c:url value='/page/onhandquantitygroupview.htm'/>"><span><spring:message code="sirius.back"/></span></a> --%>
 					<div dojoType="Toggler" targetId="filter">
 						<a class="item-button-search" href="javascript:return;"><span><spring:message code="sirius.paging.filter"/></span>
 						</a>
@@ -40,15 +40,12 @@
 			<td nowrap="nowrap"><c:out value='${on.product.productCategory.name}' /></td>
 			<td>
 				<fmt:formatNumber value='${on.onHand}' pattern=',##0.00' />
-				<c:if test="${on.product.productCategory.categoryType eq 'FINISH_GOODS'}"><strong>[<fmt:formatNumber value='${on.onHand/181.44}' pattern=',##0.00' /> BALE]</strong></c:if>
 			</td>
 			<td>
 				<fmt:formatNumber value='${on.reserved}' pattern=',##0.00' />
-				<c:if test="${on.product.productCategory.categoryType eq 'FINISH_GOODS'}"><strong>[<fmt:formatNumber value='${on.reserved/181.44}' pattern=',##0.00' /> BALE]</strong></c:if>
 			</td>
 			<td>
 				<fmt:formatNumber value='${on.availableSale}' pattern=',##0.00' />
-				<c:if test="${on.product.productCategory.categoryType eq 'FINISH_GOODS'}"><strong>[<fmt:formatNumber value='${on.availableSale/181.44}' pattern=',##0.00' /> BALE]</strong></c:if>
 			</td>
 			<td><c:out value='${on.product.unitOfMeasure.measureId}' /></td>
 		</tr>

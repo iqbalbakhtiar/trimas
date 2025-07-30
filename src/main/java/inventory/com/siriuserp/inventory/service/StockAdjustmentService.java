@@ -36,14 +36,12 @@ import com.siriuserp.sdk.annotation.AuditTrailsActionType;
 import com.siriuserp.sdk.annotation.AutomaticReverseSibling;
 import com.siriuserp.sdk.annotation.InjectParty;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
-import com.siriuserp.sdk.dao.CurrencyDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.dao.ProductInOutTransactionDao;
 import com.siriuserp.sdk.db.GridViewQuery;
 import com.siriuserp.sdk.dm.BarcodeGroup;
 import com.siriuserp.sdk.dm.BarcodeStatus;
 import com.siriuserp.sdk.dm.Currency;
-import com.siriuserp.sdk.dm.ExchangeType;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Item;
 import com.siriuserp.sdk.dm.Party;
@@ -58,7 +56,9 @@ import com.siriuserp.sdk.utility.SiriusValidator;
 import javolution.util.FastMap;
 
 /**
- * @author ferdinand
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
  */
 
 @Component
@@ -67,9 +67,6 @@ public class StockAdjustmentService
 {
 	@Autowired
 	private GenericDao genericDao;
-
-	@Autowired
-	private CurrencyDao currencyDao;
 
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
@@ -158,8 +155,8 @@ public class StockAdjustmentService
 				if (SiriusValidator.validateParam(item.getLotCode()))
 					adjustmentItem.getLot().setCode(item.getLotCode());
 
-				adjustmentItem.getMoney().setExchangeType(ExchangeType.SPOT);
-				adjustmentItem.getMoney().setCurrency(currencyDao.loadDefaultCurrency());
+				adjustmentItem.getMoney().setExchangeType(form.getExchangeType());
+				adjustmentItem.getMoney().setCurrency(form.getCurrency());
 				adjustmentItem.getMoney().setAmount(item.getPrice());
 
 				stockAdjustment.getItems().add(adjustmentItem);

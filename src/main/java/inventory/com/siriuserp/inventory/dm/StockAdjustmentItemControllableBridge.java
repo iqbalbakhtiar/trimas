@@ -1,5 +1,7 @@
 /**
- * 
+ * File Name  : StockAdjustmentItemControllableBridge.java
+ * Created On : Jul 26, 2025
+ * Email	  : iqbal@siriuserp.com
  */
 package com.siriuserp.inventory.dm;
 
@@ -30,7 +32,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * @author ferdinand
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
  */
 
 @Getter
@@ -42,7 +46,7 @@ import lombok.Setter;
 public class StockAdjustmentItemControllableBridge extends Controllable
 {
 	private static final long serialVersionUID = -4080723051752661867L;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_stock_adjustment_item")
 	@LazyToOne(LazyToOneOption.PROXY)
@@ -50,77 +54,92 @@ public class StockAdjustmentItemControllableBridge extends Controllable
 	private StockAdjustmentItem stockAdjustmentItem;
 
 	@Override
-	public Date getDate() {
+	public Date getDate()
+	{
 		return getStockAdjustmentItem().getStockAdjustment().getDate();
 	}
 
 	@Override
-	public Product getProduct() {
+	public Product getProduct()
+	{
 		return getStockAdjustmentItem().getProduct();
 	}
 
 	@Override
-	public BigDecimal getQuantity() {
+	public BigDecimal getQuantity()
+	{
 		return getStockAdjustmentItem().getQuantity();
 	}
 
 	@Override
-	public Party getOrganization() {
+	public Party getOrganization()
+	{
 		return getStockAdjustmentItem().getStockAdjustment().getOrganization();
 	}
 
 	@Override
-	public Container getContainer() {
+	public Container getContainer()
+	{
 		return getStockAdjustmentItem().getContainer();
 	}
 
 	@Override
-	public Grid getGrid() {
+	public Grid getGrid()
+	{
 		return getStockAdjustmentItem().getGrid();
 	}
 
 	@Override
-	public Container getSourceContainer() {
+	public Container getSourceContainer()
+	{
 		return getStockAdjustmentItem().getContainer();
 	}
 
 	@Override
-	public Grid getSourceGrid() {
+	public Grid getSourceGrid()
+	{
 		return getStockAdjustmentItem().getGrid();
 	}
 
 	@Override
-	public Container getDestinationContainer() {
+	public Container getDestinationContainer()
+	{
 		return getStockAdjustmentItem().getContainer();
 	}
 
 	@Override
-	public Grid getDestinationGrid() {
+	public Grid getDestinationGrid()
+	{
 		return getStockAdjustmentItem().getGrid();
 	}
 
 	@Override
-	public Lot getLot() {
+	public Lot getLot()
+	{
 		return getStockAdjustmentItem().getLot();
 	}
 
 	@Override
-	public Tag getTag() {
+	public Tag getTag()
+	{
 		return getStockAdjustmentItem().getTag();
 	}
-	
+
 	@Override
-	public BigDecimal getUnitPrice() {
+	public BigDecimal getUnitPrice()
+	{
 		return getInOuts().iterator().next().getPrice();
 	}
-	
+
 	@Override
-	public Lot getOriginLot() {
+	public Lot getOriginLot()
+	{
 		return null;
 	}
-	
+
 	@Override
-	public String getAuditCode() {
+	public String getAuditCode()
+	{
 		return this.id + "";
 	}
 }

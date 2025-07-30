@@ -1,3 +1,8 @@
+/**
+ * File Name  : GoodsReceiptManualController.java
+ * Created On : Jul 26, 2023
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.inventory.controller;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,25 +38,25 @@ import com.siriuserp.sdk.springmvc.view.ViewHelper;
 import com.siriuserp.sdk.utility.FormHelper;
 
 /**
- * @author Andres Nodas
- * Sirius Indonesia, PT
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
  * www.siriuserp.com
  */
 
 @Controller
-@SessionAttributes(value = { "receiptManual_form", "receiptManual_edit" }, types = {GoodsReceiptManual.class, InventoryForm.class})
+@SessionAttributes(value = "receiptManual_form", types = InventoryForm.class)
 @DefaultRedirect(url = "goodsreceiptmanualview.htm")
-public class GoodsReceiptManualController extends ControllerBase {
-
+public class GoodsReceiptManualController extends ControllerBase
+{
 	@Autowired
 	private GoodsReceiptManualService service;
-	
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder, WebRequest request)
 	{
-		initBinderFactory.initBinder(binder, Product.class, Facility.class, Container.class, Grid.class,Party.class, WarehouseTransactionSource.class);
+		initBinderFactory.initBinder(binder, Product.class, Facility.class, Container.class, Grid.class, Party.class, WarehouseTransactionSource.class);
 	}
-	
+
 	@RequestMapping("/goodsreceiptmanualview.htm")
 	public ModelAndView view(HttpServletRequest request) throws ServiceException
 	{
@@ -73,6 +78,8 @@ public class GoodsReceiptManualController extends ControllerBase {
 		{
 			service.add(FormHelper.create(GoodsReceiptManual.class, form));
 			status.setComplete();
+
+			response.store("id", form.getGoodsReceiptManual().getId());
 		} catch (Exception e)
 		{
 			response.statusError();
@@ -90,14 +97,16 @@ public class GoodsReceiptManualController extends ControllerBase {
 	}
 
 	@RequestMapping("/goodsreceiptmanualedit.htm")
-	public ModelAndView edit(@ModelAttribute("receiptManual_edit") GoodsReceiptManual goodsReceiptManual, SessionStatus status) throws ServiceException
+	public ModelAndView edit(@ModelAttribute("receiptManual_form") InventoryForm form, SessionStatus status) throws ServiceException
 	{
 		JSONResponse response = new JSONResponse();
 
 		try
 		{
-			service.edit(goodsReceiptManual);
+			service.edit(FormHelper.update(form.getGoodsReceiptManual(), form));
 			status.setComplete();
+
+			response.store("id", form.getGoodsReceiptManual().getId());
 		} catch (Exception e)
 		{
 			response.statusError();
@@ -107,12 +116,12 @@ public class GoodsReceiptManualController extends ControllerBase {
 
 		return response;
 	}
-	
+
 	@RequestMapping("/goodsreceiptmanualdelete.htm")
 	public ModelAndView delete(@RequestParam("id") Long id) throws Exception
 	{
 		//service.delete(service.load(id));
 		return ViewHelper.redirectTo("goodsreceiptmanualview.htm");
 	}
-	
+
 }

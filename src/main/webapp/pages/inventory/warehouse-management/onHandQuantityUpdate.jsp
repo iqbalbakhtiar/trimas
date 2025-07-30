@@ -46,7 +46,7 @@
         <tr>
             <%-- <th width="15%"><spring:message code="organization"/></th> --%>
             <th width="8%"><spring:message code="facility"/></th>
-            <th width="10%"><spring:message code="grid"/></th>
+            <th width="10%" style="display: none;"><spring:message code="grid"/></th>
             <th width="10%"><spring:message code="container"/></th>
             <th width="8%"><spring:message code="barcode"/></th>
             <th width="8%"><spring:message code="product.lot"/></th>
@@ -69,7 +69,7 @@
                         <c:out value='${detail.container.grid.facility.name}'/>
                     </c:if>
                 </td>
-                <td>
+                <td style="display: none;">
                     <c:if test="${status.index == 0 || detail.container.grid.id != details[status.index-1].container.grid.id}">
                         <c:out value='${detail.container.grid.name}'/>
                     </c:if>
@@ -126,9 +126,9 @@
         reservedBale = reserved / 181.44;
         availableBale = available / 181.44;
 
-        showOnHand = onHand.numberFormat('#,##0.00') + ' ${product.unitOfMeasure.measureId} <strong>['+onHandBale.numberFormat('#,##0.00')+' BALE]</strong>';
-        showReserved = reserved.numberFormat('#,##0.00') + ' ${product.unitOfMeasure.measureId} <strong>['+reservedBale.numberFormat('#,##0.00')+' BALE]</strong>';
-        showAvailable = available.numberFormat('#,##0.00') + ' ${product.unitOfMeasure.measureId} <strong>['+availableBale.numberFormat('#,##0.00')+' BALE]</strong>';
+        showOnHand = onHand.numberFormat('#,##0.00') + ' ${product.unitOfMeasure.measureId}';
+        showReserved = reserved.numberFormat('#,##0.00') + ' ${product.unitOfMeasure.measureId}';
+        showAvailable = available.numberFormat('#,##0.00') + ' ${product.unitOfMeasure.measureId}';
     }
 
     document.getElementById('onHand').innerHTML = showOnHand;

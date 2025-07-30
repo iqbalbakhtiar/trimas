@@ -21,10 +21,10 @@
 <table width="100%" cellpadding="0" cellspacing="0" class="table-list">
 <tr>
 	<th width="1%"><div style="width:40px"></div></th>
-	<th width="8%"><spring:message code="sirius.date"/></th>
-	<th width="20%"><spring:message code="sirius.code"/></th>
-	<th width="15%"><spring:message code="organization"/></th>
-	<th width="15%"><spring:message code="facility"/></th>
+	<th width="5%"><spring:message code="sirius.date"/></th>
+	<th width="10%"><spring:message code="sirius.code"/></th>
+	<th width="10%"><spring:message code="organization"/></th>
+	<th width="10%"><spring:message code="facility"/></th>
 	<th width="50%"><spring:message code="sirius.reason"/></th>
 </tr>
 <c:forEach items="${adjustments}" var="ad">

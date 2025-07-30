@@ -1,3 +1,8 @@
+/**
+ * File Name  : GoodsReceiptManualService.java
+ * Created On : Jul 26, 2023
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.inventory.service;
 
 import java.util.Map;
@@ -36,8 +41,8 @@ import com.siriuserp.sdk.utility.SiriusValidator;
 import javolution.util.FastMap;
 
 /**
- * @author Andres Nodas
- * Sirius Indonesia, PT
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
  * www.siriuserp.com
  */
 
@@ -45,22 +50,20 @@ import javolution.util.FastMap;
 @Transactional(rollbackFor = Exception.class)
 public class GoodsReceiptManualService
 {
-
 	@Autowired
 	private CodeSequenceDao codeSequenceDao;
 
 	@Autowired
 	private GenericDao genericDao;
 
-	//@Autowired
-	//private GoodsReceiptService goodsReceiptService;
+	/*@Autowired
+	private GoodsReceiptService goodsReceiptService;*/
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws ServiceException
 	{
-		FastMap<String, Object> map = new FastMap<String, Object>();
-
 		GoodsReceiptFilterCriteria criteria = (GoodsReceiptFilterCriteria) filterCriteria;
+		FastMap<String, Object> map = new FastMap<String, Object>();
 
 		if (SiriusValidator.validateParamWithZeroPosibility(criteria.getOrganization()))
 			map.put("organization", genericDao.load(Party.class, criteria.getOrganization()));
@@ -100,13 +103,13 @@ public class GoodsReceiptManualService
 	}
 
 	@AuditTrails(className = GoodsReceiptManual.class, actionType = AuditTrailsActionType.CREATE)
-	@AutomaticSibling(roles= {"AddInventorySiblingRole"})
+	@AutomaticSibling(roles = "AddInventorySiblingRole")
 	@AutomaticReverseSibling(roles = "GoodsReceiptManualGenerateBarcodeSiblingRole")
 	public void add(GoodsReceiptManual goodsReceiptManual) throws Exception
 	{
 		InventoryForm form = (InventoryForm) goodsReceiptManual.getForm();
-		
-		goodsReceiptManual.setCode(GeneratorHelper.instance().generate(TableType.GOODS_RECEIPT_MANUAL, codeSequenceDao, goodsReceiptManual.getOrganization()));
+
+		goodsReceiptManual.setCode(GeneratorHelper.instance().generate(TableType.GOODS_RECEIPT_MANUAL, codeSequenceDao));
 
 		for (Item item : form.getItems())
 		{
@@ -124,40 +127,39 @@ public class GoodsReceiptManualService
 				receiptItem.setFacilityDestination(item.getGrid().getFacility());
 				receiptItem.setDestinationGrid(item.getGrid());
 				receiptItem.setDestinationContainer(item.getContainer());
-				receiptItem.getLot().setSerial(item.getSerial());;
+				receiptItem.getLot().setSerial(item.getSerial());
+				receiptItem.getLot().setCode(item.getLotCode());
 				receiptItem.setReferenceCode(goodsReceiptManual.getCode());
 				receiptItem.setReferenceFrom(goodsReceiptManual.getSupplier().getFullName());
 				receiptItem.setReferenceTo(item.getContainer().getCode());
 				receiptItem.setOrganization(goodsReceiptManual.getOrganization());
 				receiptItem.setGoodsReceiptManual(goodsReceiptManual);
-				
+
 				WarehouseTransactionItem warehouseTransactionItem = ReferenceItemHelper.init(genericDao, receiptItem.getQuantity(), WarehouseTransactionType.IN, receiptItem);
 				warehouseTransactionItem.setLocked(false);
-				
+
 				receiptItem.setTransactionItem(warehouseTransactionItem);
-				
+
 				receiptItem.setGoodsReceiptManual(goodsReceiptManual);
 				goodsReceiptManual.getItems().add(receiptItem);
 			}
 		}
 
 		genericDao.add(goodsReceiptManual);
-
-		//autoWarehouseService.autoReceipt(goodsReceiptManual);
 	}
 
 	@AuditTrails(className = GoodsReceiptManual.class, actionType = AuditTrailsActionType.UPDATE)
 	public void edit(GoodsReceiptManual goodsReceiptManual) throws ServiceException
 	{
 		genericDao.update(goodsReceiptManual);
-
-		/*@AuditTrails(className = GoodsReceiptManual.class, actionType = AuditTrailsActionType.DELETE)
-		public void delete(GoodsReceiptManual goodsReceiptManual) throws Exception
-		{
-			for (GoodsReceipt receipt : goodsReceiptManual.getReceipts())
-				goodsReceiptService.delete(receipt);
-	
-			genericDao.delete(goodsReceiptManual);*/
 	}
 
+	/*@AuditTrails(className = GoodsReceiptManual.class, actionType = AuditTrailsActionType.DELETE)
+	public void delete(GoodsReceiptManual goodsReceiptManual) throws Exception
+	{
+		for (GoodsReceipt receipt : goodsReceiptManual.getReceipts())
+			goodsReceiptService.delete(receipt);
+	
+		genericDao.delete(goodsReceiptManual);
+	}*/
 }

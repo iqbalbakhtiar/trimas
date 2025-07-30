@@ -54,7 +54,7 @@
 		<th width="8%" nowrap="nowrap"><spring:message code="product.category"/></th>
 		<th width="5%" nowrap="nowrap"><spring:message code="product.uom"/></th>
 		<th width="5%" nowrap="nowrap"><spring:message code="barcode"/></th>
-		<%-- <th width="5%" nowrap="nowrap"><spring:message code="product.lot"/></th> --%>
+		<th width="5%" nowrap="nowrap"><spring:message code="product.lot"/></th>
 		<th width="10%" nowrap="nowrap" style="text-align: right;"><spring:message code="product.quantity"/></th>
 		<th width="10%" nowrap="nowrap" style="text-align: right;"><spring:message code="sirius.price"/></th>
 		<th width="30%">&nbsp;</th>
@@ -70,7 +70,7 @@
 		<td nowrap="nowrap"><c:out value='${item.product.productCategory.name}'/></td>
 		<td nowrap="nowrap"><c:out value='${item.product.unitOfMeasure.measureId}'/></td>
 		<td nowrap="nowrap"><c:out value='${item.lot.serial}'/></td>
-		<%-- <td nowrap="nowrap"><c:out value='${item.lot.code}'/></td> --%>
+		<td nowrap="nowrap"><c:out value='${item.lot.code}'/></td>
 		<td nowrap="nowrap" style="text-align: right;"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
 		<td nowrap="nowrap" style="text-align: right;"><fmt:formatNumber value='${item.money.amount}' pattern=',##0.00'/></td>
 		<td>&nbsp;</td>
@@ -78,7 +78,7 @@
 	</c:forEach>
 	</tbody>
 	<tfoot>
-	<tr class="end-table"><td colspan="10">&nbsp;</td></tr>
+	<tr class="end-table"><td colspan="11">&nbsp;</td></tr>
 	</tfoot>
 	</table>
 	</sesform:form>

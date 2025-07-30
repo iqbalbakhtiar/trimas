@@ -6,22 +6,20 @@ package com.siriuserp.sdk.dm;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.siriuserp.accountreceivable.dm.Billing;
-import com.siriuserp.inventory.dm.WarehouseTransactionItem;
-import com.siriuserp.production.dm.CostCenter;
-import com.siriuserp.production.dm.MaterialType;
-import com.siriuserp.sales.dm.DeliveryOrderItemType;
-import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
-import com.siriuserp.sales.dm.SalesType;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.siriuserp.accountpayable.dm.InvoiceVerification;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationItem;
+import com.siriuserp.accountreceivable.dm.Billing;
 import com.siriuserp.accountreceivable.dm.BillingReferenceItem;
 import com.siriuserp.accountreceivable.dm.WriteOffType;
 import com.siriuserp.administration.dm.Geographic;
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.dm.UnitOfMeasure;
+import com.siriuserp.inventory.dm.WarehouseTransactionItem;
+import com.siriuserp.sales.dm.DeliveryOrderItemType;
+import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
+import com.siriuserp.sales.dm.SalesType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -82,7 +80,6 @@ public class Item extends SiriusItem
 	private SalesType salesType = SalesType.STANDARD;
 	private WriteOffType writeOffType;
 	private DeliveryOrderItemType deliveryItemType;
-	private MaterialType materialType;
 
 	private Facility facility;
 	private Grid grid;
@@ -102,7 +99,6 @@ public class Item extends SiriusItem
 	private WarehouseTransactionItem warehouseTransactionItem;
 	private InvoiceVerificationItem invoiceVerificationItem;
 	private InvoiceVerification invoiceVerification;
-	private CostCenter costCenter;
 	private Billing billing;
 
 	private String code;

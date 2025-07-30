@@ -61,9 +61,9 @@ public class BarcodeGroupService
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
 	{
-		FastMap<String, Object> map = new FastMap<String, Object>();
 		BarcodeGroupFilterCriteria criteria = (BarcodeGroupFilterCriteria) filterCriteria;
 
+		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("filterCriteria", criteria);
 		map.put("barcodes", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
 
@@ -127,7 +127,6 @@ public class BarcodeGroupService
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> preadd3(InventoryForm form) throws Exception
 	{
-		Map<String, Object> map = new FastMap<String, Object>();
 		FastList<Barcode> barcodes = new FastList<Barcode>();
 
 		for (Item item : form.getItems())
@@ -151,6 +150,7 @@ public class BarcodeGroupService
 			}
 		}
 
+		Map<String, Object> map = new FastMap<String, Object>();
 		map.put("barcode_form", form);
 		map.put("itemReferences", form.getItems());
 		map.put("barcodes", barcodes);
@@ -282,10 +282,9 @@ public class BarcodeGroupService
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
 	public Map<String, Object> barcodeGroupPrint(Long id)
 	{
-		Map<String, Object> map = new HashMap<String, Object>();
-
 		BarcodeGroup barcodeGroup = genericDao.load(BarcodeGroup.class, id);
 
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", barcodeGroup.getBarcodes());
 		map.put("groupId", barcodeGroup.getId());
 		map.put("type", "4");
@@ -296,10 +295,9 @@ public class BarcodeGroupService
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
 	public Map<String, Object> barcodePrint(Long id)
 	{
-		Map<String, Object> map = new HashMap<String, Object>();
-
 		Barcode barcode = genericDao.load(Barcode.class, id);
 
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", barcode);
 		map.put("type", "4");
 
@@ -340,7 +338,7 @@ public class BarcodeGroupService
 	public void addFromGR(BarcodeGroup barcodeGroup, List<Item> items) throws Exception
 	{
 		if (!SiriusValidator.validateParam(barcodeGroup.getCode()))
-			barcodeGroup.setCode(GeneratorHelper.instance().generate(TableType.BARCODE_GROUP, codeSequenceDao, barcodeGroup.getFacility().getCode()));
+			barcodeGroup.setCode(GeneratorHelper.instance().generate(TableType.BARCODE_GROUP, codeSequenceDao));
 
 		for (Item item : items)
 		{
@@ -372,6 +370,5 @@ public class BarcodeGroupService
 		}
 
 		genericDao.add(barcodeGroup);
-
 	}
 }

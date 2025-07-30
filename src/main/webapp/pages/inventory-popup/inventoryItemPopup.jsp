@@ -69,7 +69,7 @@
 							<td nowrap="nowrap"><c:out value='${com.product.name}'/></td>
 							<td nowrap="nowrap"><c:out value='${com.container.name}'/></td>
 							<td nowrap="nowrap"><c:out value='${com.lot.code}'/></td>
-                            <td nowrap="nowrap"><fmt:formatNumber value='${com.availableSale}' pattern='${com.product.unitOfMeasure.name}'/></td>
+                            <td nowrap="nowrap"><fmt:formatNumber value='${com.availableSale}' pattern='#,##0.00'/></td>
                         </tr>
 						</c:forEach>
 					  	<tr class="end-table"><td colspan="6">&nbsp;</td></tr>

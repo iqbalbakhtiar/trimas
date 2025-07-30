@@ -6,7 +6,6 @@
 package com.siriuserp.sdk.utility;
 
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.util.Date;
 
 import com.siriuserp.sdk.dao.CodeSequenceDao;
@@ -153,16 +152,12 @@ public class GeneratorHelper
 		case GOODS_ISSUE_SEQUENCE:
 		case MOVING_CONTAINER_ISSUE_SEQUENCE:
 			return sequence(codeSequence, index);
-		case SALES_ORDER:
-			return sales(codeSequence, codeExt, index, date, tax);
 		case DELIVERY_ORDER:
 		case PURCHASE_ORDER:
 		case BILLING_BATCH:
 		case GOODS_RECEIPT:
 		case BILLING:
 			return codeDateCount(tableType, codeSequence, index, date);
-		case PURCHASE_REQUISITION:
-			return purchaseRequisition(codeSequence, index, date);
 		default:
 			return format(codeSequence, index);
 		}
@@ -246,29 +241,6 @@ public class GeneratorHelper
 		return barcode.toString();
 	}
 
-	//SEQ/CODEEXT/TAXORNOTAX/MONTH/YEAR EX:001/BNG/SSM/05/2025
-	private String sales(CodeSequence codeSequence, String codeExt, Integer index, Date date, Tax tax)
-	{
-		StringBuffer sb = new StringBuffer();
-		String sCode = "" + index;
-
-		for (int idx = 0; idx < (codeSequence.getType().getLength() - sCode.trim().length()); idx++)
-			sb.append("0");
-
-		sb.append(index);
-
-		if (SiriusValidator.validateParam(codeExt))
-			sb.append("/" + codeExt);
-
-		if (tax != null && tax.getTaxRate().compareTo(BigDecimal.ZERO) > 0)
-			sb.append("/SSM");
-
-		sb.append("/" + DateHelper.getMonth(date));
-		sb.append("/" + DateHelper.getYear(date));
-
-		return sb.toString();
-	}
-
 	//CODE|YEAR|MONTH|SEQ EX:SJ2505001
 	private String codeDateCount(TableType tableType, CodeSequence codeSequence, Integer index, Date date)
 	{
@@ -287,37 +259,4 @@ public class GeneratorHelper
 
 		return sb.toString();
 	}
-
-	//CODE|YEAR|MONTH|SEQ EX:PRQ - 2508001
-	private String purchaseRequisition(CodeSequence codeSequence, int index, Date date) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(codeSequence.getType().getCode()).append(" - ");
-		String yy = String.valueOf(codeSequence.getYear()).substring(2);
-		int mm = Integer.parseInt(DateHelper.getMonth(date));
-		sb.append(yy)
-				.append(String.format("%02d", mm))
-				.append(String.format("%0" + codeSequence.getType().getLength() + "d", index));
-		return sb.toString();
-	}
-
-	//SEQ/CODEEXT/TAXORNOTAX/MONTH/YEAR EX:001/BNG/SSM/05/2025
-	/*private String purchase(CodeSequence codeSequence, Integer index, Date date)
-	{
-		StringBuffer sb = new StringBuffer();
-		sb.append("PO/");
-		String sCode = "" + index;
-	
-		for (int idx = 0; idx < (codeSequence.getType().getLength() - sCode.trim().length()); idx++)
-			sb.append("0");
-	
-		sb.append(index);
-	
-		if (codeSequence.getCompany() != null)
-			sb.append("/" + codeSequence.getCompany());
-	
-		sb.append("/" + DateHelper.toMonthRome(Integer.valueOf(DateHelper.getMonth(date))));
-		sb.append("/" + DateHelper.getYear(date));
-	
-		return sb.toString();
-	}*/
 }

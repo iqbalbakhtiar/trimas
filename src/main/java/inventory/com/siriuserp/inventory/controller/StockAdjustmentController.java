@@ -24,7 +24,7 @@ import com.siriuserp.inventory.criteria.StockAdjustmentFilterCriteria;
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.dm.StockAdjustment;
 import com.siriuserp.inventory.form.InventoryForm;
-import com.siriuserp.inventory.query.StockAdjustmentGridViewQuery;
+import com.siriuserp.inventory.query.StockAdjustmentViewQuery;
 import com.siriuserp.inventory.service.StockAdjustmentService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
@@ -69,7 +69,7 @@ public class StockAdjustmentController extends ControllerBase
 	@RequestMapping("/stockadjustmentview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentList", service.view(criteriaFactory.create(request, StockAdjustmentFilterCriteria.class), StockAdjustmentGridViewQuery.class));
+		return new ModelAndView("/inventory/warehouse-management/stockAdjustmentList", service.view(criteriaFactory.create(request, StockAdjustmentFilterCriteria.class), StockAdjustmentViewQuery.class));
 	}
 
 	@RequestMapping("/stockadjustmentpreadd.htm")

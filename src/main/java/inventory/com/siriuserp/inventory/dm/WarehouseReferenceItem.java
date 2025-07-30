@@ -32,7 +32,6 @@ import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 import org.springframework.security.userdetails.ldap.Person;
 
-import com.siriuserp.production.dm.ProductionOrderDetailItem;
 import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.CreditTerm;
 import com.siriuserp.sdk.dm.Facility;
@@ -159,11 +158,6 @@ public abstract class WarehouseReferenceItem extends Model implements LotCompara
 	@Fetch(FetchMode.SELECT)
 	protected WarehouseTransactionItem transactionItem;
 	
-	@OneToOne(mappedBy = "referenceItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.EXTRA)
-	@Fetch(FetchMode.SELECT)
-	protected ProductionOrderDetailItem productionOrderDetailItem;
-
 	@Override
 	public Money getMoney()
 	{

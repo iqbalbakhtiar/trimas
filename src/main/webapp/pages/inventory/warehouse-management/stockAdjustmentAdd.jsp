@@ -37,7 +37,7 @@
 					<img src="assets/icons/list_extensions.gif" onclick="openfacility();" style="cursor: pointer;" title="Facility" />
 				</td>
 			</tr>
-			<tr>
+			<tr style="display: none;">
 				<td align="right"><spring:message code="sirius.currency"/> :</td>
 				<td>
 					<form:select id='currency' path='currency' cssClass="rate">
@@ -70,6 +70,7 @@
 					<th width="10%" nowrap="nowrap"><spring:message code="product.name"/></th>
 					<th width="5%" nowrap="nowrap"><spring:message code="product.onhand"/></th>
 					<th width="5%" nowrap="nowrap"><spring:message code="product.uom"/></th>
+					<th width="5%" nowrap="nowrap"><spring:message code="product.lot"/></th>
 					<th width="5%" nowrap="nowrap"><spring:message code="stockadjustmentitem.adjust.qty"/>/<spring:message code="product.serial"/></th>
 					<th width="20%" colspan="2"><spring:message code="stockdepreciation.adjustedprice"/></th>
 				</tr>
@@ -138,6 +139,7 @@
 		$('#facility').focus(function(){
 
 			$('.barcode').remove();
+			$('.barcodeDetail').remove();
 			
 			$('.check').prop("checked", true);
 			$('.item-button-delete').click();
@@ -158,7 +160,6 @@
                     let indexAttr = $(this).attr('index');
                     
                     document.querySelectorAll('.barcodeGroup'+indexAttr).forEach(e => e.remove());
-                    
                 }
             });
                 
@@ -193,6 +194,7 @@
 		const codeProduct = List.get('<input class="input-disabled" disabled="true" size="12"/>','productCode['+index+']');
 		const onHand = List.get('<input class="number-disabled" disabled="true" size="12"/>','onHand['+index+']', '0.00');
 		const uom = List.get('<input class="input-disabled" disabled="true" size="12"/>','uom['+index+']');
+		const lotCode = List.get('<input size="12"/>','lotCode['+index+']');
 		const quantity = List.get('<input class="input-number negative" onkeyup='+"checkQuantity(this);"+' size="12"/>','quantity['+index+']', '1');
 		const cogs = List.get('<input class="input-number negative" size="12"/>','price['+index+']', '0.00');
 		
@@ -202,6 +204,7 @@
 		$tr.append(List.col([product, productImg]));
 		$tr.append(List.col([onHand]));
 		$tr.append(List.col([uom]));
+		$tr.append(List.col([lotCode]));
 		$tr.append(List.col([quantity]));
 		$tr.append(List.col([cogs]));
 
@@ -213,6 +216,13 @@
 					
 	function opencontainerpopup(index)
 	{
+		const facility = document.getElementById('facility');
+		if(!facility.value)
+		{
+			alert('<spring:message code="facility"/> <spring:message code="notif.empty"/> !');
+			return;
+		}
+		
 		openpopup("<c:url value='/page/popupcontainerview.htm?target=container['/>"+index+"]");
 	}
 	
@@ -295,15 +305,15 @@
 				addLine(index, 0);
 				$('#iBody' + index + ' tr:last').addClass('barcode');
 				
-				$('#uom\\['+index+'\\]').remove();
+				$('#uom\\['+index+'\\]').attr("style", "display:none;");
+				$('#lotCode\\['+index+'\\]').remove();
 				$('#price\\['+index+'\\]').remove();
 				$('#product\\[' + index + '\\]').prop('disabled', true);	
 				$('#container\\[' + index + '\\]').prop('disabled', true);
 				
 				let $input = $('#quantity\\[' + index + '\\]');
-				if ($input.length) {
+				if ($input.length)
 				    $input.attr('data-name', 'quantityDel');
-				}
 			}
 		}
 	}
@@ -371,7 +381,7 @@
 				$('#iBody' + idxRef + ' tr:last').addClass('barcode');
 			}
 			
-			$('#uom\\['+idxRef+'\\]').remove();
+			$('#uom\\['+idxRef+'\\]').attr("style", "display:none;");
 			$('#price\\['+idxRef+'\\]').remove();
 			$('#product\\[' + idxRef + '\\]').prop('disabled', true);	
 			$('#container\\[' + idxRef + '\\]').prop('disabled', true);
@@ -389,7 +399,7 @@
 	    const $uom = $('#uom\\[' + $idxRef + '\\]').val();
 
 	    const $tbody = $('#iBody' + $idxRef);
-	    const $tr = $('<tr/>').addClass('barcodeGroup' + $idxRef);
+	    const $tr = $('<tr/>').addClass('barcodeGroup' + $idxRef+' barcodeDetail');
 
 	    if ($productId) {
 	        $.ajax({
@@ -399,7 +409,7 @@
 	            dataType: 'json',
 	            success: function(json) {
 
-	                const product = List.get('<input class="input" size="12" type="hidden"/>', 'product[' + index + ']', $productId);
+	                const product = List.get('<input class="input" size="12" type="hidden" serial="true"/>', 'product[' + index + ']', $productId);
 	                const container = List.get('<input class="input" size="12" type="hidden"/>', 'container[' + index + ']', $containerId);
 
 	                let input = '';
@@ -445,6 +455,7 @@
 	                const $barcodeImg = List.img('<spring:message code="barcode"/>', index, 'openBarcode("' + index + '","' + $productId + '")').css('display', 'none');
 	                const $qty = List.get('<input type="text" class="input-number input-disabled" readonly="true" size="12"/>', 'onHand[' + index + ']', '0.00');
 	                const $uomField = List.get('<input type="text" class="input-disabled" disabled="true" size="12"/>', 'uom[' + index + ']', $uom);
+	        		const $lotCode = List.get('<input size="12"/>','lotCode['+index+']');
 	                const quantity = List.get('<input class="input-number negative totals' + $idxRef + '" size="12" onchange="calculateAdjust(\'' + index + '\', \'' + $idxRef + '\');"/>', 'quantity[' + index + ']', '1');
 	                const cogs = List.get('<input class="input-number negative" size="12"/>', 'price[' + index + ']', '0.00');
 
@@ -453,6 +464,7 @@
 	                $tr.append(List.col([$barcode, $barcodeImg], '', 'text-align: right;').attr('colspan', '2'));
 	                $tr.append(List.col([$qty]));
 	                $tr.append(List.col([$uomField]));
+	                $tr.append(List.col([$lotCode]));
 	                $tr.append(List.col([quantity]));
 	                $tr.append(List.col([cogs]));
 

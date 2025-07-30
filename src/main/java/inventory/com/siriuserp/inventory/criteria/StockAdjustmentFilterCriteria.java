@@ -16,14 +16,16 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StockAdjustmentFilterCriteria extends AbstractFilterCriteria 
+public class StockAdjustmentFilterCriteria extends AbstractFilterCriteria
 {
 	private static final long serialVersionUID = 7102489002882121613L;
-	
+
+	private String organizationName;
+	private String facilityName;
 	private String code;
-	
-    private Long facility;
-    
-    private Date dateFrom;
-    private Date dateTo;
+
+	private Long facility;
+
+	private Date dateFrom;
+	private Date dateTo;
 }
