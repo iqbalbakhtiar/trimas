@@ -158,7 +158,7 @@ public class GoodsReceiptService extends Service
 			item.setWarehouseTransactionItem(transactionItem);
 			item.setBuffer(itemAdapter.getIssued());
 			item.setAmount(transactionItem.getMoney().getAmount());
-			
+
 			form.getItems().add(item);
 
 			if (!transactionItem.getType().equals(WarehouseTransactionType.OUT) && !transactionItem.getTransactionCode().contains(builder))
@@ -197,7 +197,7 @@ public class GoodsReceiptService extends Service
 		InventoryConfiguration configuration = genericDao.load(InventoryConfiguration.class, Long.valueOf(1));
 		Assert.notNull(configuration, "Inventory configuration doesnot exist!");
 
-		goodsReceipt.setCode(GeneratorHelper.instance().generate(TableType.GOODS_RECEIPT,codeSequenceDao,goodsReceipt.getOrganization().getCode(),null,null,CodeSequence.MONTH,null));
+		goodsReceipt.setCode(GeneratorHelper.instance().generate(TableType.GOODS_RECEIPT, codeSequenceDao, goodsReceipt.getOrganization().getCode(), null, null, CodeSequence.MONTH, null));
 
 		boolean createInvoice = false;
 		for (Item item : goodsReceipt.getForm().getItems())
@@ -403,35 +403,29 @@ public class GoodsReceiptService extends Service
 
 		return map;
 	}
-	
+
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> print(Long id, Long container) throws Exception
 	{
 		InventoryForm form = FormHelper.bind(InventoryForm.class, load(id));
 
 		FastMap<String, Object> map = new FastMap<String, Object>();
-		
-		if(container == null) {
-			List<Container> containers = form.getGoodsReceipt().getItems().stream()
-				    .map(GoodsReceiptItem::getContainer)      
-				    .distinct()                             
-				    .collect(Collectors.toList());
-			
+
+		if (container == null)
+		{
+			List<Container> containers = form.getGoodsReceipt().getItems().stream().map(GoodsReceiptItem::getContainer).distinct().collect(Collectors.toList());
+
 			map.put("containers", containers);
+		} else
+		{
+
+			List<GoodsReceiptItem> filteredItems = form.getGoodsReceipt().getItems().stream().filter(it -> it.getContainer() != null // jaga‑jaga null
+					&& it.getContainer().getId().equals(container)).collect(Collectors.toList());
+			map.put("items", filteredItems);
 		}
-		else {
-			
-			List<GoodsReceiptItem> filteredItems = form.getGoodsReceipt().getItems().stream()
-		            .filter(it -> it.getContainer() != null           // jaga‑jaga null
-		                       && it.getContainer().getId().equals(container))
-		            .collect(Collectors.toList());
-		    map.put("items", filteredItems);
-		}
-	    
+
 		return map;
 	}
-	
-	
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public GoodsReceipt load(Long id)

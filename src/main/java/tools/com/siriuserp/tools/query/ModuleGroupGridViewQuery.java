@@ -52,6 +52,8 @@ public class ModuleGroupGridViewQuery extends AbstractGridViewQuery {
 	        
 	    if(SiriusValidator.validateParam(criteria.getName()))
 	    	builder.append(" AND module.name LIKE :name");
+	    
+	    builder.append(" ORDER BY module.menuIndex ASC");
 
 	    Query query = getSession().createQuery(builder.toString());
 

@@ -14,6 +14,7 @@ import com.siriuserp.accountreceivable.dm.Billing;
 import com.siriuserp.accountreceivable.dm.BillingReferenceItem;
 import com.siriuserp.accountreceivable.dm.WriteOffType;
 import com.siriuserp.administration.dm.Geographic;
+import com.siriuserp.inventory.dm.ConversionType;
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.inventory.dm.UnitOfMeasure;
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
@@ -80,6 +81,7 @@ public class Item extends SiriusItem
 	private SalesType salesType = SalesType.STANDARD;
 	private WriteOffType writeOffType;
 	private DeliveryOrderItemType deliveryItemType;
+	private ConversionType conversionType;
 
 	private Facility facility;
 	private Grid grid;

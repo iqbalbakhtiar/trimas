@@ -79,12 +79,16 @@ public class GenericDaoImpl extends DaoHelper<Object> implements GenericDao
     public <T> List<T> getUniqeFields(Class<T> tClass, String field[], Object param[], String[] fieldOrder, String[] orderType)
 	{
 		StringBuilder builder = new StringBuilder();
-		int countField = field.length > param.length ? param.length : field.length;
+		
+		int countField = 0;
+		if (param != null)
+			countField = field.length > param.length ? param.length : field.length;
 
 		builder.append("FROM "+tClass.getName()+" ");
 		
-		for(int i=0;i<countField;i++)
-			builder.append((i == 0 ? "WHERE " : "AND " ) + field[i]+(StringHelper.OPERATORS.matcher(field[i]).find() ? "" : " =")+":param" + i +" ");
+		if(param != null)
+			for(int i=0;i<countField;i++)
+				builder.append((i == 0 ? "WHERE " : "AND " ) + field[i]+(StringHelper.OPERATORS.matcher(field[i]).find() ? "" : " =")+":param" + i +" ");
 	
 		if(fieldOrder.length > 0) {
 			builder.append("ORDER BY ");

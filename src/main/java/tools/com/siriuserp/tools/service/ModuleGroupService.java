@@ -29,76 +29,78 @@ import javolution.util.FastMap;
  * www.siriuserp.com
  */
 @Component
-@Transactional(rollbackFor=Exception.class)
+@Transactional(rollbackFor = Exception.class)
 public class ModuleGroupService
 {
-    @Autowired
-    private GenericDao genericDao;
+	@Autowired
+	private GenericDao genericDao;
 
-    @Transactional(readOnly=true,propagation=Propagation.NOT_SUPPORTED)
-    public FastMap<String,Object> preview()
-    {
-    	FastMap<String,Object> map = new FastMap<String, Object>();
-    	map.put("alls", genericDao.loadAll(ModuleGroup.class));
-        
-        return map;
-    }
-    
-    @Transactional(readOnly=true,propagation=Propagation.NOT_SUPPORTED)
-    public FastMap<String,Object> view(GridViewFilterCriteria filterCriteria,Class<? extends GridViewQuery> queryclass) throws ServiceException
-    {
-        FastMap<String,Object> map = new FastMap<String, Object>();
-        map.put("filterCriteria",filterCriteria);
-        map.put("alls",FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
-        
-        return map;
-    }
-    
-    @Transactional(readOnly=true,propagation=Propagation.NOT_SUPPORTED)
-    public FastMap<String,Object> preadd(String id)
-    {
-        FastMap<String,Object> map = new FastMap<String, Object>();
-        
-        ModuleGroup moduleGroup = new ModuleGroup();
-        
-        if(SiriusValidator.validateParamWithZeroPosibility(id))
-            moduleGroup.setParent(load(Long.valueOf(id)));
-        
-        map.put("moduleGroup",moduleGroup);
-        
-        return map;
-    }
-    
-    @Transactional(readOnly=true,propagation=Propagation.NOT_SUPPORTED)
-    public FastMap<String,Object> preedit(Long id)
-    {
-        FastMap<String,Object> map = new FastMap<String, Object>();
-        map.put("moduleGroup",load(id));
-        
-        return map;
-    }
-    
-    @AuditTrails(className=ModuleGroup.class,actionType=AuditTrailsActionType.CREATE)
-    public void add(ModuleGroup moduleGroup)throws ServiceException
-    {
-    	genericDao.add(moduleGroup); 
-    }
-    
-    @AuditTrails(className=ModuleGroup.class,actionType=AuditTrailsActionType.UPDATE)
-    public void edit(ModuleGroup moduleGroup)throws ServiceException
-    {
-    	genericDao.update(moduleGroup); 
-    }
-    
-    @AuditTrails(className=ModuleGroup.class,actionType=AuditTrailsActionType.DELETE)
-    public void delete(ModuleGroup moduleGroup)throws ServiceException
-    {
-    	genericDao.delete(moduleGroup); 
-    }
- 
-    @Transactional(readOnly=true,propagation=Propagation.NOT_SUPPORTED)
-    public ModuleGroup load(Long id)
-    {
-        return genericDao.load(ModuleGroup.class, id);
-    }
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> preview()
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("alls", genericDao.getUniqeFields(ModuleGroup.class, null, null, new String[]
+		{ "menuIndex" }, new String[]
+		{ "ASC" }));
+
+		return map;
+	}
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws ServiceException
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("filterCriteria", filterCriteria);
+		map.put("alls", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
+
+		return map;
+	}
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> preadd(String id)
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+
+		ModuleGroup moduleGroup = new ModuleGroup();
+
+		if (SiriusValidator.validateParamWithZeroPosibility(id))
+			moduleGroup.setParent(load(Long.valueOf(id)));
+
+		map.put("moduleGroup", moduleGroup);
+
+		return map;
+	}
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> preedit(Long id)
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("moduleGroup", load(id));
+
+		return map;
+	}
+
+	@AuditTrails(className = ModuleGroup.class, actionType = AuditTrailsActionType.CREATE)
+	public void add(ModuleGroup moduleGroup) throws ServiceException
+	{
+		genericDao.add(moduleGroup);
+	}
+
+	@AuditTrails(className = ModuleGroup.class, actionType = AuditTrailsActionType.UPDATE)
+	public void edit(ModuleGroup moduleGroup) throws ServiceException
+	{
+		genericDao.update(moduleGroup);
+	}
+
+	@AuditTrails(className = ModuleGroup.class, actionType = AuditTrailsActionType.DELETE)
+	public void delete(ModuleGroup moduleGroup) throws ServiceException
+	{
+		genericDao.delete(moduleGroup);
+	}
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public ModuleGroup load(Long id)
+	{
+		return genericDao.load(ModuleGroup.class, id);
+	}
 }

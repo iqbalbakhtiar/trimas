@@ -294,6 +294,7 @@ public enum TableType
 	
 	//W
     WORK_ISSUE("WI"),
+    WORK_ORDER("WO"),
 	WAREHOUSE_CASH("WHC");
 	
 	private String code;
