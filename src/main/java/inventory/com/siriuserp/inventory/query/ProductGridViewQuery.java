@@ -53,12 +53,15 @@ public class ProductGridViewQuery extends AbstractGridViewQuery
 		if (SiriusValidator.validateParam(criteria.getExcludeCategoryType()))
 			builder.append("AND pro.productCategory.categoryType != :excludeCategoryType ");
 
+		if (SiriusValidator.validateParam(criteria.getBase()))
+			builder.append("AND pro.base =:base ");
+
 		if (SiriusValidator.validateParam(criteria.getSaleable()))
 			builder.append("AND pro.saleable =:saleable ");
 
 		if (SiriusValidator.validateParam(criteria.getStatus()))
 			builder.append("AND pro.enabled =:status ");
-		
+
 		if (SiriusValidator.validateParam(criteria.getPurchaseRequestType()) && "SERVICE".equalsIgnoreCase(criteria.getPurchaseRequestType()))
 			builder.append("AND pro.productType =:purchaseRequestType ");
 		else
@@ -73,6 +76,7 @@ public class ProductGridViewQuery extends AbstractGridViewQuery
 		Query query = getSession().createQuery(builder.toString());
 		query.setCacheable(true);
 		query.setReadOnly(true);
+		query.setParameter("purchaseRequestType", ProductType.SERVICE);
 
 		if (SiriusValidator.validateParam(criteria.getCode()))
 			query.setParameter("code", "%" + criteria.getCode() + "%");
@@ -85,8 +89,6 @@ public class ProductGridViewQuery extends AbstractGridViewQuery
 
 		if (SiriusValidator.validateParam(criteria.getType()))
 			query.setParameter("type", ProductType.valueOf(criteria.getType()));
-		
-			query.setParameter("purchaseRequestType", ProductType.SERVICE);
 
 		if (SiriusValidator.validateLongParam(criteria.getCategoryId()))
 			query.setParameter("categoryId", criteria.getCategoryId());
@@ -99,6 +101,9 @@ public class ProductGridViewQuery extends AbstractGridViewQuery
 
 		if (SiriusValidator.validateParam(criteria.getExcludeCategoryType()))
 			query.setParameter("excludeCategoryType", CategoryType.valueOf(criteria.getExcludeCategoryType()));
+
+		if (SiriusValidator.validateParam(criteria.getBase()))
+			query.setParameter("base", criteria.getBase());
 
 		if (SiriusValidator.validateParam(criteria.getSaleable()))
 			query.setParameter("saleable", criteria.getSaleable());

@@ -111,9 +111,9 @@
 			if(_code)
 				_code.value = product.productCode;
 
-			var _id = self.opener.document.getElementById('productId${param.index}');
-			if(_id)
-				_id.value = product.productId;
+			var _productId = self.opener.document.getElementById('productId${param.index}');
+			if(_productId)
+				_productId.value = product.productId;
 
 			var _name = self.opener.document.getElementById('productName${param.index}');
 			if(_name)
@@ -126,13 +126,22 @@
 			var _cat = self.opener.document.getElementById('productCategory[${param.index}]');
 			if(_cat)
 			{	
-				_cat.setAttribute("lot",product.isLot);
-				_cat.value = product.categoryName;
+				if(_cat.tagName.toLowerCase() === 'select') {
+					_cat.remove(_cat.selectedIndex);
+					var _opt = document.createElement('option');
+					_opt.value = product.productCategory.id;
+					_opt.text = product.productCategory.name;
+
+					_cat.appendChild(_opt);
+				} else {
+					_cat.setAttribute("lot",product.isLot);
+					_cat.value = product.unitOfMeasure.name;
+				}
 			}
 				
 			var _uom = self.opener.document.getElementById('uom[${param.index}]');
 			if(_uom)
-				_uom.value = product.uomSymbol;
+				_uom.value = product.unitOfMeasure.measureId;
 			
 			//Call after all set
 			if(_client) {

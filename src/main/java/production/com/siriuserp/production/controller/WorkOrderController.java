@@ -28,6 +28,7 @@ import com.siriuserp.production.query.WorkOrderViewQuery;
 import com.siriuserp.production.service.WorkOrderService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
+import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Party;
@@ -58,6 +59,7 @@ public class WorkOrderController extends ControllerBase
 		binder.registerCustomEditor(Tax.class, modelEditor.forClass(Tax.class));
 		binder.registerCustomEditor(Currency.class, modelEditor.forClass(Currency.class));
 		binder.registerCustomEditor(Facility.class, modelEditor.forClass(Facility.class));
+		binder.registerCustomEditor(Container.class, modelEditor.forClass(Container.class));
 	}
 
 	@RequestMapping("/workorderview.htm")

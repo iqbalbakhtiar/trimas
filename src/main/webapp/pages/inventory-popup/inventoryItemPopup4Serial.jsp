@@ -44,7 +44,8 @@
 
 				var _client = self.opener.document.getElementById('product[${param.index}]');
 				if (_client) {
-					if (_client.tagName === 'SELECT') {
+					console.log('>>> '+_client.getAttribute('readonly'));
+					if (_client.getAttribute('readonly') === 'null' && _client.tagName === 'SELECT') {
 						_client.options.length = 0;
 						var _opt = document.createElement('option');
 						_opt.value = inventory.product.id;

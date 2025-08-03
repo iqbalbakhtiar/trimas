@@ -5,6 +5,8 @@
  */
 package com.siriuserp.production.service;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -85,20 +87,21 @@ public class WorkOrderService extends Service
 			WorkOrderApprovableBridge approvableBridge = ApprovableBridgeHelper.create(WorkOrderApprovableBridge.class, workOrder);
 			approvableBridge.setApprovableType(ApprovableType.WORK_ORDER);
 			approvableBridge.setUri("workorderpreedit.htm");
+
 			workOrder.setApprovable(approvableBridge);
 		}
 
 		for (Item item : form.getItems())
 		{
-			if (item.getProduct() != null)
+			if (item.getProduct() != null && item.getQuantity().compareTo(BigDecimal.ZERO) > 0)
 			{
 				WorkOrderItem workOrderItem = new WorkOrderItem();
-				workOrderItem.setProduct(item.getProduct());
+				workOrderItem.setWorkOrder(workOrder);
 				workOrderItem.setConversionType(item.getConversionType());
 				workOrderItem.setContainer(item.getContainer());
+				workOrderItem.setProduct(item.getProduct());
 				workOrderItem.setQuantity(item.getQuantity());
 				workOrderItem.setNote(item.getNote());
-				workOrderItem.setWorkOrder(workOrder);
 
 				workOrder.getItems().add(workOrderItem);
 			}

@@ -47,6 +47,7 @@ public class ProductController extends ControllerBase
 		binder.registerCustomEditor(ProductCategory.class, modelEditor.forClass(ProductCategory.class));
 		binder.registerCustomEditor(UnitOfMeasure.class, modelEditor.forClass(UnitOfMeasure.class));
 		binder.registerCustomEditor(Brand.class, modelEditor.forClass(Brand.class));
+		binder.registerCustomEditor(Product.class, modelEditor.forClass(Product.class));
 	}
 
 	@RequestMapping("/productview.htm")

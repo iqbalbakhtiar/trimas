@@ -68,7 +68,7 @@ public class Product extends Model
 
 	@Column(name = "base", length = 1)
 	@Type(type = "yes_no")
-	private boolean base = false;
+	private boolean base = true;
 
 	@Column(name = "enabled", length = 1)
 	@Type(type = "yes_no")
@@ -169,11 +169,10 @@ public class Product extends Model
 		map.put("barcode", getBarcode());
 		map.put("isSerial", isSerial());
 		map.put("parent", getParent());
-		map.put("categoryName", getProductCategory().getName());
-		map.put("uomId", getUnitOfMeasure().getId());
-		map.put("uomSymbol", getUnitOfMeasure().getMeasureId());
 		map.put("factoryCode", getFactoryCode());
 		map.put("qtyToBase", getQtyToBase());
+		map.put("productCategory", getProductCategory());
+		map.put("unitOfMeasure", getUnitOfMeasure());
 
 		return map;
 	}

@@ -86,8 +86,15 @@ public class ProductService extends Service
 	{
 		InventoryForm form = (InventoryForm) product.getForm();
 		product.setCode(GeneratorHelper.instance().generate(TableType.PRODUCT, codeSequenceDao));
-
 		product.setName(product.getName().toUpperCase());
+
+		if (product.getParent() != null)
+		{
+			String newName = product.getParent().getName() + " " + product.getName();
+			product.setName(newName);
+			product.setBase(false);
+		}
+
 		if (check(product.getName()))
 			throw new ServiceException("Product with name " + product.getName() + " already exist !!!");
 

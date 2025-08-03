@@ -27,7 +27,7 @@
 						<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupcompanystructurerolebasedview.htm?target=org'/>');" title="<spring:message code='organization'/>" />
 					</td>
 				</tr>
-				<tr>
+				<tr style="display: none;">
 					<td align="right"><spring:message code="facility"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
@@ -49,6 +49,7 @@
 					<td width="1%" align="center">:</td>
 					<td>
 						<input id="startDate" name="startDate" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>"/>
+						&nbsp;
 						<input id="workStart" name="workStart" class="clockpicker" value="07:00" size="4" />
 					</td>
 				</tr>
@@ -57,6 +58,7 @@
 					<td width="1%" align="center">:</td>
 					<td>
 						<input id="finishDate" name="finishDate" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>"/>
+						&nbsp;
 						<input id="workEnd" name="workEnd" class="clockpicker" value="17:00" size="4" />
 					</td>
 				</tr>
@@ -127,19 +129,20 @@
 		    	<table class="table-list" id="lineItemConvert" cellspacing="0" cellpadding="0" align="center" style="width:100%;">
 		    	<thead>
 		    	<tr>
-					<th width="1%"><input id="checklineConvert" value="lineConvert" class="checkallConvert" type="checkbox"/></th>
+					<th width="1%"><input id="checklineConvert" target="Convert" class="checkall" type="checkbox"/></th>
 					<th><spring:message code="product.name"/></th>
                    	<th width="8%"><spring:message code='container'/></th>
 					<th width="5%"><spring:message code="product.onhand"/></th>
 					<th width="5%"><spring:message code="product.lot"/></th>
-					<th width="50%"><spring:message code="product.uom"/></th>
+					<th width="5%"><spring:message code="product.uom"/></th>
                     <th width="5%"><spring:message code='sirius.qty'/></th>
+                    <th width="50%"><spring:message code='sirius.note'/></th>
 				</tr>
 				</thead>
 				<tbody id="lineItemConvert">
 				</tbody>
 				<tfoot>
-					<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
+					<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
 				</tfoot>
 				</table>
 			</div>
@@ -154,21 +157,20 @@
 		    	<table class="table-list" id="lineItemResult" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">
 		    	<thead>
 		    	<tr>
-			    	<th colspan="2"><spring:message code='sirius.code'/></th>
-                     	<th colspan="2"><spring:message code='sirius.name'/></th>
-                     	<th width="9%"><spring:message code='category'/></th>
-                       <th width="9%"><spring:message code='sirius.uom'/></th>
-                       <th width="10%"><spring:message code='facility'/></th>
-                       <th width="10%"><spring:message code='grid'/></th>
-                       <th width="10%"><spring:message code='container'/></th>
-                       <th width="11%"><spring:message code='plafon.available'/></th>
-                       <th width="10%"><spring:message code='sirius.qty'/></th>
+					<th width="1%"><input id="checklineConvert" target="Result" class="checkall" type="checkbox"/></th>
+					<th><spring:message code="product.name"/></th>
+                   	<th width="8%"><spring:message code='container'/></th>
+					<th width="5%"><spring:message code="product.onhand"/></th>
+					<th width="5%"><spring:message code="product.lot"/></th>
+					<th width="5%"><spring:message code="product.uom"/></th>
+                    <th width="5%"><spring:message code='sirius.qty'/></th>
+                    <th width="50%"><spring:message code='sirius.note'/></th>
 				</tr>
 				</thead>
 				<tbody id="lineItemResult">
 				</tbody>
 				<tfoot>
-					<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
+					<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
 				</tfoot>
 				</table>
 			</div>
@@ -181,9 +183,8 @@
 $(function(){
 	
 	$('.item-button-save').click(function(){
-		if(validateForm()) {
+		if(validation())
 			save();
-		}
 	});
 	
 	$('.item-button-new').click(function() {
@@ -191,11 +192,12 @@ $(function(){
 	});
 	
 	$('.checkall').click(function () {
-        $('.checkConvert').prop("checked", this.checked);
+        $('.check'+$(this).attr('target')).prop("checked", this.checked);
     });
 	
-	$('.delconvert').click(function () {
-        $('.checkConvert').each(function(){
+	$('.item-button-delete').click(function () {
+		var target = $(this).attr('target');
+        $('.check'+target).each(function(){
             if(this.checked){
             	this.checked = false;
                 $(this).parent().parent().remove();
@@ -205,7 +207,7 @@ $(function(){
             }
         });
         
-        $('.checkallConvert').prop("checked", false);
+        $('.checkall').prop("checked", false);
     });
 });
 
@@ -230,12 +232,12 @@ function openOperator() {
 	const orgId = $('#org').val();
 	const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
 	const params = {
-		target: 'operator', // Id Dropdown (Select) element
-		organization: orgId, // Org (PartyTo)
-		fromRoleType: 4, // Customer
-		toRoleType: 5, // Supplier
-		relationshipType: 3, // Customer Relationship
-		base: false // Filter Only Customer (Not Group)
+		target: 'operator',
+		organization: orgId,
+		fromRoleType: 3,
+		toRoleType: 2,
+		relationshipType: 2,
+		base: false
 	};
 
 	openpopup(buildUrl(baseUrl, params));
@@ -290,7 +292,7 @@ async function populateGrid() {
 	}
 }
 
-function validateForm() {
+function validation() {
     // Validasi organisasi
     var organization = $('#org').val();
     if (organization == null || organization === "") {
@@ -319,32 +321,34 @@ function validateForm() {
         return false;
     } */
     
-    if ($('#lineItem tr').length === 0) {
+    if ($('#lineItemConvert tr').length === 0) {
+        alert('<spring:message code="notif.add"/> <spring:message code="salesorder.lineitem"/> <spring:message code="notif.select2"/> !');
+        return false;
+    }
+    
+    if ($('#lineItemResult tr').length === 0) {
         alert('<spring:message code="notif.add"/> <spring:message code="salesorder.lineitem"/> <spring:message code="notif.select2"/> !');
         return false;
     }
 
-    // Validasi Line Items
     var isValid = true;
-    $('#lineItem tr').each(function(index){
+    $('#lineItemConvert tr').each(function(index){
         var $row = $(this);
         
-        // Validasi product
-        var product = $row.find('select[id^="product["]').val();
+        /* var product = $row.find('select[id^="product["]').val();
         if (product == null || product === "") {
             alert('<spring:message code="product"/> <spring:message code="notif.empty"/> ! (<spring:message code="salesorder.lineitem"/> ' + (index + 1) + ')');
             isValid = false;
-            return false; // Keluar dari each
+            return false;
         }
 
-        // Validasi quantity
         var qtyStr = $row.find('input[id^="quantity["]').val().replace(/,/g, '');
         var qty = parseFloat(qtyStr);
         if (isNaN(qty) || qty <= 0) {
             alert('<spring:message code="sirius.qty"/> <spring:message code="notif.empty"/> ! (<spring:message code="salesorder.lineitem"/> ' + (index + 1) + ')');
             isValid = false;
             return false;
-        }
+        } */
     });
 
     if (!isValid)
@@ -395,8 +399,12 @@ function addLineItem(target)
 	$table = $('#lineItem'+target);
 	$tbody = $('<tbody id="iBody'+index+'"/>');
 	$tr = $('<tr/>');
+	$type = 'CONVERT';
 	
-	const checkbox = List.get('<input type="checkbox" class="check"/>','check['+index +']');	
+	if(target.toLowerCase() === 'result')
+		$type = 'RESULT';
+	
+	const checkbox = List.get('<input type="checkbox" class="check'+target+'"/>','check['+index +']');	
 	const container = List.get('<select class="combobox"/>','container['+index+']');
 	const containerImg = List.img('Container', index, 'opencontainerpopup("'+index+'")');
 	const product = List.get('<select class="combobox-ext product"/>','product['+index+']');
@@ -405,9 +413,11 @@ function addLineItem(target)
 	const gridTo = List.get('<input class="input-disabled" disabled="true" size="12"/>','gridTo['+index+']');
 	const source = List.get('<select class="input-disabled combobox" readonly="true"/>','source['+index+']'); 
 	const onHand = List.get('<input class="number-disabled" disabled="true" size="12"/>','onhand['+index+']');
+	const serial = List.get('<input disabled="true" size="12" type="hidden"/>','serialCheck['+index+']');
 	const uom = List.get('<input class="input-disabled" disabled="true" size="12"/>','uom['+index+']');
 	const quantity = List.get('<input class="input-decimal quantities" onchange='+"checkQuantity(this);"+' size="12"/>','quantity['+index+']', '0');
-	const serial = List.get('<input disabled="true" size="12" type="hidden"/>','serialCheck['+index+']');
+	const note = List.get('<input size="30"/>','note['+index+']');
+	const conversionType = List.get('<input readonly="true" style="display: none;"/>','conversionType['+index+']',$type);
 	
 	$tr.append(List.col([checkbox]));
 	$tr.append(List.col([product, productImg]));
@@ -416,6 +426,7 @@ function addLineItem(target)
 	$tr.append(List.col(['&nbsp;']));
 	$tr.append(List.col([uom]));
 	$tr.append(List.col([quantity]));
+	$tr.append(List.col([note, conversionType]));
 
 	$tbody.append($tr);
 	$table.append($tbody);
@@ -464,7 +475,9 @@ function checkQuantity(element)
 
 		$('#product\\[' + idxRef + '\\]').prop('disabled', true);
 		$('#container\\[' + idxRef + '\\]').prop('disabled', true);
-		$('#source\\['    + idxRef + '\\]').prop('disabled', true);
+		$('#source\\[' + idxRef + '\\]').prop('disabled', true);
+		$('#note\\[' + idxRef + '\\]').prop('disabled', true);
+		$('#note\\[' + idxRef + '\\]').prop('style', 'display: none;');
 
 		$input.attr('data-name', 'quantityDel');
 	}
@@ -473,33 +486,31 @@ function checkQuantity(element)
 function addLine($idxRef, idx)
 {
 	$productId = $('#product\\['+$idxRef+'\\]').val();
+	$productName = $('#product\\['+$idxRef+'\\]').text();
 	$sourceId = $('#source\\['+$idxRef+'\\]').val();
-	$containerId = $('#container\\['+$idxRef+'\\]').val();
 	$uom = $('#uom\\['+$idxRef+'\\]').val();
 	
 	$tbody = $('#iBody'+$idxRef);
 	$tr = $('<tr/>').addClass('barcodeGroup' + $idxRef);
     
     $product = List.get('<input class="input" size="12" type="hidden"/>','product['+idx+']', $productId);
-    $source = List.get('<input class="input" size="12" type="hidden"/>','source['+idx+']', $sourceId);
-    $container = List.get('<input class="input" size="12" type="hidden"/>','container['+idx+']', $containerId);
+    $container = List.get('<input class="input" size="12" type="hidden"/>','container['+idx+']', $sourceId);
     $lotCode = List.get('<input class="inputbox-small input-disabled" size="12" type="text" readonly/>','lotCode['+idx+']');
-
     $barcode = List.get('<select class="combobox barcodes" onchange="calculateAdjust(\'' + idx + '\');"></select>','serial[' + idx + ']');
 	$barcodeImg = List.img('<spring:message code="barcode"/>', idx, 'openBarcode("'+idx+'","'+$productId+'","'+$sourceId+'")');
-	
 	$onhand = List.get('<input type="text" class="input-decimal input-disabled" disabled="true" size="12"/>','onHand['+idx+']', '0.00');
 	$uom = List.get('<input type="text" class="input-disabled" disabled="true" size="12"/>','uom['+idx+']', $uom);
-
 	$quantity = List.get('<input class="input-decimal quantities" size="12"/>','quantity['+idx+']', '0.00');
+	$note = List.get('<input size="30"/>','note['+idx+']');
 	
 	$tr.append(List.col([$product]));
-	$tr.append(List.col([$source]));
+	$tr.append(List.col([$container]));
 	$tr.append(List.col([$barcode, $barcodeImg], '', 'text-align: right;'));
 	$tr.append(List.col([$onhand]));
 	$tr.append(List.col([$lotCode]));
 	$tr.append(List.col([$uom]));
 	$tr.append(List.col([$quantity]));
+	$tr.append(List.col([$note]));
 	
 	$tbody.append($tr);
 	index++;
@@ -532,6 +543,19 @@ function openBarcode(index, productId, containerId)
 	};
 	
 	openpopup(buildUrl(baseUrl, params));
+}
+
+function calculateAdjust(index) {
+	var barcode = $('#serial\\['+index+'\\]').val();
+	var barcode = $('#serial\\['+index+'\\]').val();
+	var qty = parseFloat($('#quantity\\['+index+'\\]').val().toNumber());
+	var onHand = parseFloat($('#onHand\\['+index+'\\]').val().toNumber());
+	
+	if(!barcode && qty < 0) {
+		alert('<spring:message code="sirius.qty"/> <spring:message code="notif.lower"/> 0 !!!');
+		$('#quantity\\['+index+'\\]').val(0.00);
+		return;
+	}
 }
 
 </script>

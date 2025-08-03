@@ -15,6 +15,14 @@
 	  	</td>
 	</tr>
 	<tr>
+		<td align="right"><spring:message code="product.base"/> :</td>
+		<td>
+			<form:select id="productParent" path="parent" cssClass="combobox-ext">
+			</form:select>
+			<a class="item-popup" onclick="javascript:openProduct();" title="<spring:message code='product'/>" />
+		</td>
+	</tr>
+	<tr>
 		<td align="right"><spring:message code="product.name"/> :</td>
 		<td nowrap="nowrap">
 			<form:input id='name' path="name" size="43"/>
@@ -39,12 +47,12 @@
 	<tr>
 		<td align="right"><spring:message code="product.category"/> :</td>
 		<td>
-			<form:select id="productCategory" path="productCategory" cssClass="combobox-ext">
+			<form:select id="productCategory[0]" path="productCategory" cssClass="combobox-ext">
 			    <c:if test='${not empty product_form.productCategory}'>
 					<form:option value='${product_form.productCategory.id}' label='${product_form.productCategory.name}' />
 			    </c:if>
 			</form:select>
-			<a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupproductcategoryview.htm?target=productCategory'/>');" title="Product Category" />
+			<a id="browseProductCategory" class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupproductcategoryview.htm?target=productCategory[0]'/>');" title="<spring:message code='product.category'/>" />
 		</td>
 	</tr>
 	<tr>
@@ -112,42 +120,23 @@ $(function(){
 		if(validation())
 			save();
 	});
-
-	function save() {
-		var xhr = new XMLHttpRequest();
-		xhr.open('POST', "<c:url value='/page/productadd.htm'/>");
-		xhr.responseType = 'json';
-		
-		if(xhr.readyState == 1)
-		{
-			$dialog.empty();
-			$dialog.html('<spring:message code="notif.saving"/>');
-			$dialog.dialog('open');
-		}
-		
-		xhr.onreadystatechange = function () {
-			if(xhr.readyState == 4)
-			{
-				var json = xhr.response;
-				if(json)
-				{
-					if(json.status == 'OK')
-					{
-						$dialog.dialog('close');
-						
-						let url = "<c:url value='/page/productpreedit.htm?id='/>"+json.id;;
-						
-						window.location=url;
-					}
-					else
-							afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
-				}
-			}
-		};
-		
-		xhr.send(new FormData($('#addForm')[0]));
-	}
+	
+	$('#productParent').change(function(){
+		$('#browseProductCategory').attr('style', 'display; none;');
+	});
 });
+
+function openProduct() {
+	  
+	const baseUrl = '<c:url value="/page/popupproductview.htm"/>';
+	const params = {
+		target: 'productParent',
+		status: true,
+		base: true,
+		index: 0,
+	};
+	openpopup(buildUrl(baseUrl, params));
+}
 
 function validation()
 {
@@ -157,12 +146,52 @@ function validation()
 		return false;
 	}
 	
-	if(!$('#productCategory').val())
+	if(!$('#productCategory\\[0\\]').val())
 	{
 		alert('<spring:message code="notif.select1"/> <spring:message code="productcategory"/> <spring:message code="notif.select2"/> !!!');
 		return false;
 	}
+	
+	if(!$('#brand').val())
+	{
+		alert('<spring:message code="notif.select1"/> <spring:message code="brand"/> <spring:message code="notif.select2"/> !!!');
+		return false;
+	}
 
 	return true;
+}
+
+function save() {
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', "<c:url value='/page/productadd.htm'/>");
+	xhr.responseType = 'json';
+	
+	if(xhr.readyState == 1)
+	{
+		$dialog.empty();
+		$dialog.html('<spring:message code="notif.saving"/>');
+		$dialog.dialog('open');
+	}
+	
+	xhr.onreadystatechange = function () {
+		if(xhr.readyState == 4)
+		{
+			var json = xhr.response;
+			if(json)
+			{
+				if(json.status == 'OK')
+				{
+					$dialog.dialog('close');
+					
+					let url = "<c:url value='/page/productpreedit.htm?id='/>"+json.id;;
+					window.location=url;
+				}
+				else
+					afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
+			}
+		}
+	};
+	
+	xhr.send(new FormData($('#addForm')[0]));
 }
 </script>

@@ -72,6 +72,7 @@ public class Form implements SiriusForm
 	private Party updatedBy;
 
 	private PostalAddress postalAddress;
+	private Product parent;
 	private Product product;
 	private Brand brand;
 

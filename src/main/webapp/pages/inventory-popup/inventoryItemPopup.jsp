@@ -142,7 +142,6 @@
 					_quantity.value = '0.000';
 				else
 					_quantity.value = '0';		
-
 			}
 
 			var _container = self.opener.document.getElementById('container[${param.index}]');
