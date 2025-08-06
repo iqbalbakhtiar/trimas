@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.siriuserp.inventory.dm.ConversionType;
+import com.siriuserp.inventory.dm.WarehouseTransactionType;
 import com.siriuserp.production.dm.ProductionStatus;
 import com.siriuserp.production.dm.WorkOrder;
 import com.siriuserp.production.dm.WorkOrderApprovableBridge;
@@ -36,6 +38,7 @@ import com.siriuserp.sdk.utility.ApprovableBridgeHelper;
 import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
+import com.siriuserp.sdk.utility.ReferenceItemHelper;
 
 import javolution.util.FastMap;
 
@@ -95,13 +98,32 @@ public class WorkOrderService extends Service
 		{
 			if (item.getProduct() != null && item.getQuantity().compareTo(BigDecimal.ZERO) > 0)
 			{
+				WarehouseTransactionType transactionType = WarehouseTransactionType.OUT;
+				if (item.getConversionType().equals(ConversionType.RESULT))
+					transactionType = WarehouseTransactionType.IN;
+
 				WorkOrderItem workOrderItem = new WorkOrderItem();
 				workOrderItem.setWorkOrder(workOrder);
 				workOrderItem.setConversionType(item.getConversionType());
 				workOrderItem.setContainer(item.getContainer());
 				workOrderItem.setProduct(item.getProduct());
 				workOrderItem.setQuantity(item.getQuantity());
+				workOrderItem.getLot().setSerial(item.getSerial());
 				workOrderItem.setNote(item.getNote());
+
+				if (workOrderItem.getConversionType().equals(ConversionType.CONVERT))
+				{
+					workOrderItem.setSourceContainer(item.getContainer());
+					workOrderItem.setSourceGrid(workOrderItem.getSourceContainer().getGrid());
+					workOrderItem.setFacilitySource(workOrderItem.getSourceGrid().getFacility());
+				} else
+				{
+					workOrderItem.setDestinationContainer(item.getContainer());
+					workOrderItem.setDestinationGrid(workOrderItem.getDestinationContainer().getGrid());
+					workOrderItem.setFacilityDestination(workOrderItem.getDestinationGrid().getFacility());
+				}
+
+				workOrderItem.setTransactionItem(ReferenceItemHelper.init(genericDao, workOrderItem.getQuantity(), transactionType, workOrderItem));
 
 				workOrder.getItems().add(workOrderItem);
 			}

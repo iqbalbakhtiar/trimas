@@ -119,7 +119,7 @@
 	</table>
 	<br/>
 	<div id="mainTab" dojoType="TabContainer" style="width:100% ; height: 400px;">
-		<div id="convert" dojoType="ContentPane" label="Convert From" class="tab-pages" refreshOnShow="true">
+		<div id="convert" dojoType="ContentPane" label="<spring:message code='workorder.convert'/>" class="tab-pages" refreshOnShow="true">
   			<div class="toolbar-clean">
   				<div class="toolbar-clean">
   					<a class="item-button-new" target="Convert"><span><spring:message code="sirius.row.new"/></span></a>
@@ -147,7 +147,7 @@
 				</table>
 			</div>
 		</div>
-		<div id="result" dojoType="ContentPane" label="Convert From" class="tab-pages" refreshOnShow="true">
+		<div id="result" dojoType="ContentPane" label="<spring:message code='workorder.result'/>" class="tab-pages" refreshOnShow="true">
   			<div class="toolbar-clean">
   				<div class="toolbar-clean">
   					<a class="item-button-new" target="Result"><span><spring:message code="sirius.row.new"/></span></a>
@@ -415,9 +415,8 @@ function addLineItem(target)
 	const onHand = List.get('<input class="number-disabled" disabled="true" size="12"/>','onhand['+index+']');
 	const serial = List.get('<input disabled="true" size="12" type="hidden"/>','serialCheck['+index+']');
 	const uom = List.get('<input class="input-disabled" disabled="true" size="12"/>','uom['+index+']');
-	const quantity = List.get('<input class="input-decimal quantities" onchange='+"checkQuantity(this);"+' size="12"/>','quantity['+index+']', '0');
+	const quantity = List.get('<input class="input-decimal quantities" conversionType="'+$type+'" onchange='+"checkQuantity(this);"+' size="12"/>','quantity['+index+']', '0');
 	const note = List.get('<input size="30"/>','note['+index+']');
-	const conversionType = List.get('<input readonly="true" style="display: none;"/>','conversionType['+index+']',$type);
 	
 	$tr.append(List.col([checkbox]));
 	$tr.append(List.col([product, productImg]));
@@ -426,7 +425,7 @@ function addLineItem(target)
 	$tr.append(List.col(['&nbsp;']));
 	$tr.append(List.col([uom]));
 	$tr.append(List.col([quantity]));
-	$tr.append(List.col([note, conversionType]));
+	$tr.append(List.col([note]));
 
 	$tbody.append($tr);
 	$table.append($tbody);
@@ -451,6 +450,7 @@ function openProduct(index) {
 function checkQuantity(element) 
 { 
 	let idxRef = $(element).attr('index');
+	let conversionType = $(element).attr('conversionType');
 	let $input = $('#quantity\\[' + idxRef + '\\]');
 	
 	var onHand = document.getElementById('onhand[' + idxRef + ']').value.toNumber();
@@ -459,7 +459,7 @@ function checkQuantity(element)
 	
 	if(onHand < qty) 
 	{
-		alert('<spring:message code="transferorder.qty"/> <spring:message code="notif.greater"/> <spring:message code="product.onhand"/> !!!');
+		alert('<spring:message code="sirius.qty"/> <spring:message code="notif.greater"/> <spring:message code="product.onhand"/> !!!');
 		document.getElementById('quantity[' + idxRef + ']').value = onHand;
 		
 		return;
@@ -469,7 +469,7 @@ function checkQuantity(element)
 		$('#iBody' + idxRef + ' tr.barcode').remove();
 
 		for (let i = 0; i < element.value; i++) {
-			addLine(idxRef, index);
+			addLine(idxRef, index, conversionType);
 			$('#iBody' + idxRef + ' tr:last').addClass('barcode');
 		}
 
@@ -483,12 +483,17 @@ function checkQuantity(element)
 	}
 }
 
-function addLine($idxRef, idx)
+function addLine($idxRef, idx, convType)
 {
 	$productId = $('#product\\['+$idxRef+'\\]').val();
 	$productName = $('#product\\['+$idxRef+'\\]').text();
 	$sourceId = $('#source\\['+$idxRef+'\\]').val();
 	$uom = $('#uom\\['+$idxRef+'\\]').val();
+	
+	$qtyAttr = 'class="input-decimal quantities"';
+	
+	if(convType == 'CONVERT')
+		$qtyAttr = 'class="input-decimal quantities input-disabled" readonly="true"';
 	
 	$tbody = $('#iBody'+$idxRef);
 	$tr = $('<tr/>').addClass('barcodeGroup' + $idxRef);
@@ -500,17 +505,18 @@ function addLine($idxRef, idx)
 	$barcodeImg = List.img('<spring:message code="barcode"/>', idx, 'openBarcode("'+idx+'","'+$productId+'","'+$sourceId+'")');
 	$onhand = List.get('<input type="text" class="input-decimal input-disabled" disabled="true" size="12"/>','onHand['+idx+']', '0.00');
 	$uom = List.get('<input type="text" class="input-disabled" disabled="true" size="12"/>','uom['+idx+']', $uom);
-	$quantity = List.get('<input class="input-decimal quantities" size="12"/>','quantity['+idx+']', '0.00');
+	$quantity = List.get('<input size="12" '+$qtyAttr+'/>','quantity['+idx+']', '0.00');
 	$note = List.get('<input size="30"/>','note['+idx+']');
+	$conversionType = List.get('<input readonly="true" style="display: none;"/>','conversionType['+index+']', convType);
 	
 	$tr.append(List.col([$product]));
 	$tr.append(List.col([$container]));
-	$tr.append(List.col([$barcode, $barcodeImg], '', 'text-align: right;'));
+	$tr.append(List.col([$barcode, convType == 'CONVERT' ? $barcodeImg : ''], '', 'text-align: right;'));
 	$tr.append(List.col([$onhand]));
 	$tr.append(List.col([$lotCode]));
 	$tr.append(List.col([$uom]));
 	$tr.append(List.col([$quantity]));
-	$tr.append(List.col([$note]));
+	$tr.append(List.col([$note, $conversionType]));
 	
 	$tbody.append($tr);
 	index++;
@@ -558,4 +564,25 @@ function calculateAdjust(index) {
 	}
 }
 
+
+function createBarcode(id)
+{
+	const confirmDialog = $('<div><spring:message code="notif.proceed"/> (<spring:message code="sirius.create"/> <spring:message code="barcode"/>) ?</div>').dialog(
+	{
+		autoOpen: false, title: '<spring:message code="notif.confirmation"/>', modal:true,
+		buttons: {
+			'<spring:message code="sirius.yes"/>': function() {
+				$(this).dialog('close');
+
+				var url = "<c:url value='/page/barcodegrouppreadd1.htm?barcodeType=WORK_ORDER&referenceId='/>"+id;
+				window.location = url;
+			},
+			'<spring:message code="sirius.no"/>': function() {
+				$(this).dialog('close');
+			}
+		}
+	});
+
+	confirmDialog.dialog('open');
+}
 </script>

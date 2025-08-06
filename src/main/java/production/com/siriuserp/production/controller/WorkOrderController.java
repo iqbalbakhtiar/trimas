@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.production.criteria.WorkOrderFilterCriteria;
+import com.siriuserp.production.dm.ProductionStatus;
 import com.siriuserp.production.dm.WorkOrder;
 import com.siriuserp.production.form.ProductionForm;
 import com.siriuserp.production.query.WorkOrderViewQuery;
@@ -60,6 +61,7 @@ public class WorkOrderController extends ControllerBase
 		binder.registerCustomEditor(Currency.class, modelEditor.forClass(Currency.class));
 		binder.registerCustomEditor(Facility.class, modelEditor.forClass(Facility.class));
 		binder.registerCustomEditor(Container.class, modelEditor.forClass(Container.class));
+		binder.registerCustomEditor(ProductionStatus.class, enumEditor.forClass(ProductionStatus.class));
 	}
 
 	@RequestMapping("/workorderview.htm")

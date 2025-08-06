@@ -22,10 +22,12 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
 import com.siriuserp.inventory.dm.ConversionType;
+import com.siriuserp.inventory.dm.Inventoriable;
 import com.siriuserp.inventory.dm.WarehouseReferenceItem;
 import com.siriuserp.inventory.dm.WarehouseTransaction;
 import com.siriuserp.inventory.dm.WarehouseTransactionSource;
 import com.siriuserp.sdk.dm.Container;
+import com.siriuserp.sdk.dm.Grid;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -40,7 +42,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "work_order_item")
-public class WorkOrderItem extends WarehouseReferenceItem
+public class WorkOrderItem extends WarehouseReferenceItem implements Inventoriable
 {
 	private static final long serialVersionUID = 5740764911693785047L;
 
@@ -64,6 +66,12 @@ public class WorkOrderItem extends WarehouseReferenceItem
 	private WorkOrder workOrder;
 
 	@Override
+	public Long getReferenceId()
+	{
+		return getWorkOrder().getId();
+	}
+
+	@Override
 	public WarehouseTransaction getWarehouseTransaction()
 	{
 		return getWorkOrder();
@@ -73,6 +81,30 @@ public class WorkOrderItem extends WarehouseReferenceItem
 	public WarehouseTransactionSource getTransactionSource()
 	{
 		return WarehouseTransactionSource.WORK_ORDER;
+	}
+
+	@Override
+	public String getRefTo()
+	{
+		return getWorkOrder().getOperator().getFullName();
+	}
+
+	@Override
+	public Container getSourceContainer()
+	{
+		return this.getContainer();
+	}
+
+	@Override
+	public Container getDestinationContainer()
+	{
+		return this.getContainer();
+	}
+
+	@Override
+	public Grid getGrid()
+	{
+		return this.getContainer().getGrid();
 	}
 
 	@Override

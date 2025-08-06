@@ -19,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -125,6 +126,7 @@ public class WorkOrder extends Model implements Warehouseable, ApprovableBridge
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@Where(clause = "conversion_type = 'CONVERT'")
+	@OrderBy("id")
 	private Set<WorkOrderItem> convertItems = new FastSet<WorkOrderItem>();
 
 	@OneToMany(mappedBy = "workOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -132,6 +134,7 @@ public class WorkOrder extends Model implements Warehouseable, ApprovableBridge
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	@Where(clause = "conversion_type = 'RESULT'")
+	@OrderBy("id")
 	private Set<WorkOrderItem> resultItems = new FastSet<WorkOrderItem>();
 
 	@Override

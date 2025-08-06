@@ -10,7 +10,8 @@ package com.siriuserp.inventory.dm;
  * PT. Sirius Indonesia
  * www.siriuserp.com
  */
+
 public enum ConversionType
 {
-	CONVERT,RESULT
+	CONVERT, RESULT, WASTE, REJECT;
 }
