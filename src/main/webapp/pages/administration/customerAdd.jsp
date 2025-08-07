@@ -67,6 +67,33 @@
 			</td>
 		</tr>
 		<tr>
+			<td align="right"><spring:message code="customer.status"/></td>
+			<td width="1%" align="center">:</td>
+			<td>
+				<form:select id="customerStatus" path="customerStatus" cssClass="combobox-min">
+					<form:options items="${statuses}" />
+				</form:select>
+			</td>
+		</tr>
+		<tr>
+			<td align="right"><spring:message code="customer.initiated.by"/></td>
+			<td width="1%" align="center">:</td>
+			<td>
+				<form:select id="initiatedBy" path="initiatedBy" cssClass="combobox-ext">
+				</form:select>
+				<a class="item-popup" onclick="openSalesPerson();" title="Initiated By"/>
+			</td>
+		</tr>
+		<tr>
+			<td align="right"><spring:message code="customer.inspected.by"/></td>
+			<td width="1%" align="center">:</td>
+			<td>
+				<form:select id="inspectedBy" path="inspectedBy" cssClass="combobox-ext">
+				</form:select>
+				<a class="item-popup" onclick="openEmployee();" title="Initiated By"/>
+			</td>
+		</tr>
+		<tr>
 			<td align="right"><spring:message code="sirius.note"/></td>
 			<td width="1%" align="center">:</td>
 			<td><form:textarea path="note" rows="6" cols="45"/></td>
@@ -84,6 +111,44 @@ $(function(){
 		}
 	});
 });
+
+function openSalesPerson() {
+	if (!$('#org').val()) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
+		return;
+	}
+
+	const orgId = $('#org').val();
+	const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
+	const params = {
+		target: 'initiatedBy', // Id Dropdown (Select) element
+		organization: orgId, // Org (PartyTo)
+		fromRoleType: 7, // Sales Person
+		toRoleType: 2, // Company
+		relationshipType: 2 // Employee Relationship
+	};
+
+	openpopup(buildUrl(baseUrl, params));
+}
+
+function openEmployee() {
+	if (!$('#org').val()) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
+		return;
+	}
+
+	const orgId = $('#org').val();
+	const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
+	const params = {
+		target: 'inspectedBy', // Id Dropdown (Select) element
+		organization: orgId, // Org (PartyTo)
+		fromRoleType: 3, // Employee
+		toRoleType: 2, // Company
+		relationshipType: 2 // Employee Relationship
+	};
+
+	openpopup(buildUrl(baseUrl, params));
+}
 
 function validateForm() {
 	var organization = $('#org').val();
@@ -150,25 +215,5 @@ function save() {
 	};
 	
 	xhr.send(new FormData($('#addForm')[0]));
-}
-
-function openCustomerGroup() {
-	if (!$('#org').val()) {
-		alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
-		return;
-	}
-
-	const orgId = $('#org').val();
-	const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
-	const params = {
-		target: 'partyGroup', // Id Dropdown (Select) element
-		organization: orgId, // Org (PartyTo)
-		fromRoleType: 4, // Customer
-		toRoleType: 5, // Supplier
-		relationshipType: 3, // Customer Relationship
-		base: true // Filter Only Customer Group
-	};
-
-	openpopup(buildUrl(baseUrl, params));
 }
 </script>

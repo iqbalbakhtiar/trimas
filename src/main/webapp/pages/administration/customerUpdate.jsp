@@ -55,7 +55,42 @@
 					<form:radiobutton path="active" value="true" label="Active"/>
 					<form:radiobutton path="active" value="false" label="Inactive"/>	
 				</td>
-			</tr>	
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="customer.status"/></td>
+				<td width="1%" align="center">:</td>
+				<td>
+					<form:select id="customerStatus" path="customerStatus" cssClass="combobox-min">
+						<c:forEach var="status" items="${statuses}">
+							<form:option value="${status}">${status}</form:option>
+						</c:forEach>
+					</form:select>
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="customer.initiated.by"/></td>
+				<td width="1%" align="center">:</td>
+				<td>
+					<form:select id="initiatedBy" path="initiatedBy" cssClass="combobox-ext">
+						<c:if test='${not empty customer_edit.initiatedBy.id}'>
+							<form:option value='${customer_edit.initiatedBy.id}' label='${customer_edit.initiatedBy.fullName}'/>
+						</c:if>
+					</form:select>
+					<a class="item-popup" onclick="openSalesPerson();" title="Initiated By"/>
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><spring:message code="customer.inspected.by"/></td>
+				<td width="1%" align="center">:</td>
+				<td>
+					<form:select id="inspectedBy" path="inspectedBy" cssClass="combobox-ext">
+						<c:if test='${not empty customer_edit.inspectedBy.id}'>
+							<form:option value='${customer_edit.inspectedBy.id}' label='${customer_edit.inspectedBy.fullName}'/>
+						</c:if>
+					</form:select>
+					<a class="item-popup" onclick="openEmployee();" title="Initiated By"/>
+				</td>
+			</tr>
 			<tr>
 				<td align="right"><spring:message code="sirius.note"/></td>
 				<td width="1%" align="center">:</td>
@@ -562,5 +597,43 @@ function togglePaymentSchedule() { // For show / hide Payment Schedule depend on
         $('#paymentScheduleDiv').hide();
         $('#paymentScheduleTable').hide();
     }
+}
+
+function openSalesPerson() {
+	if (!$('#org').val()) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
+		return;
+	}
+
+	const orgId = $('#org').val();
+	const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
+	const params = {
+		target: 'initiatedBy', // Id Dropdown (Select) element
+		organization: orgId, // Org (PartyTo)
+		fromRoleType: 7, // Sales Person
+		toRoleType: 2, // Company
+		relationshipType: 2 // Employee Relationship
+	};
+
+	openpopup(buildUrl(baseUrl, params));
+}
+
+function openEmployee() {
+	if (!$('#org').val()) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
+		return;
+	}
+
+	const orgId = $('#org').val();
+	const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
+	const params = {
+		target: 'inspectedBy', // Id Dropdown (Select) element
+		organization: orgId, // Org (PartyTo)
+		fromRoleType: 3, // Employee
+		toRoleType: 2, // Company
+		relationshipType: 2 // Employee Relationship
+	};
+
+	openpopup(buildUrl(baseUrl, params));
 }
 </script>

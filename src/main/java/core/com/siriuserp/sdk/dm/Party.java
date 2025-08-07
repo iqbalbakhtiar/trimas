@@ -107,6 +107,10 @@ public class Party extends Model implements JSONSupport
 	@Enumerated(EnumType.STRING)
 	protected FlagLevel flagLevel = FlagLevel.USERLEVEL;
 
+	@Column(name = "customer_status")
+	@Enumerated(EnumType.STRING)
+	private CustomerStatus customerStatus = CustomerStatus.PROSPECT;
+
 	@Column(name = "picture")
 	private String picture;
 
@@ -118,6 +122,18 @@ public class Party extends Model implements JSONSupport
 	@LazyToOne(LazyToOneOption.NO_PROXY)
 	@Fetch(FetchMode.SELECT)
 	private Party partyGroup; // Relasi Customer dengan Customer Group
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_party_initiated_by")
+	@LazyToOne(LazyToOneOption.NO_PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Party initiatedBy;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_party_inspected_by")
+	@LazyToOne(LazyToOneOption.NO_PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Party inspectedBy;
 
 	@OneToOne(mappedBy = "party", fetch = FetchType.LAZY)
 	@LazyToOne(LazyToOneOption.PROXY)

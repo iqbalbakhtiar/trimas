@@ -1,5 +1,6 @@
 package com.siriuserp.administration.service;
 
+import com.siriuserp.sdk.dm.CustomerStatus;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -56,6 +57,7 @@ public class CustomerService extends Service {
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		map.put("customer_add", new Party());
+		map.put("statuses", CustomerStatus.values());
 
 		return map;
 	}
@@ -110,6 +112,7 @@ public class CustomerService extends Service {
 		map.put("customer_edit", customer);
 		map.put("relationship", partyRelationship);
 	    map.put("trxCodes", TrxCode.values());
+		map.put("statuses", CustomerStatus.values());
 		
 		return map;
 	}
