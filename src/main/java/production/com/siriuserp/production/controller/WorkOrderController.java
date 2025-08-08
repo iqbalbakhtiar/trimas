@@ -132,8 +132,29 @@ public class WorkOrderController extends ControllerBase
 		return ViewHelper.redirectTo("workorderview.htm");
 	}
 
+	@RequestMapping("/workorderfinish.htm")
+	public ModelAndView finish(@RequestParam("id") Long id, SessionStatus status) throws Exception
+	{
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			service.finish(service.load(id));
+			status.setComplete();
+
+			response.store("id", id);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			response.statusError();
+			response.setMessage(e.getLocalizedMessage());
+		}
+
+		return response;
+	}
+
 	@RequestMapping("/workorderchangestatus.htm")
-	public ModelAndView close(@RequestParam("id") Long id, @RequestParam("productionStatus") String productionStatus, SessionStatus status) throws Exception
+	public ModelAndView changeStatus(@RequestParam("id") Long id, @RequestParam("productionStatus") String productionStatus, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 

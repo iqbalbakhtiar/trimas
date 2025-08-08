@@ -104,6 +104,12 @@ public class WorkOrder extends Model implements Warehouseable, ApprovableBridge
 	private Party operator;
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_machine")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Machine machine;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_party_approver")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
@@ -133,7 +139,7 @@ public class WorkOrder extends Model implements Warehouseable, ApprovableBridge
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
-	@Where(clause = "conversion_type = 'RESULT'")
+	@Where(clause = "conversion_type != 'CONVERT'")
 	@OrderBy("id")
 	private Set<WorkOrderItem> resultItems = new FastSet<WorkOrderItem>();
 
@@ -219,6 +225,14 @@ public class WorkOrder extends Model implements Warehouseable, ApprovableBridge
 	public boolean isDeleteable()
 	{
 		if (getProductionStatus().equals(ProductionStatus.OPEN))
+			return true;
+
+		return false;
+	}
+
+	public boolean isCloseable()
+	{
+		if (getProductionStatus().equals(ProductionStatus.OPEN) || getProductionStatus().equals(ProductionStatus.IN_PROGRESS))
 			return true;
 
 		return false;

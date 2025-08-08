@@ -30,6 +30,7 @@ import com.siriuserp.sdk.annotation.AutomaticSibling;
 import com.siriuserp.sdk.dao.CodeSequenceDao;
 import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.GridViewQuery;
+import com.siriuserp.sdk.dm.CodeSequence;
 import com.siriuserp.sdk.dm.Item;
 import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.dm.UrlCache;
@@ -86,8 +87,7 @@ public class GoodsIssueService
 		InventoryConfiguration configuration = genericDao.load(InventoryConfiguration.class, Long.valueOf(1));
 		Assert.notNull("Inventory configuration doesnot exist!");
 
-		String code = GeneratorHelper.instance().generate(TableType.GOODS_ISSUE, codeSequenceDao, goodsIssue.getOrganization());
-		goodsIssue.setCode(code);
+		goodsIssue.setCode(GeneratorHelper.instance().generate(TableType.GOODS_ISSUE, codeSequenceDao, goodsIssue.getOrganization().getCode(), null, null, CodeSequence.MONTH, null));
 
 		for (Item item : goodsIssue.getForm().getItems())
 			if (SiriusValidator.gz(item.getIssued()) && item.getContainer() != null)

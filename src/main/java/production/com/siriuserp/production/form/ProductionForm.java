@@ -7,6 +7,7 @@ package com.siriuserp.production.form;
 
 import java.util.Date;
 
+import com.siriuserp.production.dm.Machine;
 import com.siriuserp.production.dm.ProductionStatus;
 import com.siriuserp.production.dm.WorkOrder;
 import com.siriuserp.sdk.dm.Form;
@@ -32,6 +33,7 @@ public class ProductionForm extends Form
 	private String workStart;
 	private String workEnd;
 
+	private Machine machine;
 	private WorkOrder workOrder;
 
 	private ProductionStatus productionStatus;

@@ -155,6 +155,7 @@ public class GeneratorHelper
 		case DELIVERY_ORDER:
 		case PURCHASE_ORDER:
 		case BILLING_BATCH:
+		case GOODS_ISSUE:
 		case GOODS_RECEIPT:
 		case BILLING:
 			return codeDateCount(tableType, codeSequence, index, date);
@@ -249,6 +250,7 @@ public class GeneratorHelper
 		String year = DateHelper.getYear(date) + "";
 
 		sb.append(tableType.getCode());
+		sb.append(" ");
 		sb.append(year.substring(year.length() - 2, year.length()));
 		sb.append(DateHelper.getMonth(date));
 
