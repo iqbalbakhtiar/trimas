@@ -63,20 +63,20 @@
 					</td>
 				</tr>
 				<tr>
-					<td align="right"><spring:message code="sirius.operator"/></td>
-					<td width="1%" align="center">:</td>
-					<td>
-						<form:select id="operator" path="operator" cssClass="combobox-ext">
-							<form:option value='${workOrder_edit.operator.id}' label='${workOrder_edit.operator.fullName}'/>
-						</form:select>
-					</td>
-				</tr>
-				<tr>
 					<td align="right"><spring:message code="machine"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="machine" path="machine" cssClass="combobox-ext">
 							<form:option value='${workOrder_edit.machine.id}' label='${workOrder_edit.machine.name}'/>
+						</form:select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right"><spring:message code="sirius.operator"/></td>
+					<td width="1%" align="center">:</td>
+					<td>
+						<form:select id="operator" path="operator" cssClass="combobox-ext">
+							<form:option value='${workOrder_edit.operator.id}' label='${workOrder_edit.operator.fullName}'/>
 						</form:select>
 					</td>
 				</tr>
@@ -116,6 +116,7 @@
 									</h1>
 								</td>
 							</tr>
+							<c:if test="${not empty workOrder_edit.issueds}">
 							<tr>
                                 <th colspan="2" align="right" class="highlight"><spring:message code="goodsissue"/></th>
                             </tr>
@@ -124,7 +125,9 @@
 								<td colspan="2" align="right"><a href="<c:url value='/page/goodsissuepreedit.htm?id=${issue.id}'/>">${issue.code}</a></td>
 							</tr>
                           	</c:forEach>
+                          	</c:if>
                             <tr><td colspan="2">&nbsp;</td></tr>
+							<c:if test="${not empty workOrder_edit.receipts}">
                             <tr>
                                 <th colspan="2" align="right" class="highlight"><spring:message code="goodsreceipt"/></th>
                             </tr>
@@ -133,6 +136,7 @@
 								<td colspan="2" align="right"><a href="<c:url value='/page/goodsreceiptpreedit.htm?id=${receipt.id}'/>">${receipt.code}</a></td>
 							</tr>
                           	</c:forEach>
+                          	</c:if>
 							</table>
 						</fieldset>
 					</td>

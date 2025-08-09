@@ -63,21 +63,21 @@
 					</td>
 				</tr>
 				<tr>
-					<td align="right"><spring:message code="sirius.operator"/></td>
-					<td width="1%" align="center">:</td>
-					<td>
-						<form:select id="operator" path="operator" cssClass="combobox-ext">
-						</form:select>
-						<a class="item-popup" onclick="openOperator()" title="<spring:message code='sirius.operator'/>" />
-					</td>
-				</tr>
-				<tr>
 					<td align="right"><spring:message code="machine"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:select id="machine" path="machine" cssClass="combobox-ext">
 						</form:select>
 						<a class="item-popup" onclick="openMachine()" title="<spring:message code='machine'/>" />
+					</td>
+				</tr>
+				<tr>
+					<td align="right"><spring:message code="sirius.operator"/></td>
+					<td width="1%" align="center">:</td>
+					<td>
+						<form:select id="operator" path="operator" cssClass="combobox-ext">
+						</form:select>
+						<a class="item-popup" onclick="openOperator()" title="<spring:message code='sirius.operator'/>" />
 					</td>
 				</tr>
 				<tr>
@@ -458,22 +458,28 @@ function addLineItem(target)
 	$tbody = $('<tbody id="iBody'+index+'"/>');
 	$tr = $('<tr/>');
 	$type = 'CONVERT';
+	$containerAttr = 'class="input-disabled combobox"';
 	
-	if(target.toLowerCase() === 'result')
+	if(target.toLowerCase() === 'result') {
 		$type = 'RESULT';
-	else if(target.toLowerCase() === 'waste')
+		$containerAttr = 'class="combobox"';
+	}
+	else if(target.toLowerCase() === 'waste') {
 		$type = 'WASTE';
-	else if(target.toLowerCase() === 'reject')
+		$containerAttr = 'class="combobox"';
+	}
+	else if(target.toLowerCase() === 'reject') {
 		$type = 'REJECT';
+		$containerAttr = 'class="combobox"';
+	}
 	
 	const checkbox = List.get('<input type="checkbox" class="check'+target+'"/>','check['+index +']');	
-	const container = List.get('<select class="combobox"/>','container['+index+']');
-	const containerImg = List.img('Container', index, 'opencontainerpopup("'+index+'")');
 	const product = List.get('<select class="combobox-ext product"/>','product['+index+']');
-	const productImg = List.img('Product', index, 'openProduct("'+index+'")');
+	const productImg = List.img('Product', index, 'openProduct("'+index+'","'+$type+'")');
 	const gridFrom = List.get('<input class="input-disabled" disabled="true" size="12"/>','gridFrom['+index+']');
 	const gridTo = List.get('<input class="input-disabled" disabled="true" size="12"/>','gridTo['+index+']');
-	const source = List.get('<select class="input-disabled combobox" readonly="true"/>','source['+index+']'); 
+	const source = List.get('<select readonly="true"'+$containerAttr+'/>','source['+index+']'); 
+	const sourceImg = List.img('Container', index, 'openContainer("'+index+'")');
 	const onHand = List.get('<input class="number-disabled" disabled="true" size="12"/>','onhand['+index+']');
 	const serial = List.get('<input disabled="true" size="12" type="hidden"/>','serialCheck['+index+']');
 	const uom = List.get('<input class="input-disabled" disabled="true" size="12"/>','uom['+index+']');
@@ -482,7 +488,12 @@ function addLineItem(target)
 	
 	$tr.append(List.col([checkbox]));
 	$tr.append(List.col([product, productImg]));
-	$tr.append(List.col([source]));
+
+	if($type == 'CONVERT')
+		$tr.append(List.col([source]));
+	else
+		$tr.append(List.col([source, sourceImg]));
+	
 	$tr.append(List.col([onHand, serial]));
 	$tr.append(List.col(['&nbsp;']));
 	$tr.append(List.col([uom]));
@@ -498,9 +509,13 @@ function addLineItem(target)
 	$(".input-decimal").bind(inputFormat);
 }
 
-function openProduct(index) {
+function openProduct(index, type) {
 	  
-	const baseUrl = '<c:url value="/page/popupproductfortransfer.htm"/>';
+	var baseUrl = '<c:url value="/page/popupproductfortransfer.htm"/>';
+	
+	if(type != 'CONVERT')
+		baseUrl = '<c:url value="/page/popupproductview.htm"/>';
+	
 	const params = {
 		target: 'product[' + index + ']',
 		index: index,
@@ -509,17 +524,35 @@ function openProduct(index) {
 	openpopup(buildUrl(baseUrl, params));
 }
 
+function openContainer(index){
+	const baseUrl = '<c:url value="/page/popupcontainerview.htm"/>';
+	const params = {
+		target: 'source[' + index + ']',
+		index: index
+	};
+	openpopup(buildUrl(baseUrl, params));
+}
+
 function checkQuantity(element) 
 { 
 	let idxRef = $(element).attr('index');
 	let conversionType = $(element).attr('conversionType');
+	let container = $('#source\\[' + idxRef + '\\]');
 	let $input = $('#quantity\\[' + idxRef + '\\]');
 	
 	var onHand = document.getElementById('onhand[' + idxRef + ']').value.toNumber();
 	var qty = document.getElementById('quantity[' + idxRef + ']').value.toNumber();
 	var serialCheck = document.getElementById('serialCheck[' + idxRef + ']').value;
 	
-	if(onHand < qty) 
+	if(!container.val())
+	{
+		alert('<spring:message code="notif.select1"/> <spring:message code="container"/> <spring:message code="notif.select2"/> !!!');
+		document.getElementById('quantity[' + idxRef + ']').value = 0.00;
+		
+		return;
+	}
+	
+	if(conversionType == 'CONVERT' && onHand < qty) 
 	{
 		alert('<spring:message code="sirius.qty"/> <spring:message code="notif.greater"/> <spring:message code="product.onhand"/> !!!');
 		document.getElementById('quantity[' + idxRef + ']').value = onHand;
@@ -625,7 +658,6 @@ function calculateAdjust(index) {
 		return;
 	}
 }
-
 
 function createBarcode(id)
 {

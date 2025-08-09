@@ -161,8 +161,7 @@ public class WorkOrderService extends Service
 	}
 
 	@AuditTrails(className = WorkOrder.class, actionType = AuditTrailsActionType.UPDATE)
-	@AutomaticSibling(roles =
-	{ "DelInventorySiblingRole", "AddInventorySiblingRole" })
+	@AutomaticSibling(roles = { "DelInventorySiblingRole", "AddInventorySiblingRole" })
 	public void finish(WorkOrder workOrder) throws Exception
 	{
 		workOrder.setProductionStatus(ProductionStatus.FINISH);
