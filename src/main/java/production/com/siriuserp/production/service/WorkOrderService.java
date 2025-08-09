@@ -30,6 +30,7 @@ import com.siriuserp.sdk.dao.GenericDao;
 import com.siriuserp.sdk.db.AbstractGridViewQuery;
 import com.siriuserp.sdk.dm.ApprovalDecisionStatus;
 import com.siriuserp.sdk.dm.Item;
+import com.siriuserp.sdk.dm.Lot;
 import com.siriuserp.sdk.dm.TableType;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
@@ -99,7 +100,7 @@ public class WorkOrderService extends Service
 			if (item.getProduct() != null && item.getQuantity().compareTo(BigDecimal.ZERO) > 0)
 			{
 				WarehouseTransactionType transactionType = WarehouseTransactionType.OUT;
-				if (item.getConversionType().equals(ConversionType.RESULT))
+				if (!item.getConversionType().equals(ConversionType.CONVERT))
 					transactionType = WarehouseTransactionType.IN;
 
 				WorkOrderItem workOrderItem = new WorkOrderItem();
@@ -157,6 +158,26 @@ public class WorkOrderService extends Service
 	{
 		if (workOrder.getProductionStatus().equals(ProductionStatus.OPEN))
 			genericDao.delete(workOrder);
+	}
+
+	@AuditTrails(className = WorkOrder.class, actionType = AuditTrailsActionType.UPDATE)
+	@AutomaticSibling(roles = { "DelInventorySiblingRole", "AddInventorySiblingRole" })
+	public void finish(WorkOrder workOrder) throws Exception
+	{
+		workOrder.setProductionStatus(ProductionStatus.FINISH);
+
+		for (WorkOrderItem item : workOrder.getResultItems())
+		{
+			if (item.getProduct().isSerial())
+			{
+				if (item.getLot() == null)
+					item.setLot(new Lot());
+
+				item.getLot().setSerial(GeneratorHelper.instance().generate(TableType.BARCODE_PRODUCT, codeSequenceDao, workOrder.getDate()));
+			}
+		}
+
+		genericDao.update(workOrder);
 	}
 
 	@AuditTrails(className = WorkOrder.class, actionType = AuditTrailsActionType.UPDATE)

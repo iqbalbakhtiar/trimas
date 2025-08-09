@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.production.criteria.WorkOrderFilterCriteria;
+import com.siriuserp.production.dm.Machine;
 import com.siriuserp.production.dm.ProductionStatus;
 import com.siriuserp.production.dm.WorkOrder;
 import com.siriuserp.production.form.ProductionForm;
@@ -61,6 +62,7 @@ public class WorkOrderController extends ControllerBase
 		binder.registerCustomEditor(Currency.class, modelEditor.forClass(Currency.class));
 		binder.registerCustomEditor(Facility.class, modelEditor.forClass(Facility.class));
 		binder.registerCustomEditor(Container.class, modelEditor.forClass(Container.class));
+		binder.registerCustomEditor(Machine.class, modelEditor.forClass(Machine.class));
 		binder.registerCustomEditor(ProductionStatus.class, enumEditor.forClass(ProductionStatus.class));
 	}
 
@@ -132,8 +134,29 @@ public class WorkOrderController extends ControllerBase
 		return ViewHelper.redirectTo("workorderview.htm");
 	}
 
+	@RequestMapping("/workorderfinish.htm")
+	public ModelAndView finish(@RequestParam("id") Long id, SessionStatus status) throws Exception
+	{
+		JSONResponse response = new JSONResponse();
+
+		try
+		{
+			service.finish(service.load(id));
+			status.setComplete();
+
+			response.store("id", id);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			response.statusError();
+			response.setMessage(e.getLocalizedMessage());
+		}
+
+		return response;
+	}
+
 	@RequestMapping("/workorderchangestatus.htm")
-	public ModelAndView close(@RequestParam("id") Long id, @RequestParam("productionStatus") String productionStatus, SessionStatus status) throws Exception
+	public ModelAndView changeStatus(@RequestParam("id") Long id, @RequestParam("productionStatus") String productionStatus, SessionStatus status) throws Exception
 	{
 		JSONResponse response = new JSONResponse();
 

@@ -106,7 +106,11 @@
 				_client.setAttribute("serial", product.isSerial);
 				_client.setAttribute("lot", product.isLot);
 			}
-
+			
+			var _serial = self.opener.document.getElementById('serialCheck[${param.index}]');
+			if(_serial)
+				_serial.value = product.isSerial;
+			
 			var _code = self.opener.document.getElementById('productCode[${param.index}]');
 			if(_code)
 				_code.value = product.productCode;

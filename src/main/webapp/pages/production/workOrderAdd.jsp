@@ -63,6 +63,15 @@
 					</td>
 				</tr>
 				<tr>
+					<td align="right"><spring:message code="machine"/></td>
+					<td width="1%" align="center">:</td>
+					<td>
+						<form:select id="machine" path="machine" cssClass="combobox-ext">
+						</form:select>
+						<a class="item-popup" onclick="openMachine()" title="<spring:message code='machine'/>" />
+					</td>
+				</tr>
+				<tr>
 					<td align="right"><spring:message code="sirius.operator"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
@@ -93,23 +102,6 @@
 				<table width="100%" style="border: none">
 					<tr>
 						<td>
-							<fieldset>
-								<legend><strong><spring:message code="salesorder.recapitulation"/></strong></legend>
-								<table width="100%" style="border: none">
-									<tr>
-										<td width="80%" align="right"><spring:message code="salesorder.total"/></td>
-										<td width="20%">:&nbsp;&nbsp;<input id="totalSales" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
-									</tr>
-									<tr>
-										<td width="80%" align="right"><spring:message code="salesorder.tax.amount"/></td>
-										<td width="20%">:&nbsp;&nbsp;<input id="totalTax" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
-									</tr>
-									<tr>
-										<td width="80%" align="right"><strong><spring:message code="salesorder.total.transaction"/></strong></td>
-										<td width="20%">:&nbsp;&nbsp;<input id="totalTransaction" value="0.00" name="amount" class="number-disabled" readonly="readonly" size="20"/></td>
-									</tr>
-								</table>
-							</fieldset>
 						</td>
 					</tr>
 				</table>
@@ -154,7 +146,7 @@
   					<a class="item-button-delete" target="Result"><span><spring:message code="sirius.row.delete"/></span></a>
 		    		<div class="item-navigator">&nbsp;</div>
 		    	</div>
-		    	<table class="table-list" id="lineItemResult" cellspacing="0" cellpadding="0" align="center"  style="width:100%;">
+		    	<table class="table-list" id="lineItemResult" cellspacing="0" cellpadding="0" align="center" style="width:100%;">
 		    	<thead>
 		    	<tr>
 					<th width="1%"><input id="checklineConvert" target="Result" class="checkall" type="checkbox"/></th>
@@ -168,6 +160,62 @@
 				</tr>
 				</thead>
 				<tbody id="lineItemResult">
+				</tbody>
+				<tfoot>
+					<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
+				</tfoot>
+				</table>
+			</div>
+		</div>
+		<div id="waste" dojoType="ContentPane" label="<spring:message code='workorder.waste'/>" class="tab-pages" refreshOnShow="true">
+  			<div class="toolbar-clean">
+  				<div class="toolbar-clean">
+  					<a class="item-button-new" target="Waste"><span><spring:message code="sirius.row.new"/></span></a>
+  					<a class="item-button-delete" target="Waste"><span><spring:message code="sirius.row.delete"/></span></a>
+		    		<div class="item-navigator">&nbsp;</div>
+		    	</div>
+		    	<table class="table-list" id="lineItemWaste" cellspacing="0" cellpadding="0" align="center" style="width:100%;">
+		    	<thead>
+		    	<tr>
+					<th width="1%"><input id="checklineWaste" target="Waste" class="checkall" type="checkbox"/></th>
+					<th><spring:message code="product.name"/></th>
+                   	<th width="8%"><spring:message code='container'/></th>
+					<th width="5%"><spring:message code="product.onhand"/></th>
+					<th width="5%"><spring:message code="product.lot"/></th>
+					<th width="5%"><spring:message code="product.uom"/></th>
+                    <th width="5%"><spring:message code='sirius.qty'/></th>
+                    <th width="50%"><spring:message code='sirius.note'/></th>
+				</tr>
+				</thead>
+				<tbody id="lineItemWaste">
+				</tbody>
+				<tfoot>
+					<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
+				</tfoot>
+				</table>
+			</div>
+		</div>
+		<div id="reject" dojoType="ContentPane" label="<spring:message code='workorder.reject'/>" class="tab-pages" refreshOnShow="true">
+  			<div class="toolbar-clean">
+  				<div class="toolbar-clean">
+  					<a class="item-button-new" target="Reject"><span><spring:message code="sirius.row.new"/></span></a>
+  					<a class="item-button-delete" target="Reject"><span><spring:message code="sirius.row.delete"/></span></a>
+		    		<div class="item-navigator">&nbsp;</div>
+		    	</div>
+		    	<table class="table-list" id="lineItemReject" cellspacing="0" cellpadding="0" align="center" style="width:100%;">
+		    	<thead>
+		    	<tr>
+					<th width="1%"><input id="checklineReject" target="Reject" class="checkall" type="checkbox"/></th>
+					<th><spring:message code="product.name"/></th>
+                   	<th width="8%"><spring:message code='container'/></th>
+					<th width="5%"><spring:message code="product.onhand"/></th>
+					<th width="5%"><spring:message code="product.lot"/></th>
+					<th width="5%"><spring:message code="product.uom"/></th>
+                    <th width="5%"><spring:message code='sirius.qty'/></th>
+                    <th width="50%"><spring:message code='sirius.note'/></th>
+				</tr>
+				</thead>
+				<tbody id="lineItemWaste">
 				</tbody>
 				<tfoot>
 					<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
@@ -238,6 +286,16 @@ function openOperator() {
 		toRoleType: 2,
 		relationshipType: 2,
 		base: false
+	};
+
+	openpopup(buildUrl(baseUrl, params));
+}
+
+function openMachine() {
+	const baseUrl = '<c:url value="/page/popupmachineview.htm"/>';
+	const params = {
+		target: 'machine',
+		enabled: true
 	};
 
 	openpopup(buildUrl(baseUrl, params));
@@ -400,18 +458,28 @@ function addLineItem(target)
 	$tbody = $('<tbody id="iBody'+index+'"/>');
 	$tr = $('<tr/>');
 	$type = 'CONVERT';
+	$containerAttr = 'class="input-disabled combobox"';
 	
-	if(target.toLowerCase() === 'result')
+	if(target.toLowerCase() === 'result') {
 		$type = 'RESULT';
+		$containerAttr = 'class="combobox"';
+	}
+	else if(target.toLowerCase() === 'waste') {
+		$type = 'WASTE';
+		$containerAttr = 'class="combobox"';
+	}
+	else if(target.toLowerCase() === 'reject') {
+		$type = 'REJECT';
+		$containerAttr = 'class="combobox"';
+	}
 	
 	const checkbox = List.get('<input type="checkbox" class="check'+target+'"/>','check['+index +']');	
-	const container = List.get('<select class="combobox"/>','container['+index+']');
-	const containerImg = List.img('Container', index, 'opencontainerpopup("'+index+'")');
 	const product = List.get('<select class="combobox-ext product"/>','product['+index+']');
-	const productImg = List.img('Product', index, 'openProduct("'+index+'")');
+	const productImg = List.img('Product', index, 'openProduct("'+index+'","'+$type+'")');
 	const gridFrom = List.get('<input class="input-disabled" disabled="true" size="12"/>','gridFrom['+index+']');
 	const gridTo = List.get('<input class="input-disabled" disabled="true" size="12"/>','gridTo['+index+']');
-	const source = List.get('<select class="input-disabled combobox" readonly="true"/>','source['+index+']'); 
+	const source = List.get('<select readonly="true"'+$containerAttr+'/>','source['+index+']'); 
+	const sourceImg = List.img('Container', index, 'openContainer("'+index+'")');
 	const onHand = List.get('<input class="number-disabled" disabled="true" size="12"/>','onhand['+index+']');
 	const serial = List.get('<input disabled="true" size="12" type="hidden"/>','serialCheck['+index+']');
 	const uom = List.get('<input class="input-disabled" disabled="true" size="12"/>','uom['+index+']');
@@ -420,7 +488,12 @@ function addLineItem(target)
 	
 	$tr.append(List.col([checkbox]));
 	$tr.append(List.col([product, productImg]));
-	$tr.append(List.col([source]));
+
+	if($type == 'CONVERT')
+		$tr.append(List.col([source]));
+	else
+		$tr.append(List.col([source, sourceImg]));
+	
 	$tr.append(List.col([onHand, serial]));
 	$tr.append(List.col(['&nbsp;']));
 	$tr.append(List.col([uom]));
@@ -436,9 +509,13 @@ function addLineItem(target)
 	$(".input-decimal").bind(inputFormat);
 }
 
-function openProduct(index) {
+function openProduct(index, type) {
 	  
-	const baseUrl = '<c:url value="/page/popupproductfortransfer.htm"/>';
+	var baseUrl = '<c:url value="/page/popupproductfortransfer.htm"/>';
+	
+	if(type != 'CONVERT')
+		baseUrl = '<c:url value="/page/popupproductview.htm"/>';
+	
 	const params = {
 		target: 'product[' + index + ']',
 		index: index,
@@ -447,17 +524,35 @@ function openProduct(index) {
 	openpopup(buildUrl(baseUrl, params));
 }
 
+function openContainer(index){
+	const baseUrl = '<c:url value="/page/popupcontainerview.htm"/>';
+	const params = {
+		target: 'source[' + index + ']',
+		index: index
+	};
+	openpopup(buildUrl(baseUrl, params));
+}
+
 function checkQuantity(element) 
 { 
 	let idxRef = $(element).attr('index');
 	let conversionType = $(element).attr('conversionType');
+	let container = $('#source\\[' + idxRef + '\\]');
 	let $input = $('#quantity\\[' + idxRef + '\\]');
 	
 	var onHand = document.getElementById('onhand[' + idxRef + ']').value.toNumber();
 	var qty = document.getElementById('quantity[' + idxRef + ']').value.toNumber();
 	var serialCheck = document.getElementById('serialCheck[' + idxRef + ']').value;
 	
-	if(onHand < qty) 
+	if(!container.val())
+	{
+		alert('<spring:message code="notif.select1"/> <spring:message code="container"/> <spring:message code="notif.select2"/> !!!');
+		document.getElementById('quantity[' + idxRef + ']').value = 0.00;
+		
+		return;
+	}
+	
+	if(conversionType == 'CONVERT' && onHand < qty) 
 	{
 		alert('<spring:message code="sirius.qty"/> <spring:message code="notif.greater"/> <spring:message code="product.onhand"/> !!!');
 		document.getElementById('quantity[' + idxRef + ']').value = onHand;
@@ -563,7 +658,6 @@ function calculateAdjust(index) {
 		return;
 	}
 }
-
 
 function createBarcode(id)
 {

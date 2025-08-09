@@ -44,7 +44,6 @@
 
 				var _client = self.opener.document.getElementById('product[${param.index}]');
 				if (_client) {
-					console.log('>>> '+_client.getAttribute('readonly'));
 					if (_client.getAttribute('readonly') === 'null' && _client.tagName === 'SELECT') {
 						_client.options.length = 0;
 						var _opt = document.createElement('option');
