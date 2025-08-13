@@ -1,3 +1,8 @@
+/**
+ * File Name  : SalesOrderController.java
+ * Created On : Mar 6, 2025
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.sales.controller;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +27,7 @@ import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sales.dm.SalesOrderItem;
 import com.siriuserp.sales.dm.SalesType;
 import com.siriuserp.sales.form.SalesForm;
-import com.siriuserp.sales.query.SalesOrderGridViewQuery;
+import com.siriuserp.sales.query.SalesOrderViewQuery;
 import com.siriuserp.sales.service.SalesOrderService;
 import com.siriuserp.sdk.annotation.DefaultRedirect;
 import com.siriuserp.sdk.base.ControllerBase;
@@ -34,6 +39,12 @@ import com.siriuserp.sdk.dm.Tax;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
 import com.siriuserp.sdk.utility.FormHelper;
+
+/**
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
+ */
 
 @Controller
 @SessionAttributes(value = "salesOrder_form", types = SalesForm.class)
@@ -61,7 +72,7 @@ public class SalesOrderController extends ControllerBase
 	@RequestMapping("/salesorderview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{
-		return new ModelAndView("/sales/salesOrderList", service.view(criteriaFactory.create(request, SalesOrderFilterCriteria.class), SalesOrderGridViewQuery.class));
+		return new ModelAndView("/sales/salesOrderList", service.view(criteriaFactory.create(request, SalesOrderFilterCriteria.class), SalesOrderViewQuery.class));
 	}
 
 	@RequestMapping("/salesorderpreadd.htm")
@@ -143,9 +154,9 @@ public class SalesOrderController extends ControllerBase
 	public ModelAndView print(@RequestParam("id") Long id, @RequestParam("printType") int printType) throws Exception
 	{
 		if (printType == 1)
-			return new ModelAndView("/sales/salesOrderContractPrintTax", service.preedit(id));
+			return new ModelAndView("/sales/salesOrderPrint", service.preedit(id));
 
-		return new ModelAndView("/sales/salesOrderContractPrint", service.preedit(id));
+		return new ModelAndView("/sales/salesOrderPrint", service.preedit(id));
 	}
 
 	@RequestMapping("/salesorderbyproductjson.htm")

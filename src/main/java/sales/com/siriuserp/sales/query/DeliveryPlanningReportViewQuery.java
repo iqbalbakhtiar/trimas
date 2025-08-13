@@ -3,7 +3,6 @@ package com.siriuserp.sales.query;
 import org.hibernate.Query;
 
 import com.siriuserp.sales.criteria.SalesReportFilterCriteria;
-import com.siriuserp.sales.dm.SalesInternalType;
 import com.siriuserp.sdk.db.AbstractStandardReportQuery;
 import com.siriuserp.sdk.utility.SiriusValidator;
 
@@ -32,9 +31,6 @@ public class DeliveryPlanningReportViewQuery extends AbstractStandardReportQuery
 		if (SiriusValidator.validateParam(criteria.getSalesOrderCode()))
 			builder.append("AND sequenceItem.salesOrderItem.salesOrder.code LIKE :salesOrderCode ");
 
-		if (SiriusValidator.validateParam(criteria.getSalesInternalType()))
-			builder.append("AND sequenceItem.salesOrderItem.salesOrder.salesInternalType =:salesInternalType ");
-
 		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 		{
 			if (SiriusValidator.validateDate(criteria.getDateTo()))
@@ -57,9 +53,6 @@ public class DeliveryPlanningReportViewQuery extends AbstractStandardReportQuery
 
 		if (SiriusValidator.validateParam(criteria.getSalesOrderCode()))
 			query.setParameter("salesOrderCode", "%" + criteria.getSalesOrderCode() + "%");
-
-		if (SiriusValidator.validateParam(criteria.getSalesInternalType()))
-			query.setParameter("salesInternalType", SalesInternalType.valueOf(criteria.getSalesInternalType()));
 
 		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 			query.setParameter("dateFrom", criteria.getDateFrom());

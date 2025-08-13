@@ -1,6 +1,9 @@
+/**
+ * File Name  : SalesOrderService.java
+ * Created On : Mar 6, 2025
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.sales.service;
-
-import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,6 +44,12 @@ import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
 
 import javolution.util.FastMap;
+
+/**
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
+ */
 
 @Component
 @Transactional(rollbackFor = Exception.class)
@@ -94,10 +103,7 @@ public class SalesOrderService extends Service
 		money.setCurrency(currency);
 		money.setAmount(form.getAmount());
 
-		if (salesOrder.getTax() != null && salesOrder.getTax().getTaxRate().compareTo(BigDecimal.ZERO) > 0)
-			salesOrder.setCode(GeneratorHelper.instance().generate(TableType.SALES_ORDER, codeSequenceDao, "SSM", salesOrder.getSalesInternalType().getCode(), salesOrder.getDate(), salesOrder.getTax()));
-		else
-			salesOrder.setCode(GeneratorHelper.instance().generate(TableType.SALES_ORDER, codeSequenceDao, null, salesOrder.getSalesInternalType().getCode(), salesOrder.getDate(), salesOrder.getTax()));
+		salesOrder.setCode(GeneratorHelper.instance().generate(TableType.SALES_ORDER, codeSequenceDao, salesOrder.getDate()));
 
 		salesOrder.setMoney(money);
 		salesOrder.setSalesType(SalesType.STANDARD);

@@ -107,11 +107,11 @@
 										<tr>
 											<td align="center">
 												<strong>
-													Sumedang, <fmt:formatDate value='${billing_form.date}' pattern='dd MMMM yyyy'/>
+													Cimahi, <fmt:formatDate value='${billing_form.date}' pattern='dd MMMM yyyy'/>
 												</strong>
 											</td>
 										</tr>
-										<tr><td align="center">PT. SAN STAR MANUNGGAL</td></tr>
+										<tr><td align="center">PT. SHUN HUI ZHIYE INDONESIA</td></tr>
 										<tr><td>&nbsp;</td></tr>
 										<tr><td>&nbsp;</td></tr>
 									</table>

@@ -1,3 +1,8 @@
+/**
+ * File Name  : SalesForm.java
+ * Created On : Mar 6, 2025
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.sales.form;
 
 import java.math.BigDecimal;
@@ -9,7 +14,6 @@ import com.siriuserp.sales.dm.DeliveryOrderRealization;
 import com.siriuserp.sales.dm.DeliveryPlanning;
 import com.siriuserp.sales.dm.DeliveryPlanningSequence;
 import com.siriuserp.sales.dm.SOStatus;
-import com.siriuserp.sales.dm.SalesInternalType;
 import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sdk.dm.Form;
 import com.siriuserp.sdk.dm.Party;
@@ -17,6 +21,12 @@ import com.siriuserp.sdk.dm.PostalAddress;
 
 import lombok.Getter;
 import lombok.Setter;
+
+/**
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
+ */
 
 @Getter
 @Setter
@@ -50,5 +60,4 @@ public class SalesForm extends Form
 	private PostalAddress shippingAddress;
 
 	private SOStatus soStatus;
-	private SalesInternalType salesInternalType;
 }

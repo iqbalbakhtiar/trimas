@@ -52,6 +52,14 @@
 						  	</div>
 					  	</div>
 					  	<div class="main-box">
+					  		<table border="0" width="100%" align="center">
+					  			<tr>
+					  				<td>
+					  				<img style="margin-left: -15px;" src="assets/images/shunhui-logo.png" width="350" height="40"/>
+					  				</br><font size="2"></font>
+					  				</td>
+					  			</tr>
+					  		</table>
 					  		<table cellpadding="1" cellspacing="1" width="100%" align="center">
 							<tr>
 								<td valign="top" align="center" colspan="2"><h2>SURAT JALAN</h2></td>
@@ -61,7 +69,7 @@
 									<table>
 										<tr style="font-weight: bold;font-size: large;">
 											<td valign="top" nowrap="nowrap" style="width: 15px;">No </td>
-											<td nowrap="nowrap" colspan="2">: <c:out value="${fn:replace(deliveryOrder_edit.code, 'SJ', '')}" /></td>
+											<td nowrap="nowrap" colspan="2">: <c:out value="${deliveryOrder_edit.code}" /></td>
 										</tr>
 										<tr>
 											<td valign="top" nowrap="nowrap" colspan="3">
@@ -75,7 +83,7 @@
 								<td style="width: 50%;">
 									<table cellpadding="1" cellspacing="1" width="100%">
 										<tr>
-											<td valign="top" colspan="2">Sumedang, <fmt:formatDate value='${deliveryOrder_edit.date}' pattern='dd MMMM yyyy'/></td>
+											<td valign="top" colspan="2">Cimahi, <fmt:formatDate value='${deliveryOrder_edit.date}' pattern='dd MMMM yyyy'/></td>
 										</tr>
 										<tr>
 											<td valign="top" colspan="2">Kepada Yth.</td>
@@ -102,7 +110,6 @@
 					  			</tr>
 								<c:forEach items="${deliveryOrder_edit.items}" var="item" varStatus="idx">
 									<c:if test="${item.deliveryItemType eq 'BASE'}">
-									<c:set var="bale" value="${item.quantity / 181.44}"/>
 									<c:set var="count" value="${fn:length(item.serials)}"/>
 						  			<tr>
 	                               		<c:set var="pattern" value=",##0.00" />
@@ -110,18 +117,12 @@
 							  				<table border="0" cellpadding="1" cellspacing="5" width="100%">
 							  				<tr>
 							  					<td align="right" style="width: 50%"><fmt:formatNumber value='${count}' pattern=',##0.00'/></td>
-							  					<td style="width: 50%">Karung</td>
+							  					<td style="width: 50%">Roll</td>
 						  					</tr>
 						  					<tr>
 							  					<td align="right"><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
 							  					<td>${item.product.unitOfMeasure.measureId}</td>
 						  					</tr>
-						  					<c:if test="${item.salesInternalType eq 'YARN'}">
-						  					<tr>
-							  					<td align="right"><fmt:formatNumber value='${bale}' pattern=',##0.00'/></td>
-							  					<td>Bale</td>
-						  					</tr>
-						  					</c:if>
 							  				</table>
 						  				</td>
 						  				<td style="border-bottom:1px solid black;border-left:1px solid black;text-transform: uppercase;" valign="top" nowrap="nowrap">
@@ -138,7 +139,7 @@
 											</c:if>
 						  					<tr>
 							  					<td align="right"><spring:message code="product"/></td>
-							  					<td>: ${item.product.name} <c:if test="${item.salesInternalType eq 'YARN'}">${deliveryOrder_edit.referenceLot}</c:if></td>
+							  					<td>: ${item.product.name}</td>
 						  					</tr>
 							  				</table>
 						  				</td>

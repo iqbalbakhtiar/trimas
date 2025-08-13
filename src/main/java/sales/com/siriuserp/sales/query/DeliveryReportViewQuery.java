@@ -8,7 +8,6 @@ package com.siriuserp.sales.query;
 import org.hibernate.Query;
 
 import com.siriuserp.sales.criteria.SalesReportFilterCriteria;
-import com.siriuserp.sales.dm.SalesInternalType;
 import com.siriuserp.sdk.db.AbstractStandardReportQuery;
 import com.siriuserp.sdk.utility.SiriusValidator;
 
@@ -27,7 +26,8 @@ public class DeliveryReportViewQuery extends AbstractStandardReportQuery
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT NEW com.siriuserp.sales.adapter.DeliveryReportAdapter(deliveryItem, salesItem, ");
-		builder.append("(SELECT DISTINCT(billItem.billing) FROM BillingItem billItem WHERE billItem.billingReferenceItem.referenceId = realizationItem.deliveryOrderRealization.id AND billItem.billingReferenceItem.referenceName = 'DELIVERY_ORDER_REALIZATION'))");
+		builder.append(
+				"(SELECT DISTINCT(billItem.billing) FROM BillingItem billItem WHERE billItem.billingReferenceItem.referenceId = realizationItem.deliveryOrderRealization.id AND billItem.billingReferenceItem.referenceName = 'DELIVERY_ORDER_REALIZATION'))");
 		builder.append("FROM DeliveryOrderRealizationItem realizationItem JOIN realizationItem.deliveryOrderItem deliveryItem JOIN deliveryItem.deliveryReferenceItem.salesOrderItem salesItem ");
 		builder.append("WHERE deliveryItem.deliveryItemType = 'BASE' ");
 
@@ -39,9 +39,6 @@ public class DeliveryReportViewQuery extends AbstractStandardReportQuery
 
 		if (SiriusValidator.validateParam(criteria.getSalesOrderCode()))
 			builder.append("AND salesItem.salesOrder.code LIKE :salesOrderCode ");
-
-		if (SiriusValidator.validateParam(criteria.getSalesInternalType()))
-			builder.append("AND salesItem.salesOrder.salesInternalType =:salesInternalType ");
 
 		if (SiriusValidator.validateLongParam(criteria.getProduct()))
 			builder.append("AND salesItem.product.id =:productId ");
@@ -74,9 +71,6 @@ public class DeliveryReportViewQuery extends AbstractStandardReportQuery
 
 		if (SiriusValidator.validateParam(criteria.getSalesOrderCode()))
 			query.setParameter("salesOrderCode", "%" + criteria.getSalesOrderCode() + "%");
-
-		if (SiriusValidator.validateParam(criteria.getSalesInternalType()))
-			query.setParameter("salesInternalType", SalesInternalType.valueOf(criteria.getSalesInternalType()));
 
 		if (SiriusValidator.validateLongParam(criteria.getProduct()))
 			query.setParameter("productId", criteria.getProduct());

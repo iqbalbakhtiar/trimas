@@ -1,3 +1,8 @@
+/**
+ * File Name  : SalesOrderItem.java
+ * Created On : Mar 6, 2025
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.sales.dm;
 
 import java.math.BigDecimal;
@@ -30,6 +35,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
+ */
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -53,10 +64,10 @@ public class SalesOrderItem extends Model implements DeliveryOrderReferenceable
 	private BigDecimal returned = BigDecimal.ZERO;
 
 	@Column(name = "delivered")
-	protected BigDecimal delivered = BigDecimal.ZERO;
+	private BigDecimal delivered = BigDecimal.ZERO;
 
 	@Column(name = "accepted")
-	protected BigDecimal accepted = BigDecimal.ZERO;
+	private BigDecimal accepted = BigDecimal.ZERO;
 
 	@Column(name = "discount")
 	private BigDecimal discount = BigDecimal.ZERO;
@@ -72,7 +83,7 @@ public class SalesOrderItem extends Model implements DeliveryOrderReferenceable
 
 	@Column(name = "item_status")
 	@Enumerated(EnumType.STRING)
-	protected SOStatus lockStatus = SOStatus.OPEN;
+	private SOStatus lockStatus = SOStatus.OPEN;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_product")
@@ -108,7 +119,6 @@ public class SalesOrderItem extends Model implements DeliveryOrderReferenceable
 	{
 		Map<String, Object> map = new FastMap<String, Object>();
 		map.put("id", getId());
-		map.put("self", this.getClass().getSimpleName());
 		map.put("product", getProduct());
 		map.put("price", getMoney().getAmount());
 

@@ -80,7 +80,7 @@ public class Product extends Model
 
 	@Column(name = "saleable", length = 1)
 	@Type(type = "yes_no")
-	private boolean saleable = false;
+	private boolean saleable = true;
 
 	@Column(name = "note", length = 255)
 	private String note;

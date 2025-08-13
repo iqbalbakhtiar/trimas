@@ -8,7 +8,6 @@ package com.siriuserp.sales.query;
 import org.hibernate.Query;
 
 import com.siriuserp.sales.criteria.SalesReportFilterCriteria;
-import com.siriuserp.sales.dm.SalesInternalType;
 import com.siriuserp.sdk.db.AbstractStandardReportQuery;
 import com.siriuserp.sdk.utility.SiriusValidator;
 
@@ -36,18 +35,15 @@ public class SalesOnProgressReportViewQuery extends AbstractStandardReportQuery
 		if (SiriusValidator.validateLongParam(criteria.getCustomer()))
 			builder.append("AND salesItem.salesOrder.customer.id =:customerId ");
 
-		if (SiriusValidator.validateParam(criteria.getSalesInternalType()))
-			builder.append("AND salesItem.salesOrder.salesInternalType =:salesInternalType ");
-
 		if (SiriusValidator.validateParam(criteria.getStatus()))
 		{
 			if (criteria.getStatus().equals("IN_PROGRESS"))
 				builder.append("AND (salesItem.quantity - salesItem.delivered) > 0");
-			
+
 			if (criteria.getStatus().equals("DONE"))
 				builder.append("AND (salesItem.quantity - salesItem.delivered) <= 0");
 		}
-		
+
 		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 		{
 			if (SiriusValidator.validateDate(criteria.getDateTo()))
@@ -67,9 +63,6 @@ public class SalesOnProgressReportViewQuery extends AbstractStandardReportQuery
 
 		if (SiriusValidator.validateLongParam(criteria.getCustomer()))
 			query.setParameter("customerId", criteria.getCustomer());
-
-		if (SiriusValidator.validateParam(criteria.getSalesInternalType()))
-			query.setParameter("salesInternalType", SalesInternalType.valueOf(criteria.getSalesInternalType()));
 
 		if (SiriusValidator.validateDate(criteria.getDateFrom()))
 			query.setParameter("dateFrom", criteria.getDateFrom());
