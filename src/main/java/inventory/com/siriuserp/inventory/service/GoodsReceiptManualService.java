@@ -121,7 +121,7 @@ public class GoodsReceiptManualService
 				receiptItem.setAmount(item.getPrice());
 				receiptItem.setProduct(item.getProduct());
 				receiptItem.setContainer(item.getContainer());
-				receiptItem.setAmount(item.getPrice());
+				receiptItem.getMoney().setAmount(item.getPrice());
 				receiptItem.setGrid(item.getGrid());
 				receiptItem.setFacilitySource(goodsReceiptManual.getFacility());
 				receiptItem.setFacilityDestination(item.getGrid().getFacility());

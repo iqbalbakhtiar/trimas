@@ -35,41 +35,41 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "goods_receipt_manual_item")
-public class GoodsReceiptManualItem extends WarehouseReferenceItem implements JSONSupport {
-
+public class GoodsReceiptManualItem extends WarehouseReferenceItem implements JSONSupport
+{
 	private static final long serialVersionUID = -790816080477891556L;
-	
+
 	@Column(name = "amount")
 	private BigDecimal amount = BigDecimal.ZERO;
-	
+
 	@Column(name = "quantity")
 	private BigDecimal quantity = BigDecimal.ZERO;
-	
+
 	@Column(name = "unreceipted")
 	private BigDecimal unreceipted = BigDecimal.ZERO;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_product")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private Product product;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_container")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private Container container;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_grid")
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private Grid grid;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "warehouse_transaction_source")
 	private WarehouseTransactionSource transactionSource = WarehouseTransactionSource.GOODS_RECEIPT_MANUAL;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_goods_receipt_manual")
 	@LazyToOne(LazyToOneOption.PROXY)
@@ -77,33 +77,38 @@ public class GoodsReceiptManualItem extends WarehouseReferenceItem implements JS
 	private GoodsReceiptManual goodsReceiptManual;
 
 	@Override
-	public String getAuditCode()
+	public WarehouseTransaction getWarehouseTransaction()
 	{
-		return "";
-	}
-
-	@Override
-	public WarehouseTransaction getWarehouseTransaction() {
 		return getGoodsReceiptManual();
 	}
 
 	@Override
-	public WarehouseTransactionSource getTransactionSource() {
+	public WarehouseTransactionSource getTransactionSource()
+	{
 		return this.transactionSource;
 	}
-	
+
 	@Override
-	public Container getContainer() {
-		 return this.container;
+	public Container getContainer()
+	{
+		return this.container;
 	}
-	
+
 	@Override
-	public Container getDestinationContainer() {
-		 return this.container;
+	public Container getDestinationContainer()
+	{
+		return this.container;
 	}
-	
+
 	@Override
-	public Container getSourceContainer() {
-		 return this.container;
+	public Container getSourceContainer()
+	{
+		return this.container;
+	}
+
+	@Override
+	public String getAuditCode()
+	{
+		return "";
 	}
 }

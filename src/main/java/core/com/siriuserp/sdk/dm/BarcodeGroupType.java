@@ -9,15 +9,17 @@ import lombok.Getter;
  */
 
 @Getter
-public enum BarcodeGroupType {
-    PRODUCTION("Production"),
-    STOCK_ADJUSTMENT("Stock Adjustment"),
-    PURCHASE_ORDER("Purchase Order");
+public enum BarcodeGroupType
+{
+	PRODUCTION("Production"),
+	STOCK_ADJUSTMENT("Stock Adjustment"),
+	GOODS_RECEIPT_MANUAL("Goods Receipt Manual"),
+	PURCHASE_ORDER("Purchase Order");
 
-    private final String normalizedName;
+	private final String normalizedName;
 
-    BarcodeGroupType(String normalizedName) {
-        this.normalizedName = normalizedName;
-    }
-
+	BarcodeGroupType(String normalizedName)
+	{
+		this.normalizedName = normalizedName;
+	}
 }

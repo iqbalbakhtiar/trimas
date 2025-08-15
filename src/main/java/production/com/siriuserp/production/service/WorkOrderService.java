@@ -110,6 +110,7 @@ public class WorkOrderService extends Service
 				workOrderItem.setProduct(item.getProduct());
 				workOrderItem.setQuantity(item.getQuantity());
 				workOrderItem.getLot().setSerial(item.getSerial());
+				workOrderItem.setReferenceFrom("Produksi");
 				workOrderItem.setNote(item.getNote());
 
 				if (workOrderItem.getConversionType().equals(ConversionType.CONVERT))

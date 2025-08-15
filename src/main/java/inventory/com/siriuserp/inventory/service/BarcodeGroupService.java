@@ -164,43 +164,40 @@ public class BarcodeGroupService
 		InventoryForm form = (InventoryForm) barcodeGroup.getForm();
 		barcodeGroup.setCode(GeneratorHelper.instance().generate(TableType.BARCODE_GROUP, codeSequenceDao));
 
-		if (form != null)
+		for (Item item : barcodeGroup.getForm().getItems())
 		{
-			for (Item item : barcodeGroup.getForm().getItems())
+			if (item.getProduct() != null && SiriusValidator.gz(item.getQuantity()))
 			{
-				if (item.getProduct() != null && SiriusValidator.gz(item.getQuantity()))
-				{
-					String code = "";
+				String code = "";
 
-					if (SiriusValidator.validateParam(item.getSerial()))
-						code = item.getSerial();
-					else
-						code = GeneratorHelper.instance().generate(TableType.BARCODE_PRODUCT, codeSequenceDao, barcodeGroup.getDate());
+				if (SiriusValidator.validateParam(item.getSerial()))
+					code = item.getSerial();
+				else
+					code = GeneratorHelper.instance().generate(TableType.BARCODE_PRODUCT, codeSequenceDao, barcodeGroup.getDate());
 
-					Barcode barcode = new Barcode();
-					barcode.setCode(code);
-					barcode.setLotCode(item.getLotCode());
-					barcode.setProduct(item.getProduct());
-					barcode.setQuantity(item.getQuantity());
-					barcode.setConeMark(item.getConeMark());
-					barcode.setQuantityCone(item.getQuantityCone());
+				Barcode barcode = new Barcode();
+				barcode.setCode(code);
+				barcode.setLotCode(item.getLotCode());
+				barcode.setProduct(item.getProduct());
+				barcode.setQuantity(item.getQuantity());
+				barcode.setConeMark(item.getConeMark());
+				barcode.setQuantityCone(item.getQuantityCone());
 
-					if (SiriusValidator.gz(item.getQuantityReal()))
-						barcode.setQuantityReal(item.getQuantityReal());
-					else
-						barcode.setQuantityReal(barcode.getQuantity());
+				if (SiriusValidator.gz(item.getQuantityReal()))
+					barcode.setQuantityReal(item.getQuantityReal());
+				else
+					barcode.setQuantityReal(barcode.getQuantity());
 
-					barcode.setBarcodeGroup(barcodeGroup);
-					item.setSerial(barcode.getCode());
+				barcode.setBarcodeGroup(barcodeGroup);
+				item.setSerial(barcode.getCode());
 
-					barcodeGroup.getBarcodes().add(barcode);
-				}
+				barcodeGroup.getBarcodes().add(barcode);
 			}
 		}
 
 		genericDao.add(barcodeGroup);
 
-		if (form != null && form.getPurchaseOrder() != null)
+		if (form.getPurchaseOrder() != null)
 			purchaseOrderService.addItem(form.getPurchaseOrder().getId(), barcodeGroup.getForm().getItems());
 
 		return barcodeGroup;
