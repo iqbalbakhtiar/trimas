@@ -97,6 +97,16 @@ public class DeliveryPlanningSequence extends Model
 		return deliveryOrders;
 	}
 
+	public boolean isEnabled()
+	{
+		boolean enabled = true;
+
+		if (getDeliveryPlanning().getSalesOrder().getSoStatus().equals(SOStatus.CLOSE))
+			enabled = false;
+
+		return enabled;
+	}
+
 	@Override
 	public String getAuditCode()
 	{
