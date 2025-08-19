@@ -1,3 +1,8 @@
+/**
+ * File Name  : GoodsReceiptService.java
+ * Created On : Jul 26, 2023
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.inventory.service;
 
 import java.math.BigDecimal;
@@ -17,8 +22,11 @@ import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceItem;
 import com.siriuserp.accountpayable.dm.InvoiceVerificationReferenceType;
 import com.siriuserp.accountpayable.service.InvoiceVerificationService;
 import com.siriuserp.accountpayable.util.InvoiceVerificationReferenceUtil;
+import com.siriuserp.administration.util.LotHelper;
 import com.siriuserp.inventory.adapter.WarehouseItemAdapter;
 import com.siriuserp.inventory.criteria.GoodsReceiptFilterCriteria;
+import com.siriuserp.inventory.dm.DWInventoryItemBalance;
+import com.siriuserp.inventory.dm.DWInventoryItemBalanceDetail;
 import com.siriuserp.inventory.dm.GoodsIssue;
 import com.siriuserp.inventory.dm.GoodsIssueItem;
 import com.siriuserp.inventory.dm.GoodsReceipt;
@@ -27,10 +35,13 @@ import com.siriuserp.inventory.dm.InventoryConfiguration;
 import com.siriuserp.inventory.dm.InventoryItem;
 import com.siriuserp.inventory.dm.ProductCategoryType;
 import com.siriuserp.inventory.dm.ProductInOutTransaction;
+import com.siriuserp.inventory.dm.StockControl;
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
 import com.siriuserp.inventory.dm.WarehouseTransactionSource;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
 import com.siriuserp.inventory.form.InventoryForm;
+import com.siriuserp.inventory.util.InventoryBalanceDetailUtil;
+import com.siriuserp.inventory.util.InventoryBalanceUtil;
 import com.siriuserp.inventory.util.InventoryItemTagUtil;
 import com.siriuserp.procurement.dm.PurchaseOrderItem;
 import com.siriuserp.sdk.annotation.AuditTrails;
@@ -62,6 +73,7 @@ import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.DateHelper;
+import com.siriuserp.sdk.utility.DecimalHelper;
 import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
@@ -69,6 +81,12 @@ import com.siriuserp.sdk.utility.SiriusValidator;
 import com.siriuserp.sdk.utility.UserHelper;
 
 import javolution.util.FastMap;
+
+/**
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
+ */
 
 @SuppressWarnings("unchecked")
 @Component
@@ -89,6 +107,12 @@ public class GoodsReceiptService extends Service
 
 	@Autowired
 	private InventoryItemTagUtil inventoryItemUtil;
+
+	@Autowired
+	private InventoryBalanceUtil balanceUtil;
+
+	@Autowired
+	private InventoryBalanceDetailUtil balanceDetailUtil;
 
 	@Autowired
 	private StockControlService stockControllService;
@@ -223,7 +247,6 @@ public class GoodsReceiptService extends Service
 			}
 		}
 
-		//Remove Unused Items
 		goodsReceipt.getItems().removeIf(item -> item.getReceipted().compareTo(BigDecimal.ZERO) < 1 && item.getContainer() == null);
 
 		Assert.notEmpty(goodsReceipt.getItems(), "Empty item transaction, please recheck !");
@@ -238,42 +261,21 @@ public class GoodsReceiptService extends Service
 			createInvoice(goodsReceipt);
 	}
 
-	/**
-	 * Membuat objek InvoiceVerification berdasarkan GoodsReceipt.
-	 *
-	 * Properti yang diset pada InvoiceVerification:
-	 * - date          : Diambil dari tanggal GoodsReceipt.
-	 * - organization  : Diambil dari organisasi GoodsReceipt.
-	 * - supplier      : Diambil dari Party di WarehouseReferenceItem.
-	 * - tax           : Diambil dari WarehouseReferenceItem.
-	 * - money.currency: Diambil dari WarehouseReferenceItem.
-	 * - money.amount  : Total jumlah yang diterima dikalikan harga dari PO (termasuk pajak).
-	 * - unpaid        : Sama dengan money.amount.
-	 * - dueDate       : tanggal GoodsReceipt + Term (Supplier).
-	 * Sisanya dibiarkan null atau default value.
-	 *
-	 * @param goodsReceipt {@link GoodsReceipt} yang menjadi sumber / referensi data invoice
-	 */
 	@AuditTrails(className = InvoiceVerification.class, actionType = AuditTrailsActionType.CREATE)
 	private void createInvoice(GoodsReceipt goodsReceipt) throws Exception
 	{
 		InventoryForm form = new InventoryForm();
 		InvoiceVerification invoiceVerification = new InvoiceVerification();
 		invoiceVerification.setForm(form);
-
-		// Set Payable
 		invoiceVerification.setDate(goodsReceipt.getDate());
 		invoiceVerification.setOrganization(goodsReceipt.getOrganization());
 		invoiceVerification.setMoney(new Money());
 
-		// Temp var for unpaid
 		BigDecimal totalAmount = BigDecimal.ZERO;
-		// Looping through GR Item
 		for (GoodsReceiptItem goodsReceiptItem : goodsReceipt.getItems())
 		{
 			if (goodsReceiptItem.getReceipted().compareTo(BigDecimal.ZERO) > 0)
 			{
-				//Parent purchase order jika itemnya serial, jika non serial maka tidak ada parent
 				PurchaseOrderItem purchaseItem = genericDao.load(PurchaseOrderItem.class, goodsReceiptItem.getWarehouseTransactionItem().getReferenceItem().getId());
 
 				InvoiceVerificationReferenceItem invoiceReference = new InvoiceVerificationReferenceItem();
@@ -291,7 +293,6 @@ public class GoodsReceiptService extends Service
 				InvoiceVerificationItem invoiceItem = InvoiceVerificationReferenceUtil.initItem(invoiceReference);
 				invoiceItem.setInvoiceVerification(invoiceVerification);
 
-				// Set Invoice Supplier, Tax & Currency
 				if (invoiceVerification.getSupplier() == null)
 					invoiceVerification.setSupplier(purchaseItem.getParty());
 
@@ -301,7 +302,6 @@ public class GoodsReceiptService extends Service
 				if (invoiceVerification.getMoney().getCurrency() == null)
 					invoiceVerification.getMoney().setCurrency(purchaseItem.getMoney().getCurrency());
 
-				//Untuk barang serial, Receipted Qty adalah Qty Timbang yg masuk ke stock, tp yg masuk invoice adalah Qty Awal (Qty Barcode Beli)
 				if (goodsReceiptItem.getProduct().isSerial())
 					totalAmount = totalAmount.add(purchaseItem.getBarcodeQuantity().multiply(purchaseItem.getMoney().getAmount()));
 				else
@@ -315,17 +315,16 @@ public class GoodsReceiptService extends Service
 			}
 		}
 
-		// Set amount & unpaid after add tax
 		BigDecimal taxAmount = totalAmount.multiply(invoiceVerification.getTax().getTaxRate()).divide(BigDecimal.valueOf(100));
 		totalAmount = totalAmount.add(taxAmount);
 		invoiceVerification.setUnpaid(totalAmount);
 		invoiceVerification.getMoney().setAmount(totalAmount);
 
-		// Set dueDae dari Credit Term (Supplier) yang harus didapatkan dari party relationship
 		PartyRelationship relationship = partyRelationshipDao.load(invoiceVerification.getSupplier().getId(), invoiceVerification.getOrganization().getId(), PartyRelationshipType.SUPPLIER_RELATIONSHIP);
 		CreditTerm creditTerm = creditTermDao.loadByRelationship(relationship.getId(), true, invoiceVerification.getDate());
 		if (creditTerm == null)
 			throw new ServiceException("Supplier doesn't have active Credit Term, please set it first on supplier page.");
+
 		invoiceVerification.setDueDate(DateHelper.plusDays(invoiceVerification.getDate(), creditTerm.getTerm()));
 
 		form.setInvoiceVerification(invoiceVerification);
@@ -380,7 +379,6 @@ public class GoodsReceiptService extends Service
 	public Map<String, Object> preedit(Long id) throws Exception
 	{
 		InventoryForm form = FormHelper.bind(InventoryForm.class, load(id));
-
 		FastMap<String, Object> map = new FastMap<String, Object>();
 
 		map.put("adapter", form);
@@ -408,13 +406,11 @@ public class GoodsReceiptService extends Service
 	public Map<String, Object> print(Long id, Long container) throws Exception
 	{
 		InventoryForm form = FormHelper.bind(InventoryForm.class, load(id));
-
 		FastMap<String, Object> map = new FastMap<String, Object>();
 
 		if (container == null)
 		{
 			List<Container> containers = form.getGoodsReceipt().getItems().stream().map(GoodsReceiptItem::getContainer).distinct().collect(Collectors.toList());
-
 			map.put("containers", containers);
 		} else
 		{
@@ -437,5 +433,65 @@ public class GoodsReceiptService extends Service
 	public void edit(GoodsReceipt goodsReceipt) throws Exception
 	{
 		genericDao.update(goodsReceipt);
+	}
+
+	@AuditTrails(className = GoodsReceipt.class, actionType = AuditTrailsActionType.DELETE)
+	public void delete(GoodsReceipt goodsReceipt) throws Exception
+	{
+		if (goodsReceipt.isDeletable())
+		{
+			for (GoodsReceiptItem goodsReceiptItem : goodsReceipt.getItems())
+			{
+				WarehouseTransactionItem transactionItem = (WarehouseTransactionItem) genericDao.load(WarehouseTransactionItem.class, goodsReceiptItem.getWarehouseTransactionItem().getId());
+
+				if (transactionItem != null)
+				{
+					BigDecimal receipted = transactionItem.getReceipted().subtract(goodsReceiptItem.getReceipted());
+					if (receipted.compareTo(BigDecimal.ZERO) < 0)
+						receipted = BigDecimal.ZERO;
+
+					transactionItem.setLocked(false);
+					transactionItem.setReceipted(receipted);
+					transactionItem.setUnreceipted(transactionItem.getUnreceipted().add(goodsReceiptItem.getReceipted()));
+
+					genericDao.update(transactionItem);
+
+					inventoryItemUtil.out(InventoryItem.class, goodsReceiptItem);
+
+					if (goodsReceiptItem.getWarehouseTransactionItem().getType().equals(WarehouseTransactionType.INTERNAL))
+					{
+						inventoryItemUtil.trout(InventoryItem.class, goodsReceiptItem);
+
+						BigDecimal buffer = goodsReceiptItem.getQuantity();
+
+						for (StockControl control : transactionItem.getDestinations())
+						{
+							if (control.getLot() == null || LotHelper.getKey(control.getLot()).compareTo(LotHelper.getKey(goodsReceiptItem.getLot())) == 0)
+							{
+								if (buffer.compareTo(BigDecimal.ZERO) <= 0)
+									break;
+
+								if (control.getQuantity().compareTo(buffer) >= 0)
+								{
+									control.setBuffer(control.getBuffer().add(buffer));
+									buffer = BigDecimal.ZERO;
+								} else
+								{
+									buffer = buffer.subtract(control.getQuantity());
+									control.setBuffer(control.getQuantity());
+
+									genericDao.update(control);
+								}
+							}
+						}
+					}
+				}
+
+				balanceUtil.in(DWInventoryItemBalance.class, goodsReceiptItem, DecimalHelper.negative(goodsReceiptItem.getReceipted()));
+				balanceDetailUtil.in(DWInventoryItemBalanceDetail.class, goodsReceiptItem, transactionItem, goodsReceipt, DecimalHelper.negative(goodsReceiptItem.getReceipted()), goodsReceiptItem.getCogs(), goodsReceipt.getNote());
+			}
+
+			genericDao.delete(goodsReceipt);
+		}
 	}
 }

@@ -49,7 +49,6 @@ import lombok.Setter;
 @Table(name = "goods_receipt_manual")
 public class GoodsReceiptManual extends Model implements Transaction, JSONSupport, Receiptable
 {
-
 	private static final long serialVersionUID = 5895311821742826408L;
 
 	@Column(name = "code")
@@ -94,7 +93,6 @@ public class GoodsReceiptManual extends Model implements Transaction, JSONSuppor
 
 	public BigDecimal getTotalQuantity()
 	{
-
 		BigDecimal amount = BigDecimal.ZERO;
 
 		for (GoodsReceiptManualItem item : getItems())
@@ -105,7 +103,6 @@ public class GoodsReceiptManual extends Model implements Transaction, JSONSuppor
 
 	public BigDecimal getTotalQuantityPcs()
 	{
-
 		BigDecimal amount = BigDecimal.ZERO;
 
 		for (GoodsReceiptManualItem item : getItems())
@@ -167,6 +164,15 @@ public class GoodsReceiptManual extends Model implements Transaction, JSONSuppor
 		return getItems() == null ? Collections.emptySet()
 				: getItems().stream().map(GoodsReceiptManualItem::getTransactionItem).filter(Objects::nonNull).map(WarehouseTransactionItem::getReceiptedItems).filter(Objects::nonNull).flatMap(list -> list.stream())
 						.map(GoodsReceiptItem::getGoodsReceipt).filter(Objects::nonNull).collect(Collectors.toSet());
+	}
+
+	public boolean isDeleteble()
+	{
+		for (GoodsReceipt goodsReceipt : getReceipts())
+			if (!goodsReceipt.isDeletable())
+				return false;
+
+		return true;
 	}
 
 	@Override
