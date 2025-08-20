@@ -40,6 +40,7 @@ import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
 import com.siriuserp.sdk.utility.ReferenceItemHelper;
+import com.siriuserp.sdk.utility.SiriusValidator;
 
 import javolution.util.FastMap;
 
@@ -110,8 +111,13 @@ public class WorkOrderService extends Service
 				workOrderItem.setProduct(item.getProduct());
 				workOrderItem.setQuantity(item.getQuantity());
 				workOrderItem.getLot().setSerial(item.getSerial());
+				workOrderItem.getLot().setCode(item.getLotCode());
 				workOrderItem.setReferenceFrom("Produksi");
-				workOrderItem.setNote(item.getNote());
+
+				if (SiriusValidator.validateParam(item.getNote()))
+					workOrderItem.setNote(item.getNote());
+				else
+					workOrderItem.setNote("");
 
 				if (workOrderItem.getConversionType().equals(ConversionType.CONVERT))
 				{
@@ -162,7 +168,8 @@ public class WorkOrderService extends Service
 	}
 
 	@AuditTrails(className = WorkOrder.class, actionType = AuditTrailsActionType.UPDATE)
-	@AutomaticSibling(roles = { "DelInventorySiblingRole", "AddInventorySiblingRole" })
+	@AutomaticSibling(roles =
+	{ "DelInventorySiblingRole", "AddInventorySiblingRole" })
 	public void finish(WorkOrder workOrder) throws Exception
 	{
 		workOrder.setProductionStatus(ProductionStatus.FINISH);
