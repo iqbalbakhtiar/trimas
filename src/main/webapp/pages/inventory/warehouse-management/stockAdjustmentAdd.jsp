@@ -223,7 +223,7 @@
 			return;
 		}
 		
-		openpopup("<c:url value='/page/popupcontainerview.htm?target=container['/>"+index+"]");
+		openpopup("<c:url value='/page/popupcontainerview.htm?target=container['/>"+index+"]&facility="+facility.value);
 	}
 	
 	function openproduct(index)
