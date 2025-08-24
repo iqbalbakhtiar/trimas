@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.siriuserp.inventory.criteria.GoodsReceiptFilterCriteria;
+import com.siriuserp.inventory.dm.GoodsReceipt;
 import com.siriuserp.inventory.dm.GoodsReceiptManual;
 import com.siriuserp.inventory.dm.GoodsReceiptManualItem;
 import com.siriuserp.inventory.dm.WarehouseTransactionItem;
@@ -56,8 +57,8 @@ public class GoodsReceiptManualService
 	@Autowired
 	private GenericDao genericDao;
 
-	/*@Autowired
-	private GoodsReceiptService goodsReceiptService;*/
+	@Autowired
+	private GoodsReceiptService goodsReceiptService;
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws ServiceException
@@ -121,7 +122,7 @@ public class GoodsReceiptManualService
 				receiptItem.setAmount(item.getPrice());
 				receiptItem.setProduct(item.getProduct());
 				receiptItem.setContainer(item.getContainer());
-				receiptItem.setAmount(item.getPrice());
+				receiptItem.getMoney().setAmount(item.getPrice());
 				receiptItem.setGrid(item.getGrid());
 				receiptItem.setFacilitySource(goodsReceiptManual.getFacility());
 				receiptItem.setFacilityDestination(item.getGrid().getFacility());
@@ -154,12 +155,12 @@ public class GoodsReceiptManualService
 		genericDao.update(goodsReceiptManual);
 	}
 
-	/*@AuditTrails(className = GoodsReceiptManual.class, actionType = AuditTrailsActionType.DELETE)
+	@AuditTrails(className = GoodsReceiptManual.class, actionType = AuditTrailsActionType.DELETE)
 	public void delete(GoodsReceiptManual goodsReceiptManual) throws Exception
 	{
 		for (GoodsReceipt receipt : goodsReceiptManual.getReceipts())
 			goodsReceiptService.delete(receipt);
-	
+
 		genericDao.delete(goodsReceiptManual);
-	}*/
+	}
 }

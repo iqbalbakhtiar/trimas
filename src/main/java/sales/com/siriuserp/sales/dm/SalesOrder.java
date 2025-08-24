@@ -1,3 +1,8 @@
+/**
+ * File Name  : SalesOrder.java
+ * Created On : Mar 6, 2025
+ * Email	  : iqbal@siriuserp.com
+ */
 package com.siriuserp.sales.dm;
 
 import java.util.Date;
@@ -11,8 +16,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -45,12 +48,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author Iqbal Bakhtiar
+ * PT. Sirius Indonesia
+ * www.siriuserp.com
+ */
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "sales_order")
-@Inheritance(strategy = InheritanceType.JOINED)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class SalesOrder extends Model implements JSONSupport, ApprovableBridge
 {
@@ -76,7 +84,7 @@ public class SalesOrder extends Model implements JSONSupport, ApprovableBridge
 
 	@Column(name = "auto_dps")
 	@Type(type = "yes_no")
-	protected boolean autoDPS = Boolean.FALSE;
+	private boolean autoDPS = Boolean.FALSE;
 
 	@Column(name = "deliverable")
 	@Type(type = "yes_no")
@@ -84,15 +92,11 @@ public class SalesOrder extends Model implements JSONSupport, ApprovableBridge
 
 	@Column(name = "status")
 	@Enumerated(EnumType.STRING)
-	protected SOStatus soStatus = SOStatus.OPEN;
+	private SOStatus soStatus = SOStatus.OPEN;
 
 	@Column(name = "sales_type")
 	@Enumerated(EnumType.STRING)
-	protected SalesType salesType = SalesType.STANDARD;
-
-	@Column(name = "sales_internal_type")
-	@Enumerated(EnumType.STRING)
-	protected SalesInternalType salesInternalType = SalesInternalType.YARN;
+	private SalesType salesType = SalesType.STANDARD;
 
 	@Embedded
 	private Money money;

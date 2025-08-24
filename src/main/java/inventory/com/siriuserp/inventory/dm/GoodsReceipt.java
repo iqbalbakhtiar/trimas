@@ -1,7 +1,9 @@
 package com.siriuserp.inventory.dm;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -122,6 +124,19 @@ public class GoodsReceipt extends Model implements Transaction, JSONSupport
 		references.addAll(getItems().stream().map(item -> item.getWarehouseTransactionItem().getFullUri()).collect(Collectors.toSet()));
 
 		return String.join("<br/>", references);
+	}
+
+	public boolean isNotUsed()
+	{
+		Optional<ProductInOutTransaction> group = getItems().stream().flatMap(item -> item.getInOuts().stream().filter(inout -> inout.getQuantity().compareTo(inout.getReceipted()) == 0 && inout.getDiscount().compareTo(BigDecimal.ZERO) == 0))
+				.findFirst();
+
+		return group.isPresent();
+	}
+
+	public boolean isDeletable()
+	{
+		return !isVerificated() && isNotUsed();
 	}
 
 	@Override

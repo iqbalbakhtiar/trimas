@@ -84,7 +84,7 @@ public class DeliveryPlanningService
 		salesOrder.setSoStatus(SOStatus.PLANNING);
 		genericDao.update(salesOrder);
 
-		planning.setCode(GeneratorHelper.instance().generate(TableType.DELIVERY_PLANNING, codeSequenceDao, planning.getSalesOrder().getOrganization()));
+		planning.setCode(GeneratorHelper.instance().generate(TableType.DELIVERY_PLANNING, codeSequenceDao, planning.getDate()));
 		genericDao.add(planning);
 	}
 

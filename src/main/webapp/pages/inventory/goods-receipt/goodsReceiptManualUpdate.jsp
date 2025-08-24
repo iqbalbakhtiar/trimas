@@ -1,10 +1,13 @@
 <%@ include file="/pages/includes/sirius-head.jsp"%>
 
 <div class="toolbar">
-    <a class="item-button-list" href="<c:url value='/page/goodsreceiptmanualview.htm'/>"><span>List</span></a>
+    <a class="item-button-list" href="<c:url value='/page/goodsreceiptmanualview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
     <c:if test="${access.edit}">
-        <a class="item-button-save"><span>Update</span></a>
+        <a class="item-button-save"><span><spring:message code="sirius.save"/></span></a>
     </c:if>
+    <c:if test="${empty receiptManual_edit.receipts and not fn:contains(activerole, 'Stock')}">
+		<a class="item-button-doc"><span><spring:message code="sirius.finish"/></span></a>
+	</c:if>
 </div>
 
 <div class="main-box">
@@ -41,7 +44,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td nowrap="nowrap" align="right"><spring:message code="goodsreceipt.supplier.invoice" />:</td>
+                    <td nowrap="nowrap" align="right"><spring:message code="goodsreceipt.receive.from"/> :</td>
                     <td>
                         <form:select id="supplier" path="supplier" cssClass="combobox-ext">
                             <c:if test='${not empty receiptManual_edit.supplier}'>
@@ -60,23 +63,21 @@
 	            </tr>--%>
                 <tr>
                     <td nowrap="nowrap" align="right"><spring:message code="sirius.note" /> :</td>
-                    <td><form:textarea path="note" cols="55" rows="7"/></td>
+                    <td><form:textarea path="note" rows="6" cols="45"/></td>
                 </tr>
                 </table>
             </td>
-            <td width="47%" valign="top" align="left" style="display: none;">
+            <td width="47%" valign="top" align="left">
                 <fieldset>
                     <legend><strong><spring:message code="sirius.transaction.recap"/></strong></legend>
                     <table width="100%">
                         <tr>
                             <th width="50%">&nbsp;</th>
                             <th width="25%">Qty</th>
-                            <th width="25%">Qty (Pcs)</th>
                         </tr>
                         <tr>
                             <td align="right">Total : </td>
                             <td><input id="totalQty" value="<fmt:formatNumber value='${receiptManual_edit.totalQuantity}' pattern=',##0.00'/>" class="number-disabled" disabled size="15"/></td>
-                            <td><input id="totalQtyPcs" value="<fmt:formatNumber value='${receiptManual_edit.totalQuantityPcs}' pattern=',##0.00'/>" class="number-disabled" disabled size="15"/></td>
                         </tr>
                     </table>
                 </fieldset>
@@ -84,7 +85,7 @@
                     <legend><strong><spring:message code="sirius.reference"/></strong></legend>
                     <table width="100%">
                         <tr>
-                            <td align="right" width="45%">Goods Receipt</td>
+                            <td align="right" width="45%"><spring:message code="goodsreceipt"/></td>
                             <td> :&nbsp;
                                 <c:forEach items="${receiptManual_edit.receipts}" var="receipt" varStatus="status">
                                     <c:if test="${status.index > 0}">, </c:if>
@@ -104,43 +105,40 @@
         </tr>
         </table>
         <br/>
-		<div class="toolbar-clean">
-			<div class="item-navigator">&nbsp;</div>
-			<a class="item-button-new" href="javascript:addLineItem();"><span><spring:message code="sirius.row.new"/></span></a>
-			<a class="item-button-delete" ><span><spring:message code="sirius.row.delete"/></span></a>
-		</div>
         <table id="lineItemTable" width="100%" cellpadding="0" cellspacing="0" class="table-list">
         <thead>
             <tr>
                 <th width="1%">&nbsp;</th>
-                <th width="8%" style="display: none;"><spring:message code="grid"/></th>
+                <th width="8%"><spring:message code="grid"/></th>
 				<th width="8%"><spring:message code="container"/></th>
                 <th width="8%"><spring:message code="sirius.code" /></th>
                 <th width="8%"><spring:message code="sirius.name" /></th>
-                <th width="8%" style="display: none;"><spring:message code="product.category" /></th>
+                <th width="8%"><spring:message code="product.category" /></th>
                 <th width="8%"><spring:message code="barcode" /></th>
+				<th width="5%"><spring:message code="product.lot" /></th>
                 <th width="6%"><spring:message code="product.uom" /></th>
                 <th width="6%"><spring:message code="sirius.qty"/></th>
-                <th width="6%"><spring:message code="goodsreceiptitem.priceadjust"/></th>
+                <th width="6%"><spring:message code="sirius.price"/></th>
             </tr>
         </thead>
         <tbody>
-            <c:forEach items="${receiptManual_edit.items}" var="item">
-            <tr>
-                <td></td>
-                <td style="display: none;">${item.container.grid.name}</td>
-                <td>${item.container.name}</td>
-                <td>${item.product.code}</td>
-                <td>${item.product.name}</td>
-                <td style="display: none;">${item.product.productCategory.name}</td>
-                <td>${item.lot.serial}</td>
-                <td>${item.product.unitOfMeasure.measureId}</td>
-                <td><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
-                <td><fmt:formatNumber value='${item.amount}' pattern=',##0.00'/></td>
-            </tr>
-            </c:forEach>
+        <c:forEach items="${receiptManual_edit.items}" var="item" varStatus="status">
+        <tr>
+            <td></td>
+            <td>${item.container.grid.name}</td>
+            <td>${item.container.name}</td>
+            <td>${item.product.code}</td>
+            <td>${item.product.name}</td>
+            <td>${item.product.productCategory.name}</td>
+            <td>${item.lot.serial}</td>
+            <td>${item.lot.code}</td>
+            <td>${item.product.unitOfMeasure.measureId}</td>
+            <td><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
+            <td><fmt:formatNumber value='${item.amount}' pattern=',##0.00'/></td>
+        </tr>
+        </c:forEach>
         </tbody>
-        <tfoot><tr class="end-table"><td colspan="15">&nbsp;</td></tr></tfoot>
+        <tfoot><tr class="end-table"><td colspan="${fn:contains(activerole, 'Stock') ? 13 : 15}">&nbsp;</td></tr></tfoot>
         </table>
     </sesform:form>
 </div>
@@ -149,38 +147,77 @@
 <%@ include file="/pages/includes/sirius-foot.jsp"%>
 <script type="text/javascript">
 	$(function() {
-		var $dialog = $('<div></div>').dialog({autoOpen: false,title: 'Goods Issue Manual',modal:true,buttons: {Close: function() {$(this).dialog('close');}}});
-
 		$('.item-button-save').click(function(){
-
             $.ajax({
-                url:"<c:url value='/page/goodsreceiptmanualedit.htm'/>",
-                data:$('#editForm').serialize(),
-                type : 'POST',
-                dataType : 'json',
-                beforeSend:function()
-                {
-                    $dialog.empty();
-                    $dialog.html('Updating Goods Receipt Manual data......');
-                    $dialog.dialog('open');
-                },
-                success : function(json) {
-                    if(json)
-                    {
-                        if(json.status == 'OK')
-                        {
-                            $dialog.dialog('close');
-                            window.location="<c:url value='/page/goodsreceiptmanualview.htm'/>";
-                        }
-                        else
-                        {
-                            $dialog.empty();
-                            $dialog.html('Proccess fail,reason:<br/>'+json.message);
-                        }
-                    }
-                }
-            });
+    		    url:"<c:url value='/page/goodsreceiptmanualedit.htm'/>",
+    		    data:$('#editForm').serialize(),
+    		    type : 'POST',
+    		    dataType : 'json',
+    		    beforeSend:function()
+    		    {
+    		      $dialog.empty();
+    		      $dialog.html('<spring:message code="notif.updating"/>');
+    		      $dialog.dialog('open');
+    		    },
+    		    success : function(json) {
+    		    	if(json)
+    		    	{
+    		        	if(json.status === 'OK')
+    		        	{
+    		          		$dialog.dialog('close');
+    		          		window.location="<c:url value='/page/goodsreceiptmanualpreedit.htm?id='/>"+json.id;
+    		        	}
+    		        	else
+    		        	{
+    		          		$dialog.empty();
+    		          		$dialog.html('<spring:message code="notif.profailed"/> :<br/>'+json.message);
+    		        	}
+    				}
+    			}
+    		});
 		});
-
     });
+	
+	$('.item-button-doc').click(function(e) {
+	    let isValid = true;
+	
+	    $('.amounts').each(function() {
+	      const rawVal = $(this).val().replace(/,/g, '');
+	      const amount = parseFloat(rawVal);
+	
+	      if (isNaN(amount) || amount <= 0) {
+	    	alert('<spring:message code="retailitem.price"/> <spring:message code="notif.greater.zero"/> !');
+	        isValid = false;
+	        return false; 
+	      }
+	    });
+	
+	    if (isValid) {
+	    	$.ajax({
+	            url: '<c:url value="/page/goodsreceiptmanualedit.htm?finish=true"/>',
+	            data: $('#editForm').serialize(),
+	            type: 'POST',
+	            dataType: 'json',
+	            beforeSend: function () {
+	                $dialog.empty();
+	                $dialog.html('<spring:message code="notif.updating"/>');
+	                $dialog.dialog('open');
+	            },
+	            success: function (json) {
+	                if (json) {
+	                    if (json.status === 'OK') {
+	                        $dialog.dialog('close');
+	                        window.location = '<c:url value="/page/goodsreceiptmanualpreedit.htm?id="/>' + json.id;
+	                    } else {
+	                        $dialog.empty();
+	                        $dialog.html('<spring:message code="notif.profailed"/> :<br/>' + json.message);
+	                    }
+	                }
+	            }
+	        });
+    	}
+	
+	    return false;
+	});
+
 </script>

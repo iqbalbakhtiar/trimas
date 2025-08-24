@@ -1,10 +1,8 @@
 <%@ include file="/common/sirius-general-top.jsp"%>
-
 <div class="toolbar">
 	<a class="item-button-list" href="<c:url value='/page/salesorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
 </div>
-
 <div class="main-box">
 <sesform:form id="addForm" name="addForm" method="post" modelAttribute="salesOrder_form" enctype="multipart/form-data">
 	<table width="100%" border="0">
@@ -30,21 +28,11 @@
 					</td>
 				</tr>
 				<tr>
-					<td align="right"><spring:message code="salesorder.type"/></td>
-					<td width="1%" align="center">:</td>
-					<td>
-						<form:select id="salesInternalType" path="salesInternalType">
-							<form:option value="YARN" selected="true"><spring:message code="salesorder.type.yarn"/></form:option>
-							<form:option value="WASTE"><spring:message code="salesorder.type.waste"/></form:option>
-						</form:select>
-					</td>
-				</tr>
-				<tr>
 					<td align="right"><spring:message code="sirius.date"/></td>
 					<td width="1%" align="center">:</td>
 					<td><input id="date" name="date" class="datepicker" value="<fmt:formatDate value='${now}' pattern='dd-MM-yyyy'/>" onchange="updateExpDate()"/></td>
 				</tr>
-				<tr>
+				<tr style="display: none;">
 					<td align="right"><spring:message code="salesorder.expired.date"/></td>
 					<td width="1%" align="center">:</td>
 					<td><input id="expDate" name="expDate" class="datepicker" value="<fmt:formatDate value='${twoMonth}' pattern='dd-MM-yyyy'/>"/></td>
@@ -106,7 +94,6 @@
 				</tr>
 				</table>
 			</td>
-			
 			<td width="40%" valign="top">
 				<table width="100%" style="border: none">
 					<tr>
@@ -132,7 +119,6 @@
 					</tr>
 				</table>
 			</td>
-
 		</tr>
 	</table>
 	<br/>
@@ -164,7 +150,6 @@
 				</tr>
   			</table>
 		</div>
-		
 		<div id="productLineItem" dojoType="ContentPane" label="<spring:message code='salesorder.lineitem'/>" class="tab-pages" refreshOnShow="true" selected="true">
   			<div class="toolbar-clean">
   				<div class="toolbar-clean">
@@ -339,11 +324,11 @@ function validateForm() {
     }
 
     // Validasi approver
-    var approver = $('#approver').val();
+    /* var approver = $('#approver').val();
     if (approver == null || approver === "") {
         alert('<spring:message code="approver"/> <spring:message code="notif.empty"/> !');
         return false;
-    }
+    } */
     
  	// **Tambahkan validasi untuk memastikan setidaknya ada satu line item**
     if ($('#lineItem tr').length === 0) {
@@ -474,18 +459,12 @@ function addLine() {
     $tr = $('<tr/>');
     
 	$cbox = List.get('<input type="checkbox" class="check"/>','check'+index);
-	
 	$product = List.get('<select class="combobox-ext productInput" onchange="checkDuplicate(this);updateDisplay();"/>','product['+index+']');
 	$productImg = List.img('<spring:message code="product"/>', index, 'openProduct("'+index+'")');
-	
 	$qty = List.get('<input type="text" class="input-decimal" size="6" onchange="updateDisplay();"/>','quantity['+index+']', '0.00');
-	
 	$uom = List.get('<input type="text" class="input-disabled" disabled size="6" />','uom['+index+']');
-	
 	$price = List.get('<input type="text" class="input-decimal" size="12" onchange="updateDisplay()"/>','amount['+index+']', '0.00');
-
 	$totalAmount = List.get('<input type="text" class="input-decimal input-disabled" disabled size="12"/>','totalAmount['+index+']', '0.00');
-	
 	$packNote = List.get('<input type="text" size="30"/>','note['+index+']');
 	
 	$tr.append(List.col([$cbox]));
@@ -502,23 +481,12 @@ function addLine() {
 }
 
 function openProduct(index) {
-	var exclCat = "";
-	var cat = "";
-	var salesType = $('#salesInternalType').val();
-  
-  	if(salesType == 'YARN')
-  		exclCat = "WASTE";
-  	else
-  		cat = "WASTE";
-	  
 	const baseUrl = '<c:url value="/page/popupproductview.htm"/>';
 	const params = {
-		target: 'product[' + index + ']', // Id Dropdown (Select) element
+		target: 'product[' + index + ']',
 		index: index,
-		excludeCategoryType: exclCat,
-		categoryName: cat,
 		saleable: true,
-		status: true // Filter Only Active Products
+		status: true
 	};
 	openpopup(buildUrl(baseUrl, params));
 }

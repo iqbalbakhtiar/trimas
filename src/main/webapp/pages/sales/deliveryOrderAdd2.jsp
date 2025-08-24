@@ -222,14 +222,15 @@ function validateForm() {
     	var productType = obj.getAttribute('producttype');
         var referenceQty = parseFloat($('#referenceQuantity\\['+idx+'\\]').val());
         var quantity = parseFloat($('#delivered\\['+idx+'\\]').val());
+        
         if(productType == 'serial') {
-			var productName = product.text();
+			/* var productName = product.text();
 
             if (quantity !== referenceQty) {
                 alert('<strong>' + productName + '</strong> - ' + '<spring:message code="deliveryorder.quantity"/> ' + '<spring:message code="notif.different"/> ' + '<spring:message code="deliveryorder.reference.qty"/> !');
                 isValid = false;
                 return false;
-            }
+            } */
     	} else { // product type non serial
 			var productName = product.text();
 	

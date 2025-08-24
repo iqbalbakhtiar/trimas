@@ -159,6 +159,7 @@
 					<th><spring:message code="product.name"/></th>
                    	<th width="8%"><spring:message code='container'/></th>
 					<th width="5%"><spring:message code="product.serial"/></th>
+					<th width="5%"><spring:message code="product.lot"/></th>
 					<th width="5%"><spring:message code="product.uom"/></th>
                     <th width="5%"><spring:message code='sirius.qty'/></th>
                     <th width="50%"><spring:message code='sirius.note'/></th>
@@ -171,6 +172,7 @@
 	                <td><input size="26" value="${item.product.name}" class="input-disabled" disabled/></td>
 	                <td><input size="26" value="${item.container.name}" class="input-disabled" disabled/></td>
 	                <td><input size="12" value="${item.lot.serial}" class="input-disabled" disabled/></td>
+	                <td><input size="5" value="${item.lot.code}" class="input-disabled" disabled/></td>
 	                <td><input size="12" value="${item.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
 	                <td><input size="12" value="<fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/>" class="input-disabled" disabled/></td>
 	                <td><input size="30" value="${item.note}" class="input-disabled" disabled/></td>
@@ -178,7 +180,7 @@
 				</c:forEach>
 				</tbody>
 				<tfoot>
-					<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
+					<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
 				</tfoot>
 				</table>
 			</div>
@@ -195,6 +197,7 @@
 					<th><spring:message code="product.name"/></th>
                    	<th width="8%"><spring:message code='container'/></th>
 					<th width="5%"><spring:message code="product.serial"/></th>
+					<th width="5%"><spring:message code="product.lot"/></th>
 					<th width="5%"><spring:message code="product.uom"/></th>
                     <th width="5%"><spring:message code='sirius.qty'/></th>
                     <th width="50%"><spring:message code='sirius.note'/></th>
@@ -208,6 +211,7 @@
 	                <td><input size="26" value="${item.product.name}" class="input-disabled" disabled/></td>
 	                <td><input size="26" value="${item.container.name}" class="input-disabled" disabled/></td>
 	                <td><input size="12" value="${item.lot.serial}" class="input-disabled" disabled/></td>
+	                <td><input size="5" value="${item.lot.code}" class="input-disabled" disabled/></td>
 	                <td><input size="12" value="${item.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
 	                <td><input size="12" value="<fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/>" class="input-disabled" disabled/></td>
 	                <td><input size="30" value="${item.note}" class="input-disabled" disabled/></td>
@@ -216,7 +220,7 @@
 				</c:forEach>
 				</tbody>
 				<tfoot>
-					<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
+					<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
 				</tfoot>
 				</table>
 			</div>
@@ -233,6 +237,7 @@
 					<th><spring:message code="product.name"/></th>
                    	<th width="8%"><spring:message code='container'/></th>
 					<th width="5%"><spring:message code="product.serial"/></th>
+					<th width="5%"><spring:message code="product.lot"/></th>
 					<th width="5%"><spring:message code="product.uom"/></th>
                     <th width="5%"><spring:message code='sirius.qty'/></th>
                     <th width="50%"><spring:message code='sirius.note'/></th>
@@ -246,6 +251,7 @@
 	                <td><input size="26" value="${item.product.name}" class="input-disabled" disabled/></td>
 	                <td><input size="26" value="${item.container.name}" class="input-disabled" disabled/></td>
 	                <td><input size="12" value="${item.lot.serial}" class="input-disabled" disabled/></td>
+	                <td><input size="5" value="${item.lot.code}" class="input-disabled" disabled/></td>
 	                <td><input size="12" value="${item.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
 	                <td><input size="12" value="<fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/>" class="input-disabled" disabled/></td>
 	                <td><input size="30" value="${item.note}" class="input-disabled" disabled/></td>
@@ -254,7 +260,7 @@
 				</c:forEach>
 				</tbody>
 				<tfoot>
-					<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
+					<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
 				</tfoot>
 				</table>
 			</div>
@@ -271,6 +277,7 @@
 					<th><spring:message code="product.name"/></th>
                    	<th width="8%"><spring:message code='container'/></th>
 					<th width="5%"><spring:message code="product.serial"/></th>
+					<th width="5%"><spring:message code="product.lot"/></th>
 					<th width="5%"><spring:message code="product.uom"/></th>
                     <th width="5%"><spring:message code='sirius.qty'/></th>
                     <th width="50%"><spring:message code='sirius.note'/></th>
@@ -284,6 +291,7 @@
 	                <td><input size="26" value="${item.product.name}" class="input-disabled" disabled/></td>
 	                <td><input size="26" value="${item.container.name}" class="input-disabled" disabled/></td>
 	                <td><input size="12" value="${item.lot.serial}" class="input-disabled" disabled/></td>
+	                <td><input size="5" value="${item.lot.code}" class="input-disabled" disabled/></td>
 	                <td><input size="12" value="${item.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
 	                <td><input size="12" value="<fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/>" class="input-disabled" disabled/></td>
 	                <td><input size="30" value="${item.note}" class="input-disabled" disabled/></td>
@@ -292,7 +300,7 @@
 				</c:forEach>
 				</tbody>
 				<tfoot>
-					<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
+					<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
 				</tfoot>
 				</table>
 			</div>

@@ -91,23 +91,22 @@
 		<table id="lineItemTable" width="100%" cellpadding="0" cellspacing="0" class="table-list">
 			<thead>
 			<tr>
-				<th width="2%"><input class="checkall" type="checkbox" /></th>
-				<th width="15%" style="display: none;"><spring:message code="grid" /></th>
-				<th width="15%"><spring:message code="container" /></th>
-				<th width="20%"><spring:message code="product" /></th>
-				<th width="10%"><spring:message code="barcode" /></th>
-				<th width="15%"><spring:message code="goodsreceiptitem.uom" /></th>
-				<th width="10%" style="white-space: normal; line-height: 10px; text-align: center"><spring:message code="invoiceverificationitem.receivedqty" /></th>
-				<th width="15%"><spring:message code="sirius.qty"/></th>
-				<th width="15%"><spring:message code="sirius.price" /></th>
-				<th width="15%"><spring:message code="goodsreceiptitem.priceadjust" /></th>
+				<th width="1%"><input class="checkall" type="checkbox"/></th>
+				<th width="15%" style="display: none;"><spring:message code="grid"/></th>
+				<th width="15%"><spring:message code="container"/></th>
+				<th width="20%"><spring:message code="product"/></th>
+				<th width="5%"><spring:message code="barcode"/></th>
+				<th width="5%"><spring:message code="product.lot"/></th>
+				<th width="15%"><spring:message code="goodsreceiptitem.uom"/></th>
+				<th width="10%"><spring:message code="invoiceverificationitem.receivedqty"/></th>
+				<th width="35%"><spring:message code="goodsreceiptitem.priceadjust"/></th>
 			</tr>
 			</thead>
 			<tbody id="tbody">
 			</tbody>
 			<tfoot>
 			<tr class="end-table">
-				<td colspan="15">&nbsp;</td>
+				<td colspan="9">&nbsp;</td>
 			</tr>
 			</tfoot>
 		</table>
@@ -181,7 +180,7 @@
 						if(json.status == 'OK')
 						{
 							$dialog.dialog('close');
-							window.location="<c:url value='/page/goodsreceiptpreedit.htm?id='/>"+json.id;
+							window.location="<c:url value='/page/goodsreceiptmanualpreedit.htm?id='/>"+json.id;
 						}
 						else
 							afterFail($dialog, '<spring:message code="notif.profailed"/> :<br/>' + json.message);
@@ -242,8 +241,7 @@
 		const productImg = List.img('Product', index, 'openproduct("'+index+'")');
 		const uom = List.get('<input class="input-disabled" disabled="true" size="12"/>','uom['+index+']');
 		const receipted = List.get('<input class="input-decimal negative qty" onchange='+"checkQuantity("+index+");"+' size="12"/>','receipted['+index+']', '0.00');
-		const qtyPcs = List.get('<input class="number-disabled qtyPcs" disabled="true" size="8"/>','qtyPcs['+index+']', '0.00000');
-        const amountPcs = List.get('<input class="number-disabled" readonly="true" size="12"/>','amountPcs['+index+']', '0.00');
+		const lotCode = List.get('<input size="5"/>','lotCode['+index+']');
         const amount = List.get('<input class="input-number" size="12"/>','price['+index+']', '0.00');
         
         const $input = $('<input>', {
@@ -264,17 +262,14 @@
 
 		
 		$tr.append(List.col([checkbox]));
-		// $tr.append(List.col([grid, gridImg]));
 		$tr.append(List.col([grid], '', 'display: none;'));
 		$tr.append(List.col([container, containerImg]));
 		$tr.append(List.col([product, productImg]));
 		$tr.append(List.col([barcode]));
+		$tr.append(List.col([lotCode]));
 		$tr.append(List.col([uom]));
 		$tr.append(List.col([receipted]));
-		$tr.append(List.col([qtyPcs]));
-		$tr.append(List.col([amountPcs]));
 		$tr.append(List.col([amount]));
-		//$tr.append(List.col([grid, gridImg]));
 		
 		$tbody.append($tr);
 		
@@ -296,15 +291,7 @@
             totalQuantity += quantity.value.toNumber();
         }
         
-        const quantitiesPcs = document.getElementsByClassName('qtyPcs');
-        for(const quantity of quantitiesPcs)
-        {
-            const index = quantity.getAttribute('index');
-            totalQuantityPcs += quantity.value.toNumber();
-        }
-
         document.getElementById('totalQty').value = totalQuantity.numberFormat('#,##0.00');
-        document.getElementById('totalQtyPcs').value = totalQuantityPcs.numberFormat('#,##0.00');
     }
 
     function openfacility()
@@ -365,7 +352,6 @@
 		
 		$('#av\\['+index+'\\]').val(0.00);
 		$('#quantity\\['+index+'\\]').val(0.00);
-		//$('#qtyPcs\\['+index+'\\]').val(0.00);
 		
 		let requestData = {
             productId: prodId,
@@ -383,11 +369,8 @@
 					{
 						if(json.status == 'OK'){
 							let amount = document.getElementsByName('items['+index+'].price')[0];
-							let amountPcs = document.getElementsByName('items['+index+'].amountPcs')[0];
-							if(amount && json.product != null){
+							if(amount && json.product != null)
 								amount.value = parseFloat(json.product.price).numberFormat('#,##0.00');
-								amountPcs.value = parseFloat(json.product.price).numberFormat('#,##0.00');
-							}
 							else
 								amount.value = parseFloat(0).numberFormat('#,##0.00');
 						}
@@ -408,20 +391,6 @@
 	}
 	
 	function checkQuantity(index) {
-		/*var onHand = document.getElementById('av[' + index + ']').value.toNumber();
-		var qty = document.getElementById('receipted[' + index + ']').value.toNumber();
-		
-		if(qty > onHand) {
-			alert('Issued Quantity cannot greater than On Hand !!!');
-			document.getElementById('quantity[' + index + ']').value = 0.00;
-			document.getElementById('qtyPcs[' + index + ']').value = 0.00;
-			return;
-		}
-		
-		var qtyBase = document.getElementById('baseQty[' + index + ']').value.toNumber();
-		var qtyPcs = document.getElementById('qtyPcs[' + index + ']');
-        qtyPcs.value = (qtyBase * qty).numberFormat('#,##0.00000');*/
-
         display();
 	}
 	

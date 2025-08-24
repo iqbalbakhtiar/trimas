@@ -22,7 +22,7 @@
 					
 					var _opt = document.createElement('option');
 					_opt.value = id;
-					_opt.text = code+" "+name;
+					_opt.text = name;
 					
 					_client.appendChild(_opt);
 				}

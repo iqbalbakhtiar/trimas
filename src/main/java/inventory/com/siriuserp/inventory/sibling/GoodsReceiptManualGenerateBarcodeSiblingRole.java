@@ -48,20 +48,20 @@ public class GoodsReceiptManualGenerateBarcodeSiblingRole extends AbstractSiblin
 		List<Item> itemsWithEmptySerial = new ArrayList<>();
 		List<Item> itemsWithSerial = new ArrayList<>();
 		List<Item> itemsWithSerialExist = new ArrayList<>();
-
-		BarcodeGroup barcodeGroup = new BarcodeGroup();
+		BarcodeGroup barcodeGroup = null;
 
 		if (goodsReceiptManual != null)
 		{
 			for (Item item : goodsReceiptManual.getForm().getItems())
 			{
-				if (item.getProduct() != null && SiriusValidator.nz(item.getReceipted()))
+				if (item.getProduct() != null && item.getProduct().isSerial() && SiriusValidator.nz(item.getReceipted()))
 				{
 					String serial = item.getSerial();
 
-					if (serial == null || serial.trim().isEmpty())
+					if (!SiriusValidator.validateParam(serial))
+					{
 						itemsWithEmptySerial.add(item);
-					else
+					} else
 					{
 						Barcode barcode = barcodeService.loadByCode(serial);
 						if (barcode != null)
@@ -72,15 +72,15 @@ public class GoodsReceiptManualGenerateBarcodeSiblingRole extends AbstractSiblin
 				}
 			}
 
-			if ((goodsReceiptManual.getBarcodeGroup() == null) && (!itemsWithEmptySerial.isEmpty() || !itemsWithSerial.isEmpty()))
+			boolean needGenerate = !itemsWithEmptySerial.isEmpty() || !itemsWithSerial.isEmpty();
+
+			if (goodsReceiptManual.getBarcodeGroup() == null && needGenerate)
 			{
 				barcodeGroup = new BarcodeGroup();
 				BeanUtils.copyProperties(goodsReceiptManual, barcodeGroup, "form");
-
 				barcodeGroup.setBarcodeGroupType(BarcodeGroupType.STOCK_ADJUSTMENT);
 				barcodeGroup.setActive(true);
-				barcodeGroup.setQuantity(goodsReceiptManual.getForm().getItems().stream().map(Item::getQuantity).collect(DecimalHelper.sum()));
-
+				barcodeGroup.setQuantity(goodsReceiptManual.getForm().getItems().stream().filter(item -> item.getProduct() != null && item.getProduct().isSerial()).map(Item::getQuantity).collect(DecimalHelper.sum()));
 				goodsReceiptManual.setBarcodeGroup(barcodeGroup);
 			}
 
@@ -99,26 +99,6 @@ public class GoodsReceiptManualGenerateBarcodeSiblingRole extends AbstractSiblin
 	public void prosesBarcode(List<Item> items, BarcodeGroup barcodeGroup) throws Exception
 	{
 		if (barcodeGroup != null)
-		{
 			barcodeGroupService.addFromGR(barcodeGroup, items);
-
-			for (Item item : items)
-			{
-				if (item.getProduct() != null && item.getProduct().isSerial() && SiriusValidator.nz(item.getReceipted()))
-				{
-					boolean isBarcodeValid = false;
-
-					if (SiriusValidator.validateParam(item.getSerial()))
-					{
-						Barcode barcode = barcodeService.loadByCode(item.getSerial());
-						if (barcode == null)
-							isBarcodeValid = true;
-					}
-
-					Barcode code = barcodeService.generateBarcode(item.getProduct().getId(), item.getReceipted(), item.getSerial(), barcodeGroup, isBarcodeValid);
-					item.setSerial(code.getCode());
-				}
-			}
-		}
 	}
 }

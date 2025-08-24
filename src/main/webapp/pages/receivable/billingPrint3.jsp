@@ -31,26 +31,28 @@
 				<tr>
 			</table>
 			<table border="0" width="100%" cellpadding="0" cellspacing="0">
-				<tr>
-					<td width="2%" colspan="2">&nbsp;</td>
-					<td width="96%" colspan="6" align="left"><img src="assets/images/ssm-logo.png"  width="250" height="40"/></td>
-					<td width="2%" colspan="2">&nbsp;</td>
-				</tr>
-				<tr>
-					<td width="2%" colspan="2">&nbsp;</td>
-					<td width="96%" colspan="6" align="left">Desa Sindangpakuon Kecamatan Cimanggung</td>
-					<td width="2%" colspan="2">&nbsp;</td>
-				</tr>
-				<tr>
-					<td width="2%" colspan="2">&nbsp;</td>
-					<td width="96%" colspan="6" align="left">Telp (022) 7798320</td>
-					<td width="2%" colspan="2">&nbsp;</td>
-				</tr>
-				<tr>
-					<td width="2%" colspan="2">&nbsp;</td>
-					<td width="96%" colspan="6" align="left">Fax (022) 7790185</td>
-					<td width="2%" colspan="2">&nbsp;</td>
-				</tr>
+			<tr>
+				<td width="2%" colspan="2">&nbsp;</td>
+  				<td colspan="6">
+  				<img style="margin-left: -15px;" src="assets/images/shunhui-logo.png" width="350" height="40"/>
+  				</br><font size="2"></font>
+  				</td>
+				<td width="2%" colspan="2">&nbsp;</td>
+  			</tr>
+  			<tr>
+				<td width="2%" colspan="2">&nbsp;</td>
+  				<td colspan="6" style="text-transform: uppercase;">
+  					<c:forEach items='${billing_form.organization.postalAddresses}' var='address'>
+					<c:if test='${address.selected}'>
+						${address.address}</br>
+						${address.city.name}, ${address.city.parent.name}</br>
+						Tlp. (022) 0000000</br>
+						Fax. (022) 0000000</br>
+					</c:if>
+				    </c:forEach>
+  				</td>
+				<td width="2%" colspan="2">&nbsp;</td>
+  			</tr>
 				<tr>
 					<td width="100%" colspan="10">&nbsp;</td>
 				</tr>
@@ -136,7 +138,7 @@
 							<tr><td>&nbsp;</td></tr>
 							<tr>
 								<td align="left">
-									Sumedang,
+									Cimahi,
 									<span style="display:inline-block; width:2em"></span>
 									<fmt:formatDate value='${billing_form.date}' pattern='dd MMMM yyyy'/>
 								</td>
@@ -147,7 +149,7 @@
 							<tr><td>&nbsp;</td></tr>
 							<tr><td align="left">.............................................</td></tr>
 							<tr>
-								<td align="left"><u>Marsha</u></td>
+								<td align="left"><u>PT SHUN HUI ZHIYE INDONESIA</u></td>
 							</tr>
 						</table>
 					</td>

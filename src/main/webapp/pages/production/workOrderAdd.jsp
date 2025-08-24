@@ -586,16 +586,19 @@ function addLine($idxRef, idx, convType)
 	$uom = $('#uom\\['+$idxRef+'\\]').val();
 	
 	$qtyAttr = 'class="input-decimal quantities"';
+	$lotCodeAttr = '';
 	
-	if(convType == 'CONVERT')
+	if(convType == 'CONVERT') {
 		$qtyAttr = 'class="input-decimal quantities input-disabled" readonly="true"';
+		$lotCodeAttr = 'class="input-disabled" readonly="true"';
+	}
 	
 	$tbody = $('#iBody'+$idxRef);
 	$tr = $('<tr/>').addClass('barcodeGroup' + $idxRef);
     
     $product = List.get('<input class="input" size="12" type="hidden"/>','product['+idx+']', $productId);
     $container = List.get('<input class="input" size="12" type="hidden"/>','container['+idx+']', $sourceId);
-    $lotCode = List.get('<input class="inputbox-small input-disabled" size="12" type="text" readonly/>','lotCode['+idx+']');
+    $lotCode = List.get('<input size="5" type="text" '+$lotCodeAttr+'/>','lotCode['+idx+']');
     $barcode = List.get('<select class="combobox barcodes" onchange="calculateAdjust(\'' + idx + '\');"></select>','serial[' + idx + ']');
 	$barcodeImg = List.img('<spring:message code="barcode"/>', idx, 'openBarcode("'+idx+'","'+$productId+'","'+$sourceId+'")');
 	$onhand = List.get('<input type="text" class="input-decimal input-disabled" disabled="true" size="12"/>','onHand['+idx+']', '0.00');

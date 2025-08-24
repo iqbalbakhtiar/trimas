@@ -1,6 +1,4 @@
-<%--suppress ALL --%>
 <%@ include file="/common/sirius-general-top.jsp"%>
-
 <div class="toolbar">
 	<a class="item-button-list" href="<c:url value='/page/salesorderview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<a class="item-button-save" ><span><spring:message code="sirius.save"/></span></a>
@@ -12,7 +10,6 @@
 		<a class="item-button-close canceled"><span><spring:message code="sirius.canceled"/></span></a>
 	</c:if>
 </div>
-
 <div class="main-box">
 <sesform:form id="addForm" name="addForm" method="post" modelAttribute="salesOrder_form" enctype="multipart/form-data">
 	<table width="100%" border="0">
@@ -20,7 +17,7 @@
 			<td width="60%" valign="top">
 				<table style="border:none" width="100%">
 				<tr>
-					<td width="34%" align="right">Sales Order ID</td>
+					<td width="34%" align="right"><spring:message code="sirius.code"/></td>
 					<td width="1%" align="center">:</td>
 					<td width="64%"><form:input class="inputbox input-disabled" path="code" disabled="true"/></td>
 					<td width="1%"><form:errors path="code"/></td>
@@ -33,15 +30,6 @@
 							<c:if test='${not empty salesOrder_edit.organization}'>
 								<form:option value='${salesOrder_edit.organization.id}' label='${salesOrder_edit.organization.fullName}'/>
 							</c:if>
-						</form:select>
-					</td>
-				</tr>
-				<tr>
-					<td align="right"><spring:message code="salesorder.type"/></td>
-					<td width="1%" align="center">:</td>
-					<td>
-						<form:select id="salesInternalType" path="salesInternalType" cssClass="input-disabled" disabled="true">
-							<form:option value="${salesOrder_edit.salesInternalType}"><spring:message code="salesorder.type.${salesOrder_edit.salesInternalType.messageName}"/></form:option>
 						</form:select>
 					</td>
 				</tr>

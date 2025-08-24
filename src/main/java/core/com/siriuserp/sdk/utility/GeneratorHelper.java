@@ -152,9 +152,12 @@ public class GeneratorHelper
 		case GOODS_ISSUE_SEQUENCE:
 		case MOVING_CONTAINER_ISSUE_SEQUENCE:
 			return sequence(codeSequence, index);
+		case SALES_ORDER:
+		case DELIVERY_PLANNING:
 		case DELIVERY_ORDER:
 		case PURCHASE_ORDER:
 		case BILLING_BATCH:
+		case BARCODE_GROUP:
 		case GOODS_ISSUE:
 		case GOODS_RECEIPT:
 		case BILLING:
@@ -250,7 +253,7 @@ public class GeneratorHelper
 		String year = DateHelper.getYear(date) + "";
 
 		sb.append(tableType.getCode());
-		sb.append(" ");
+		sb.append("");
 		sb.append(year.substring(year.length() - 2, year.length()));
 		sb.append(DateHelper.getMonth(date));
 

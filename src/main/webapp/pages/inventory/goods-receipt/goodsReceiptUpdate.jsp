@@ -64,13 +64,14 @@
                 <thead>
                 <tr>
                     <th width="10%"><spring:message code="product"/></th>
-                    <th width="10%" style="white-space: normal; line-height: 10px; text-align: center"><spring:message code="invoiceverificationitem.receivedqty"/></th>
+                    <th width="10%"><spring:message code="invoiceverificationitem.receivedqty"/></th>
                     <th width="5%"><spring:message code="goodsreceiptitem.uom"/></th>
                     <th width="5%"><spring:message code="barcode"/></th>
+                    <th width="5%"><spring:message code="product.lot"/></th>
                     <th width="5%"><spring:message code="container"/></th>
                     <th width="5%"><spring:message code="grid"/></th>
                     <th width="5%"><spring:message code="pricecategory.price"/></th>
-                    <th width="5%"><spring:message code="sirius.total"/></th>
+                    <th width="20%"><spring:message code="sirius.total"/></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -82,14 +83,16 @@
                             </select>
                         </td>
                         <td>
-                            <input class="input-number receipt input-disabled" index="${status.index}" id="receipted[${status.index}]" name='items[${status.index}].receipted'
-                                   size='6' value="<fmt:formatNumber value='${item.receipted}' pattern=',##0'/>" disabled/>
+                            <input class="input-decimal receipt input-disabled" index="${status.index}" id="receipted[${status.index}]" name='items[${status.index}].receipted' size='12' value="<fmt:formatNumber value='${item.receipted}' pattern=',##0.00'/>" disabled/>
                         </td>
                         <td>
                             <input class="input-disabled" size="5" value="${item.warehouseTransactionItem.referenceItem.measureName}" disabled/>
                         </td>
                         <td>
                             <input class="input-disabled" size="10" value="${item.warehouseTransactionItem.lot.serial}" disabled/>
+                        </td>
+                        <td>
+                            <input class="input-disabled" size="5" value="${item.warehouseTransactionItem.lot.code}" disabled/>
                         </td>
                         <td>
                             <form:select id='container[${status.index}]' path='items[${status.index}].container' cssClass='combobox containers input-disabled' disabled="true">
@@ -106,10 +109,10 @@
                             </form:select>
                         </td>
                         <td>
-                            <input class="input-disabled" size='6' value="<fmt:formatNumber value='${item.warehouseTransactionItem.money.amount}' pattern=',##0'/>" disabled/>
+                            <input class="input-disabled" size='12' value="<fmt:formatNumber value='${item.warehouseTransactionItem.money.amount}' pattern=',##0'/>" disabled/>
                         </td>
                         <td>
-                            <input class="input-disabled" size='6' value="<fmt:formatNumber value='${item.receipted*item.warehouseTransactionItem.money.amount}' pattern=',##0'/>" disabled/>
+                            <input class="input-disabled" size='12' value="<fmt:formatNumber value='${item.receipted*item.warehouseTransactionItem.money.amount}' pattern=',##0'/>" disabled/>
                         </td>
                     </tr>
                 </c:forEach>

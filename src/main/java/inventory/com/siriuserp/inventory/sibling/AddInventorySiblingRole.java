@@ -42,11 +42,9 @@ public class AddInventorySiblingRole extends AbstractSiblingRole
 	public void execute() throws Exception
 	{
 		Object object = (Object) getSiblingable();
-
 		Receiptable warehouse = (Receiptable) object;
-		
 		FastMap<Long, InventoryForm> receipts = new FastMap<Long, InventoryForm>();
-		
+
 		for (WarehouseReferenceItem refItem : warehouse.getReceiptables())
 		{
 			WarehouseReferenceItem transItem = genericDao.load(WarehouseReferenceItem.class, refItem.getId());
@@ -62,7 +60,7 @@ public class AddInventorySiblingRole extends AbstractSiblingRole
 					form.setFacility(transItem.getFacilityDestination());
 					form.setGrid(transItem.getDestinationGrid());
 					form.setContainer(transItem.getContainer());
-					
+
 					receipts.put(transItem.getFacilityDestination().getId(), form);
 				}
 
@@ -86,8 +84,7 @@ public class AddInventorySiblingRole extends AbstractSiblingRole
 			}
 		}
 
-		for (InventoryForm form : receipts.values()) {
+		for (InventoryForm form : receipts.values())
 			goodsReceiptService.add(FormHelper.create(GoodsReceipt.class, form));
-		}
 	}
 }

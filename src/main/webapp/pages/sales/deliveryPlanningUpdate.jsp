@@ -1,14 +1,11 @@
 <%@ include file="/pages/includes/sirius-head.jsp"%>
-
 <div class="toolbar">
 	<a class="item-button-list" href="<c:url value='/page/deliveryplanningview.htm'/>"><span>List</span></a>
 	<c:if test="${access.edit and planning_edit.planable and !planning_edit.salesOrder.locked and planning_edit.salesOrder.soStatus ne 'CLOSE' and planning_edit.salesOrder.soStatus ne 'CANCELED'}">
 		<a class="item-button-add-gl-child" href="<c:url value='/page/deliveryplanningsequencepreadd.htm?id=${planning_edit.id}'/>"><span>Add Sequence</span></a>
 	</c:if>
 </div>
-
 <div class="main-box">
-
 	<table width="100%" style="border:none">
 	<tr>
 		<td width="51%">
@@ -74,7 +71,7 @@
 		<div id="${seq.id}" dojoType="ContentPane" label="${planning_edit.code}.${seq.no}" class="tab-pages" refreshOnShow="true" >
 			<div class="toolbar">
 				<c:if test='${access.delete and empty seq.deliveryOrders}'>
-					<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/deliveryplanningsequencedelete.htm?id=${seq.id}&plan=${planning_edit.id}'/>');" title="Delete"><span>Delete</span></a>
+					<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/deliveryplanningsequencedelete.htm?id=${seq.id}&seq=${planning_edit.id}'/>');" title="Delete"><span>Delete</span></a>
 				</c:if>
 				<div class="item-navigator">&nbsp;</div>
 			</div>
@@ -176,8 +173,7 @@
 	</div>
 	</c:if>
 </div>
-<div class="info">Created by : <c:out value='${planning_edit.createdBy.fullName}'/> (<fmt:formatDate value='${planning_edit.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | Last update by : <c:out value='${planning_edit.updatedBy.fullName}'/> (<fmt:formatDate value='${planning_edit.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
-						
+<div class="info"><spring:message code="sirius.createdby"/> : <c:out value='${planning_edit.createdBy.fullName}'/> (<fmt:formatDate value='${planning_edit.createdDate}' pattern='dd-MM-yyyy HH:mm:ss'/>) | <spring:message code="sirius.updatedby"/> : <c:out value='${planning_edit.updatedBy.fullName}'/> (<fmt:formatDate value='${planning_edit.updatedDate}' pattern='dd-MM-yyyy HH:mm:ss'/>)</div>
 <%@ include file="/pages/includes/sirius-foot.jsp"%>
 <script type="text/javascript">
 
