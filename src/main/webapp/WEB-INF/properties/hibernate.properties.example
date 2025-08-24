@@ -1,6 +1,6 @@
-hibernate.connection.url=jdbc:mysql://127.0.0.1:3306/local_database?autoReconnect=true
-hibernate.connection.username=sirius
-hibernate.connection.password=permisi
+hibernate.connection.url=${HIBERNATE_URL}
+hibernate.connection.username=${HIBERNATE_USERNAME}
+hibernate.connection.password=${HIBERNATE_PASSWORD}
 
 hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
 hibernate.query.substitutions true=Y, false=N
