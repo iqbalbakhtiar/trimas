@@ -163,6 +163,7 @@
         <Valve className="org.apache.catalina.authenticator.SingleSignOn" />
         -->
 	<Valve className="org.apache.catalina.valves.RemoteIpValve"
+		   internalProxies=".*"
            remoteIpHeader="x-forwarded-for"
            remoteIpProxiesHeader="x-forwarded-by"
            protocolHeader="x-forwarded-proto" />
