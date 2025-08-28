@@ -24,7 +24,7 @@
 					</td>
 				 </tr> --%>
 			<tr>
-				<td align="right"><spring:message code="employee.code"/> :</td>
+				<td align="right"><spring:message code="salesperson.code"/> :</td>
 				<td>
 					<input id="code" class='input-disabled' value="<spring:message code="sirius.auto.generated"/>" disabled/>
 					<img id="btnBrowse" style="visibility: hidden;cursor: pointer;" src="assets/icons/list_extensions.gif" onclick="javascript:openExistingName();" title="Existing Name" />
@@ -36,7 +36,7 @@
 				<td><form:input path="salutation" size="10"/></td>
 			</tr>
 			<tr>
-				<td align="right"><spring:message code="employee.name"/> :</td>
+				<td align="right"><spring:message code="salesperson.name"/> :</td>
 				<td><form:input id="name" path="fullName" cssClass="inputbox"/></td>
 			</tr>
 			<tr>
