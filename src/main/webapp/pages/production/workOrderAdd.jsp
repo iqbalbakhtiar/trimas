@@ -519,6 +519,7 @@ function openProduct(index, type) {
 	const params = {
 		target: 'product[' + index + ']',
 		index: index,
+		status: true,
 		organization: $('#org').val(),
 	};
 	openpopup(buildUrl(baseUrl, params));
