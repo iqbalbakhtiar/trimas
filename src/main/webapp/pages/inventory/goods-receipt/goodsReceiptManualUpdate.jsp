@@ -115,7 +115,7 @@
                 <th width="8%"><spring:message code="sirius.name" /></th>
                 <th width="8%"><spring:message code="product.category" /></th>
                 <th width="8%"><spring:message code="barcode" /></th>
-				<th width="5%"><spring:message code="product.lot" /></th>
+				<th width="5%"><spring:message code="goodsreceiptitem.container.no" /></th>
                 <th width="6%"><spring:message code="product.uom" /></th>
                 <th width="6%"><spring:message code="sirius.qty"/></th>
                 <th width="6%"><spring:message code="sirius.price"/></th>
@@ -131,7 +131,7 @@
             <td>${item.product.name}</td>
             <td>${item.product.productCategory.name}</td>
             <td>${item.lot.serial}</td>
-            <td>${item.lot.code}</td>
+            <td>${item.containerNo}</td>
             <td>${item.product.unitOfMeasure.measureId}</td>
             <td><fmt:formatNumber value='${item.quantity}' pattern=',##0.00'/></td>
             <td><fmt:formatNumber value='${item.amount}' pattern=',##0.00'/></td>

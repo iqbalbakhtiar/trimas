@@ -35,6 +35,7 @@ import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.GeneratorHelper;
+import com.siriuserp.sdk.utility.LotInfoUtil;
 import com.siriuserp.sdk.utility.QueryFactory;
 import com.siriuserp.sdk.utility.ReferenceItemHelper;
 import com.siriuserp.sdk.utility.SiriusValidator;
@@ -128,8 +129,9 @@ public class GoodsReceiptManualService
 				receiptItem.setFacilityDestination(item.getGrid().getFacility());
 				receiptItem.setDestinationGrid(item.getGrid());
 				receiptItem.setDestinationContainer(item.getContainer());
+				receiptItem.setContainerNo(item.getContainerNo());
+				receiptItem.setLot(LotInfoUtil.initLot(receiptItem.getLot(), receiptItem));
 				receiptItem.getLot().setSerial(item.getSerial());
-				receiptItem.getLot().setCode(item.getLotCode());
 				receiptItem.setReferenceCode(goodsReceiptManual.getCode());
 				receiptItem.setReferenceFrom(goodsReceiptManual.getSupplier().getFullName());
 				receiptItem.setReferenceTo(item.getContainer().getCode());

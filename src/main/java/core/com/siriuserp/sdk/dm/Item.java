@@ -113,6 +113,7 @@ public class Item extends SiriusItem
 	private String referenceType;
 	private String coneMark;
 	private String variantName;
+	private String containerNo;
 
 	private boolean enabled;
 	private boolean actived;
