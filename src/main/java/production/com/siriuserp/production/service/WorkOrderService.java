@@ -114,8 +114,8 @@ public class WorkOrderService extends Service
 				workOrderItem.getLot().setCode(item.getLotCode());
 				workOrderItem.setReferenceFrom("Produksi");
 
-				if (SiriusValidator.validateParam(item.getNote()))
-					workOrderItem.setNote(item.getNote());
+				if (SiriusValidator.validateParam(item.getItemNote()))
+					workOrderItem.setNote(item.getItemNote());
 				else
 					workOrderItem.setNote("");
 
