@@ -98,6 +98,10 @@ public class SalesOrder extends Model implements JSONSupport, ApprovableBridge
 	@Enumerated(EnumType.STRING)
 	private SalesType salesType = SalesType.STANDARD;
 
+	@Column(name = "direct_invoice")
+	@Type(type = "yes_no")
+	private boolean directInvoice = Boolean.FALSE;
+
 	@Embedded
 	private Money money;
 
