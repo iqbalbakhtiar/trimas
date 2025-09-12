@@ -43,7 +43,7 @@
             <th width="8%"><spring:message code="facility"/></th>
             <th width="10%" style="display: none;"><spring:message code="grid"/></th>
             <th width="10%"><spring:message code="container"/></th>
-            <th width="3%">&nbsp;</th>
+            <th width="3%"><spring:message code="sirius.total"/></th>
             <th width="8%"><spring:message code="barcode"/></th>
             <th width="8%"><spring:message code="product.lot"/></th>
             <th width="8%"><spring:message code="product.onhand"/></th>

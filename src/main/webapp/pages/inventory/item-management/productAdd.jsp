@@ -40,7 +40,13 @@
 		<td align="right"><spring:message code="uom"/> :</td>
 		<td>
 			<form:select id="unitOfMeasure" path="unitOfMeasure" cssClass="combobox">
-				<form:options items="${uoms}" itemValue="id" itemLabel="measureId" />
+				<c:forEach items="${uoms}" var="u">
+					<option value="${u.id}"
+					        <c:if test="${(not empty product_form.unitOfMeasure and product_form.unitOfMeasure.id == u.id)
+                     or (empty product_form.unitOfMeasure and u.measureId eq 'M')}">selected="selected"</c:if>>
+							${u.measureId}
+					</option>
+				</c:forEach>
 			</form:select>
 		</td>
 	</tr>
@@ -149,12 +155,6 @@ function validation()
 	if(!$('#productCategory\\[0\\]').val())
 	{
 		alert('<spring:message code="notif.select1"/> <spring:message code="productcategory"/> <spring:message code="notif.select2"/> !!!');
-		return false;
-	}
-	
-	if(!$('#brand').val())
-	{
-		alert('<spring:message code="notif.select1"/> <spring:message code="brand"/> <spring:message code="notif.select2"/> !!!');
 		return false;
 	}
 
