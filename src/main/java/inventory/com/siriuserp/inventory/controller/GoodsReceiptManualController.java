@@ -120,7 +120,7 @@ public class GoodsReceiptManualController extends ControllerBase
 	@RequestMapping("/goodsreceiptmanualdelete.htm")
 	public ModelAndView delete(@RequestParam("id") Long id) throws Exception
 	{
-		//service.delete(service.load(id));
+		service.delete(service.load(id));
 		return ViewHelper.redirectTo("goodsreceiptmanualview.htm");
 	}
 
