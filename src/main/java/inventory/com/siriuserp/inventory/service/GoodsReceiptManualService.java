@@ -7,6 +7,7 @@ package com.siriuserp.inventory.service;
 
 import java.util.Map;
 
+import com.siriuserp.sdk.utility.FormHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -90,10 +91,13 @@ public class GoodsReceiptManualService
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> preedit(Long id) throws ServiceException
+	public Map<String, Object> preedit(Long id) throws Exception
 	{
+		InventoryForm form = FormHelper.bind(InventoryForm.class, load(id));
 		FastMap<String, Object> map = new FastMap<String, Object>();
+
 		map.put("receiptManual_edit", load(id));
+		map.put("receiptManual_form", form);
 
 		return map;
 	}
