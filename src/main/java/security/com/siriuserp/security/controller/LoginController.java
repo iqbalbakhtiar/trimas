@@ -28,8 +28,6 @@ public class LoginController extends ControllerBase
     @RequestMapping("/signin.htm")
     public ModelAndView handleRequest(HttpServletRequest request,HttpServletResponse response) throws Exception 
     {
-        PathHelper.SERVLET_PATH = request.getSession().getServletContext().getRealPath("");
-        
         DisplayConfiguration displayConfiguration = genericDao.load(DisplayConfiguration.class, Long.valueOf(1));
         if(displayConfiguration != null)
             SessionHelper.refreshLocale(request.getSession(false),displayConfiguration.getLocale());
