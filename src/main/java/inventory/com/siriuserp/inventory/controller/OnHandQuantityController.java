@@ -30,12 +30,14 @@ public class OnHandQuantityController extends ControllerBase
 	@Autowired
 	private OnHandQuantityService service;
 
+	// Main List View
 	@RequestMapping("/onhandquantitygroupview.htm")
 	public ModelAndView viewGroup(HttpServletRequest request) throws Exception
 	{
 		return new ModelAndView("/inventory/warehouse-management/onHandQuantityGroupList", service.view(criteriaFactory.create(request, OnHandQuantityFilterCriteria.class), OnHandQuantityGroupViewQuery.class));
 	}
 
+	// Second List View
 	@RequestMapping("/onhandquantityview.htm")
 	public ModelAndView view(HttpServletRequest request) throws Exception
 	{

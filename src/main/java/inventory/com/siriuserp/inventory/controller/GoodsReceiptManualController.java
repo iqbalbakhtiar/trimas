@@ -91,7 +91,7 @@ public class GoodsReceiptManualController extends ControllerBase
 	}
 
 	@RequestMapping("/goodsreceiptmanualpreedit.htm")
-	public ModelAndView preedit(@RequestParam("id") Long id) throws ServiceException
+	public ModelAndView preedit(@RequestParam("id") Long id) throws Exception
 	{
 		return new ModelAndView("/inventory/goods-receipt/goodsReceiptManualUpdate", service.preedit(id));
 	}
@@ -120,7 +120,7 @@ public class GoodsReceiptManualController extends ControllerBase
 	@RequestMapping("/goodsreceiptmanualdelete.htm")
 	public ModelAndView delete(@RequestParam("id") Long id) throws Exception
 	{
-		//service.delete(service.load(id));
+		service.delete(service.load(id));
 		return ViewHelper.redirectTo("goodsreceiptmanualview.htm");
 	}
 

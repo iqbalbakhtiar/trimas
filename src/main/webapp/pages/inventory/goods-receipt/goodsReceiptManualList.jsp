@@ -33,7 +33,7 @@
 		<c:if test="${access.edit}">
 			<a class="item-button-edit" href="<c:url value='/page/goodsreceiptmanualpreedit.htm?id=${rec.id}'/>"  title="Edit"><span>Edit</span></a>
 		</c:if>
-		<c:if test="${access.delete}">
+		<c:if test="${access.delete and rec.deleteble}">
 			<a class="item-button-delete" href="javascript:showDialog('<c:url value='/page/goodsreceiptmanualdelete.htm?id=${rec.id}'/>');" title="Del"><span>Del</span></a>
 		</c:if>
 	</td>
