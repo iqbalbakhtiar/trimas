@@ -12,7 +12,7 @@
 	
 	<appender name="file-appender" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="append" value="false" />   
-        <param name="file" value="/opt/logs/siriuserp-mml-1.5.log" />
+        <param name="file" value="/opt/logs/siriuserp-shunhui-1.5.log" />
         <layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"  value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
 		</layout>
