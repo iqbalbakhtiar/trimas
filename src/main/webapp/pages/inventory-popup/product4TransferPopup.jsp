@@ -90,7 +90,7 @@
 			var _code = self.opener.document.getElementById('codeprod[${index}]');
 			var _category = self.opener.document.getElementById('category[${index}]');
 			var _gridFrom = self.opener.document.getElementById('gridFrom[${index}]');
-			var _source = self.opener.document.getElementById('source[${index}]');
+			var _source = self.opener.document.getElementById('container[${index}]');
 
 			if(_onhand)
 				_onhand.value = parseFloat(onhand).numberFormat('#,##0.00');

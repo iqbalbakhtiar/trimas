@@ -7,6 +7,7 @@ package com.siriuserp.inventory.service;
 
 import java.util.Map;
 
+import com.siriuserp.sdk.utility.FormHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -35,6 +36,7 @@ import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.filter.GridViewFilterCriteria;
 import com.siriuserp.sdk.paging.FilterAndPaging;
 import com.siriuserp.sdk.utility.GeneratorHelper;
+import com.siriuserp.sdk.utility.LotInfoUtil;
 import com.siriuserp.sdk.utility.QueryFactory;
 import com.siriuserp.sdk.utility.ReferenceItemHelper;
 import com.siriuserp.sdk.utility.SiriusValidator;
@@ -89,10 +91,13 @@ public class GoodsReceiptManualService
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> preedit(Long id) throws ServiceException
+	public Map<String, Object> preedit(Long id) throws Exception
 	{
+		InventoryForm form = FormHelper.bind(InventoryForm.class, load(id));
 		FastMap<String, Object> map = new FastMap<String, Object>();
+
 		map.put("receiptManual_edit", load(id));
+		map.put("receiptManual_form", form);
 
 		return map;
 	}
@@ -128,8 +133,9 @@ public class GoodsReceiptManualService
 				receiptItem.setFacilityDestination(item.getGrid().getFacility());
 				receiptItem.setDestinationGrid(item.getGrid());
 				receiptItem.setDestinationContainer(item.getContainer());
+				receiptItem.setContainerNo(item.getContainerNo());
+				receiptItem.setLot(LotInfoUtil.initLot(receiptItem.getLot(), receiptItem));
 				receiptItem.getLot().setSerial(item.getSerial());
-				receiptItem.getLot().setCode(item.getLotCode());
 				receiptItem.setReferenceCode(goodsReceiptManual.getCode());
 				receiptItem.setReferenceFrom(goodsReceiptManual.getSupplier().getFullName());
 				receiptItem.setReferenceTo(item.getContainer().getCode());

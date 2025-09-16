@@ -1,9 +1,9 @@
 <%@ include file="/pages/includes/sirius-head.jsp"%>
 
 <div class="toolbar">
-	<a class="item-button-list" href="<c:url value='/page/goodsreceiptmanualview.htm'/>"><span>List</span></a>
+	<a class="item-button-list" href="<c:url value='/page/goodsreceiptmanualview.htm'/>"><span><spring:message code="sirius.list"/></span></a>
 	<c:if test="${access.add}">
-		<a class="item-button-save"><span>Save</span></a>
+		<a class="item-button-save"><span><spring:message code="sirius.save"/></span></a>
 	</c:if>
 </div>
 
@@ -96,7 +96,7 @@
 				<th width="15%"><spring:message code="container"/></th>
 				<th width="20%"><spring:message code="product"/></th>
 				<th width="5%"><spring:message code="barcode"/></th>
-				<th width="5%"><spring:message code="product.lot"/></th>
+				<th width="10%"><spring:message code="goodsreceiptitem.container.no"/></th>
 				<th width="15%"><spring:message code="goodsreceiptitem.uom"/></th>
 				<th width="10%"><spring:message code="invoiceverificationitem.receivedqty"/></th>
 				<th width="35%"><spring:message code="goodsreceiptitem.priceadjust"/></th>
@@ -161,11 +161,11 @@
                     return;
                 } 
 
-                if($('#price\\[' + index + '\\]').val().toNumber() == 0)
+                /* if($('#price\\[' + index + '\\]').val().toNumber() == 0)
                 {
         			alert('<spring:message code="sirius.price"/> <spring:message code="notif.empty"/> !');
                     return;
-                }
+                } */
             }
             
             $.ajax({
@@ -241,7 +241,7 @@
 		const productImg = List.img('Product', index, 'openproduct("'+index+'")');
 		const uom = List.get('<input class="input-disabled" disabled="true" size="12"/>','uom['+index+']');
 		const receipted = List.get('<input class="input-decimal negative qty" onchange='+"checkQuantity("+index+");"+' size="12"/>','receipted['+index+']', '0.00');
-		const lotCode = List.get('<input size="5"/>','lotCode['+index+']');
+		const containerNo = List.get('<input size="20"/>','containerNo['+index+']');
         const amount = List.get('<input class="input-number" size="12"/>','price['+index+']', '0.00');
         
         const $input = $('<input>', {
@@ -266,7 +266,7 @@
 		$tr.append(List.col([container, containerImg]));
 		$tr.append(List.col([product, productImg]));
 		$tr.append(List.col([barcode]));
-		$tr.append(List.col([lotCode]));
+		$tr.append(List.col([containerNo]));
 		$tr.append(List.col([uom]));
 		$tr.append(List.col([receipted]));
 		$tr.append(List.col([amount]));
@@ -299,7 +299,7 @@
 		const org = document.getElementById('org');
 		if(org.value == '')
 		{
-			alert('Please select Organization first!');
+	        alert('<spring:message code="sirius.organization"/> <spring:message code="notif.empty"/> !');
 			return;
 		}
 		
@@ -321,7 +321,15 @@
 
 	function opencontainerpopup(index)
 	{
-		openpopup("<c:url value='/page/popupcontainerview.htm?target=container['/>" + index + "]&index=" + index);
+		const fac = document.getElementById('facility');
+		
+		if(!fac.value)
+		{
+			alert('<spring:message code="facility"/> <spring:message code="notif.empty"/> !');
+			return;
+		}
+		
+		openpopup("<c:url value='/page/popupcontainerview.htm?target=container['/>" + index + "]&index=" + index+'&facility='+fac.value);
 	}
 
 	function openproduct(index)
@@ -329,25 +337,9 @@
 		openpopup("<c:url value='/page/popupproductview.htm?target=product['/>"+index+"]&index="+index);
 	}
 	
-    function convertProcess() {
-    	const processes = document.getElementsByClassName('process');
-
-		for(const process of processes)
-		{
-			let processValue = process.value;
-			processValue = processValue.replaceAll('[','').replaceAll(']','').replaceAll('"','');
-			process.value = processValue;
-			
-			checkOnHand(process.getAttribute('index'));
-		}
-    }
-	
 	function checkOnHand(index) {
 
 		let prodId = $('#product\\['+index+'\\]').val();
-		let prodFromId = $('#fromProduct\\['+index+'\\]').val();
-		let colId = $('#colour\\['+index+'\\]').val();
-		let proc = $('#process\\['+index+'\\]') ? $('#process\\['+index+'\\]').val():'';
 		let conId = $('#container\\['+index+'\\]').val();
 		
 		$('#av\\['+index+'\\]').val(0.00);

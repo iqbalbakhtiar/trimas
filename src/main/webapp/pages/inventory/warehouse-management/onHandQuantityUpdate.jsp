@@ -1,12 +1,7 @@
 <%@ include file="/pages/includes/sirius-head.jsp"%>	
 
 <div class="toolbar">
-	<c:if test="${product.serial}">
-		<a class="item-button-back" href="<c:url value='/page/onhandquantityview.htm?product=${product.id}'/>" title="Edit"><span><spring:message code="sirius.back"/></span></a>
-	</c:if>
-	<c:if test="${!product.serial}">
-    	<a class="item-button-back" href="<c:url value='/page/onhandquantitygroupview.htm'/>"><span><spring:message code="sirius.back"/></span></a>
-    </c:if>
+	<a class="item-button-back" href="<c:url value='/page/onhandquantitygroupview.htm'/>" title="Edit"><span><spring:message code="sirius.back"/></span></a>
 </div>
 
 <div class="main-box">
@@ -48,6 +43,7 @@
             <th width="8%"><spring:message code="facility"/></th>
             <th width="10%" style="display: none;"><spring:message code="grid"/></th>
             <th width="10%"><spring:message code="container"/></th>
+            <th width="3%"><spring:message code="sirius.total"/></th>
             <th width="8%"><spring:message code="barcode"/></th>
             <th width="8%"><spring:message code="product.lot"/></th>
             <th width="8%"><spring:message code="product.onhand"/></th>
@@ -78,6 +74,17 @@
                     <c:if test="${status.index == 0 || detail.container.id != details[status.index-1].container.id}">
                         <c:out value='${detail.container.name}'/>
                     </c:if>
+                </td>
+                <td>
+	                <c:if test="${status.index == 0 || detail.container.id != details[status.index-1].container.id}">
+		                <c:set var="barcodeCount" value="0"/>
+		                <c:forEach items="${details}" var="d">
+			                <c:if test="${d.container.id == detail.container.id}">
+				                <c:set var="barcodeCount" value="${barcodeCount + 1}"/>
+			                </c:if>
+		                </c:forEach>
+		                <fmt:formatNumber value="${barcodeCount}" pattern="##0"/>
+	                </c:if>
                 </td>
                 <td><c:out value='${detail.lot.serial}'/></td>
                 <td><c:out value='${detail.lot.code}'/></td>

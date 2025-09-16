@@ -19,6 +19,7 @@ import org.hibernate.annotations.LazyToOneOption;
 import com.siriuserp.sdk.dm.Container;
 import com.siriuserp.sdk.dm.Grid;
 import com.siriuserp.sdk.dm.JSONSupport;
+import com.siriuserp.sdk.dm.LotInfoable;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +36,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "goods_receipt_manual_item")
-public class GoodsReceiptManualItem extends WarehouseReferenceItem implements JSONSupport
+public class GoodsReceiptManualItem extends WarehouseReferenceItem implements LotInfoable, JSONSupport
 {
 	private static final long serialVersionUID = -790816080477891556L;
 
@@ -47,6 +48,9 @@ public class GoodsReceiptManualItem extends WarehouseReferenceItem implements JS
 
 	@Column(name = "unreceipted")
 	private BigDecimal unreceipted = BigDecimal.ZERO;
+
+	@Column(name = "container_no")
+	protected String containerNo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_product")
@@ -104,6 +108,12 @@ public class GoodsReceiptManualItem extends WarehouseReferenceItem implements JS
 	public Container getSourceContainer()
 	{
 		return this.container;
+	}
+
+	@Override
+	public String getSerialSource()
+	{
+		return "-";
 	}
 
 	@Override

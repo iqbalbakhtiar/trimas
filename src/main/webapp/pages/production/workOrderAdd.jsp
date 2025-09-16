@@ -320,36 +320,6 @@ function openApprover() {
 	openpopup(buildUrl(baseUrl, params));
 }
 
-async function populateGrid() {
-	const facilityId = $('#source').val();
-	if (!facilityId) {
-		alert('<spring:message code="transferorder.warehousefrom"/> ' + '<spring:message code="notif.empty"/> !');
-		return;
-	}
-
-	try {
-		const filters = [
-			{ key: 'facility.id', type: 'long', operator: 'EQUAL', value: facilityId }
-		];
-
-		const grids = await Generic.list(
-			'com.siriuserp.sdk.dm.Grid',
-			filters,
-			[{ key: 'name', direction: 'ASC' }]
-		);
-
-		const $grid = $('#gridFrom').empty();
-		grids.forEach(g => {
-			$('<option>')
-				.val(g.gridId)
-				.text(g.gridName)
-				.appendTo($grid);
-		});
-	} catch (err) {
-		console.error('Gagal mengambil data grid:', err);
-	}
-}
-
 function validation() {
     // Validasi organisasi
     var organization = $('#org').val();
@@ -478,13 +448,14 @@ function addLineItem(target)
 	const productImg = List.img('Product', index, 'openProduct("'+index+'","'+$type+'")');
 	const gridFrom = List.get('<input class="input-disabled" disabled="true" size="12"/>','gridFrom['+index+']');
 	const gridTo = List.get('<input class="input-disabled" disabled="true" size="12"/>','gridTo['+index+']');
-	const source = List.get('<select readonly="true"'+$containerAttr+'/>','source['+index+']'); 
+	const source = List.get('<select readonly="true"'+$containerAttr+'/>','container['+index+']'); 
 	const sourceImg = List.img('Container', index, 'openContainer("'+index+'")');
 	const onHand = List.get('<input class="number-disabled" disabled="true" size="12"/>','onhand['+index+']');
 	const serial = List.get('<input disabled="true" size="12" type="hidden"/>','serialCheck['+index+']');
 	const uom = List.get('<input class="input-disabled" disabled="true" size="12"/>','uom['+index+']');
 	const quantity = List.get('<input class="input-decimal quantities" conversionType="'+$type+'" onchange='+"checkQuantity(this);"+' size="12"/>','quantity['+index+']', '0');
-	const note = List.get('<input size="30"/>','note['+index+']');
+	const note = List.get('<input size="30"/>','itemNote['+index+']');
+	const conversionType = List.get('<input readonly="true" style="display: none;"/>','conversionType['+index+']', $type);
 	
 	$tr.append(List.col([checkbox]));
 	$tr.append(List.col([product, productImg]));
@@ -498,7 +469,7 @@ function addLineItem(target)
 	$tr.append(List.col(['&nbsp;']));
 	$tr.append(List.col([uom]));
 	$tr.append(List.col([quantity]));
-	$tr.append(List.col([note]));
+	$tr.append(List.col([note, conversionType]));
 
 	$tbody.append($tr);
 	$table.append($tbody);
@@ -519,6 +490,7 @@ function openProduct(index, type) {
 	const params = {
 		target: 'product[' + index + ']',
 		index: index,
+		status: true,
 		organization: $('#org').val(),
 	};
 	openpopup(buildUrl(baseUrl, params));
@@ -527,7 +499,7 @@ function openProduct(index, type) {
 function openContainer(index){
 	const baseUrl = '<c:url value="/page/popupcontainerview.htm"/>';
 	const params = {
-		target: 'source[' + index + ']',
+		target: 'container[' + index + ']',
 		index: index
 	};
 	openpopup(buildUrl(baseUrl, params));
@@ -537,7 +509,7 @@ function checkQuantity(element)
 { 
 	let idxRef = $(element).attr('index');
 	let conversionType = $(element).attr('conversionType');
-	let container = $('#source\\[' + idxRef + '\\]');
+	let container = $('#container\\[' + idxRef + '\\]');
 	let $input = $('#quantity\\[' + idxRef + '\\]');
 	
 	var onHand = document.getElementById('onhand[' + idxRef + ']').value.toNumber();
@@ -570,9 +542,8 @@ function checkQuantity(element)
 
 		$('#product\\[' + idxRef + '\\]').prop('disabled', true);
 		$('#container\\[' + idxRef + '\\]').prop('disabled', true);
-		$('#source\\[' + idxRef + '\\]').prop('disabled', true);
-		$('#note\\[' + idxRef + '\\]').prop('disabled', true);
-		$('#note\\[' + idxRef + '\\]').prop('style', 'display: none;');
+		$('#itemNote\\[' + idxRef + '\\]').prop('disabled', true);
+		$('#itemNote\\[' + idxRef + '\\]').prop('style', 'display: none;');
 
 		$input.attr('data-name', 'quantityDel');
 	}
@@ -582,7 +553,7 @@ function addLine($idxRef, idx, convType)
 {
 	$productId = $('#product\\['+$idxRef+'\\]').val();
 	$productName = $('#product\\['+$idxRef+'\\]').text();
-	$sourceId = $('#source\\['+$idxRef+'\\]').val();
+	$sourceId = $('#container\\['+$idxRef+'\\]').val();
 	$uom = $('#uom\\['+$idxRef+'\\]').val();
 	
 	$qtyAttr = 'class="input-decimal quantities"';
@@ -604,7 +575,7 @@ function addLine($idxRef, idx, convType)
 	$onhand = List.get('<input type="text" class="input-decimal input-disabled" disabled="true" size="12"/>','onHand['+idx+']', '0.00');
 	$uom = List.get('<input type="text" class="input-disabled" disabled="true" size="12"/>','uom['+idx+']', $uom);
 	$quantity = List.get('<input size="12" '+$qtyAttr+'/>','quantity['+idx+']', '0.00');
-	$note = List.get('<input size="30"/>','note['+idx+']');
+	$note = List.get('<input size="30"/>','itemNote['+idx+']');
 	$conversionType = List.get('<input readonly="true" style="display: none;"/>','conversionType['+index+']', convType);
 	
 	$tr.append(List.col([$product]));
@@ -650,7 +621,6 @@ function openBarcode(index, productId, containerId)
 }
 
 function calculateAdjust(index) {
-	var barcode = $('#serial\\['+index+'\\]').val();
 	var barcode = $('#serial\\['+index+'\\]').val();
 	var qty = parseFloat($('#quantity\\['+index+'\\]').val().toNumber());
 	var onHand = parseFloat($('#onHand\\['+index+'\\]').val().toNumber());

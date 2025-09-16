@@ -106,6 +106,7 @@ public class Item extends SiriusItem
 	private String code;
 	private String serial;
 	private String note;
+	private String itemNote;
 	private String lotCode;
 	private String palletName;
 	private String legend;
@@ -113,6 +114,7 @@ public class Item extends SiriusItem
 	private String referenceType;
 	private String coneMark;
 	private String variantName;
+	private String containerNo;
 
 	private boolean enabled;
 	private boolean actived;

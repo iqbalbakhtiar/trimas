@@ -57,6 +57,9 @@ public class GoodsReceiptManual extends Model implements Transaction, JSONSuppor
 	@Column(name = "invoice_no")
 	private String invoiceNo;
 
+	@Column(name = "note")
+	private String note;
+
 	@Column(name = "date")
 	private Date date;
 
@@ -144,7 +147,7 @@ public class GoodsReceiptManual extends Model implements Transaction, JSONSuppor
 	@Override
 	public String getNote()
 	{
-		return "";
+		return this.note;
 	}
 
 	@Override
