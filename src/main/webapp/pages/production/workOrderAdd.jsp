@@ -125,7 +125,6 @@
 					<th><spring:message code="product.name"/></th>
                    	<th width="8%"><spring:message code='container'/></th>
 					<th width="5%"><spring:message code="product.onhand"/></th>
-					<th width="5%"><spring:message code="product.lot"/></th>
 					<th width="5%"><spring:message code="product.uom"/></th>
                     <th width="5%"><spring:message code='sirius.qty'/></th>
                     <th width="50%"><spring:message code='sirius.note'/></th>
@@ -153,7 +152,6 @@
 					<th><spring:message code="product.name"/></th>
                    	<th width="8%"><spring:message code='container'/></th>
 					<th width="5%"><spring:message code="product.onhand"/></th>
-					<th width="5%"><spring:message code="product.lot"/></th>
 					<th width="5%"><spring:message code="product.uom"/></th>
                     <th width="5%"><spring:message code='sirius.qty'/></th>
                     <th width="50%"><spring:message code='sirius.note'/></th>
@@ -181,7 +179,6 @@
 					<th><spring:message code="product.name"/></th>
                    	<th width="8%"><spring:message code='container'/></th>
 					<th width="5%"><spring:message code="product.onhand"/></th>
-					<th width="5%"><spring:message code="product.lot"/></th>
 					<th width="5%"><spring:message code="product.uom"/></th>
                     <th width="5%"><spring:message code='sirius.qty'/></th>
                     <th width="50%"><spring:message code='sirius.note'/></th>
@@ -209,7 +206,6 @@
 					<th><spring:message code="product.name"/></th>
                    	<th width="8%"><spring:message code='container'/></th>
 					<th width="5%"><spring:message code="product.onhand"/></th>
-					<th width="5%"><spring:message code="product.lot"/></th>
 					<th width="5%"><spring:message code="product.uom"/></th>
                     <th width="5%"><spring:message code='sirius.qty'/></th>
                     <th width="50%"><spring:message code='sirius.note'/></th>
@@ -466,7 +462,6 @@ function addLineItem(target)
 		$tr.append(List.col([source, sourceImg]));
 	
 	$tr.append(List.col([onHand, serial]));
-	$tr.append(List.col(['&nbsp;']));
 	$tr.append(List.col([uom]));
 	$tr.append(List.col([quantity]));
 	$tr.append(List.col([note, conversionType]));
@@ -557,11 +552,9 @@ function addLine($idxRef, idx, convType)
 	$uom = $('#uom\\['+$idxRef+'\\]').val();
 	
 	$qtyAttr = 'class="input-decimal quantities"';
-	$lotCodeAttr = '';
 	
 	if(convType == 'CONVERT') {
 		$qtyAttr = 'class="input-decimal quantities input-disabled" readonly="true"';
-		$lotCodeAttr = 'class="input-disabled" readonly="true"';
 	}
 	
 	$tbody = $('#iBody'+$idxRef);
@@ -569,7 +562,6 @@ function addLine($idxRef, idx, convType)
     
     $product = List.get('<input class="input" size="12" type="hidden"/>','product['+idx+']', $productId);
     $container = List.get('<input class="input" size="12" type="hidden"/>','container['+idx+']', $sourceId);
-    $lotCode = List.get('<input size="5" type="text" '+$lotCodeAttr+'/>','lotCode['+idx+']');
     $barcode = List.get('<select class="combobox barcodes" onchange="calculateAdjust(\'' + idx + '\');"></select>','serial[' + idx + ']');
 	$barcodeImg = List.img('<spring:message code="barcode"/>', idx, 'openBarcode("'+idx+'","'+$productId+'","'+$sourceId+'")');
 	$onhand = List.get('<input type="text" class="input-decimal input-disabled" disabled="true" size="12"/>','onHand['+idx+']', '0.00');
@@ -582,7 +574,6 @@ function addLine($idxRef, idx, convType)
 	$tr.append(List.col([$container]));
 	$tr.append(List.col([$barcode, convType == 'CONVERT' ? $barcodeImg : ''], '', 'text-align: right;'));
 	$tr.append(List.col([$onhand]));
-	$tr.append(List.col([$lotCode]));
 	$tr.append(List.col([$uom]));
 	$tr.append(List.col([$quantity]));
 	$tr.append(List.col([$note, $conversionType]));
