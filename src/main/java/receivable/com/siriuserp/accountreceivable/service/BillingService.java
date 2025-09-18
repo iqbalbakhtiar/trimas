@@ -17,6 +17,7 @@ import com.siriuserp.accountreceivable.dm.Billing;
 import com.siriuserp.accountreceivable.dm.BillingCollectingStatus;
 import com.siriuserp.accountreceivable.dm.BillingItem;
 import com.siriuserp.accountreceivable.dm.BillingReferenceItem;
+import com.siriuserp.accountreceivable.dm.BillingType;
 import com.siriuserp.sales.dm.DeliveryOrderRealization;
 import com.siriuserp.sales.dm.DeliveryOrderRealizationItem;
 import com.siriuserp.sdk.annotation.AuditTrails;
@@ -42,15 +43,16 @@ import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class BillingService extends Service {
+public class BillingService extends Service
+{
 
-    @Autowired
-    private GenericDao genericDao;
+	@Autowired
+	private GenericDao genericDao;
 
-    @Autowired
-    private CodeSequenceDao codeSequenceDao;
+	@Autowired
+	private CodeSequenceDao codeSequenceDao;
 
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
 	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
@@ -61,7 +63,8 @@ public class BillingService extends Service {
 	}
 
 	@AuditTrails(className = Billing.class, actionType = AuditTrailsActionType.CREATE)
-	public void add(Billing billing) throws Exception { // Used in DOR Add
+	public void add(Billing billing) throws Exception
+	{ // Used in DOR Add
 		AccountingForm form = (AccountingForm) billing.getForm();
 
 		billing.setCode(GeneratorHelper.instance().generate(TableType.BILLING, codeSequenceDao, billing.getDate()));
@@ -70,7 +73,6 @@ public class BillingService extends Service {
 		{
 			BillingReferenceItem reference = genericDao.load(BillingReferenceItem.class, item.getBillingReferenceItem().getId());
 			reference.setBilled(true);
-			reference.setReferenceUom(reference.getProduct().getUnitOfMeasure().getMeasureId());
 
 			genericDao.update(reference);
 
@@ -93,19 +95,23 @@ public class BillingService extends Service {
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    public FastMap<String,Object> preedit(Long id) throws Exception {
+	public FastMap<String, Object> preedit(Long id) throws Exception
+	{
 		FastMap<String, Object> map = new FastMap<String, Object>();
 		Billing billing = genericDao.load(Billing.class, id);
 		AccountingForm form = FormHelper.bind(AccountingForm.class, billing);
 		BillingAdapter adapter = new BillingAdapter(form.getBilling());
 
 		// Find DO Code for Print Out
-		for (BillingItem billingItem: billing.getItems()){
-			if (billingItem.getBillingReferenceItem().getReferenceId() != null) {
+		for (BillingItem billingItem : billing.getItems())
+		{
+			if (billingItem.getBillingReferenceItem().getReferenceId() != null && billing.getBillingType().getId().equals(BillingType.DELIVERY_ORDER_REALIZATION))
+			{
 				DeliveryOrderRealization dor = genericDao.load(DeliveryOrderRealization.class, billingItem.getBillingReferenceItem().getReferenceId());
-				for (DeliveryOrderRealizationItem dorItem: dor.getItems()){
-					if (dorItem.getDeliveryOrderItem().getDeliveryOrder().getCode() != null
-						&& !dorItem.getDeliveryOrderItem().getDeliveryOrder().getCode().isEmpty()) {
+				for (DeliveryOrderRealizationItem dorItem : dor.getItems())
+				{
+					if (dorItem.getDeliveryOrderItem().getDeliveryOrder().getCode() != null && !dorItem.getDeliveryOrderItem().getDeliveryOrder().getCode().isEmpty())
+					{
 						map.put("doCode", dorItem.getDeliveryOrderItem().getDeliveryOrder().getCode());
 						break;
 					}
@@ -115,15 +121,14 @@ public class BillingService extends Service {
 
 		// Get Active Organization BankAccount for Print Out
 		Set<PartyBankAccount> partyBankAccounts = billing.getOrganization().getPartyBankAccounts();
-		BankAccount activeBankAccount = partyBankAccounts.stream()
-				.filter(PartyBankAccount::isEnabled) // Filter hanya yang enabled
+		BankAccount activeBankAccount = partyBankAccounts.stream().filter(PartyBankAccount::isEnabled) // Filter hanya yang enabled
 				.map(PartyBankAccount::getBankAccount) // Ambil BankAccount dari PartyBankAccount
 				.filter(bankAccount -> bankAccount != null) // Pastikan BankAccount tidak null
 				.max(Comparator.comparing(Model::getCreatedDate)) // Ambil BankAccount dengan createdDate terbaru
 				.orElse(null);
 
 		String saidId = EnglishNumber.convertIdComma(adapter.getTotalBillingAmount().setScale(2, RoundingMode.HALF_UP));
-		
+
 		map.put("bankAccount", activeBankAccount);
 		map.put("billing_form", form);
 		map.put("billing_edit", adapter);
@@ -133,12 +138,13 @@ public class BillingService extends Service {
 	}
 
 	@AuditTrails(className = Billing.class, actionType = AuditTrailsActionType.UPDATE)
-    public void edit(AccountingForm form) throws Exception {
-        form.getBilling().setUpdatedBy(getPerson());
-        form.getBilling().setUpdatedDate(DateHelper.now());
+	public void edit(AccountingForm form) throws Exception
+	{
+		form.getBilling().setUpdatedBy(getPerson());
+		form.getBilling().setUpdatedDate(DateHelper.now());
 
-        genericDao.update(form.getBilling()); // Update Billing Directly from JSP
-    }
+		genericDao.update(form.getBilling()); // Update Billing Directly from JSP
+	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> viewJson(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws ServiceException

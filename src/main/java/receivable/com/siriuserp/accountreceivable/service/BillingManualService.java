@@ -1,5 +1,16 @@
 package com.siriuserp.accountreceivable.service;
 
+import java.math.RoundingMode;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang.WordUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.siriuserp.accounting.dm.BankAccount;
 import com.siriuserp.accounting.form.AccountingForm;
 import com.siriuserp.accountreceivable.adapter.BillingAdapter;
@@ -34,154 +45,151 @@ import com.siriuserp.sdk.utility.EnglishNumber;
 import com.siriuserp.sdk.utility.FormHelper;
 import com.siriuserp.sdk.utility.GeneratorHelper;
 import com.siriuserp.sdk.utility.QueryFactory;
-import javolution.util.FastMap;
-import org.apache.commons.lang.WordUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.math.RoundingMode;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Set;
+import javolution.util.FastMap;
 
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class BillingManualService extends Service {
-    @Autowired
-    private GenericDao genericDao;
+public class BillingManualService extends Service
+{
+	@Autowired
+	private GenericDao genericDao;
 
-    @Autowired
-    private CodeSequenceDao codeSequenceDao;
+	@Autowired
+	private CodeSequenceDao codeSequenceDao;
 
-    @Autowired
-    private CurrencyDao currencyDao;
+	@Autowired
+	private CurrencyDao currencyDao;
 
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
-    {
-        FastMap<String, Object> map = new FastMap<String, Object>();
-        map.put("filterCriteria", filterCriteria);
-        map.put("billings", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("filterCriteria", filterCriteria);
+		map.put("billings", FilterAndPaging.filter(genericDao, QueryFactory.create(filterCriteria, queryclass)));
 
-        return map;
-    }
+		return map;
+	}
 
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    @InjectParty(keyName = "billing_form")
-    public Map<String, Object> preadd() {
-        FastMap<String, Object> map = new FastMap<String, Object>();
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	@InjectParty(keyName = "billing_form")
+	public Map<String, Object> preadd()
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		map.put("billing_form", new AccountingForm());
+		map.put("taxes", genericDao.loadAll(Tax.class));
+		map.put("currencys", genericDao.loadAll(Currency.class));
+		map.put("defaultCurrency", currencyDao.loadDefaultCurrency());
 
-        map.put("billing_form", new AccountingForm());
-        map.put("taxes", genericDao.loadAll(Tax.class));
-        map.put("currencys", genericDao.loadAll(Currency.class));
-        map.put("defaultCurrency", currencyDao.loadDefaultCurrency());
-        return map;
-    }
+		return map;
+	}
 
-    @AuditTrails(className = Billing.class, actionType = AuditTrailsActionType.CREATE)
-    public void add(Billing billing) throws ServiceException {
-        billing.setMoney(new Money());
-        billing.getMoney().setCurrency(billing.getForm().getCurrency());
-        billing.getMoney().setAmount(billing.getForm().getAmount());
-        billing.getMoney().setExchangeType(billing.getForm().getExchangeType());
-        billing.getMoney().setRate(billing.getForm().getRate());
+	@AuditTrails(className = Billing.class, actionType = AuditTrailsActionType.CREATE)
+	public void add(Billing billing) throws ServiceException
+	{
+		billing.setMoney(new Money());
+		billing.getMoney().setCurrency(billing.getForm().getCurrency());
+		billing.getMoney().setAmount(billing.getForm().getAmount());
+		billing.getMoney().setExchangeType(billing.getForm().getExchangeType());
+		billing.getMoney().setRate(billing.getForm().getRate());
 
-        billing.setCode(GeneratorHelper.instance().generate(TableType.BILLING, codeSequenceDao));
-        billing.setBillingType(genericDao.load(BillingType.class, BillingType.MANUAL));
+		billing.setCode(GeneratorHelper.instance().generate(TableType.BILLING, codeSequenceDao));
+		billing.setBillingType(genericDao.load(BillingType.class, BillingType.MANUAL));
 
-        billing.setUnpaid(billing.getForm().getAmount());
-        billing.setDueDate(DateHelper.plusDays(billing.getDate(), billing.getTerm()));
-        billing.setCreatedBy(getPerson());
-        billing.setCreatedDate(DateHelper.now());
+		billing.setUnpaid(billing.getForm().getAmount());
+		billing.setDueDate(DateHelper.plusDays(billing.getDate(), billing.getTerm()));
+		billing.setCreatedBy(getPerson());
+		billing.setCreatedDate(DateHelper.now());
 
-        // Looping Item
-        for (Item item : billing.getForm().getItems()) {
-            // TODO Copy from Billing form to Reference
-            BillingReferenceItem referenceItem = new BillingReferenceItem();
-            referenceItem.setMoney(new Money());
-            referenceItem.getMoney().setCurrency(billing.getForm().getCurrency());
-            referenceItem.getMoney().setAmount(item.getAmount());
-            referenceItem.getMoney().setExchangeType(billing.getForm().getExchangeType());
-            referenceItem.getMoney().setRate(billing.getForm().getRate());
+		// Looping Item
+		for (Item item : billing.getForm().getItems())
+		{
+			// TODO Copy from Billing form to Reference
+			BillingReferenceItem referenceItem = new BillingReferenceItem();
+			referenceItem.setMoney(new Money());
+			referenceItem.getMoney().setCurrency(billing.getForm().getCurrency());
+			referenceItem.getMoney().setAmount(item.getAmount());
+			referenceItem.getMoney().setExchangeType(billing.getForm().getExchangeType());
+			referenceItem.getMoney().setRate(billing.getForm().getRate());
 
-            referenceItem.setReferenceName("MANUAL");
-            referenceItem.setQuantity(item.getQuantity());
-            referenceItem.setReferenceUom(item.getProduct().getUnitOfMeasure().getMeasureId());
-            referenceItem.setOrganization(billing.getOrganization());
-            referenceItem.setCustomer(billing.getCustomer());
-            referenceItem.setReferenceType(BillingReferenceType.MANUAL);
-            referenceItem.setCreatedBy(getPerson());
-            referenceItem.setCreatedDate(DateHelper.now());
-            referenceItem.setTax(billing.getForm().getTax());
-            referenceItem.setProduct(item.getProduct());
-            referenceItem.setReferenceDate(billing.getDate());
+			referenceItem.setReferenceName("MANUAL");
+			referenceItem.setQuantity(item.getQuantity());
+			referenceItem.setOrganization(billing.getOrganization());
+			referenceItem.setCustomer(billing.getCustomer());
+			referenceItem.setReferenceType(BillingReferenceType.MANUAL);
+			referenceItem.setCreatedBy(getPerson());
+			referenceItem.setCreatedDate(DateHelper.now());
+			referenceItem.setTax(billing.getForm().getTax());
+			referenceItem.setProduct(item.getProduct());
+			referenceItem.setReferenceDate(billing.getDate());
 
-            referenceItem.setBilled(true);
-            BillingItem billingItem = new BillingItem();
-            billingItem.setBilling(billing);
-            billingItem.setBillingReferenceItem(referenceItem);
+			referenceItem.setBilled(true);
+			BillingItem billingItem = new BillingItem();
+			billingItem.setBilling(billing);
+			billingItem.setBillingReferenceItem(referenceItem);
 
-            billing.getItems().add(billingItem);
-        }
+			billing.getItems().add(billingItem);
+		}
 
+		// Set Billing Default Collecting Status
+		BillingCollectingStatus collecting = new BillingCollectingStatus();
+		collecting.setDueDate(billing.getDueDate());
+		collecting.setBilling(billing);
+		billing.setCollectingStatus(collecting);
 
-        // Set Billing Default Collecting Status
-        BillingCollectingStatus collecting = new BillingCollectingStatus();
-        collecting.setDueDate(billing.getDueDate());
-        collecting.setBilling(billing);
-        billing.setCollectingStatus(collecting);
+		genericDao.add(billing);
+	}
 
-        genericDao.add(billing);
-    }
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public FastMap<String, Object> preedit(Long id) throws Exception
+	{
+		FastMap<String, Object> map = new FastMap<String, Object>();
+		Billing billing = genericDao.load(Billing.class, id);
+		AccountingForm form = FormHelper.bind(AccountingForm.class, billing);
+		BillingAdapter adapter = new BillingAdapter(form.getBilling());
 
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    public FastMap<String,Object> preedit(Long id) throws Exception {
-        FastMap<String, Object> map = new FastMap<String, Object>();
-        Billing billing = genericDao.load(Billing.class, id);
-        AccountingForm form = FormHelper.bind(AccountingForm.class, billing);
-        BillingAdapter adapter = new BillingAdapter(form.getBilling());
+		// Find DO Code for Print Out
+		for (BillingItem billingItem : billing.getItems())
+		{
+			if (billingItem.getBillingReferenceItem().getReferenceId() != null)
+			{
+				DeliveryOrderRealization dor = genericDao.load(DeliveryOrderRealization.class, billingItem.getBillingReferenceItem().getReferenceId());
+				for (DeliveryOrderRealizationItem dorItem : dor.getItems())
+				{
+					if (dorItem.getDeliveryOrderItem().getDeliveryOrder().getCode() != null && !dorItem.getDeliveryOrderItem().getDeliveryOrder().getCode().isEmpty())
+					{
+						map.put("doCode", dorItem.getDeliveryOrderItem().getDeliveryOrder().getCode());
+						break;
+					}
+				}
+			}
+		}
 
-        // Find DO Code for Print Out
-        for (BillingItem billingItem: billing.getItems()){
-            if (billingItem.getBillingReferenceItem().getReferenceId() != null) {
-                DeliveryOrderRealization dor = genericDao.load(DeliveryOrderRealization.class, billingItem.getBillingReferenceItem().getReferenceId());
-                for (DeliveryOrderRealizationItem dorItem: dor.getItems()){
-                    if (dorItem.getDeliveryOrderItem().getDeliveryOrder().getCode() != null
-                            && !dorItem.getDeliveryOrderItem().getDeliveryOrder().getCode().isEmpty()) {
-                        map.put("doCode", dorItem.getDeliveryOrderItem().getDeliveryOrder().getCode());
-                        break;
-                    }
-                }
-            }
-        }
+		// Get Active Organization BankAccount for Print Out
+		Set<PartyBankAccount> partyBankAccounts = billing.getOrganization().getPartyBankAccounts();
+		BankAccount activeBankAccount = partyBankAccounts.stream().filter(PartyBankAccount::isEnabled) // Filter hanya yang enabled
+				.map(PartyBankAccount::getBankAccount) // Ambil BankAccount dari PartyBankAccount
+				.filter(bankAccount -> bankAccount != null) // Pastikan BankAccount tidak null
+				.max(Comparator.comparing(Model::getCreatedDate)) // Ambil BankAccount dengan createdDate terbaru
+				.orElse(null);
 
-        // Get Active Organization BankAccount for Print Out
-        Set<PartyBankAccount> partyBankAccounts = billing.getOrganization().getPartyBankAccounts();
-        BankAccount activeBankAccount = partyBankAccounts.stream()
-                .filter(PartyBankAccount::isEnabled) // Filter hanya yang enabled
-                .map(PartyBankAccount::getBankAccount) // Ambil BankAccount dari PartyBankAccount
-                .filter(bankAccount -> bankAccount != null) // Pastikan BankAccount tidak null
-                .max(Comparator.comparing(Model::getCreatedDate)) // Ambil BankAccount dengan createdDate terbaru
-                .orElse(null);
+		String saidId = EnglishNumber.convertIdComma(adapter.getTotalBillingAmount().setScale(2, RoundingMode.HALF_UP));
 
-        String saidId = EnglishNumber.convertIdComma(adapter.getTotalBillingAmount().setScale(2, RoundingMode.HALF_UP));
+		map.put("bankAccount", activeBankAccount);
+		map.put("billing_form", form);
+		map.put("billing_edit", adapter);
+		map.put("defaultCurrency", currencyDao.loadDefaultCurrency());
+		map.put("saidId", WordUtils.capitalizeFully(saidId));
 
-        map.put("bankAccount", activeBankAccount);
-        map.put("billing_form", form);
-        map.put("billing_edit", adapter);
-        map.put("defaultCurrency", currencyDao.loadDefaultCurrency());
-        map.put("saidId", WordUtils.capitalizeFully(saidId));
+		return map;
+	}
 
-        return map;
-    }
+	@AuditTrails(className = Billing.class, actionType = AuditTrailsActionType.UPDATE)
+	public void edit(Billing billing) throws ServiceException
+	{
+		billing.setUpdatedBy(getPerson());
+		billing.setUpdatedDate(DateHelper.now());
 
-    @AuditTrails(className = Billing.class, actionType = AuditTrailsActionType.UPDATE)
-    public void edit(Billing billing) throws ServiceException {
-        billing.setUpdatedBy(getPerson());
-        billing.setUpdatedDate(DateHelper.now());
-
-        genericDao.update(billing);
-    }
+		genericDao.update(billing);
+	}
 }

@@ -33,8 +33,12 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
+import com.siriuserp.accountreceivable.dm.BillingReferenceable;
+import com.siriuserp.accountreceivable.dm.BillingType;
+import com.siriuserp.accountreceivable.dm.Billingable;
 import com.siriuserp.sdk.dm.ApprovableBridge;
 import com.siriuserp.sdk.dm.CreditTerm;
+import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.JSONSupport;
 import com.siriuserp.sdk.dm.Model;
@@ -60,7 +64,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "sales_order")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class SalesOrder extends Model implements JSONSupport, ApprovableBridge
+public class SalesOrder extends Model implements JSONSupport, ApprovableBridge, Billingable
 {
 	private static final long serialVersionUID = -5053662637061845245L;
 
@@ -199,6 +203,58 @@ public class SalesOrder extends Model implements JSONSupport, ApprovableBridge
 	public String getUri()
 	{
 		return "salesorderpreedit.htm";
+	}
+
+	@Override
+	public Long getReferenceId()
+	{
+		return this.getId();
+	}
+
+	@Override
+	public Currency getCurrency()
+	{
+		return getMoney().getCurrency();
+	}
+
+	@Override
+	public Set<BillingReferenceable> getBillingReferenceables()
+	{
+		FastSet<BillingReferenceable> referenceables = new FastSet<BillingReferenceable>();
+
+		for (SalesOrderItem item : getItems())
+			referenceables.add(item);
+
+		return referenceables;
+	}
+
+	@Override
+	public Long getBillingType()
+	{
+		return BillingType.SALES_ORDER;
+	}
+
+	@Override
+	public boolean isBillingable()
+	{
+		if (getSalesType().equals(SalesType.STANDARD))
+		{
+			if (isDirectInvoice())
+				return true;
+			else
+				return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean isAutoReceipt()
+	{
+		if (getSalesType().equals(SalesType.STANDARD))
+			return false;
+
+		return true;
 	}
 
 	@Override

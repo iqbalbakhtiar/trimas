@@ -6,6 +6,7 @@
 package com.siriuserp.accountreceivable.dao;
 
 import com.siriuserp.accountreceivable.dm.Billing;
+import com.siriuserp.accountreceivable.dm.BillingReferenceType;
 import com.siriuserp.sdk.base.Dao;
 
 /**
@@ -16,5 +17,5 @@ import com.siriuserp.sdk.base.Dao;
 
 public interface BillingDao extends Dao<Billing>
 {
-	public Billing getBillingByReference(Long referenceId);
+	public Billing getBillingByReference(Long referenceId, BillingReferenceType referenceType);
 }

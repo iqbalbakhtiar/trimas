@@ -123,6 +123,14 @@
 										<td width="20%">:&nbsp;&nbsp;<input id="totalSales" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
 									</tr>
 									<tr>
+										<td width="80%" align="right"><spring:message code="standardsalesorder.totaldiscount"/></td>
+										<td width="20%">:&nbsp;&nbsp;<input id="totalDiscount" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
+									</tr>
+									<tr>
+										<td width="80%" align="right"><spring:message code="salesorder.amount.beforetax"/></td>
+										<td width="20%">:&nbsp;&nbsp;<input id="totalBeforeTax" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
+									</tr>
+									<tr>
 										<td width="80%" align="right"><spring:message code="salesorder.tax.amount"/></td>
 										<td width="20%">:&nbsp;&nbsp;<input id="totalTax" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
 									</tr>
@@ -470,42 +478,36 @@ function updateDisplay() {
 	var taxRate = Number.parse($('#tax option:selected').data('taxrate')) || 0;
 	$('#taxRate').val(taxRate ? taxRate.toFixed(2) : '');
 
-	// Inisialisasi total
-	var totalSales = 0, totalDiscount = 0, totalBeforeTax = 0;
+	let totalSales = 0;
+	let totalDiscount = 0;
 
-	// Fungsi helper untuk mendapatkan nilai numerik
-	function getNumericValue($input) {
-		return $input.val().toNumber() || 0;
-	}
+	$('#lineItem tr').each(function () {
+		const idx = $(this).find('[name^="items["]').first().attr('index');
+		if (!idx) return;
 
-	// Update setiap line item
-	$('#lineItem tr').each(function(){
-		var $row = $(this);
+		const qty = parseFloat($('#quantity\\[' + idx + '\\]').val().toNumber());
+		const price = parseFloat($('#amount\\[' + idx + '\\]').val().toNumber());
+		const disc = parseFloat($('#discount\\[' + idx + '\\]').val().toNumber());
 
-		var qty = getNumericValue($row.find('input[id^="quantity["]'));
-		var price = getNumericValue($row.find('input[id^="amount["]'));
-		var disc = getNumericValue($row.find('input[id^="discount["]'));
+		const lineTotal = qty * price;
+		const lineDisc = qty * disc;
+		const finalAmount = lineTotal - lineDisc;
 
-		var amount = qty * price;
-		var amountDisc = qty * disc;
-		var totalAmount = amount;
+		totalSales += lineTotal;
+		totalDiscount += lineDisc;
 
-		totalSales += amount;
-		totalBeforeTax += totalAmount;
-
-		// Mengatur nilai terformat menggunakan numberFormat
-		$row.find('input[id^="amountInput["]').val(amount.numberFormat('#,##0.00'));
-		$row.find('input[id^="totalDisc["]').val(amountDisc.numberFormat('#,##0.00'));
-		$row.find('input[id^="totalAmount["]').val(totalAmount.numberFormat('#,##0.00'));
+		$('#totalDisc\\[' + idx + '\\]').val(lineDisc.numberFormat('#,##0.00'));
+		$('#totalAmount\\[' + idx + '\\]').val(finalAmount.numberFormat('#,##0.00'));
 	});
 
-	// Menghitung totalTax dan totalTransaction
-	var totalTax = totalBeforeTax * (taxRate / 100);
-	var totalTransaction = totalBeforeTax + totalTax;
+	const amountBeforeTax = totalSales - totalDiscount;
+	const taxAmount = (amountBeforeTax * taxRate) / 100;
+	const totalTransaction = amountBeforeTax + taxAmount;
 
 	$('#totalSales').val(totalSales.numberFormat('#,##0.00'));
-	$('#totalBeforeTax').val(totalBeforeTax.numberFormat('#,##0.00'));
-	$('#totalTax').val(totalTax.numberFormat('#,##0.00'));
+	$('#totalDiscount').val(totalDiscount.numberFormat('#,##0.00'));
+	$('#totalBeforeTax').val(amountBeforeTax.numberFormat('#,##0.00'));
+	$('#totalTax').val(taxAmount.numberFormat('#,##0.00'));
 	$('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
 }
 
