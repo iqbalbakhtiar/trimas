@@ -466,7 +466,7 @@
 
 	        $recapTable.append(
 	            '<tr>' +
-	                '<td><input class="input" size="45" type="text" style="text-align:left;" value="'+data.name+'" readonly></td>' +
+	            	'<td align="left" width="70%">'+data.name+'</td>' +
 	                '<td><input size="8" class="input-disabled" type="text" style="text-align:right;" value="'+data.roll+'" readonly></td>' +
 	                '<td><input size="8" class="input-disabled" type="text" style="text-align:right;" value="'+data.meter.numberFormat('#,##0.00')+'" readonly></td>' +
 	            '</tr>'

@@ -79,12 +79,12 @@
 						</table>
 						<table width="100%">
 							<tr>
-								<th width="75%">&nbsp;</th>
-								<th style="text-align:right; padding:4px 14px;" width="25%"><spring:message code="sirius.qty"/>&nbsp;</th>
+								<th width="70%">&nbsp;</th>
+								<th style="text-align:right; padding:4px 14px;" width="30%"><spring:message code="sirius.qty"/>&nbsp;</th>
 							</tr>
 							<tr>
-								<td align="right"><spring:message code="sirius.total"/> :</td>
-								<td><input id="totalQty" value="<fmt:formatNumber value='${receiptManual_edit.totalQuantity}' pattern=',##0.00'/>"
+								<td width="80%" align="right"><spring:message code="sirius.total"/> :</td>
+								<td style="text-align:right; padding:4px 14px;" width="30%"><input id="totalQty" value="<fmt:formatNumber value='${receiptManual_edit.totalQuantity}' pattern=',##0.00'/>"
 									class="number-disabled" disabled size="15" /></td>
 							</tr>
 						</table>
@@ -270,7 +270,7 @@
 	    $.each(recap, function(product, data){
 	        $recapBody.append(
 	            '<tr>' +
-	                '<td><input class="input" size="45" type="text" style="text-align:left;" value="'+product+'" readonly></td>' +
+	                '<td width="70%">'+product+'</td>' +
 	                '<td><input size="8" class="input-disabled" type="text" style="text-align:right;" value="'+data.roll+'" readonly></td>' +
 	                '<td><input size="8" class="input-disabled" type="text" style="text-align:right;" value="'+data.meter.toFixed(2)+'" readonly></td>' +
 	            '</tr>'
