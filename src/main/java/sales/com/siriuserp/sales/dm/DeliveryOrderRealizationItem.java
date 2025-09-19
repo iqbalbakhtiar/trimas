@@ -25,6 +25,9 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
+import com.siriuserp.accountreceivable.dm.BillingReferenceType;
+import com.siriuserp.accountreceivable.dm.BillingReferenceable;
+import com.siriuserp.accountreceivable.dm.BillingableItemType;
 import com.siriuserp.inventory.dm.Reservable;
 import com.siriuserp.inventory.dm.WarehouseReferenceItem;
 import com.siriuserp.inventory.dm.WarehouseTransaction;
@@ -49,7 +52,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "delivery_order_realization_item")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class DeliveryOrderRealizationItem extends WarehouseReferenceItem implements Reservable, Comparable<DeliveryOrderRealizationItem>
+public class DeliveryOrderRealizationItem extends WarehouseReferenceItem implements Reservable, Comparable<DeliveryOrderRealizationItem>, BillingReferenceable
 {
 	private static final long serialVersionUID = 3807540226776848698L;
 
@@ -143,5 +146,20 @@ public class DeliveryOrderRealizationItem extends WarehouseReferenceItem impleme
 			return getAccepted();
 
 		return BigDecimal.ZERO;
+	}
+
+	@Override
+	public BillingReferenceType getBillingReferenceType()
+	{
+		return BillingReferenceType.DELIVERY_ORDER_REALIZATION;
+	}
+
+	@Override
+	public BillingableItemType getBillingableItemType()
+	{
+		if (getDeliveryOrderItem().getDeliveryItemType().equals(DeliveryOrderItemType.BASE))
+			return BillingableItemType.BASE;
+
+		return BillingableItemType.SERIAL;
 	}
 }

@@ -33,7 +33,7 @@ public class BillingAdapter extends AbstractUIAdapter
 				BillingReferenceItem refItem = item.getBillingReferenceItem();
 				if (refItem != null)
 				{
-					BigDecimal itemTotal = refItem.getTotalAmount();
+					BigDecimal itemTotal = refItem.getSubtotal();
 					totalLineAmount = totalLineAmount.add(itemTotal);
 				}
 			}
@@ -45,26 +45,16 @@ public class BillingAdapter extends AbstractUIAdapter
 	/* Method Calculation For Billing Pre-edit */
 	public BigDecimal getTaxAmount()
 	{
-		BigDecimal totalLineAmount = getTotalLineAmount();
-
-		if (billing == null || billing.getTax() == null || billing.getTax().getTaxRate() == null)
-			return BigDecimal.ZERO;
-
 		BigDecimal taxRate = billing.getTax().getTaxRate();
-
-		if (totalLineAmount == null || taxRate == null)
-			return BigDecimal.ZERO;
-
-		// Calculate tax amount: (TotalLineAmount * TaxRate) / 100
-		return totalLineAmount.multiply(taxRate).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
+		return getTotalAfterDiscount().multiply(taxRate).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
 	}
 
 	public BigDecimal getTotalAfterTax()
 	{
-		return this.getTotalLineAmount().add(getTaxAmount());
+		return this.getTotalAfterDiscount().add(getTaxAmount());
 	}
 
-	// TODO: Mendapatkan Total Credit Memo dari Billing terkait apabila CreditMemo sudah dimplementasikan
+	//Mendapatkan Total Credit Memo dari Billing terkait apabila CreditMemo sudah dimplementasikan
 	public BigDecimal getTotalCreditMemo()
 	{
 		return BigDecimal.ZERO;
@@ -96,11 +86,7 @@ public class BillingAdapter extends AbstractUIAdapter
 			{
 				BillingReferenceItem refItem = item.getBillingReferenceItem();
 				if (refItem != null)
-				{
-					BigDecimal discountAmount = refItem.getDiscountAmount();
-					if (discountAmount != null)
-						totalDiscount = totalDiscount.add(discountAmount);
-				}
+					totalDiscount = totalDiscount.add(refItem.getDiscount().multiply(refItem.getQuantity()));
 			}
 		}
 
@@ -120,7 +106,7 @@ public class BillingAdapter extends AbstractUIAdapter
 			{
 				BillingReferenceItem refItem = item.getBillingReferenceItem();
 				if (refItem != null)
-					totalAfterDiscount = totalAfterDiscount.add(refItem.getTotalAmount());
+					totalAfterDiscount = totalAfterDiscount.add(refItem.getTotalAfterDiscount());
 			}
 		}
 

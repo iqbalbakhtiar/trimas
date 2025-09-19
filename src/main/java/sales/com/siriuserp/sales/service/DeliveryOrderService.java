@@ -20,6 +20,7 @@ import com.siriuserp.sales.dm.DeliveryOrderItem;
 import com.siriuserp.sales.dm.DeliveryOrderItemType;
 import com.siriuserp.sales.dm.DeliveryOrderReferenceItem;
 import com.siriuserp.sales.dm.SOStatus;
+import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sales.dm.SalesOrderItem;
 import com.siriuserp.sales.form.SalesForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
@@ -41,6 +42,7 @@ import com.siriuserp.sdk.utility.SiriusValidator;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import javolution.util.FastSet;
 
 /**
  * @author Iqbal Bakhtiar
@@ -111,6 +113,7 @@ public class DeliveryOrderService extends Service
 		SalesForm form = (SalesForm) deliveryOrder.getForm();
 		deliveryOrder.setCode(GeneratorHelper.instance().generate(TableType.DELIVERY_ORDER, codeSequenceDao, deliveryOrder.getDate()));
 
+		FastSet<Long> salesIds = new FastSet<Long>();
 		List<Item> baseItems = new FastList<Item>();
 		List<Item> serialItems = new FastList<Item>();
 
@@ -147,6 +150,8 @@ public class DeliveryOrderService extends Service
 
 			genericDao.update(salesItem);
 
+			salesIds.add(salesItem.getSalesOrder().getId());
+
 			deliveryOrder.getItems().add(baseItem);
 
 			for (Item sItem : serialItems)
@@ -174,6 +179,14 @@ public class DeliveryOrderService extends Service
 		}
 
 		genericDao.add(deliveryOrder);
+
+		for (Long salesId : salesIds)
+		{
+			SalesOrder salesOrder = genericDao.load(SalesOrder.class, salesId);
+			salesOrder.setSoStatus(SOStatus.DELIVERED);
+
+			genericDao.update(salesOrder);
+		}
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
