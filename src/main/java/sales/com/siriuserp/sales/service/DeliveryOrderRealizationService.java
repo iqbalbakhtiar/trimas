@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.siriuserp.accountreceivable.dao.BillingDao;
+import com.siriuserp.accountreceivable.dm.BillingReferenceType;
 import com.siriuserp.inventory.dao.InventoryItemDao;
 import com.siriuserp.inventory.dm.InventoryItem;
 import com.siriuserp.inventory.dm.WarehouseTransactionType;
@@ -171,7 +172,7 @@ public class DeliveryOrderRealizationService extends Service
 		FastMap<String, Object> map = new FastMap<>();
 		map.put("realization_form", form);
 		map.put("realization_edit", form.getDeliveryOrderRealization());
-		map.put("billing", billingDao.getBillingByReference(id));
+		map.put("billing", billingDao.getBillingByReference(id, BillingReferenceType.DELIVERY_ORDER_REALIZATION));
 
 		return map;
 	}

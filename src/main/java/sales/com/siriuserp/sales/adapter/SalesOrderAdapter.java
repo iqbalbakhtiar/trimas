@@ -35,6 +35,7 @@ public class SalesOrderAdapter extends AbstractUIAdapter
 			item.put("quantity", salesOrderItem.getQuantity());
 			item.put("amount", salesOrderItem.getMoney().getAmount());
 			item.put("discount", salesOrderItem.getDiscount());
+			item.put("discountPercent", salesOrderItem.getDiscountPercent());
 			item.put("priceNett", getPriceNett(salesOrderItem));
 			item.put("subTotal", getSubTotal(salesOrderItem));
 			item.put("note", salesOrderItem.getNote());
@@ -48,39 +49,47 @@ public class SalesOrderAdapter extends AbstractUIAdapter
 	// PriceNett = Price - Discount
 	private BigDecimal getPriceNett(SalesOrderItem item)
 	{
-		BigDecimal discountAmount = item.getMoney().getAmount().multiply(item.getDiscount()).divide(BigDecimal.valueOf(100));
-		return item.getMoney().getAmount().subtract(discountAmount);
+		return item.getMoney().getAmount().subtract(item.getDiscount());
 	}
 
 	// SubTotal = PriceNett * Quantity
 	private BigDecimal getSubTotal(SalesOrderItem item)
 	{
-		return getPriceNett(item).multiply(item.getQuantity());
+		return item.getMoney().getAmount().multiply(item.getQuantity());
 	}
 
-	// TotalAmount = Sum of all SubTotals
 	public BigDecimal getTotalAmount()
 	{
-		return salesOrder.getItems().stream().map(this::getSubTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
-	}
-
-	public BigDecimal getTotalItemAmount()
-	{
-		BigDecimal total = BigDecimal.ZERO;
+		BigDecimal amount = BigDecimal.ZERO;
 
 		for (SalesOrderItem item : getSalesOrder().getItems())
-			total = total.add(getSubTotal(item));
+			amount = amount.add(getSubTotal(item));
 
-		return total;
+		return amount;
+	}
+
+	public BigDecimal getTotalDiscount()
+	{
+		BigDecimal amount = BigDecimal.ZERO;
+
+		for (SalesOrderItem item : getSalesOrder().getItems())
+			amount = amount.add(item.getDiscount().multiply(item.getQuantity()));
+
+		return amount;
+	}
+
+	public BigDecimal getTotalAfterDiscount()
+	{
+		return getTotalAmount().subtract(getTotalDiscount());
 	}
 
 	public BigDecimal getTaxAmount()
 	{
-		return getTotalItemAmount().multiply(getSalesOrder().getTax().getTaxRate().divide(BigDecimal.valueOf(100)));
+		return getTotalAfterDiscount().multiply(getSalesOrder().getTax().getTaxRate().divide(BigDecimal.valueOf(100)));
 	}
 
 	public BigDecimal getTotalTransaction()
 	{
-		return getTotalItemAmount().add(getTaxAmount());
+		return getTotalAfterDiscount().add(getTaxAmount());
 	}
 }

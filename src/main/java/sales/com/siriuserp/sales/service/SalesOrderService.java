@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.siriuserp.accountreceivable.dao.BillingDao;
+import com.siriuserp.accountreceivable.dm.BillingReferenceType;
 import com.siriuserp.sales.adapter.SalesOrderAdapter;
 import com.siriuserp.sales.dao.SalesOrderItemDao;
 import com.siriuserp.sales.dm.ApprovableType;
@@ -65,6 +67,9 @@ public class SalesOrderService extends Service
 	private CodeSequenceDao codeSequenceDao;
 
 	@Autowired
+	private BillingDao billingDao;
+
+	@Autowired
 	private DeliveryPlanningService planningService;
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
@@ -91,6 +96,7 @@ public class SalesOrderService extends Service
 	}
 
 	@AuditTrails(className = SalesOrder.class, actionType = AuditTrailsActionType.CREATE)
+	@AutomaticSibling(roles = "AddBillingSiblingRole")
 	public void add(SalesOrder salesOrder) throws Exception
 	{
 		SalesForm form = (SalesForm) salesOrder.getForm();
@@ -130,6 +136,7 @@ public class SalesOrderService extends Service
 				salesOrderItem.setProduct(item.getProduct());
 				salesOrderItem.setQuantity(item.getQuantity());
 				salesOrderItem.setDiscount(item.getDiscount());
+				salesOrderItem.setDiscountPercent(item.getDiscountPercent());
 				salesOrderItem.setNote(item.getNote());
 				salesOrderItem.setSalesOrder(salesOrder);
 
@@ -161,6 +168,7 @@ public class SalesOrderService extends Service
 		map.put("approvalDecisionStatuses", ApprovalDecisionStatus.values());
 		map.put("approvalDecision", salesForm.getSalesOrder().getApprovable() != null ? salesForm.getSalesOrder().getApprovable().getApprovalDecision() : null);
 		map.put("adapter", adapter);
+		map.put("billing", billingDao.getBillingByReference(id, BillingReferenceType.SALES_ORDER));
 
 		return map;
 	}
