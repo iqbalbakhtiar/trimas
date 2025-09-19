@@ -122,7 +122,7 @@
 							<table width="100%" style="border: none">
 							<c:if test="${not empty billing}">
 								<tr>
-									<th align="right" class="highlight">Billing</th>
+									<th align="right" class="highlight"><spring:message code="billing"/></th>
 								</tr>
 								<tr>
 									<td align="right"><a href="<c:url value='/page/billingpreedit.htm?id=${billing.id}'/>"><c:out value='${billing.code}'/></a></td>

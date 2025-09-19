@@ -26,6 +26,9 @@ import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
 
+import com.siriuserp.accountreceivable.dm.BillingReferenceable;
+import com.siriuserp.accountreceivable.dm.BillingType;
+import com.siriuserp.accountreceivable.dm.Billingable;
 import com.siriuserp.inventory.dm.GoodsIssue;
 import com.siriuserp.inventory.dm.Issueable;
 import com.siriuserp.sdk.dm.Currency;
@@ -47,9 +50,8 @@ import lombok.Setter;
 @Entity
 @Table(name = "delivery_order_realization")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class DeliveryOrderRealization extends Model implements JSONSupport, Issueable
+public class DeliveryOrderRealization extends Model implements JSONSupport, Issueable, Billingable
 {
-
 	private static final long serialVersionUID = -1654445314172791626L;
 
 	@Column(name = "code")
@@ -138,12 +140,6 @@ public class DeliveryOrderRealization extends Model implements JSONSupport, Issu
 	}
 
 	@Override
-	public String getAuditCode()
-	{
-		return id + "," + code;
-	}
-
-	@Override
 	public Set<DeliveryOrderRealizationItem> getIssueables()
 	{
 		return getItems();
@@ -198,4 +194,46 @@ public class DeliveryOrderRealization extends Model implements JSONSupport, Issu
 	{
 		return getItems().stream().filter(item -> item.getDeliveryOrderItem().getDeliveryOrder() != null).findFirst().get().getDeliveryOrderItem().getDeliveryOrder();
 	}
+
+	@Override
+	public Long getBillingType()
+	{
+		return BillingType.DELIVERY_ORDER_REALIZATION;
+	}
+
+	@Override
+	public Long getReferenceId()
+	{
+		return this.getId();
+	}
+
+	@Override
+	public Set<BillingReferenceable> getBillingReferenceables()
+	{
+		FastSet<BillingReferenceable> referenceables = new FastSet<BillingReferenceable>();
+
+		for (DeliveryOrderRealizationItem item : getItems())
+			referenceables.add(item);
+
+		return referenceables;
+	}
+
+	@Override
+	public boolean isBillingable()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean isAutoReceipt()
+	{
+		return false;
+	}
+
+	@Override
+	public String getAuditCode()
+	{
+		return id + "," + code;
+	}
+
 }

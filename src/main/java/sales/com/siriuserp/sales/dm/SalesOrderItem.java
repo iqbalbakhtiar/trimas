@@ -25,6 +25,9 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
+import com.siriuserp.accountreceivable.dm.BillingReferenceType;
+import com.siriuserp.accountreceivable.dm.BillingReferenceable;
+import com.siriuserp.accountreceivable.dm.BillingableItemType;
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.sdk.dm.Lot;
 import com.siriuserp.sdk.dm.Model;
@@ -47,7 +50,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "sales_order_item")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class SalesOrderItem extends Model implements DeliveryOrderReferenceable
+public class SalesOrderItem extends Model implements DeliveryOrderReferenceable, BillingReferenceable
 {
 	private static final long serialVersionUID = -2172781865197634218L;
 
@@ -71,6 +74,9 @@ public class SalesOrderItem extends Model implements DeliveryOrderReferenceable
 
 	@Column(name = "discount")
 	private BigDecimal discount = BigDecimal.ZERO;
+
+	@Column(name = "discount_percent")
+	private BigDecimal discountPercent = BigDecimal.ZERO;
 
 	@Column(name = "note")
 	private String note;
@@ -106,6 +112,18 @@ public class SalesOrderItem extends Model implements DeliveryOrderReferenceable
 	public DeliveryOrderReferenceType getReferenceType()
 	{
 		return DeliveryOrderReferenceType.SALES_ORDER;
+	}
+
+	@Override
+	public BillingReferenceType getBillingReferenceType()
+	{
+		return BillingReferenceType.SALES_ORDER;
+	}
+
+	@Override
+	public BillingableItemType getBillingableItemType()
+	{
+		return BillingableItemType.BASE;
 	}
 
 	// (Qty * Amount)

@@ -15,24 +15,26 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "billing_type")
-public class BillingType extends Model {
+public class BillingType extends Model
+{
+	private static final long serialVersionUID = 1725317245148646705L;
 
-    private static final long serialVersionUID = 1725317245148646705L;
+	public static final Long DELIVERY_ORDER_REALIZATION = Long.valueOf(1);
+	public static final Long MANUAL = Long.valueOf(2);
+	public static final Long SALES_ORDER = Long.valueOf(3);
 
-    public static final Long DELIVERY_ORDER_REALIZATION = Long.valueOf(1);
-    public static final Long MANUAL = Long.valueOf(2);
+	@Column(name = "code")
+	private String code;
 
-    @Column(name = "code")
-    private String code;
+	@Column(name = "name")
+	private String name;
 
-    @Column(name = "name")
-    private String name;
+	@Column(name = "url")
+	private String url;
 
-    @Column(name = "url")
-    private String url;
-
-    @Override
-    public String getAuditCode() {
-        return id + "," + code;
-    }
+	@Override
+	public String getAuditCode()
+	{
+		return id + "," + code;
+	}
 }

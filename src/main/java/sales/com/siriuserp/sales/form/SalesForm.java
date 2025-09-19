@@ -60,4 +60,6 @@ public class SalesForm extends Form
 	private PostalAddress shippingAddress;
 
 	private SOStatus soStatus;
+
+	private boolean directInvoice = false;
 }

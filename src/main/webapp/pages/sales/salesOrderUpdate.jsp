@@ -6,7 +6,7 @@
 	<c:if test="${approvalDecision.approvalDecisionStatus eq 'APPROVE_AND_FINISH' and salesOrder_edit.soStatus ne 'CLOSE' and salesOrder_edit.soStatus ne 'CANCELED'}">
 		<a class="item-button-close close"><span><spring:message code="sirius.close"/></span></a>
 	</c:if>
-	<c:if test="${salesOrder_edit.soStatus ne 'CLOSE' and salesOrder_edit.soStatus ne 'CANCELED'}">
+	<c:if test="${salesOrder_edit.soStatus eq 'OPEN' or salesOrder_edit.soStatus eq 'PLANNING'}">
 		<a class="item-button-close canceled"><span><spring:message code="sirius.canceled"/></span></a>
 	</c:if>
 </div>
@@ -49,9 +49,28 @@
 					<td>
 						<form:select id="customer" path="customer" cssClass="combobox-ext input-disabled" disabled="true">
 							<c:if test='${not empty salesOrder_edit.customer}'>
-								<form:option value="${salesOrder_edit.customer.id}">${salesOrder_edit.customer.code} ${salesOrder_edit.customer.fullName}</form:option>
+								<form:option value="${salesOrder_edit.customer.id}">${salesOrder_edit.customer.fullName}</form:option>
 							</c:if>
 						</form:select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right"><spring:message code="salesperson"/></td>
+					<td width="1%" align="center">:</td>
+					<td>
+						<form:select id="salesPerson" path="salesPerson" cssClass="combobox-ext input-disabled" disabled="true">
+							<c:if test='${not empty salesOrder_edit.salesPerson}'>
+								<form:option value="${salesOrder_edit.salesPerson.id}">${salesOrder_edit.salesPerson.fullName}</form:option>
+							</c:if>
+						</form:select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right"><spring:message code="salesorder.invoice"/></td>
+	              	<td width="1%" align="center">:</td>
+					<td>
+						<form:radiobutton id="invoiceTrue" path="directInvoice" value="true" disabled="true"/><spring:message code="salesorder.invoice.direct"/>
+						<form:radiobutton id="invoiceFalse" path="directInvoice" value="false" disabled="true"/><spring:message code="salesorder.invoice.delivery"/>	
 					</td>
 				</tr>
 				<tr>
@@ -106,7 +125,6 @@
 				</tr>
 				</table>
 			</td>
-			
 			<td width="40%" valign="top">
 				<table width="100%" style="border: none">
 					<tr>
@@ -120,10 +138,57 @@
 											<c:if test="${salesOrder_edit.soStatus eq 'CLOSE' or salesOrder_edit.soStatus eq 'CANCELED'}"><div style="color: red;"><spring:message code="salesorder.status.${salesOrder_edit.soStatus.messageName}"/></div></c:if>
 											<c:if test="${salesOrder_edit.soStatus eq 'PLANNING'}"><div style="color: blue;"><spring:message code="salesorder.status.${salesOrder_edit.soStatus.messageName}"/></div></c:if>
 											<c:if test="${salesOrder_edit.soStatus eq 'OPEN'}"><div style="color: green;"><spring:message code="salesorder.status.${salesOrder_edit.soStatus.messageName}"/></div></c:if>
+											<c:if test="${salesOrder_edit.soStatus eq 'DELIVERED'}"><div style="color: green;"><spring:message code="salesorder.status.${salesOrder_edit.soStatus.messageName}"/></div></c:if>
 											</h1>
-											<strong><a href="<c:url value='/page/deliveryplanningpreedit.htm?id=${salesOrder_edit.deliveryPlanning.id}'/>">${salesOrder_edit.deliveryPlanning.code}</a></strong>
 										</td>
 									</tr>
+								</table>
+							</fieldset>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<fieldset>
+								<legend><strong><spring:message code="sirius.reference"/></strong></legend>
+								<table width="100%" style="border: none">
+									<tr>
+										<th align="right" class="highlight"><spring:message code="deliveryplanning"/></th>
+									</tr>
+									<tr>
+										<td align="right"><a href="<c:url value='/page/deliveryplanningpreedit.htm?id=${salesOrder_edit.deliveryPlanning.id}'/>"><c:out value='${salesOrder_edit.deliveryPlanning.code}'/></a></td>
+									</tr>
+									<tr><td colspan="2">&nbsp;</td></tr>
+									<tr>
+										<th align="right" class="highlight"><spring:message code="deliveryorder"/></th>
+									</tr>
+									<c:forEach items="${salesOrder_edit.deliveryPlanning.sequences}" var="seq">
+										<c:forEach items="${seq.deliveryOrders}" var="delivery">
+										<tr>
+											<td align="right"><a href="<c:url value='/page/deliveryorderpreedit.htm?id=${delivery.id}'/>"><c:out value='${delivery.code}'/></a></td>
+										</tr>
+										</c:forEach>
+									</c:forEach>
+									<tr><td colspan="2">&nbsp;</td></tr>
+									<tr>
+										<th align="right" class="highlight"><spring:message code="deliveryrealization"/></th>
+									</tr>
+									<c:forEach items="${salesOrder_edit.deliveryPlanning.sequences}" var="seq">
+										<c:forEach items="${seq.deliveryOrders}" var="delivery">
+										<tr>
+											<td align="right"><a href="<c:url value='/page/deliveryorderrealizationpreedit.htm?id=${delivery.deliveryOrderRealization.id}'/>"><c:out value='${delivery.deliveryOrderRealization.code}'/></a></td>
+										</tr>
+										</c:forEach>
+									</c:forEach>
+									<tr><td colspan="2">&nbsp;</td></tr>
+									<c:if test="${not empty billing}">
+									<tr>
+										<th align="right" class="highlight"><spring:message code="billing"/></th>
+									</tr>
+									<tr>
+										<td align="right"><a href="<c:url value='/page/billingpreedit.htm?id=${billing.id}'/>"><c:out value='${billing.code}'/></a></td>
+									</tr>
+									<tr><td colspan="2">&nbsp;</td></tr>
+									</c:if>
 								</table>
 							</fieldset>
 						</td>
@@ -134,16 +199,24 @@
 								<legend><strong><spring:message code="salesorder.recapitulation"/></strong></legend>
 								<table width="100%" style="border: none">
 									<tr>
-										<td width="80%" align="right"><spring:message code="salesorder.total"/></td>
-										<td width="20%">:&nbsp;&nbsp;<input id="totalSales" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
+										<td width="80%" align="right"><spring:message code="salesorder.total"/> :</td>
+										<td width="20%"><input id="totalSales" value="<fmt:formatNumber value='${adapter.totalAmount}' pattern='#,##0.00'/>" class="number-disabled" readonly="readonly" size="20"/></td>
 									</tr>
 									<tr>
-										<td width="80%" align="right"><spring:message code="salesorder.tax.amount"/></td>
-										<td width="20%">:&nbsp;&nbsp;<input id="totalTax" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
+										<td width="80%" align="right"><spring:message code="salesorder.total.discount"/> :</td>
+										<td width="20%"><input id="totalDiscount" value="<fmt:formatNumber value='${adapter.totalDiscount}' pattern='#,##0.00'/>" class="number-disabled" readonly="readonly" size="20"/></td>
 									</tr>
 									<tr>
-										<td width="80%" align="right"><strong><spring:message code="salesorder.total.transaction"/></strong></td>
-										<td width="20%">:&nbsp;&nbsp;<input id="totalTransaction" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
+										<td width="80%" align="right"><spring:message code="salesorder.total.afterdiscount"/> :</td>
+										<td width="20%"><input id="totalAfterDiscount" value="<fmt:formatNumber value='${adapter.totalAfterDiscount}' pattern='#,##0.00'/>" class="number-disabled" readonly="readonly" size="20"/></td>
+									</tr>
+									<tr>
+										<td width="80%" align="right"><spring:message code="salesorder.total.tax"/> :</td>
+										<td width="20%"><input id="taxAmount" value="<fmt:formatNumber value='${adapter.taxAmount}' pattern='#,##0.00'/>" class="number-disabled" readonly="readonly" size="20"/></td>
+									</tr>
+									<tr>
+										<td width="80%" align="right"><strong><spring:message code="salesorder.total.transaction"/> :</strong></td>
+										<td width="20%"><input id="totalTransaction" value="<fmt:formatNumber value='${adapter.totalTransaction}' pattern='#,##0.00'/>" class="number-disabled" readonly="readonly" size="20"/></td>
 									</tr>
 								</table>
 							</fieldset>
@@ -260,31 +333,9 @@ $(function(){
 	updateDisplay();
 	
 	$('.item-button-save').click(function(){
-		if(validateForm()) {
-			save();
-		}
+		save();
 	});
 	
-	$('.item-button-new').click(function() {
-		addLine($index);
-		$index++;
-	});
-	
-	$('.checkall').click(function () {
-        $('.check').prop("checked", this.checked);
-    });
-	
-	$('.item-button-delete').click(function () {
-        $('.check').each(function(){
-            if(this.checked){
-                this.checked = false;
-                $(this).parent().parent().remove();
-                updateDisplay();
-            }
-        });
-        $('.checkall').prop("checked", false);
-    });
-
 	$('.item-button-print').click(function(){
 		printSO();
 	});
@@ -326,53 +377,6 @@ $(function(){
 	});
 });
 
-function validateForm() {
- 	// **Tambahkan validasi untuk memastikan setidaknya ada satu line item**
-    if ($('#lineItem tr').length === 0) {
-        alert('<spring:message code="notif.add"/> <spring:message code="salesorder.lineitem"/> <spring:message code="notif.select2"/> !');
-        return false;
-    }
-
-    // Validasi Line Items
-    var isValid = true;
-    $('#lineItem tr').each(function(index){
-        var $row = $(this);
-        
-        // Validasi product
-        var product = $row.find('input[id^="product["]').val();
-        if (product == null || product === "") {
-            alert('<spring:message code="product"/> <spring:message code="notif.empty"/> ! (<spring:message code="salesorder.lineitem"/> ' + (index + 1) + ')');
-            isValid = false;
-            return false; // Keluar dari each
-        }
-
-        // Validasi quantity
-        var qtyStr = $row.find('input[id^="quantity["]').val().replace(/,/g, '');
-        var qty = parseFloat(qtyStr);
-        if (isNaN(qty) || qty <= 0) {
-            alert('<spring:message code="sirius.qty"/> <spring:message code="notif.empty"/> ! (<spring:message code="salesorder.lineitem"/> ' + (index + 1) + ')');
-            isValid = false;
-            return false;
-        }
-
-        // Validasi price
-        var priceStr = $row.find('input[id^="amount["]').val().replace(/,/g, '');
-        var price = parseFloat(priceStr);
-        if (isNaN(price) || price <= 0) {
-            alert('<spring:message code="sirius.unitprice"/> <spring:message code="notif.empty"/> ! (<spring:message code="salesorder.lineitem"/> ' + (index + 1) + ')');
-            isValid = false;
-            return false;
-        }
-    });
-
-    if (!isValid) {
-        return false;
-    }
-
-    // Jika semua validasi lolos
-    return true;
-}
-
 function save() {
 	$.ajax({
 		url:"<c:url value='/page/salesorderedit.htm'/>",
@@ -391,8 +395,6 @@ function save() {
 				if(json.status === 'OK')
 				{
 					$dialog.dialog('close');
-					<%--window.location="<c:url value='/page/deliveryorderview.htm'/>";--%>
-					// Or Can use This
 					window.location="<c:url value='/page/salesorderpreedit.htm?id='/>"+json.id;
 				}
 				else
@@ -403,104 +405,6 @@ function save() {
 			}
 		}
 	});
-}
-
-function updateDisplay() {
-	// Update Tax
-	var taxRate = Number.parse($('#tax option:selected').data('taxrate')) || 0;
-	$('#taxRate').val(taxRate ? taxRate.toFixed(2) : '');
-
-	// Inisialisasi total
-	var totalSales = 0, totalDiscount = 0, totalBeforeTax = 0;
-
-	// Fungsi helper untuk mendapatkan nilai numerik
-	function getNumericValue($input) {
-		return $input.val().toNumber() || 0;
-	}
-
-	// Update setiap line item
-	$('#lineItem tr').each(function(){
-		var $row = $(this);
-
-		var qty = getNumericValue($row.find('input[id^="quantity["]'));
-		var price = getNumericValue($row.find('input[id^="amount["]'));
-
-		var amount = qty * price;
-		var totalAmount = amount;
-
-		totalSales += amount;
-		totalBeforeTax += totalAmount;
-
-		// Mengatur nilai terformat menggunakan numberFormat
-		$row.find('input[id^="amountInput["]').val(amount.numberFormat('#,##0.00'));
-		$row.find('input[id^="totalAmount["]').val(totalAmount.numberFormat('#,##0.00'));
-	});
-
-	// Menghitung totalTax dan totalTransaction
-	var totalTax = totalBeforeTax * (taxRate / 100);
-	var totalTransaction = totalBeforeTax + totalTax;
-
-	$('#totalSales').val(totalSales.numberFormat('#,##0.00'));
-	$('#totalBeforeTax').val(totalBeforeTax.numberFormat('#,##0.00'));
-	$('#totalTax').val(totalTax.numberFormat('#,##0.00'));
-	$('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
-}
-
-function addLine($index) {
-	$tbody = $('#lineItem');
-	$tr = $('<tr/>');
-
-	$cbox = List.get('<input type="checkbox" class="check"/>','check'+$index);
-
-	$product = List.get('<select class="combobox productInput" onchange="checkDuplicate(this);updateDisplay();"/>','product['+$index+']');
-	$productImg = List.img('<spring:message code="product"/>', $index, 'openProduct("'+$index+'")');
-
-	$qty = List.get('<input type="text" class="input-number" size="6" onchange="updateDisplay();"/>','quantity['+$index+']', '0.00');
-
-	$uom = List.get('<input type="text" class="input-disabled" disabled size="6" />','uom['+$index+']');
-
-	$price = List.get('<input type="text" class="input-number" size="12" onchange="updateDisplay()"/>','amount['+$index+']', '0.00');
-
-	$totalAmount = List.get('<input type="text" class="input-number input-disabled" disabled size="12"/>','totalAmount['+$index+']', '0.00');
-
-	$packNote = List.get('<input type="text"/>','note['+$index+']');
-
-	$tr.append(List.col([$cbox]));
-	$tr.append(List.col([$product, $productImg]));
-	$tr.append(List.col([$qty]));
-	$tr.append(List.col([$uom]));
-	$tr.append(List.col([$price]));
-	$tr.append(List.col([$totalAmount]));
-	$tr.append(List.col([$packNote]));
-
-	$tbody.append($tr);
-
-	$(".input-number").bind(inputFormat);
-}
-
-function openProduct(index) {
-	openpopup("<c:url value='/page/popupproductview.htm?&target=product['/>"+index+"]&index="+index);
-}
-
-function openapprover() {
-	if (!$('#org').val()) {
-		alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
-		return;
-	}
-
-	const orgId = $('#org').val();
-	const approver = $('#approver').val();
-	const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
-	const params = {
-		target: 'approver', // Id Dropdown (Select) element
-		organization: orgId, // Org (PartyTo)
-		fromRoleType: 8, // Sales Approver
-		toRoleType: 2, // Company
-		relationshipType: 2, // Employment Relationship
-		except: approver // Except this approver
-	};
-
-	openpopup(buildUrl(baseUrl, params));
 }
 
 function printSO() {
