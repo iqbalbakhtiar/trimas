@@ -151,30 +151,44 @@
 										</td>
 									</tr>
 									<tr>
+										<td width="80%" align="right"><spring:message code="billing.discount"/>:&nbsp;</td>
+										<td width="20%">
+											<input id="discount" value="<fmt:formatNumber value='${billing_edit.totalDiscountAmount}' pattern=',##0.00'/>"
+												   class="number-disabled" readonly="readonly" size="20" disabled/>
+										</td>
+									</tr>
+									<tr>
+										<td width="80%" align="right"><spring:message code="billing.afterdiscount"/>:&nbsp;</td>
+										<td width="20%">
+											<input id="afterDiscount" value="<fmt:formatNumber value='${billing_edit.totalAfterDiscount}' pattern=',##0.00'/>"
+												   class="number-disabled" readonly="readonly" size="20" disabled/>
+										</td>
+									</tr>
+									<tr>
 										<td width="80%" align="right"><spring:message code="tax.amount"/>:&nbsp;</td>
 										<td width="20%">
-											<input id="unpaid" value="<fmt:formatNumber value='${billing_edit.taxAmount}' pattern=',##0.00'/>"
+											<input id="taxAmount" value="<fmt:formatNumber value='${billing_edit.taxAmount}' pattern=',##0.00'/>"
 												   class="number-disabled" readonly="readonly" size="20" disabled/>
 										</td>
 									</tr>
 									<tr>
 										<td width="80%" align="right"><spring:message code="billing.totalafter.tax"/>:&nbsp;</td>
 										<td width="20%">
-											<input id="unpaid" value="<fmt:formatNumber value='${billing_edit.totalAfterTax}' pattern=',##0.00'/>"
+											<input id="totalAfterTax" value="<fmt:formatNumber value='${billing_edit.totalAfterTax}' pattern=',##0.00'/>"
 												   class="number-disabled" readonly="readonly" size="20" disabled/>
 										</td>
 									</tr>
 									<tr>
 										<td width="80%" align="right"><spring:message code="manualbilling.creditmemo"/>:&nbsp;</td>
 										<td width="20%">
-											<input id="unpaid" value="<fmt:formatNumber value='${billing_edit.totalCreditMemo}' pattern=',##0.00'/>"
+											<input id="totalCreditMemo" value="<fmt:formatNumber value='${billing_edit.totalCreditMemo}' pattern=',##0.00'/>"
 												   class="number-disabled" readonly="readonly" size="20" disabled/>
 										</td>
 									</tr>
 									<tr>
 										<td width="80%" align="right"><strong><spring:message code="billing.total.amount"/></strong>:&nbsp;</td>
 										<td width="20%">
-											<input id="unpaid" value="<fmt:formatNumber value='${billing_edit.totalBillingAmount}' pattern=',##0.00'/>"
+											<input id="totalBillingAmount" value="<fmt:formatNumber value='${billing_edit.totalBillingAmount}' pattern=',##0.00'/>"
 												   class="number-disabled" readonly="readonly" size="20" disabled/>
 										</td>
 									</tr>
@@ -242,12 +256,12 @@
 							<td></td>
 							<td><input size="30" value="${item.billingReferenceItem.product.name}" class="input-disabled productInput" disabled/></td>
 							<td><input size="10" value="${item.billingReferenceItem.quantity}" class="input-disabled input-decimal" disabled/></td>
-							<td><input size="5" value="${item.billingReferenceItem.referenceUom}" class="input-disabled" disabled/></td>
+							<td><input size="5" value="${item.billingReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
 							<td><input size="12" value="<fmt:formatNumber value='${item.billingReferenceItem.money.amount}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
 							<td><input size="10" value="${item.billingReferenceItem.discount}" class="input-disabled input-decimal" disabled/></td>
 							<td><input size="15" type="text" value="<fmt:formatNumber value='${item.billingReferenceItem.subtotal}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
-							<td><input size="15" type="text" value="<fmt:formatNumber value='${item.billingReferenceItem.discountAmount}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
-							<td><input size="15" type="text" value="<fmt:formatNumber value='${item.billingReferenceItem.totalAmount}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
+							<td><input size="15" type="text" value="<fmt:formatNumber value='${item.billingReferenceItem.totalDiscount}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
+							<td><input size="15" type="text" value="<fmt:formatNumber value='${item.billingReferenceItem.totalAfterDiscount}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
 						</tr>
 						</c:if>
 					</c:forEach>

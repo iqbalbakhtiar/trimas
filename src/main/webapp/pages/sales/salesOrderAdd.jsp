@@ -43,18 +43,35 @@
 					<td>
 						<form:select id="customer" path="customer" cssClass="combobox-ext" onchange="updateShippingAddress(this)">
 						</form:select>
-						<a class="item-popup" onclick="openCustomer()" title="Customer" />
+						<a class="item-popup" onclick="openCustomer()" title="<spring:message code='customer'/>" />
 					</td>
 				</tr>
 				<tr>
-					<td width="19%" align="right">PO No :</td>
+					<td align="right"><spring:message code="salesperson"/></td>
+					<td width="1%" align="center">:</td>
+					<td>
+						<form:select id="salesPerson" path="salesPerson" cssClass="combobox-ext">
+						</form:select>
+						<a class="item-popup" onclick="openSalesPerson()" title="<spring:message code='salesperson'/>" />
+					</td>
+				</tr>
+				<tr>
+					<td align="right"><spring:message code="salesorder.invoice"/></td>
+	              	<td width="1%" align="center">:</td>
+					<td>
+						<form:radiobutton id="invoiceTrue" path="directInvoice" value="true"/><spring:message code="salesorder.invoice.direct"/>
+						<form:radiobutton id="invoiceFalse" path="directInvoice" value="false"/><spring:message code="salesorder.invoice.delivery"/>	
+					</td>
+				</tr>
+				<tr>
+					<td width="19%" align="right">PO No</td>
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:input id='poCode' path='poCode' cssClass='inputbox' size="15"/>
 					</td>
 				</tr>
 				<tr>
-					<td width="19%" align="right"><spring:message code="creditterm.term"/> :</td>
+					<td width="19%" align="right"><spring:message code="creditterm.term"/></td>
 					<td width="1%" align="center">:</td>
 					<td>
 						<form:input id='term' path='term' cssClass='input-number' size="8"/>
@@ -104,6 +121,14 @@
 									<tr>
 										<td width="80%" align="right"><spring:message code="salesorder.total"/></td>
 										<td width="20%">:&nbsp;&nbsp;<input id="totalSales" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
+									</tr>
+									<tr>
+										<td width="80%" align="right"><spring:message code="standardsalesorder.totaldiscount"/></td>
+										<td width="20%">:&nbsp;&nbsp;<input id="totalDiscount" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
+									</tr>
+									<tr>
+										<td width="80%" align="right"><spring:message code="salesorder.amount.beforetax"/></td>
+										<td width="20%">:&nbsp;&nbsp;<input id="totalBeforeTax" value="0.00" class="number-disabled" readonly="readonly" size="20"/></td>
 									</tr>
 									<tr>
 										<td width="80%" align="right"><spring:message code="salesorder.tax.amount"/></td>
@@ -165,6 +190,9 @@
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
 							<th width="8%" nowrap="nowrap"><spring:message code="sirius.unitprice"/></th>
+							<th width="8%" nowrap="nowrap"><spring:message code="salesorder.disc"/> %</th>
+							<th width="8%" nowrap="nowrap"><spring:message code="salesorder.disc"/> (Rp)</th>
+							<th width="8%" nowrap="nowrap"><spring:message code="salesorder.total.disc"/></th>
 							<th width="8%" nowrap="nowrap"><spring:message code="sirius.total"/> <spring:message code="sirius.amount"/></th>
 							<th width="50%" nowrap="nowrap"><spring:message code="salesorder.packing.note"/></th>
 						</tr>
@@ -172,7 +200,7 @@
 					<tbody id="lineItem">
 					</tbody>
 					<tfoot>
-						<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
+						<tr class="end-table"><td colspan="10">&nbsp;</td></tr>
 					</tfoot>
 				</table>
 			</div>
@@ -406,47 +434,6 @@ function save() {
 	});
 }
 
-function updateDisplay() {
-	// Update Tax
-	var taxRate = Number.parse($('#tax option:selected').data('taxrate')) || 0;
-	$('#taxRate').val(taxRate ? taxRate.toFixed(2) : '');
-
-	// Inisialisasi total
-	var totalSales = 0, totalDiscount = 0, totalBeforeTax = 0;
-
-	// Fungsi helper untuk mendapatkan nilai numerik
-	function getNumericValue($input) {
-		return $input.val().toNumber() || 0;
-	}
-
-	// Update setiap line item
-	$('#lineItem tr').each(function(){
-		var $row = $(this);
-
-		var qty = getNumericValue($row.find('input[id^="quantity["]'));
-		var price = getNumericValue($row.find('input[id^="amount["]'));
-
-		var amount = qty * price;
-		var totalAmount = amount;
-
-		totalSales += amount;
-		totalBeforeTax += totalAmount;
-
-		// Mengatur nilai terformat menggunakan numberFormat
-		$row.find('input[id^="amountInput["]').val(amount.numberFormat('#,##0.00'));
-		$row.find('input[id^="totalAmount["]').val(totalAmount.numberFormat('#,##0.00'));
-	});
-
-	// Menghitung totalTax dan totalTransaction
-	var totalTax = totalBeforeTax * (taxRate / 100);
-	var totalTransaction = totalBeforeTax + totalTax;
-
-	$('#totalSales').val(totalSales.numberFormat('#,##0.00'));
-	$('#totalBeforeTax').val(totalBeforeTax.numberFormat('#,##0.00'));
-	$('#totalTax').val(totalTax.numberFormat('#,##0.00'));
-	$('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
-}
-
 var index = 0;
 function cleanItems() {
 	$('.checkall').click();
@@ -464,6 +451,9 @@ function addLine() {
 	$qty = List.get('<input type="text" class="input-decimal" size="6" onchange="updateDisplay();"/>','quantity['+index+']', '0.00');
 	$uom = List.get('<input type="text" class="input-disabled" disabled size="6" />','uom['+index+']');
 	$price = List.get('<input type="text" class="input-decimal" size="12" onchange="updateDisplay()"/>','amount['+index+']', '0.00');
+	$disc = List.get('<input type="text" class="input-decimal" size="5" onchange="discConvert(this);updateDisplay();"/>','discountPercent['+index+']', '0.00');
+	$discAmount = List.get('<input type="text" class="input-decimal" size="12" onchange="discConvert(this);updateDisplay();"/>','discount['+index+']', '0.00');
+	$totalDisc = List.get('<input type="text" class="input-decimal inputbox-price input-disabled" />','totalDisc['+index+']', '0.00');
 	$totalAmount = List.get('<input type="text" class="input-decimal input-disabled" disabled size="12"/>','totalAmount['+index+']', '0.00');
 	$packNote = List.get('<input type="text" size="30"/>','note['+index+']');
 	
@@ -472,12 +462,53 @@ function addLine() {
 	$tr.append(List.col([$qty]));
 	$tr.append(List.col([$uom]));
 	$tr.append(List.col([$price]));
+	$tr.append(List.col([$disc]));
+	$tr.append(List.col([$discAmount]));
+	$tr.append(List.col([$totalDisc]));
 	$tr.append(List.col([$totalAmount]));
 	$tr.append(List.col([$packNote]));
 	
 	$tbody.append($tr);
   	index++;
 	$(".input-decimal").bind(inputFormat);
+}
+
+function updateDisplay() {
+	// Update Tax
+	var taxRate = Number.parse($('#tax option:selected').data('taxrate')) || 0;
+	$('#taxRate').val(taxRate ? taxRate.toFixed(2) : '');
+
+	let totalSales = 0;
+	let totalDiscount = 0;
+
+	$('#lineItem tr').each(function () {
+		const idx = $(this).find('[name^="items["]').first().attr('index');
+		if (!idx) return;
+
+		const qty = parseFloat($('#quantity\\[' + idx + '\\]').val().toNumber());
+		const price = parseFloat($('#amount\\[' + idx + '\\]').val().toNumber());
+		const disc = parseFloat($('#discount\\[' + idx + '\\]').val().toNumber());
+
+		const lineTotal = qty * price;
+		const lineDisc = qty * disc;
+		const finalAmount = lineTotal - lineDisc;
+
+		totalSales += lineTotal;
+		totalDiscount += lineDisc;
+
+		$('#totalDisc\\[' + idx + '\\]').val(lineDisc.numberFormat('#,##0.00'));
+		$('#totalAmount\\[' + idx + '\\]').val(finalAmount.numberFormat('#,##0.00'));
+	});
+
+	const amountBeforeTax = totalSales - totalDiscount;
+	const taxAmount = (amountBeforeTax * taxRate) / 100;
+	const totalTransaction = amountBeforeTax + taxAmount;
+
+	$('#totalSales').val(totalSales.numberFormat('#,##0.00'));
+	$('#totalDiscount').val(totalDiscount.numberFormat('#,##0.00'));
+	$('#totalBeforeTax').val(amountBeforeTax.numberFormat('#,##0.00'));
+	$('#totalTax').val(taxAmount.numberFormat('#,##0.00'));
+	$('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
 }
 
 function openProduct(index) {
@@ -543,6 +574,26 @@ function openCustomer() {
 	openpopup(buildUrl(baseUrl, params));
 }
 
+function openSalesPerson() {
+	if (!$('#org').val()) {
+		alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
+		return;
+	}
+
+	const orgId = $('#org').val();
+	const baseUrl = '<c:url value="/page/popuppartyrelationview.htm"/>';
+	const params = {
+		target: 'salesPerson', // Id Dropdown (Select) element
+		organization: orgId, // Org (PartyTo)
+		fromRoleType: 7, // Sales person
+		toRoleType: 2, // Company
+		relationshipType: 2, // Employment Relationship
+		base: false // Filter Only Customer (Not Group)
+	};
+
+	openpopup(buildUrl(baseUrl, params));
+}
+
 function openApprover() {
 	if (!$('#org').val()) {
 		alert('<spring:message code="notif.select1"/> <spring:message code="organization"/> <spring:message code="notif.select2"/> !!!');
@@ -574,6 +625,30 @@ function updateExpDate() {
 		var formattedDate = (dt < 10 ? '0'+dt:dt)+'-'+(mt < 10 ? '0'+mt:mt)+'-'+yr;
 		$('#expDate').val(formattedDate);
 	}
+}
+
+function discConvert(element) {
+	const idx = $(element).attr('index');
+	if (!idx) return;
+
+	const price = parseFloat($('#amount\\[' + idx + '\\]').val().replace(/,/g, '')) || 0;
+
+	if (price === 0) return;
+
+	const amountField = $('#discount\\[' + idx + '\\]');
+	const percentField = $('#discountPercent\\[' + idx + '\\]');
+
+	if ($(element).is(percentField)) {
+		const percent = parseFloat(percentField.val().replace(/,/g, '')) || 0;
+		const amount = (price * percent) / 100;
+		amountField.val(amount.numberFormat('#,##0.00'));
+	} else {
+		const amount = parseFloat(amountField.val().replace(/,/g, '')) || 0;
+		const percent = (amount / price) * 100;
+		percentField.val(percent.numberFormat('#,##0.00'));
+	}
+
+	updateDisplay();
 }
 
 </script>

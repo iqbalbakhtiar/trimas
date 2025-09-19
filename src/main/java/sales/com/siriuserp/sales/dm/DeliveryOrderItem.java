@@ -168,6 +168,14 @@ public class DeliveryOrderItem extends Model
 			return getItemParent().getDeliveryReferenceItem().getSalesOrderItem().getDiscount();
 	}
 
+	public BigDecimal getDiscountPercent()
+	{
+		if (getDeliveryReferenceItem() != null)
+			return getDeliveryReferenceItem().getSalesOrderItem().getDiscountPercent();
+		else
+			return getItemParent().getDeliveryReferenceItem().getSalesOrderItem().getDiscountPercent();
+	}
+
 	public Tax getTax()
 	{
 		if (getDeliveryReferenceItem() != null)

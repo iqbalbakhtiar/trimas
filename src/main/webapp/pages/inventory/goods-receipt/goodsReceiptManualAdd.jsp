@@ -80,6 +80,24 @@
 					</table>
 				</fieldset>
 			</td>
+			<td width="40%" valign="top">
+	          <table width="100%" style="border: none">
+	            <tr>
+	              <td>
+	                <fieldset>
+	                  	<legend><strong><spring:message code="salesorder.recapitulation"/></strong></legend>
+						<table id="recapTable" style="width: 100%; text-align:center;">
+						<tr>
+				            <td style="text-align:left;"><strong>Product</strong></td>
+				            <td style="text-align:right; padding:4px 8px;"><strong>Roll</strong></td>
+				            <td style="text-align:right; padding:4px 8px;"><strong>Meter</strong></td>
+				        </tr>
+						</table>
+	                </fieldset>
+	              </td>
+	            </tr>
+	          </table>
+	        </td>
 		</tr>
 		</table>
 		<br />
@@ -383,7 +401,68 @@
 	}
 	
 	function checkQuantity(index) {
+		recap();
         display();
 	}
 	
+	
+	function recap()
+	{
+	    let totalQuantity = 0; 
+	    const recap = {}; 
+	    const quantities = document.getElementsByClassName('qty');
+
+	    for (const quantity of quantities)
+	    {
+	        const index = quantity.getAttribute('index');
+	        const product = $('#product\\[' + index + '\\]').val();
+	        const qty = quantity.value.toNumber();
+	        const uom = $('#uom\\[' + index + '\\]').val(); 
+
+	        if (!product || !uom) continue; 
+
+	        const uomLower = uom.toLowerCase();
+
+	        if (uomLower === 'roll' || uomLower === 'm') {
+	            if (!recap[product]) {
+	                recap[product] = { roll: 0, meter: 0 };
+	            }
+
+	            if (uomLower === 'roll') {
+	                recap[product].roll += qty;       
+	            } else if (uomLower === 'm') {
+	                recap[product].meter += qty;    
+	                totalQuantity += qty;           
+	            }
+	        }
+	    }
+
+	    document.getElementById('totalQty').value = totalQuantity.numberFormat('#,##0.00');
+
+	    const $recapTable = $('#recapTable'); 
+	    $recapTable.empty();
+
+	    $recapTable.append(
+	        '<tr>' +
+	            '<td style="text-align:left;"><strong>Product</strong></td>' +
+	            '<td style="text-align:right; padding:4px 8px;"><strong>Roll</strong></td>' +
+	            '<td style="text-align:right; padding:4px 8px;"><strong>Meter</strong></td>' +
+	        '</tr>'
+	    );
+
+	    for (const productId in recap) {
+	        const data = recap[productId];
+	        const productText = $('#product\\['+Object.keys(recap).indexOf(productId)+'\\] option:selected').text() || productId;
+
+	        $recapTable.append(
+	            '<tr>' +
+	                '<td><input class="input" size="45" type="text" style="text-align:left;" value="'+productText+'" readonly></td>' +
+	                '<td><input size="8" class="input-disabled" type="text" style="text-align:right;" value="'+data.roll+'" readonly></td>' +
+	                '<td><input size="8" class="input-disabled" type="text" style="text-align:right;" value="'+data.meter.numberFormat('#,##0.00')+'" readonly></td>' +
+	            '</tr>'
+	        );
+	    }
+	}
+
+
 </script>
