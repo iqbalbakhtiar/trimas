@@ -213,6 +213,38 @@ function validateForm() {
 		return false;
 	}
 
+	
+	if ($('.lineItem').length === 0) {
+	    alert('<spring:message code="salesorder.lineitem"/> <spring:message code="notif.empty"/> !');
+	    return false;
+	}
+	
+	// Validasi delivered & qtySerial
+	var valid = true;
+
+	$('input[id^="delivered["]').each(function() {
+	    var idx = $(this).attr('index');
+	    var type = $(this).attr('producttype');
+	    var delivered = parseFloat($(this).val()) || 0;
+
+	    if (type === 'serial') {
+	        var qtySerial = parseFloat($('#qtySerial\\[' + idx + '\\]').val()) || 0;
+	        if (qtySerial <= 0) {
+	        	alert('<spring:message code="deliveryorder.quantity"/> <spring:message code="notif.greater.zero"/> !');
+	            valid = false;
+	            return false; // break loop
+	        }
+	    } else {
+	        if (delivered <= 0) {
+	        	alert('<spring:message code="deliveryorder.quantity"/> <spring:message code="notif.greater.zero"/> !');
+	            valid = false;
+	            return false;
+	        }
+	    }
+	});
+
+	if (!valid) return false;
+	
 	// Validasi Line Items
 	var isValid = true;
 	$('.quantities').each(function(i, obj)
