@@ -64,6 +64,25 @@
                 </td>
 
                 <td width="40%" valign="top">
+                	<c:if test="${not empty receipt_form.prepayment}">
+	                	<table width="100%" style="border: none">
+	                        <tr>
+	                            <td>
+	                                <fieldset>
+	                                    <legend><strong><spring:message code="sirius.reference"/></strong></legend>
+	                                    <table width="100%" style="border:none">
+	                                        <tr>
+	                                            <th align="right" class="highlight"><spring:message code="prepayment"/></th>
+	                                        </tr>
+	                                        <tr>
+	                                            <td align="right"><a href="<c:url value='/page/prepaymentpreedit.htm?id=${receipt_form.prepayment.id}'/>">${receipt_form.prepayment.code}</a></td>
+	                                        </tr>
+	                                    </table>
+	                                </fieldset>
+	                            </td>
+	                        </tr>
+	                    </table>
+                    </c:if>
                     <table width="100%" style="border: none">
                         <tr>
                             <td>
