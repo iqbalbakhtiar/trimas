@@ -17,6 +17,7 @@ import com.siriuserp.accountpayable.dm.PaymentMethodType;
 import com.siriuserp.accountreceivable.dm.Billing;
 import com.siriuserp.accountreceivable.dm.BillingBatch;
 import com.siriuserp.accountreceivable.dm.CreditMemoReferenceType;
+import com.siriuserp.accountreceivable.dm.Prepayment;
 import com.siriuserp.accountreceivable.dm.Receipt;
 import com.siriuserp.accountreceivable.dm.ReceiptInformation;
 import com.siriuserp.sdk.dm.AccountType;
@@ -58,6 +59,7 @@ public class AccountingForm extends Form
 
 	private Date dueDate;
 	private Date paidDate;
+	private Date realDate;
 
 	private Party holder;
 	private Money money;
@@ -80,6 +82,7 @@ public class AccountingForm extends Form
 	private BillingBatch billingBatch;
 	private Receipt receipt;
 	private ReceiptInformation receiptInformation;
+	private Prepayment prepayment;
 
 	private CreditMemoReferenceType memoReferenceType;
 
