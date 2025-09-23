@@ -19,7 +19,13 @@
 			<tr>
 			  	<td></td>
 			  	<td valign="middle"><input name="invType" type="radio" value="1" checked></td>
-			  	<td valign="middle" align="left">Invoice</td>
+			  	<td valign="middle" align="left">Invoice 1</td>
+			  	<td width="1%" align="left">&nbsp;</td>
+			</tr>
+			<tr>
+			  	<td></td>
+			  	<td valign="middle"><input name="invType" type="radio" value="4"></td>
+			  	<td valign="middle" align="left">Invoice 2</td>
 			  	<td width="1%" align="left">&nbsp;</td>
 			</tr>
 			<tr>

@@ -3,9 +3,7 @@
 <style type="text/css" media="screen">
 	@import url("<c:url value='/assets/sirius.css'/>");
 	@import url("<c:url value='/assets/sirius-print-a4.css'/>");
-</style>
-<style type="text/css" media="print">
-	@import url("<c:url value='/assets/sirius-print-a4.css'/>");
+	@import url("<c:url value='/assets/sirius-print-dotmatrix.css'/>");
 </style>
 
 <div class="toolbar">

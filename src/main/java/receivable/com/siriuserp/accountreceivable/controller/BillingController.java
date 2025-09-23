@@ -98,6 +98,8 @@ public class BillingController extends ControllerBase
 			return new ModelAndView("/receivable/billingPrint2", service.preedit(id)).addObject("redirect", redirect).addObject("redirectId", redirectId);
 		if (invType.equals("3"))
 			return new ModelAndView("/receivable/billingPrint3", service.preedit(id)).addObject("redirect", redirect).addObject("redirectId", redirectId);
+		if (invType.equals("4"))
+			return new ModelAndView("/receivable/billingPrint4", service.preedit(id)).addObject("redirect", redirect).addObject("redirectId", redirectId);
 		else
 			return ViewHelper.redirectTo("billingview.htm");
 	}
