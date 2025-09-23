@@ -139,7 +139,7 @@
 	                <c:forEach items='${prepayment_edit.receipts}' var='receipt'>
 	                    <tr>
 	                        <td>&nbsp;</td>
-	                        <td><a href="<c:url value='/page/receiptpreedit?id=${receipt.id}'/>"><c:out value='${receipt.code}'/></a></td>
+	                        <td><a href="<c:url value='/page/receiptpreedit.htm?id=${receipt.id}'/>"><c:out value='${receipt.code}'/></a></td>
 	                        <td><fmt:formatDate value='${receipt.realDate}' pattern='dd-MM-yyyy'/></td>
 	                        <td><fmt:formatNumber value='${receipt.receiptInformation.amount}' pattern=',##0.00'/></td>
 	                    </tr>

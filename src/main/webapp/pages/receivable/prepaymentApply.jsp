@@ -277,6 +277,12 @@
         	alert('<spring:message code="receipt.amount"/> <spring:message code="notif.zero"/> !');
         	return false;
         }
+        
+        if ($("#totalAmount").val().toNumber() < $("#totalApplied").val().toNumber())
+        {
+        	alert('<spring:message code="receipt.applied.amount"/> <spring:message code="notif.greater"/> <spring:message code="receipt.total"/> !');
+        	return false;
+        }
 
         // Jika semua validasi lolos
         return true;
