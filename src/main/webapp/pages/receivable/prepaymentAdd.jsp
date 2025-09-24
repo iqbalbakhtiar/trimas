@@ -111,14 +111,14 @@
 		                        <tr>
 		                            <td nowrap="nowrap" align="right"><spring:message code="receipt.amount"/> : </td>
 		                            <td>
-		                                <form:input id='amount' path='receiptInformation.amount' value="0" cssClass='applied input-number' onchange="updateDisplay()"/>
+		                                <form:input id='amount' path='receiptInformation.amount' value="0.00" cssClass='applied input-currency' onchange="updateDisplay()"/>
 		                                <input type="hidden" id="amountdef" value="0"/>
 		                            </td>
 		                        </tr>
 		                        <tr>
 		                            <td nowrap="nowrap" align="right"><spring:message code="receipt.charge"/> : </td>
 		                            <td>
-		                                <form:input id='bankCharges' path='receiptInformation.bankCharges' value="0" cssClass='applied input-number' onchange="updateDisplay()"/>
+		                                <form:input id='bankCharges' path='receiptInformation.bankCharges' value="0.00" cssClass='applied input-currency' onchange="updateDisplay()"/>
 		                            </td>
 		                        </tr>
 		                        <tr>
@@ -179,7 +179,7 @@
         $("#bankName").val("");
         $("#bankBranch").val("");
         $("#accountNo").val("");
-        $("#bankCharges").val("0");
+        $("#bankCharges").val("0.00");
     }
 
     function openCustomer() {

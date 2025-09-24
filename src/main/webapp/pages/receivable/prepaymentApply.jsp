@@ -150,13 +150,13 @@
 		                        <tr>
 		                            <td nowrap="nowrap" align="right"><spring:message code="receipt.amount"/> : </td>
 		                            <td>
-		                                <input id='amount' name='receiptInformation.amount' value="<fmt:formatNumber value='${prepayment_form.receiptInformation.amount}' pattern='#,##0'/>" class='applied input-number' readonly="true"/>
+		                                <input id='amount' name='receiptInformation.amount' value="<fmt:formatNumber value='${prepayment_form.receiptInformation.amount}' pattern='#,##0.00'/>" class='applied input-number' readonly="true"/>
 		                            </td>
 		                        </tr>
 		                        <tr>
 		                            <td nowrap="nowrap" align="right"><spring:message code="receipt.charge"/> : </td>
 		                            <td>
-		                                <input id='bankCharges' name='receiptInformation.bankCharges' value="<fmt:formatNumber value='${prepayment_form.receiptInformation.bankCharges}' pattern='#,##0'/>" class='applied input-number' readonly="true"/>
+		                                <input id='bankCharges' name='receiptInformation.bankCharges' value="<fmt:formatNumber value='${prepayment_form.receiptInformation.bankCharges}' pattern='#,##0.00'/>" class='applied input-number' readonly="true"/>
 		                            </td>
 		                        </tr>
 		                        <tr>
@@ -272,7 +272,7 @@
             return false;
         }
         
-        if ($("#amount").val().toNumber() < 1)
+        if ($("#amount").val().toNumber() < 0)
         {
         	alert('<spring:message code="receipt.amount"/> <spring:message code="notif.zero"/> !');
         	return false;
