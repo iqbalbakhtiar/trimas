@@ -150,13 +150,13 @@
 		                        <tr>
 		                            <td nowrap="nowrap" align="right"><spring:message code="receipt.amount"/> : </td>
 		                            <td>
-		                                <input id='amount' name='receiptInformation.amount' value="<fmt:formatNumber value='${prepayment_form.receiptInformation.amount}' pattern='#,##0.00'/>" class='applied input-number' readonly="true"/>
+		                                <input id='amount' name='receiptInformation.amount' value="<fmt:formatNumber value='${prepayment_form.receiptInformation.amount}' pattern='#,##0.00'/>" class='applied input-currency' readonly="true"/>
 		                            </td>
 		                        </tr>
 		                        <tr>
 		                            <td nowrap="nowrap" align="right"><spring:message code="receipt.charge"/> : </td>
 		                            <td>
-		                                <input id='bankCharges' name='receiptInformation.bankCharges' value="<fmt:formatNumber value='${prepayment_form.receiptInformation.bankCharges}' pattern='#,##0.00'/>" class='applied input-number' readonly="true"/>
+		                                <input id='bankCharges' name='receiptInformation.bankCharges' value="<fmt:formatNumber value='${prepayment_form.receiptInformation.bankCharges}' pattern='#,##0.00'/>" class='applied input-currency' readonly="true"/>
 		                            </td>
 		                        </tr>
 		                        <tr>
