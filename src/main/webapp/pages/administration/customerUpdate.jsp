@@ -116,6 +116,7 @@
 				<th width="5%"><spring:message code="postaladdress.city"/></th>
 				<th width="5%"><spring:message code="sirius.default"/></th>
 				<th width="5%"><spring:message code="sirius.status"/></th>
+				<th width="5%"><spring:message code="sirius.default"/></th>
 				<th width="10%"><spring:message code="sirius.note"/></th>
 			</tr>
 			<c:forEach items="${customer_edit.postalAddresses}" var="postal">
@@ -162,7 +163,8 @@
 				<th width="15%"><spring:message code="contactmechanism.department"/></th>
 				<th width="15%"><spring:message code="contactmechanism.type"/></th>
 				<th width="15%"><spring:message code="contactmechanism.detail"/></th>
-				<th width="15%"><spring:message code="sirius.status"/></th>
+				<th width="10%"><spring:message code="sirius.status"/></th>
+				<th width="10%"><spring:message code="sirius.default"/></th>
 				<th width="20%"><spring:message code="sirius.note"/></th>
 			</tr>
 			<c:forEach items="${customer_edit.contactMechanisms}" var="contact">
@@ -180,10 +182,14 @@
 						<c:if test='${contact.active}'><spring:message code="sirius.active"/></c:if>
 						<c:if test='${!contact.active}'><spring:message code="sirius.inactive"/></c:if>
 					</td>
+					<td>
+						<c:if test='${contact.def}'><spring:message code="sirius.yes"/></c:if>
+						<c:if test='${!contact.def}'><spring:message code="sirius.no"/></c:if>
+					</td>
 					<td>${contact.note}</td>
 				</tr>
 			</c:forEach>
-			<tr class="end-table"><td colspan="7">&nbsp;</td></tr>
+			<tr class="end-table"><td colspan="8">&nbsp;</td></tr>
 			</table>
 		</div>
 		

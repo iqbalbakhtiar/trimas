@@ -118,7 +118,7 @@
 				  			<c:set var="phone" value=""/>
 				  			<c:set var="fax" value=""/>
 				  			<c:forEach items='${salesOrder_edit.customer.contactMechanisms}' var='cont'>
-				  			<c:if test="${cont.active}">
+				  			<c:if test="${cont.def}">
 								<c:if test='${cont.contactMechanismType eq "PHONE"}'>
 						  			<c:set var="phone" value="${cont.contact}"/>
 								</c:if>
