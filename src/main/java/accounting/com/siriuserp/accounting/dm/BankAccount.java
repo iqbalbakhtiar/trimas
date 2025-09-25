@@ -25,6 +25,7 @@ import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
 import com.siriuserp.accountpayable.dm.PaymentInformation;
+import com.siriuserp.accountreceivable.dm.ReceiptInformation;
 import com.siriuserp.sdk.dm.AccountType;
 import com.siriuserp.sdk.dm.JSONSupport;
 import com.siriuserp.sdk.dm.Model;
@@ -102,13 +103,16 @@ public class BankAccount extends Model implements JSONSupport
 	@Fetch(FetchMode.SELECT)
 	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
 	private Set<PaymentInformation> paymentInformations = new FastSet<PaymentInformation>();
+	
+	@OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY)
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@Fetch(FetchMode.SELECT)
+	@Type(type = "com.siriuserp.sdk.hibernate.types.SiriusHibernateCollectionType")
+	private Set<ReceiptInformation> receiptInformation = new FastSet<ReceiptInformation>();
 
 	public boolean isDeleteable()
 	{
-		if (!getPaymentInformations().isEmpty())
-			return false;
-
-		return true;
+		return getPaymentInformations().isEmpty();
 	}
 
 	@Override

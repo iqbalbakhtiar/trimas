@@ -12,6 +12,7 @@ import com.siriuserp.sdk.dm.Currency;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Party;
 import com.siriuserp.sdk.dm.PostalAddress;
+import com.siriuserp.sdk.dm.Siblingable;
 
 /**
  * @author Iqbal Bakhtiar
@@ -19,7 +20,7 @@ import com.siriuserp.sdk.dm.PostalAddress;
  * www.siriuserp.com
  */
 
-public interface Billingable
+public interface Billingable extends Siblingable
 {
 	public Long getReferenceId();
 	public Party getOrganization();

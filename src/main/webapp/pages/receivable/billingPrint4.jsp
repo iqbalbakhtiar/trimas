@@ -11,7 +11,7 @@
 <style type="text/css" media="screen">
 	@import url("<c:url value='/assets/sirius.css'/>");
 	@import url("<c:url value='/assets/sirius-print-a4.css'/>");
-	@import url("<c:url value='/assets/sirius-print-dotmatrix.css'/>");
+    @import url("<c:url value='/assets/sirius-print-dotmatrix.css'/>");
 </style>
 <style type="text/css" media="print">
 	@import url("<c:url value='/assets/sirius-print-a4.css'/>");
@@ -120,8 +120,11 @@
 				<td colspan="2">&nbsp;</td>
 				<td class="border-top border-left border-bottom" colspan="2" align="center" width="46%">Nama Barang</td>
 				<td class="border-top border-left border-bottom" align="center" width="15%">Jumlah</td>
-				<td class="border-top border-left border-bottom" align="center" width="15%">Harga Satuan</td>
-				<td class="border-top border-left border-right border-bottom" colspan="2" align="center" width="30%">Total</td>
+				<td class="border-top border-left border-bottom" align="center" width="15%">Harga Sebelum Pajak</td>
+				<td class="border-top border-left border-bottom" align="center" width="15%">Harga Setelah Pajak</td>
+				<td class="border-top border-left border-bottom" align="center" width="15%">Diskon</td>
+				<td class="border-top border-left border-bottom" align="center" width="15%">Total Sebelum Pajak</td>
+				<td class="border-top border-left border-bottom border-right" align="center" width="15%">Total Setelah Pajak</td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
 			<c:forEach items='${billing_form.billing.items}' var='item' varStatus='status'>
@@ -130,7 +133,10 @@
 				<td class="border-left border-bottom" colspan="2">${item.billingReferenceItem.product.name}</td>
 				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.quantity}' pattern=',##0.00'/></td>
 				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.money.amount}' pattern=',##0.00'/></td>
-				<td class="border-left border-bottom border-right" colspan="2" align="right"><fmt:formatNumber value='${item.billingReferenceItem.subtotal}' pattern=',##0.00'/></td>
+				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.totalWithTax}' pattern=',##0.00'/></td>
+				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.totalDiscount}' pattern=',##0.00'/></td>
+				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.quantity*item.billingReferenceItem.money.amount}' pattern=',##0.00'/></td>
+				<td class="border-left border-bottom border-right" align="right"><fmt:formatNumber value='${item.billingReferenceItem.quantity*item.billingReferenceItem.totalWithTax}' pattern=',##0.00'/></td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
 			</c:forEach>

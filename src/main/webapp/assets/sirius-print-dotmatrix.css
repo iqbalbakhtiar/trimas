@@ -1,0 +1,31 @@
+/* sirius-print-dotmatrix.css */
+body, table, td {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 10pt;
+    line-height: 1.2;
+    color: #000;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.border-top    { border-top: 1px solid black; }
+.border-bottom { border-bottom: 1px solid black; }
+.border-left   { border-left: 1px solid black; }
+.border-right  { border-right: 1px solid black; }
+
+td {
+    padding: 2px 4px;
+}
+
+/* Hilangkan background hitam tebal */
+td[style*="background: black"] {
+    background: none !important;
+}
+
+/* Setting page untuk continuous form / dot matrix */
+@page {
+    margin: 5mm;
+    size: A4 portrait;
+}

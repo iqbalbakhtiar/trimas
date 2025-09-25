@@ -88,9 +88,9 @@
 	                  	<legend><strong><spring:message code="salesorder.recapitulation"/></strong></legend>
 						<table id="recapTable" style="width: 100%; text-align:center;">
 						<tr>
-				            <td style="text-align:left;"><strong>Product</strong></td>
-				            <td style="text-align:right; padding:4px 8px;"><strong>Roll</strong></td>
-				            <td style="text-align:right; padding:4px 8px;"><strong>Meter</strong></td>
+				            <td style="text-align:left;"><strong><spring:message code="product"/></strong></td>
+				            <td style="text-align:right; padding:4px 8px;"><strong><spring:message code="sirius.qty"/></strong></td>
+				            <td style="text-align:right; padding:4px 8px;"><strong><spring:message code="sirius.meter"/></strong></strong></td>
 				        </tr>
 						</table>
 	                </fieldset>
@@ -405,17 +405,16 @@
         display();
 	}
 	
-	
-	function recap()
-	{
+	function recap() {
 	    let totalQuantity = 0; 
-	    const recap = {}; 
+	    const temp = {}; 
+	    const recap = {};
 	    const quantities = document.getElementsByClassName('qty');
 
-	    for (const quantity of quantities)
-	    {
+	    for (const quantity of quantities) {
 	        const index = quantity.getAttribute('index');
 	        const product = $('#product\\[' + index + '\\]').val();
+	        const productText = $('#product\\[' + index + '\\] option:selected').text();
 	        const qty = quantity.value.toNumber();
 	        const uom = $('#uom\\[' + index + '\\]').val(); 
 
@@ -423,40 +422,51 @@
 
 	        const uomLower = uom.toLowerCase();
 
-	        if (uomLower === 'roll' || uomLower === 'm') {
-	            if (!recap[product]) {
-	                recap[product] = { roll: 0, meter: 0 };
-	            }
+	        if (!temp[product]) {
+	            temp[product] = { 
+	                roll: 0, 
+	                meter: 0, 
+	                hasMeter: false,
+	                name: productText
+	            };
+	        }
 
-	            if (uomLower === 'roll') {
-	                recap[product].roll += qty;       
-	            } else if (uomLower === 'm') {
-	                recap[product].meter += qty;    
-	                totalQuantity += qty;           
-	            }
+	        temp[product].roll += 1;
+
+	        if (uomLower === 'm') {
+	            temp[product].meter += qty;    
+	            totalQuantity += qty; 
+	            temp[product].hasMeter = true;         
 	        }
 	    }
 
-	    document.getElementById('totalQty').value = totalQuantity.numberFormat('#,##0.00');
+	    for (const productId in temp) {
+	        if (temp[productId].hasMeter) {
+	            recap[productId] = {
+	                roll: temp[productId].roll,
+	                meter: temp[productId].meter,
+	                name: temp[productId].name
+	            };
+	        }
+	    }
 
 	    const $recapTable = $('#recapTable'); 
 	    $recapTable.empty();
 
 	    $recapTable.append(
 	        '<tr>' +
-	            '<td style="text-align:left;"><strong>Product</strong></td>' +
-	            '<td style="text-align:right; padding:4px 8px;"><strong>Roll</strong></td>' +
-	            '<td style="text-align:right; padding:4px 8px;"><strong>Meter</strong></td>' +
+		        '<td style="text-align:left;"><strong><spring:message code="product"/></strong></td>'+
+	            '<td style="text-align:right; padding:4px 8px;"><strong><spring:message code="sirius.qty"/></strong></td>'+
+	            '<td style="text-align:right; padding:4px 8px;"><strong><spring:message code="sirius.meter"/></strong></strong></td>'+
 	        '</tr>'
 	    );
 
 	    for (const productId in recap) {
 	        const data = recap[productId];
-	        const productText = $('#product\\['+Object.keys(recap).indexOf(productId)+'\\] option:selected').text() || productId;
 
 	        $recapTable.append(
 	            '<tr>' +
-	                '<td><input class="input" size="45" type="text" style="text-align:left;" value="'+productText+'" readonly></td>' +
+	            	'<td align="left" width="70%">'+data.name+'</td>' +
 	                '<td><input size="8" class="input-disabled" type="text" style="text-align:right;" value="'+data.roll+'" readonly></td>' +
 	                '<td><input size="8" class="input-disabled" type="text" style="text-align:right;" value="'+data.meter.numberFormat('#,##0.00')+'" readonly></td>' +
 	            '</tr>'

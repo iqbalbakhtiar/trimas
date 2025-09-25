@@ -25,7 +25,12 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
+import com.siriuserp.accounting.dm.BankAccount;
+import com.siriuserp.accountpayable.dm.CashBankTransactionReferenceable;
+import com.siriuserp.accountpayable.dm.PaymentMethodType;
 import com.siriuserp.sdk.dm.Currency;
+import com.siriuserp.sdk.dm.Exchange;
+import com.siriuserp.sdk.dm.ExchangeType;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Model;
 import com.siriuserp.sdk.dm.Party;
@@ -41,7 +46,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "receipt")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Receipt extends Model
+public class Receipt extends Model implements CashBankTransactionReferenceable
 {
 	private static final long serialVersionUID = 7666523877294333288L;
 
@@ -87,6 +92,12 @@ public class Receipt extends Model
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Fetch(FetchMode.SELECT)
 	private Currency currency;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_prepayment")
+	@LazyToOne(LazyToOneOption.PROXY)
+	@Fetch(FetchMode.SELECT)
+	private Prepayment prepayment;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "fk_receipt_information")
@@ -110,5 +121,50 @@ public class Receipt extends Model
 	public String getAuditCode()
 	{
 		return id + "," + note;
+	}
+
+	@Override
+	public Long getReferenceId() {
+		return getId();
+	}
+
+	@Override
+	public Long getExtReferenceId() {
+		return null;
+	}
+
+	@Override
+	public BigDecimal getAmount() {
+		return getReceiptInformation().getAmount();
+	}
+
+	@Override
+	public ExchangeType getExchangeType() {
+		return null;
+	}
+
+	@Override
+	public PaymentMethodType getPaymentMethodType() {
+		return getReceiptInformation().getPaymentMethodType();
+	}
+
+	@Override
+	public String getUri() {
+		return "receiptpreedit.htm";
+	}
+
+	@Override
+	public Party getParty() {
+		return getCustomer();
+	}
+
+	@Override
+	public Exchange getExchange() {
+		return null;
+	}
+
+	@Override
+	public BankAccount getBankAccount() {
+		return getReceiptInformation().getBankAccount();
 	}
 }

@@ -124,6 +124,8 @@ public class ReceiptService extends Service
 				genericDao.update(application.getBilling());
 
 				receipt.getApplications().add(application);
+				
+				total = total.add(application.getPaidAmount()).add(application.getWriteOff());
 			}
 		}
 
