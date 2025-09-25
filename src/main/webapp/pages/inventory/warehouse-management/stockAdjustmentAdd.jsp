@@ -242,7 +242,7 @@
 			return;
 		}
 		
-		openpopup("<c:url value='/page/popupproductview.htm?target=product['/>"+index+"]&index="+index+"&container="+con.value+"&organization="+org.value);
+		openpopup("<c:url value='/page/popupproductview.htm?target=product['/>"+index+"]&index="+index+"&container="+con.value+"&organization="+org.value+"&status=true");
 	}
 	
 	function checkOnHand(index) {

@@ -83,6 +83,9 @@
 				_client.appendChild(_opt);
 			}
 			
+			var sourceId = $('#source').val();  
+			var sourceName = $('#source option:selected').text();  
+			
 			var _onhand = self.opener.document.getElementById('onhand[${index}]');
 			var _serial = self.opener.document.getElementById('serialCheck[${index}]');
 			var _uom = self.opener.document.getElementById('uom[${index}]');
@@ -90,7 +93,8 @@
 			var _code = self.opener.document.getElementById('codeprod[${index}]');
 			var _category = self.opener.document.getElementById('category[${index}]');
 			var _gridFrom = self.opener.document.getElementById('gridFrom[${index}]');
-			var _source = self.opener.document.getElementById('container[${index}]');
+			//var _container = self.opener.document.getElementById('container[${index}]');
+			var _source = self.opener.document.getElementById('source[${index}]');
 
 			if(_onhand)
 				_onhand.value = parseFloat(onhand).numberFormat('#,##0.00');
@@ -113,13 +117,24 @@
 			if(_gridFrom)
 				_gridFrom.value = grid;
 			
+			/*if(_container)
+			{
+				_container.remove(_source.selectedIndex);
+				
+				var _opt = document.createElement('option');
+				_opt.value = containerId;
+				_opt.text = containerName.replaceAll("*", "\"");;
+				
+				_container.appendChild(_opt);
+			}*/
+			
 			if(_source)
 			{
 				_source.remove(_source.selectedIndex);
 				
 				var _opt = document.createElement('option');
-				_opt.value = containerId;
-				_opt.text = containerName.replaceAll("*", "\"");;
+				_opt.value = sourceId;
+				_opt.text = sourceName.replaceAll("*", "\"");;
 				
 				_source.appendChild(_opt);
 			}

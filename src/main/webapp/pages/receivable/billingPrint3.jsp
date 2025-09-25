@@ -6,6 +6,7 @@
 </style>
 <style type="text/css" media="print">
 	@import url("<c:url value='/assets/sirius-print-a4.css'/>");
+	@import url("<c:url value='/assets/sirius-print-dotmatrix.css'/>");
 </style>
 <style>
 	tr.body-print td {
@@ -34,7 +35,7 @@
 			<tr>
 				<td width="2%" colspan="2">&nbsp;</td>
   				<td colspan="6">
-  				<img style="margin-left: -15px;" src="assets/images/shunhui-logo.png" width="350" height="40"/>
+  				<img style="margin-left: -15px;" src="assets/images/shunhui-logo-crop.png" width="350" height="40"/>
   				</br><font size="2"></font>
   				</td>
 				<td width="2%" colspan="2">&nbsp;</td>
