@@ -65,15 +65,20 @@ public class ContactMechanismService extends Service
 	}
 
 	@AuditTrails(className = Party.class, actionType = AuditTrailsActionType.CREATE)
-	public void add(ContactMechanism contactMechanism) throws ServiceException
-	{
-		Party party = genericDao.load(Party.class, contactMechanism.getParty().getId());
-		party.getContactMechanisms().add(contactMechanism);
-		party.setUpdatedBy(getPerson());
-		party.setUpdatedDate(DateHelper.now());
+	public void add(ContactMechanism contactMechanism) throws ServiceException {
+	    Party party = genericDao.load(Party.class, contactMechanism.getParty().getId());
 
-		partyDao.update(party);
+	    if (Boolean.TRUE.equals(contactMechanism.isDef())) 
+	        for (ContactMechanism cm : party.getContactMechanisms()) 
+	            cm.setDef(false); 
+
+	    party.getContactMechanisms().add(contactMechanism);
+	    party.setUpdatedBy(getPerson());
+	    party.setUpdatedDate(DateHelper.now());
+
+	    partyDao.update(party);
 	}
+
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 	public FastMap<String, Object> preedit(Long id)
@@ -85,16 +90,34 @@ public class ContactMechanismService extends Service
 	}
 
 	@AuditTrails(className = ContactMechanism.class, actionType = AuditTrailsActionType.UPDATE)
-	public void edit(ContactMechanism contactMechanism) throws ServiceException
-	{
-		Party party = contactMechanism.getParty();
-		party.setUpdatedBy(getPerson());
-		party.setUpdatedDate(DateHelper.now());
+	@Transactional
+	public void edit(ContactMechanism contactMechanism) throws ServiceException {
+		Party party = partyDao.load(contactMechanism.getParty().getId());
 
-		partyDao.update(party);
+	    party.setUpdatedBy(getPerson());
+	    party.setUpdatedDate(DateHelper.now());
 
-		genericDao.update(contactMechanism);
+	    if (Boolean.TRUE.equals(contactMechanism.isDef())) {
+	        for (ContactMechanism cm : party.getContactMechanisms()) 
+	            cm.setDef(false);
+	        
+	        for (ContactMechanism cm : party.getContactMechanisms()) 
+	            if (cm.getId().equals(contactMechanism.getId())) {
+	                cm.setDef(true);
+	                break;
+	            }
+	       
+	    }
+	    else
+            for (ContactMechanism cm : party.getContactMechanisms()) 
+                if (cm.getId().equals(contactMechanism.getId())) {
+                    cm.setDef(false);
+                    break;
+                }
+
+	    partyDao.update(party);
 	}
+
 
 	@AuditTrails(className = ContactMechanism.class, actionType = AuditTrailsActionType.DELETE)
 	public void delete(ContactMechanism contactMechanism) throws ServiceException

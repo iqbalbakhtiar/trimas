@@ -330,7 +330,7 @@
 $(function(){
 	var $index = 0; // For Line Item Index
 
-	updateDisplay();
+	//updateDisplay();
 	
 	$('.item-button-save').click(function(){
 		save();
