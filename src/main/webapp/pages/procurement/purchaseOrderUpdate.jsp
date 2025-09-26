@@ -44,7 +44,7 @@
                 </form:select>
               </td>
             </tr>
-            <tr>
+            <tr style="display: none;">
               <td align="right"><spring:message code="sirius.document.type"/></td>
               <td width="1%" align="center">:</td>
               <td>
