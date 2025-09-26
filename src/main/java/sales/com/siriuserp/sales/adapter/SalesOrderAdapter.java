@@ -92,15 +92,4 @@ public class SalesOrderAdapter extends AbstractUIAdapter
 	{
 		return getTotalAfterDiscount().add(getTaxAmount());
 	}
-	
-	public BigDecimal getTotalItemAmount()
-	{
-		BigDecimal total = BigDecimal.ZERO;
-
-		for (SalesOrderItem item : getSalesOrder().getItems())
-			total = total.add(getSubTotal(item));
-
-		return total;
-	}
-
 }
