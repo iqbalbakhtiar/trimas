@@ -179,7 +179,7 @@ public class DeliveryOrderService extends Service
 		}
 
 		genericDao.add(deliveryOrder);
-
+		
 		for (Long salesId : salesIds)
 		{
 			SalesOrder salesOrder = genericDao.load(SalesOrder.class, salesId);
@@ -187,6 +187,7 @@ public class DeliveryOrderService extends Service
 
 			genericDao.update(salesOrder);
 		}
+		
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)

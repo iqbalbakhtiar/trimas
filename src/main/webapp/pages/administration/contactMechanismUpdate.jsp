@@ -41,6 +41,13 @@
 									<form:radiobutton path="active" value="false" label="Inactive"/>
 								</td>
 							</tr>
+							<tr>
+								<td align="right"><spring:message code="sirius.default"/> :</td>
+								<td>
+									<form:radiobutton path="def" value="true" label="Yes"/>
+									<form:radiobutton path="def" value="false" label="No"/>
+								</td>
+							</tr>
 	                        <tr>
 								<td align="right"><spring:message code="sirius.note"/> :</td>
 								<td><form:textarea path='note' cols='55' rows='6'/></td>

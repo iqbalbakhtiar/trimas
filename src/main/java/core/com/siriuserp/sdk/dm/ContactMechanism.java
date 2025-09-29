@@ -54,6 +54,10 @@ public class ContactMechanism extends Model implements JSONSupport
 	@Column(name = "active")
 	@Type(type = "yes_no")
 	private boolean active;
+	
+	@Column(name = "def")
+	@Type(type = "yes_no")
+	private boolean def;
 
 	@Column(name = "note")
 	private String note;
