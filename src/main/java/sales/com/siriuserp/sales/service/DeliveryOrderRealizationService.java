@@ -23,6 +23,7 @@ import com.siriuserp.sales.dm.DeliveryOrderItemType;
 import com.siriuserp.sales.dm.DeliveryOrderRealization;
 import com.siriuserp.sales.dm.DeliveryOrderRealizationItem;
 import com.siriuserp.sales.dm.SOStatus;
+import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sales.form.SalesForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
@@ -154,6 +155,14 @@ public class DeliveryOrderRealizationService extends Service
 				realization.getAccepteds().add(realizationItem);
 			}
 		}
+		
+		for (SalesOrder salesOrder : delivery.getSalesOrders()) {
+			
+			if(salesOrder!=null) {
+				salesOrder.setSoStatus(SOStatus.CLOSE);
+				genericDao.update(salesOrder);
+			}
+		}
 
 		genericDao.add(realization);
 
@@ -162,6 +171,7 @@ public class DeliveryOrderRealizationService extends Service
 		delivery.setUpdatedDate(DateHelper.now());
 
 		genericDao.update(delivery);
+		
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
