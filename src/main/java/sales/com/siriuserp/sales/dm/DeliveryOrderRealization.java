@@ -72,6 +72,10 @@ public class DeliveryOrderRealization extends Model implements JSONSupport, Issu
 	@Column(name = "note_ext")
 	private String noteExt;
 
+	@Column(name = "billingable")
+	@Type(type = "yes_no")
+	private boolean billingable = Boolean.TRUE;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_party_organization")
 	@LazyToOne(LazyToOneOption.PROXY)
@@ -216,12 +220,6 @@ public class DeliveryOrderRealization extends Model implements JSONSupport, Issu
 			referenceables.add(item);
 
 		return referenceables;
-	}
-
-	@Override
-	public boolean isBillingable()
-	{
-		return true;
 	}
 
 	@Override

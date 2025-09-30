@@ -53,6 +53,14 @@
                 </form:select>
               </td>
             </tr>
+			<tr>
+				<td align="right"><spring:message code="purchaseorder.invoicetype"/></td>
+              	<td width="1%" align="center">:</td>
+				<td>
+					<form:radiobutton id="invoiceTrue" path="invoiceBeforeReceipt" value="true" disabled="true"/><spring:message code="purchaseorder.invoicetype.before"/>
+					<form:radiobutton id="invoiceFalse" path="invoiceBeforeReceipt" value="false" disabled="true"/><spring:message code="purchaseorder.invoicetype.after"/>	
+				</td>
+			</tr>
             <tr>
               <td align="right"><spring:message code="sirius.date"/></td>
               <td width="1%" align="center">:</td>

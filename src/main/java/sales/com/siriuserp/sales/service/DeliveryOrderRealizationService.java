@@ -23,7 +23,6 @@ import com.siriuserp.sales.dm.DeliveryOrderItemType;
 import com.siriuserp.sales.dm.DeliveryOrderRealization;
 import com.siriuserp.sales.dm.DeliveryOrderRealizationItem;
 import com.siriuserp.sales.dm.SOStatus;
-import com.siriuserp.sales.dm.SalesOrder;
 import com.siriuserp.sales.form.SalesForm;
 import com.siriuserp.sdk.annotation.AuditTrails;
 import com.siriuserp.sdk.annotation.AuditTrailsActionType;
@@ -120,6 +119,9 @@ public class DeliveryOrderRealizationService extends Service
 		{
 			DeliveryOrderItem deliveryOrderItem = genericDao.load(DeliveryOrderItem.class, item.getReference());
 
+			if (deliveryOrderItem.getDeliveryItemType().equals(DeliveryOrderItemType.BASE) && deliveryOrderItem.getDeliveryPlanningSequence().getDeliveryPlanning().getSalesOrder().isBillingable())
+				realization.setBillingable(false);
+
 			if (item.getAccepted().compareTo(BigDecimal.ZERO) > 0)
 			{
 				Money money = new Money();
@@ -155,14 +157,6 @@ public class DeliveryOrderRealizationService extends Service
 				realization.getAccepteds().add(realizationItem);
 			}
 		}
-		
-		for (SalesOrder salesOrder : delivery.getSalesOrders()) {
-			
-			if(salesOrder!=null) {
-				salesOrder.setSoStatus(SOStatus.CLOSE);
-				genericDao.update(salesOrder);
-			}
-		}
 
 		genericDao.add(realization);
 
@@ -171,7 +165,7 @@ public class DeliveryOrderRealizationService extends Service
 		delivery.setUpdatedDate(DateHelper.now());
 
 		genericDao.update(delivery);
-		
+
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
