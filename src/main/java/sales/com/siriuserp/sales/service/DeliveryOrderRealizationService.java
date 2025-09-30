@@ -119,6 +119,9 @@ public class DeliveryOrderRealizationService extends Service
 		{
 			DeliveryOrderItem deliveryOrderItem = genericDao.load(DeliveryOrderItem.class, item.getReference());
 
+			if (deliveryOrderItem.getDeliveryItemType().equals(DeliveryOrderItemType.BASE) && deliveryOrderItem.getDeliveryPlanningSequence().getDeliveryPlanning().getSalesOrder().isBillingable())
+				realization.setBillingable(false);
+
 			if (item.getAccepted().compareTo(BigDecimal.ZERO) > 0)
 			{
 				Money money = new Money();
@@ -152,9 +155,6 @@ public class DeliveryOrderRealizationService extends Service
 					realizationItem.setTransactionItem(ReferenceItemHelper.init(genericDao, realizationItem.getAccepted(), WarehouseTransactionType.OUT, realizationItem));
 
 				realization.getAccepteds().add(realizationItem);
-
-				if (deliveryOrderItem.getDeliveryPlanningSequence().getDeliveryPlanning().getSalesOrder().isBillingable())
-					realization.setBillingable(false);
 			}
 		}
 
