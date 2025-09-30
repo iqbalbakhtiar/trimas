@@ -32,9 +32,8 @@
               <td width="1%" align="center">:</td>
               <td>
                 <form:select id="purchaseType" path="purchaseType" cssClass="combobox-min">
-	                <c:forEach var="type" items="${purchaseTypes}">
-	                    <form:option value="${type}"><spring:message code='purchaseorder.type.${type.messageName}'/></form:option>
-	                </c:forEach>
+                    <form:option value="DIRECT" selected="true"><spring:message code='purchaseorder.type.direct'/></form:option>
+                    <form:option value="STANDARD"><spring:message code='purchaseorder.type.standard'/></form:option>
                 </form:select>
               </td>
             </tr>
@@ -49,7 +48,7 @@
                 </form:select>
               </td>
             </tr>
-			<tr id="rowInvoice">
+			<tr>
 				<td align="right"><spring:message code="purchaseorder.invoicetype"/></td>
               	<td width="1%" align="center">:</td>
 				<td>
@@ -240,16 +239,12 @@ $(function(){
     if(type == 'STANDARD') {
     	$('#standard').removeAttr('style');
     	$('#nonstandard').attr('style','display:none;');
-    	$('#rowInvoice').removeAttr('style');
     } else if(type == 'DIRECT') {
     	$('#nonstandard').removeAttr('style');
     	$('#standard').attr('style','display:none;');
-    	$('#rowInvoice').removeAttr('style');
     } else {
     	$('#nonstandard').removeAttr('style');
     	$('#standard').attr('style','display:none;');
-    	$('#rowInvoice').attr('style','display:none;');
-    	$("#invoiceTrue").prop("checked", true);
     }
   });
 
@@ -277,6 +272,7 @@ $(function(){
   });
 
   $('#org').trigger('change');
+  $('#purchaseType').trigger('change');
 });
 
 function updateDisplay() {
@@ -326,12 +322,12 @@ function updateDisplay() {
   $('#totalTax').val(totalTax.numberFormat('#,##0.00'));
   $('#totalTransaction').val(totalTransaction.numberFormat('#,##0.00'));
 
-  if(totalTransaction > new Number(1000000))
+  /* if(totalTransaction > new Number(1000000))
     $('#rowApprover').removeAttr('style');
   else {
 	$('#approver').empty();
     $('#rowApprover').attr('style','display:none;');
-  }
+  } */
 }
 
 function updateBillShipAddress(element){
@@ -400,13 +396,13 @@ function validation() {
     return false;
   }
 
-  if($('#totalTransaction').val().toNumber() > new Number(1000000)) {
+  /* if($('#totalTransaction').val().toNumber() > new Number(1000000)) {
     var approver = $('#approver').val();
     if (approver == null || approver === "") {
       alert('<spring:message code="approver"/> <spring:message code="notif.empty"/> !');
       return false;
     }
-  }
+  } */
 
   if ($('#lineItem tr').length === 0) {
     alert('<spring:message code="notif.add"/> <spring:message code="salesorder.lineitem"/> <spring:message code="notif.select2"/> !');
@@ -477,7 +473,6 @@ function save() {
   });
 }
 
-
 var selectedRequisitions = [];
 var index = 0;
 
@@ -537,15 +532,7 @@ function addLine() {
 }
 
 function openProduct(index) {
-  var cat = "";
-  var purchaseType = $('#purchaseType').val();
-  
-  if(purchaseType == 'DIRECT')
-	  cat = "STOCK";
-  else
-	  cat = "NONSTOCK&serial=false";
-  
-  openpopup("<c:url value='/page/popupproductview.htm?&target=reference['/>"+index+"]&index="+index+"&productCategoryType="+cat);
+  openpopup("<c:url value='/page/popupproductview.htm?&target=reference['/>"+index+"]&index="+index);
 }
 
 function checkDuplicate(element) {

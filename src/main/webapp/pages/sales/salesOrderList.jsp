@@ -84,6 +84,7 @@
 								<c:if test="${sales.soStatus eq 'CLOSE' or sales.soStatus eq 'CANCELED'}"><div style="color: red;"><spring:message code="salesorder.status.${sales.soStatus.messageName}"/></div></c:if>
 								<c:if test="${sales.soStatus eq 'PLANNING'}"><div style="color: blue;"><spring:message code="salesorder.status.${sales.soStatus.messageName}"/></div></c:if>
 								<c:if test="${sales.soStatus eq 'OPEN'}"><div style="color: green;"><spring:message code="salesorder.status.${sales.soStatus.messageName}"/></div></c:if>
+								<c:if test="${sales.soStatus eq 'DELIVERED'}"><div style="color: green;"><spring:message code="salesorder.status.${sales.soStatus.messageName}"/></div></c:if>
  							</td>
 						</tr>
 						</c:forEach>
