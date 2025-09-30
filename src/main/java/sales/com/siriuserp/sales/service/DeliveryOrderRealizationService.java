@@ -153,7 +153,7 @@ public class DeliveryOrderRealizationService extends Service
 
 				realization.getAccepteds().add(realizationItem);
 
-				if (!deliveryOrderItem.getDeliveryPlanningSequence().getDeliveryPlanning().getSalesOrder().isBillingable())
+				if (deliveryOrderItem.getDeliveryPlanningSequence().getDeliveryPlanning().getSalesOrder().isBillingable())
 					realization.setBillingable(false);
 			}
 		}
