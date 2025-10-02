@@ -93,7 +93,7 @@
 			var _code = self.opener.document.getElementById('codeprod[${index}]');
 			var _category = self.opener.document.getElementById('category[${index}]');
 			var _gridFrom = self.opener.document.getElementById('gridFrom[${index}]');
-			//var _container = self.opener.document.getElementById('container[${index}]');
+			var _container = self.opener.document.getElementById('container[${index}]');
 			var _source = self.opener.document.getElementById('source[${index}]');
 
 			if(_onhand)
@@ -117,16 +117,16 @@
 			if(_gridFrom)
 				_gridFrom.value = grid;
 			
-			/*if(_container)
+			if(_container)
 			{
-				_container.remove(_source.selectedIndex);
+				_container.remove(_container.selectedIndex);
 				
 				var _opt = document.createElement('option');
 				_opt.value = containerId;
 				_opt.text = containerName.replaceAll("*", "\"");;
 				
 				_container.appendChild(_opt);
-			}*/
+			}
 			
 			if(_source)
 			{

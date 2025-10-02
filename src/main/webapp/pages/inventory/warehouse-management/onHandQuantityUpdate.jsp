@@ -1,7 +1,7 @@
 <%@ include file="/pages/includes/sirius-head.jsp"%>	
 
 <div class="toolbar">
-	<a class="item-button-back" href="<c:url value='/page/onhandquantitygroupview.htm'/>" title="Edit"><span><spring:message code="sirius.back"/></span></a>
+	<a class="item-button-back" href="<c:url value='/page/onhandquantityview.htm'/>" title="Edit"><span><spring:message code="sirius.back"/></span></a>
 </div>
 
 <div class="main-box">
