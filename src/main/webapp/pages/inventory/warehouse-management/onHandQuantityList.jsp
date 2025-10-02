@@ -6,7 +6,7 @@
 		<tr>
 			<td width="30%" height="30" align="left" valign="middle">
 				<div class="toolbar-clean">
-					 <a class="item-button-back" href="<c:url value='/page/onhandquantitygroupview.htm'/>"><span><spring:message code="sirius.back"/></span></a>
+					 <%-- <a class="item-button-back" href="<c:url value='/page/onhandquantitygroupview.htm'/>"><span><spring:message code="sirius.back"/></span></a> --%>
 					<div dojoType="Toggler" targetId="filter">
 						<a class="item-button-search" href="javascript:return;"><span><spring:message code="sirius.paging.filter"/></span>
 						</a>
