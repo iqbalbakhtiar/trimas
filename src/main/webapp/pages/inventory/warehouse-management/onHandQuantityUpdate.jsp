@@ -46,7 +46,8 @@
             <th width="3%"><spring:message code="sirius.total"/></th>
             <th width="8%"><spring:message code="barcode"/></th>
             <th width="8%"><spring:message code="product.lot"/></th>
-            <th width="8%"><spring:message code="product.onhand"/></th>
+            <th width="8%" style="text-align: right;"><spring:message code="product.onhand"/></th>
+            <th width="1%">&nbsp;</th>
             <th width="8%"><spring:message code="product.reserved.process"/></th>
             <th width="8%"><spring:message code="product.ontransfer"/></th>
             <th width="10%"><spring:message code="product.available"/></th>
@@ -88,7 +89,8 @@
                 </td>
                 <td><c:out value='${detail.lot.serial}'/></td>
                 <td><c:out value='${detail.lot.code}'/></td>
-                <td id="onHand${status.index}"><fmt:formatNumber value='${detail.onHand}' pattern=',##0.00'/></td>
+                <td id="onHand${status.index}" style="text-align: right;"><fmt:formatNumber value='${detail.onHand}' pattern=',##0.00'/></td>
+                <td><a class="item-popup" onclick="javascript:openpopup('<c:url value='/page/popupproductinouttransactionview.htm?product=${product.id}&container=${detail.container.id}&serial=${detail.lot.serial}&lotCode=${detail.lot.code}'/>');"  title="Stock Control" /></td>
                 <td id="reserved${status.index}"><fmt:formatNumber value='${detail.reserved}' pattern=',##0.00'/></td>
                 <td><fmt:formatNumber value='${detail.onTransfer}' pattern=',##0.00'/></td>
                 <td id="available${status.index}"><fmt:formatNumber value='${detail.availableSale}' pattern=',##0.00'/></td>
@@ -96,7 +98,7 @@
         </c:forEach>
     </tbody>
     <tfoot>
-        <tr class="end-table"><td colspan="9">&nbsp;</td></tr>
+        <tr class="end-table"><td colspan="10">&nbsp;</td></tr>
     </tfoot>
     </table>
 </div>
