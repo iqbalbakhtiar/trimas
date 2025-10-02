@@ -47,10 +47,11 @@ import javolution.util.FastMap;
  * @author ferdinand
  */
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings(
+{ "unchecked", "rawtypes" })
 @Component
 @Transactional(rollbackFor = Exception.class)
-public class StockControlService 
+public class StockControlService
 {
 	@Autowired
 	private ProductInOutAveragePriceDao productInOutAveragePriceDao;
@@ -59,7 +60,8 @@ public class StockControlService
 	private DataWarehouseDao dataWarehouseDao;
 
 	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception {
+	public Map<String, Object> view(GridViewFilterCriteria filterCriteria, Class<? extends GridViewQuery> queryclass) throws Exception
+	{
 		Map<String, Object> map = new FastMap<String, Object>();
 		map.put("filterCriteria", filterCriteria);
 		map.put("prices", productInOutAveragePriceDao.filter(QueryFactory.create(filterCriteria, queryclass)));
@@ -78,13 +80,11 @@ public class StockControlService
 		ProductInOutAveragePrice averagePrice = productInOutAveragePriceDao.load(product.getId(), organization.getId());
 		if (averagePrice != null)
 		{
-			averagePrice.setPrice(
-					(averagePrice.getPrice().multiply(averagePrice.getQuantity()).add(quantity.multiply(price))).divide(averagePrice.getQuantity().add(quantity), 23, RoundingMode.HALF_EVEN));
+			averagePrice.setPrice((averagePrice.getPrice().multiply(averagePrice.getQuantity()).add(quantity.multiply(price))).divide(averagePrice.getQuantity().add(quantity), 23, RoundingMode.HALF_EVEN));
 			averagePrice.setQuantity(averagePrice.getQuantity().add(quantity));
 
 			dataWarehouseDao.update(averagePrice);
-		} 
-		else
+		} else
 		{
 			averagePrice = new ProductInOutAveragePrice();
 			averagePrice.setOrganization(organization);
@@ -104,24 +104,25 @@ public class StockControlService
 	 * @param quantity quantity
 	 * @return T ProductTransaction created from FIFO/LIFO process
 	 */
-	public <T> T fifoLifo(Class<T> dataWarehouse, WarehouseTransactionItem item, Controllable controllable, Inventoriable inventory, Money money, BigDecimal quantity) throws Exception {
+	public <T> T fifoLifo(Class<T> dataWarehouse, WarehouseTransactionItem item, Controllable controllable, Inventoriable inventory, Money money, BigDecimal quantity) throws Exception
+	{
 		ProductTransaction transaction = (ProductTransaction) Class.forName(dataWarehouse.getCanonicalName()).getDeclaredConstructor().newInstance();
 		transaction.setControllable(controllable);
 		transaction.setOriginItem(item);
-		
-		if(inventory.getLot() != null)
+
+		if (inventory.getLot() != null)
 		{
 			transaction.setInfo(inventory.getLot().getInfo());
 			transaction.setCode(inventory.getLot().getCode());
 			transaction.setSerial(inventory.getLot().getSerial());
 		}
 
-		if(money.getCurrency() != null)
+		if (money.getCurrency() != null)
 			transaction.setCurrency(dataWarehouseDao.load(Currency.class, money.getCurrency().getId()));
-		
+
 		transaction.setRate(money.getRate());
 		transaction.setPrice(money.getAmount());
-		
+
 		transaction.setDate(controllable.getDate());
 		transaction.setOrganization(inventory.getOrganization());
 		transaction.setContainer(inventory.getContainer());
@@ -133,29 +134,29 @@ public class StockControlService
 
 		return (T) transaction;
 	}
-	
-	public Set<Map<String, BigDecimal>> price(Class warehouse, Inventoriable inventory, StockControlType stockControlType) throws Exception 
+
+	public Set<Map<String, BigDecimal>> price(Class warehouse, Inventoriable inventory, StockControlType stockControlType) throws Exception
 	{
-		List<ProductTransaction> fifo = dataWarehouseDao.loadAll(warehouse, inventory.getOrganization().getId(), inventory.getSourceContainer().getId(), 
-				inventory.getProduct().getId(), inventory instanceof Reservable ? null : inventory.getLot(), inventory.getDate(), stockControlType);
-		
+		List<ProductTransaction> fifo = dataWarehouseDao.loadAll(warehouse, inventory.getOrganization().getId(), inventory.getSourceContainer().getId(), inventory.getProduct().getId(), inventory instanceof Reservable ? null : inventory.getLot(),
+				inventory.getDate(), stockControlType);
+
 		BigDecimal buffer = inventory.getQuantity().abs();
-		
-		Set<Map<String, BigDecimal>> list = new HashSet<Map<String,BigDecimal>>();
-		
+
+		Set<Map<String, BigDecimal>> list = new HashSet<Map<String, BigDecimal>>();
+
 		for (ProductTransaction transaction : fifo)
 		{
 			Map<String, BigDecimal> map = new FastMap<String, BigDecimal>();
- 			
+
 			if (buffer.compareTo(BigDecimal.ZERO) <= 0)
 				break;
-			
+
 			map.put("cogs", transaction.getPrice());
 			map.put("rate", transaction.getRate());
-	
+
 			list.add(map);
 		}
-		
+
 		return list;
 	}
 
@@ -169,14 +170,28 @@ public class StockControlService
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
-	public Set<StockControl> get(Class warehouse, Inventoriable inventory, Stockable stockable, StockControlType stockControlType) throws Exception {
+	public Set<StockControl> get(Class warehouse, Inventoriable inventory, Stockable stockable, StockControlType stockControlType) throws Exception
+	{
 		Set<StockControl> list = new HashSet<StockControl>();
+
+		StringBuilder notif = new StringBuilder();
+		notif.append("Quantity " + inventory.getProduct().getName());
+		notif.append("[" + inventory.getSourceContainer().getName() + "]");
+
+		if (inventory.getLot() != null)
+		{
+			notif.append("[" + SiriusValidator.getEmptyStringParam(inventory.getLot().getCode()) + "]");
+			notif.append("[" + SiriusValidator.getEmptyStringParam(inventory.getLot().getInfo()) + "]");
+			notif.append("[" + SiriusValidator.getEmptyStringParam(inventory.getLot().getSerial()) + "]");
+		}
+
+		notif.append(" requested is bigger then available quantity on Stock Controll !");
 
 		//Stock data for FIFO/LIFO
 		if (!stockControlType.equals(StockControlType.AVERAGE))
 		{
-			List<ProductTransaction> fifo = dataWarehouseDao.loadAll(warehouse, inventory.getOrganization().getId(), inventory.getSourceContainer().getId(), 
-				inventory.getProduct().getId(), inventory instanceof Reservable ? null : inventory.getLot(), inventory.getDate(), stockControlType);
+			List<ProductTransaction> fifo = dataWarehouseDao.loadAll(warehouse, inventory.getOrganization().getId(), inventory.getSourceContainer().getId(), inventory.getProduct().getId(), inventory instanceof Reservable ? null : inventory.getLot(),
+					inventory.getDate(), stockControlType);
 
 			if (!fifo.isEmpty())
 			{
@@ -187,7 +202,7 @@ public class StockControlService
 					if (buffer.compareTo(BigDecimal.ZERO) <= 0)
 						break;
 
-					StockControl control = new StockControl();	
+					StockControl control = new StockControl();
 					control.setCode(transaction.getCode());
 					control.setSerial(transaction.getSerial());
 					control.setInfo(transaction.getInfo());
@@ -199,7 +214,7 @@ public class StockControlService
 					control.setControllable(transaction.getControllable());
 					control.setStockable(stockable);
 					control.setDestinationItem(stockable.getWarehouseTransactionItem());
-			
+
 					if (transaction.getQuantity().compareTo(buffer) >= 0)
 					{
 						control.setQuantity(buffer);
@@ -207,8 +222,7 @@ public class StockControlService
 						transaction.setQuantity(transaction.getQuantity().subtract(buffer));
 
 						buffer = BigDecimal.ZERO;
-					} 
-					else
+					} else
 					{
 						control.setQuantity(transaction.getQuantity());
 
@@ -218,9 +232,9 @@ public class StockControlService
 					}
 
 					control.setBuffer(control.getQuantity());
-					
+
 					//For Convertion Reserved Global Stock to Detail Stock
-					if(inventory instanceof Reservable)
+					if (inventory instanceof Reservable)
 					{
 						Money money = new Money();
 						money.setCurrency(transaction.getCurrency());
@@ -236,15 +250,9 @@ public class StockControlService
 				}
 
 				if (buffer.compareTo(BigDecimal.ZERO) > 0)
-					throw new ServiceException("Quantity " + inventory.getProduct().getName() + " [" + inventory.getSourceContainer().getName() + "] "
-						+ "["+SiriusValidator.getEmptyStringParam(inventory.getLot().getCode())+"] ["+SiriusValidator.getEmptyStringParam(inventory.getLot().getInfo())+"] "
-							+ "["+SiriusValidator.getEmptyStringParam(inventory.getLot().getSerial())+"]"
-								+ "requested is bigger then available quantity on Stock Controll !");
+					throw new ServiceException(notif.toString());
 			} else
-				throw new ServiceException("Stock " + inventory.getProduct().getName() + " [" + inventory.getSourceContainer().getName() + "] "
-					+ "["+SiriusValidator.getEmptyStringParam(inventory.getLot().getCode())+"] ["+SiriusValidator.getEmptyStringParam(inventory.getLot().getInfo())+"]"
-						+ "["+SiriusValidator.getEmptyStringParam(inventory.getLot().getSerial())+"] "
-							+ "unsync with On Hand Quantity, please recheck again !");
+				throw new ServiceException(notif.toString());
 		} else
 		{
 			ProductInOutAveragePrice averagePrice = productInOutAveragePriceDao.load(inventory.getProduct().getId(), inventory.getOrganization().getId());
@@ -264,11 +272,12 @@ public class StockControlService
 
 		return list;
 	}
-	
+
 	/*
 	 * Stock control was simulated for ProductInOutTransaction
 	 */
-	public <T> Set<T> buffer(Class<T> dataWarehouse, Set<StockControl> controls, Controllable controllable) throws Exception {
+	public <T> Set<T> buffer(Class<T> dataWarehouse, Set<StockControl> controls, Controllable controllable) throws Exception
+	{
 		Set<T> trans = new HashSet<T>();
 
 		BigDecimal buffer = controllable.getQuantity();
@@ -276,8 +285,8 @@ public class StockControlService
 
 		for (StockControl control : controls)
 		{
-			if (SiriusValidator.gz(control.getBuffer()) && control.getStockable().getSelf().compareTo("GoodsIssueItem") == 0 &&
-				(control.getLot() == null || LotHelper.getCompare(control.getLot()).compareTo(LotHelper.getCompare(controllable.getOriginLot())) == 0))
+			if (SiriusValidator.gz(control.getBuffer()) && control.getStockable().getSelf().compareTo("GoodsIssueItem") == 0
+					&& (control.getLot() == null || LotHelper.getCompare(control.getLot()).compareTo(LotHelper.getCompare(controllable.getOriginLot())) == 0))
 			{
 				if (buffer.compareTo(BigDecimal.ZERO) <= 0)
 					break;
@@ -288,38 +297,37 @@ public class StockControlService
 					control.setBuffer(control.getBuffer().subtract(buffer));
 
 					buffer = BigDecimal.ZERO;
-				} 
-				else
+				} else
 				{
 					in = control.getBuffer();
 					buffer = buffer.subtract(control.getBuffer());
 
 					control.setBuffer(BigDecimal.ZERO);
 				}
-				
+
 				dataWarehouseDao.update(control);
 
-				if (in.compareTo(BigDecimal.ZERO) > 0) {
+				if (in.compareTo(BigDecimal.ZERO) > 0)
+				{
 					controllable.setStockable(control.getStockable());
-					
+
 					trans.add(fifoLifo(dataWarehouse, control.getSourceItem(), controllable, controllable, control.getMoney(), in));
 				}
 			}
 		}
-		
+
 		if (buffer.compareTo(BigDecimal.ZERO) > 0)
 			throw new ServiceException("Buffer Quantity " + controllable.getProduct().getName() + "[" + controllable.getSourceContainer().getName() + "] requested is bigger then available quantity on Stock Controll !");
 
 		return trans;
 	}
-	
+
 	public void unbuffer(Set<StockControl> controls, Controllable controllable) throws DataEditException
 	{
 		BigDecimal buffer = controllable.getQuantity();
-		
+
 		for (StockControl control : controls)
-			if (control.getStockable().getSelf().compareTo("GoodsIssueItem") == 0 && 
-				(control.getLot() == null || LotHelper.getKey(control.getLot()).compareTo(LotHelper.getKey(controllable.getOriginLot())) == 0))
+			if (control.getStockable().getSelf().compareTo("GoodsIssueItem") == 0 && (control.getLot() == null || LotHelper.getKey(control.getLot()).compareTo(LotHelper.getKey(controllable.getOriginLot())) == 0))
 			{
 				if (buffer.compareTo(BigDecimal.ZERO) <= 0)
 					break;
@@ -329,14 +337,13 @@ public class StockControlService
 					control.setBuffer(control.getBuffer().add(buffer));
 
 					buffer = BigDecimal.ZERO;
-				} 
-				else
+				} else
 				{
 					buffer = buffer.subtract(control.getQuantity());
 
 					control.setBuffer(control.getQuantity());
 				}
-				
+
 				dataWarehouseDao.update(control);
 			}
 	}
