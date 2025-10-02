@@ -54,55 +54,49 @@ public class DataWarehouseDaoImpl extends DaoHelper<Object> implements DataWareh
 	{
 		StringBuilder builder = new StringBuilder("FROM " + warehouse.getName() + " inventory WHERE inventory.id IS NOT NULL");
 		builder.append(" AND inventory.product.id =:product");
-		
-		if(SiriusValidator.validateParam(grid))
+
+		if (SiriusValidator.validateParam(grid))
 			builder.append(" AND inventory.grid.id =:grid");
-		
-		if(SiriusValidator.validateParam(container))
+
+		if (SiriusValidator.validateParam(container))
 			builder.append(" AND inventory.container.id =:container");
-		
-		if(lot != null && SiriusValidator.validateParam(lot.getSerial()))
+
+		if (lot != null && SiriusValidator.validateParam(lot.getSerial()))
 			builder.append(" AND inventory.lot.serial =:serial");
 		else
 			builder.append(" AND inventory.lot.serial IS NULL");
-		
-		if(lot != null && SiriusValidator.validateParam(lot.getCode()))
+
+		if (lot != null && SiriusValidator.validateParam(lot.getCode()))
 			builder.append(" AND inventory.lot.code =:code");
 		else
 			builder.append(" AND inventory.lot.code IS NULL");
-		
-		if(lot != null && SiriusValidator.validateParam(lot.getInfo()))
-			builder.append(" AND (inventory.lot.info =:info OR inventory.lot.info IS NULL)");
-		
-		if(tag != null && tag.getInventoryType() != null)
+
+		if (tag != null && tag.getInventoryType() != null)
 			builder.append(" AND inventory.tag.inventoryType =:inventoryType ");
 
 		Query criteria = getSession().createQuery(builder.toString());
 		criteria.setCacheable(true);
 		criteria.setMaxResults(1);
 		criteria.setParameter("product", product);
-		
-		if(SiriusValidator.validateParam(grid))
+
+		if (SiriusValidator.validateParam(grid))
 			criteria.setParameter("grid", grid);
-		
-		if(SiriusValidator.validateParam(container))
+
+		if (SiriusValidator.validateParam(container))
 			criteria.setParameter("container", container);
 
-		if(lot != null && SiriusValidator.validateParam(lot.getSerial()))
+		if (lot != null && SiriusValidator.validateParam(lot.getSerial()))
 			criteria.setParameter("serial", lot.getSerial());
 
-		if(lot != null && SiriusValidator.validateParam(lot.getCode()))
+		if (lot != null && SiriusValidator.validateParam(lot.getCode()))
 			criteria.setParameter("code", lot.getCode());
-				
-		if(lot != null && SiriusValidator.validateParam(lot.getInfo()))
-			criteria.setParameter("info", lot.getInfo());
-	
-		if(tag != null && tag.getInventoryType() != null)
+
+		if (tag != null && tag.getInventoryType() != null)
 			criteria.setParameter("inventoryType", tag.getInventoryType());
-		
+
 		return (T) criteria.uniqueResult();
 	}
-	
+
 	/**
 	 * @param warehouse for implement Inventory
 	 * @param product target Product
@@ -115,57 +109,51 @@ public class DataWarehouseDaoImpl extends DaoHelper<Object> implements DataWareh
 	{
 		StringBuilder builder = new StringBuilder("FROM " + warehouse.getName() + " inventory WHERE inventory.total > 0");
 		builder.append(" AND inventory.product.id =:product");
-		
-		if(SiriusValidator.validateParam(grid))
+
+		if (SiriusValidator.validateParam(grid))
 			builder.append(" AND inventory.grid.id =:grid");
-		
-		if(SiriusValidator.validateParam(container))
+
+		if (SiriusValidator.validateParam(container))
 			builder.append(" AND inventory.container.id =:container");
-		
-		if(lot != null && SiriusValidator.validateParam(lot.getSerial()))
+
+		if (lot != null && SiriusValidator.validateParam(lot.getSerial()))
 			builder.append(" AND inventory.lot.serial =:serial");
 		else
 			builder.append(" AND inventory.lot.serial IS NULL");
 
-		if(lot != null && SiriusValidator.validateParam(lot.getCode()))
+		if (lot != null && SiriusValidator.validateParam(lot.getCode()))
 			builder.append(" AND inventory.lot.code =:code");
 		else
 			builder.append(" AND inventory.lot.code IS NULL");
-		
-		if(lot != null && SiriusValidator.validateParam(lot.getInfo()))
-			builder.append(" AND (inventory.lot.info =:info OR inventory.lot.info IS NULL)");
-		
-		if(tag != null && tag.getInventoryType() != null)
+
+		if (tag != null && tag.getInventoryType() != null)
 			builder.append(" AND inventory.tag.inventoryType =:type");
 
 		builder.append(" ORDER BY inventory.tag.inventoryType ");
 		builder.append(orderType);
-		
+
 		Query criteria = getSession().createQuery(builder.toString());
 		criteria.setCacheable(true);
 		criteria.setParameter("product", product);
-		
-		if(SiriusValidator.validateParam(grid))
+
+		if (SiriusValidator.validateParam(grid))
 			criteria.setParameter("grid", grid);
 
-		if(SiriusValidator.validateParam(container))
+		if (SiriusValidator.validateParam(container))
 			criteria.setParameter("container", container);
 
-		if(lot != null && SiriusValidator.validateParam(lot.getSerial()))
+		if (lot != null && SiriusValidator.validateParam(lot.getSerial()))
 			criteria.setParameter("serial", lot.getSerial());
 
-		if(lot != null && SiriusValidator.validateParam(lot.getCode()))
+		if (lot != null && SiriusValidator.validateParam(lot.getCode()))
 			criteria.setParameter("code", lot.getCode());
-				
-		if(lot != null && SiriusValidator.validateParam(lot.getInfo()))
-			criteria.setParameter("info", lot.getInfo());
-		
-		if(tag != null && tag.getInventoryType() != null)
+
+		if (tag != null && tag.getInventoryType() != null)
 			criteria.setParameter("type", tag.getInventoryType());
-		
+
 		return criteria.list();
 	}
-	
+
 	/**
 	 * @param warehouse for implement Inventory
 	 * @param product target Product
@@ -178,23 +166,20 @@ public class DataWarehouseDaoImpl extends DaoHelper<Object> implements DataWareh
 	{
 		StringBuilder builder = new StringBuilder("FROM " + warehouse.getName() + " inventory WHERE inventory.availableSale > 0");
 		builder.append(" AND inventory.product.id =:product");
-		
-		if(SiriusValidator.validateParam(grid))
-			builder.append(" AND inventory.grid.id =:grid");
-		
-		if(SiriusValidator.validateParam(container))
-			builder.append(" AND inventory.container.id =:container");
-		
-		if(lot != null && SiriusValidator.validateParam(lot.getSerial()))
-			builder.append(" AND (inventory.lot.serial =:serial OR inventory.lot.serial IS NULL)");
-		
-		if(lot != null && SiriusValidator.validateParam(lot.getCode()))
-			builder.append(" AND (inventory.lot.code =:code OR inventory.lot.code IS NULL)");
-		
-		if(lot != null && SiriusValidator.validateParam(lot.getInfo()))
-			builder.append(" AND (inventory.lot.info =:info OR inventory.lot.info IS NULL)");
 
-		if(tag != null && tag.getInventoryType() != null)
+		if (SiriusValidator.validateParam(grid))
+			builder.append(" AND inventory.grid.id =:grid");
+
+		if (SiriusValidator.validateParam(container))
+			builder.append(" AND inventory.container.id =:container");
+
+		if (lot != null && SiriusValidator.validateParam(lot.getSerial()))
+			builder.append(" AND (inventory.lot.serial =:serial OR inventory.lot.serial IS NULL)");
+
+		if (lot != null && SiriusValidator.validateParam(lot.getCode()))
+			builder.append(" AND (inventory.lot.code =:code OR inventory.lot.code IS NULL)");
+
+		if (tag != null && tag.getInventoryType() != null)
 			builder.append(" AND inventory.tag.inventoryType =:type");
 
 		builder.append(" ORDER BY inventory.tag.inventoryType ");
@@ -203,23 +188,20 @@ public class DataWarehouseDaoImpl extends DaoHelper<Object> implements DataWareh
 		Query criteria = getSession().createQuery(builder.toString());
 		criteria.setCacheable(true);
 		criteria.setParameter("product", product);
-		
-		if(SiriusValidator.validateParam(grid))
+
+		if (SiriusValidator.validateParam(grid))
 			criteria.setParameter("grid", grid);
-		
-		if(SiriusValidator.validateParam(container))
+
+		if (SiriusValidator.validateParam(container))
 			criteria.setParameter("container", container);
 
-		if(lot != null && SiriusValidator.validateParam(lot.getSerial()))
+		if (lot != null && SiriusValidator.validateParam(lot.getSerial()))
 			criteria.setParameter("serial", lot.getSerial());
 
-		if(lot != null && SiriusValidator.validateParam(lot.getCode()))
+		if (lot != null && SiriusValidator.validateParam(lot.getCode()))
 			criteria.setParameter("code", lot.getCode());
-				
-		if(lot != null && SiriusValidator.validateParam(lot.getInfo()))
-			criteria.setParameter("info", lot.getInfo());
 
-		if(tag != null && tag.getInventoryType() != null)
+		if (tag != null && tag.getInventoryType() != null)
 			criteria.setParameter("type", tag.getInventoryType());
 
 		return criteria.list();
@@ -296,28 +278,25 @@ public class DataWarehouseDaoImpl extends DaoHelper<Object> implements DataWareh
 		builder.append("FROM " + warehouse.getName() + " trans ");
 		builder.append("WHERE trans.quantity > 0 ");
 		builder.append("AND trans.product.id =:prod ");
-		
+
 		if (SiriusValidator.validateDate(date))
 			builder.append("AND trans.date <=:date ");
-		
+
 		if (SiriusValidator.validateLongParam(organization))
 			builder.append("AND trans.organization.id =:org ");
 
 		if (SiriusValidator.validateLongParam(container))
 			builder.append("AND trans.container.id =:container ");
-	
+
 		if (lot != null && SiriusValidator.validateParam(lot.getCode()))
 			builder.append("AND trans.code =:code ");
 		else
 			builder.append("AND trans.code IS NULL ");
-		
+
 		if (lot != null && SiriusValidator.validateParam(lot.getSerial()))
 			builder.append("AND trans.serial =:serial ");
 		else
 			builder.append("AND trans.serial IS NULL ");
-
-		if (lot != null && SiriusValidator.validateParam(lot.getInfo()))
-			builder.append("AND (trans.info =:info OR trans.info IS NULL) ");
 
 		if (controlType.equals(StockControlType.FIFO))
 			builder.append("ORDER BY trans.date ASC, trans.id ASC");
@@ -330,21 +309,18 @@ public class DataWarehouseDaoImpl extends DaoHelper<Object> implements DataWareh
 
 		if (SiriusValidator.validateDate(date))
 			query.setParameter("date", date);
-		
+
 		if (SiriusValidator.validateLongParam(organization))
 			query.setParameter("org", organization);
-		
+
 		if (SiriusValidator.validateLongParam(container))
 			query.setParameter("container", container);
 
 		if (lot != null && SiriusValidator.validateParam(lot.getCode()))
 			query.setParameter("code", lot.getCode());
-			
+
 		if (lot != null && SiriusValidator.validateParam(lot.getSerial()))
 			query.setParameter("serial", lot.getSerial());
-		
-		if (lot != null && SiriusValidator.validateParam(lot.getInfo()))
-			query.setParameter("info", lot.getInfo());
 
 		return query.list();
 	}
@@ -352,8 +328,7 @@ public class DataWarehouseDaoImpl extends DaoHelper<Object> implements DataWareh
 	@Override
 	public <T> BigDecimal loadByWarehouse(Class<T> warehouse, Long id, Long container, Long product)
 	{
-		Query query = getSession().createQuery(
-				"SELECT detail.cogs FROM " + warehouse.getName() + " detail WHERE detail.warehouseId =:id AND detail.containerId =:container AND detail.productId =:product ORDER BY detail.id ASC");
+		Query query = getSession().createQuery("SELECT detail.cogs FROM " + warehouse.getName() + " detail WHERE detail.warehouseId =:id AND detail.containerId =:container AND detail.productId =:product ORDER BY detail.id ASC");
 		query.setParameter("id", id);
 		query.setParameter("container", container);
 		query.setParameter("product", product);
@@ -362,7 +337,7 @@ public class DataWarehouseDaoImpl extends DaoHelper<Object> implements DataWareh
 
 		return (BigDecimal) query.uniqueResult();
 	}
-	
+
 	@Override
 	public <T> T loadSummary(Class<T> warehouse, Long product, Date date, StockControlType controlType)
 	{
@@ -370,7 +345,7 @@ public class DataWarehouseDaoImpl extends DaoHelper<Object> implements DataWareh
 		builder.append("FROM " + warehouse.getName() + " trans ");
 		builder.append("WHERE trans.quantity > 0 ");
 		builder.append("AND trans.product.id =:prod ");
-		
+
 		if (SiriusValidator.validateDate(date))
 			builder.append("AND (trans.date <=:date OR trans.date IS NULL) ");
 
@@ -384,7 +359,7 @@ public class DataWarehouseDaoImpl extends DaoHelper<Object> implements DataWareh
 		query.setParameter("prod", product);
 		query.setMaxResults(1);
 		query.setCacheable(true);
-		
+
 		if (SiriusValidator.validateDate(date))
 			query.setParameter("date", date);
 
