@@ -44,7 +44,10 @@
 			<tr>
 				<td width="1%" colspan="2">&nbsp;</td>
 				<td width="48%" colspan="3" valign="top">
-	  				<img style="margin-left: -4px;" src="assets/images/shunhui-logo-crop.png" width="350" height="40"/>
+	  				<!-- <img style="margin-left: -4px;" src="assets/images/shunhui-logo-crop.png" width="350" height="40"/> -->
+	  				<font style="text-transform: uppercase;font-weight: bold;font-size:x-large;">
+	  					${billing_form.organization.salutation}. ${billing_form.organization.fullName}
+	  				</font>
 	  				</br>
 	  				<font>
   					<c:forEach items='${billing_form.organization.postalAddresses}' var='address'>
@@ -81,22 +84,22 @@
 			<tr>
 				<td colspan="2">&nbsp;</td>
 				<td width="10%">Nama</td>
-				<td width="90%" colspan="7">: <c:out value='${billing_form.customer.salutation} ${billing_form.customer.fullName}'/></td>
+				<td width="90%" colspan="5">: <c:out value='${billing_form.customer.salutation} ${billing_form.customer.fullName}'/></td>
+				<td width="2%" colspan="2">&nbsp;</td>
 			</tr>
 			<tr>
 				<td colspan="2">&nbsp;</td>
 				<td>Alamat</td>
-				<td width="90%" colspan="7">:
+				<td width="50%" colspan="3">:
 					<c:out value="${billing_form.shippingAddress.address}"/>
-					<c:out value="${billing_form.shippingAddress.city.name}"/>
-					<c:out value="${billing_form.shippingAddress.province.name}"/>
-					<c:out value="${billing_form.shippingAddress.postalCode}"/>
 				</td>
+				<td width="2%" colspan="2">&nbsp;</td>
+				<td width="2%" colspan="2">&nbsp;</td>
 			</tr>
 			<tr>
 				<td colspan="2">&nbsp;</td>
 				<td width="10%">No. Tlp</td>
-				<td width="90%" colspan="7">:
+				<td width="90%" colspan="5">:
 		  			<c:set var="phone" value=""/>
 		  			<c:set var="fax" value=""/>
 		  			<c:forEach items='${salesOrder_edit.customer.contactMechanisms}' var='cont'>
@@ -111,6 +114,7 @@
 				    </c:forEach>
 				    <c:out value="${phone}"/>
 				</td>
+				<td width="2%" colspan="2">&nbsp;</td>
 			</tr>
 			</table>
 			<br/>
@@ -122,7 +126,6 @@
 				<td class="border-top border-left border-bottom" align="center" width="15%">Jumlah</td>
 				<td class="border-top border-left border-bottom" align="center" width="15%">Harga Sebelum Pajak</td>
 				<td class="border-top border-left border-bottom" align="center" width="15%">Harga Setelah Pajak</td>
-				<td class="border-top border-left border-bottom" align="center" width="15%">Diskon</td>
 				<td class="border-top border-left border-bottom" align="center" width="15%">Total Sebelum Pajak</td>
 				<td class="border-top border-left border-bottom border-right" align="center" width="15%">Total Setelah Pajak</td>
 				<td colspan="2">&nbsp;</td>
@@ -133,10 +136,9 @@
 				<td class="border-left border-bottom" colspan="2">${item.billingReferenceItem.product.name}</td>
 				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.quantity}' pattern=',##0.00'/></td>
 				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.money.amount}' pattern=',##0.00'/></td>
-				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.totalWithTax}' pattern=',##0.00'/></td>
-				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.totalDiscount}' pattern=',##0.00'/></td>
-				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.quantity*item.billingReferenceItem.money.amount}' pattern=',##0.00'/></td>
-				<td class="border-left border-bottom border-right" align="right"><fmt:formatNumber value='${item.billingReferenceItem.quantity*item.billingReferenceItem.totalWithTax}' pattern=',##0.00'/></td>
+				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.amountWithTax}' pattern=',##0.00'/></td>
+				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.totalAfterDiscount}' pattern=',##0.00'/></td>
+				<td class="border-left border-bottom border-right" align="right"><fmt:formatNumber value='${item.billingReferenceItem.totalWithTax}' pattern=',##0.00'/></td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
 			</c:forEach>
@@ -156,7 +158,7 @@
 				<td>&nbsp;</td>
 				<td>Total Diskon</td>
 				<td>: Rp.</td>
-				<td align="right">-</td>
+				<td align="right"><fmt:formatNumber value='${billing_edit.totalDiscountAmount}' pattern=',##0.00'/></td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
 			<tr>
