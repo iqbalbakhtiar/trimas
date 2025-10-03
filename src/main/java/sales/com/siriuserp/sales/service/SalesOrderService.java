@@ -129,7 +129,7 @@ public class SalesOrderService extends Service
 				Money itemMoney = new Money();
 				itemMoney.setAmount(item.getAmount());
 				itemMoney.setCurrency(salesOrder.getMoney().getCurrency());
-
+				
 				SalesOrderItem salesOrderItem = new SalesOrderItem();
 				salesOrderItem.setMoney(itemMoney);
 

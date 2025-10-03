@@ -10,7 +10,7 @@ var $confirmDialog, $dialog;
 //import widget dojo
 dojo.require("dojo.widget.*");
 
-var format = {currency : "#,##0.##", decimal : "#,##0.##", number : "#,##0"};
+var format = {currency : "#,##0.####", decimal : "#,##0.##", number : "#,##0"};
 
 function setInputDynamic(){
 	$('.input-dynamic').each(function(idx, obj){
