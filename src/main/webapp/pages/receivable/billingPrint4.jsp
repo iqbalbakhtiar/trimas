@@ -137,7 +137,7 @@
 				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.quantity}' pattern=',##0.00'/></td>
 				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.money.amount}' pattern=',##0.00'/></td>
 				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.amountWithTax}' pattern=',##0.00'/></td>
-				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.totalAfterDiscount}' pattern=',##0.00'/></td>
+				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.subTotal}' pattern=',##0.00'/></td>
 				<td class="border-left border-bottom border-right" align="right"><fmt:formatNumber value='${item.billingReferenceItem.totalWithTax}' pattern=',##0.00'/></td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
@@ -147,8 +147,9 @@
 				<td colspan="2">&nbsp;</td>
 				<td colspan="2">Untuk Pembayaran Transfer Melalui Rekening :</td>
 				<td>&nbsp;</td>
-				<td>Subtotal</td>
-				<td>: Rp.</td>
+				<td>&nbsp;</td>
+				<td style="text-indent: 50px;">Subtotal</td>
+				<td align="right">Rp.</td>
 				<td align="right"><fmt:formatNumber value='${billing_edit.totalLineAmount}' pattern=',##0.00'/></td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
@@ -156,8 +157,9 @@
 				<td colspan="2">&nbsp;</td>
 				<td colspan="2">BANK CENTRAL ASIA (BCA)</td>
 				<td>&nbsp;</td>
-				<td>Total Diskon</td>
-				<td>: Rp.</td>
+				<td>&nbsp;</td>
+				<td style="text-indent: 50px;">Total Diskon</td>
+				<td align="right">Rp.</td>
 				<td align="right"><fmt:formatNumber value='${billing_edit.totalDiscountAmount}' pattern=',##0.00'/></td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
@@ -165,8 +167,9 @@
 				<td colspan="2">&nbsp;</td>
 				<td colspan="2">SHUN HUI ZHIYE PT</td>
 				<td>&nbsp;</td>
-				<td>PPN (<fmt:formatNumber value='${billing_form.tax.taxRate}' pattern=',##0'/>%)</td>
-				<td>: Rp.</td>
+				<td>&nbsp;</td>
+				<td style="text-indent: 50px;">PPN (<fmt:formatNumber value='${billing_form.tax.taxRate}' pattern=',##0'/>%)</td>
+				<td align="right">Rp.</td>
 				<td align="right"><fmt:formatNumber value='${billing_edit.taxAmount}' pattern=',##0.00'/></td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
@@ -174,8 +177,9 @@
 				<td colspan="2">&nbsp;</td>
 				<td colspan="2"><strong>7753788788</strong></td>
 				<td>&nbsp;</td>
-				<td>Total</td>
-				<td>: Rp.</td>
+				<td>&nbsp;</td>
+				<td style="text-indent: 50px;">Total</td>
+				<td align="right">Rp.</td>
 				<td align="right"><fmt:formatNumber value='${billing_edit.totalBillingAmount}' pattern=',##0.00'/></td>
 				<td colspan="2">&nbsp;</td>
 			</tr>

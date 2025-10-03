@@ -139,7 +139,7 @@ public class BillingReferenceItem extends Model
 	}
 
 	// Used In Billing Preedit
-	public BigDecimal getSubtotal()
+	public BigDecimal getSubTotal()
 	{
 		return money.getAmount().multiply(quantity);
 	}
@@ -151,7 +151,7 @@ public class BillingReferenceItem extends Model
 
 	public BigDecimal getTotalAfterDiscount()
 	{
-		return getSubtotal().subtract(getTotalDiscount());
+		return getSubTotal().subtract(getTotalDiscount());
 	}
 
 	public BigDecimal getTotalWithTax()

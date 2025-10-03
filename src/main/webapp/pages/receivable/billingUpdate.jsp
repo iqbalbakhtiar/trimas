@@ -259,7 +259,7 @@
 							<td><input size="5" value="${item.billingReferenceItem.product.unitOfMeasure.measureId}" class="input-disabled" disabled/></td>
 							<td><input size="12" value="<fmt:formatNumber value='${item.billingReferenceItem.money.amount}' pattern=',##0.0000'/>" class="input-disabled input-decimal" disabled/></td>
 							<td><input size="10" value="${item.billingReferenceItem.discount}" class="input-disabled input-decimal" disabled/></td>
-							<td><input size="15" type="text" value="<fmt:formatNumber value='${item.billingReferenceItem.subtotal}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
+							<td><input size="15" type="text" value="<fmt:formatNumber value='${item.billingReferenceItem.subTotal}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
 							<td><input size="15" type="text" value="<fmt:formatNumber value='${item.billingReferenceItem.totalDiscount}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
 							<td><input size="15" type="text" value="<fmt:formatNumber value='${item.billingReferenceItem.totalAfterDiscount}' pattern=',##0.00'/>" class="input-disabled input-decimal" disabled/></td>
 						</tr>
