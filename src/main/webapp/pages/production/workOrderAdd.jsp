@@ -477,7 +477,7 @@ function addLineItem(target)
 
 function openProduct(index, type) {
 	  
-	var baseUrl = '<c:url value="/page/popupproductfortransfer.htm"/>';
+	var baseUrl = '<c:url value="/page/popupproductonhandview.htm"/>';
 	
 	if(type != 'CONVERT')
 		baseUrl = '<c:url value="/page/popupproductview.htm"/>';
@@ -485,6 +485,7 @@ function openProduct(index, type) {
 	const params = {
 		target: 'product[' + index + ']',
 		index: index,
+		ref: '4WorkOrder',
 		status: true,
 		organization: $('#org').val(),
 	};

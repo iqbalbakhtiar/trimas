@@ -342,7 +342,18 @@
 		const org = document.getElementById('org');
 		const grid = document.getElementById('gridFrom');
 		
-		openpopup("<c:url value='/page/popupproductfortransfer.htm?target=product['/>"+index+"]&index="+index+"&organization="+org.value+"&grid="+grid.value);
+		var baseUrl = '<c:url value="/page/popupproductonhandview.htm"/>';
+		
+		const params = {
+			target: 'product[' + index + ']',
+			organization: org.value,
+			grid: grid.value,
+			index: index,
+			ref: '4Transfer',
+			status: true,
+			organization: $('#org').val(),
+		};
+		openpopup(buildUrl(baseUrl, params));
 	}
 
 	function checkQuantity(element) 
