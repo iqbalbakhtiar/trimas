@@ -130,7 +130,7 @@
 				<td class="border-left border-bottom" colspan="2">${item.billingReferenceItem.product.name}</td>
 				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.quantity}' pattern=',##0.00'/></td>
 				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.money.amount}' pattern=',##0.00'/></td>
-				<td class="border-left border-bottom border-right" colspan="2" align="right"><fmt:formatNumber value='${item.billingReferenceItem.subtotal}' pattern=',##0.00'/></td>
+				<td class="border-left border-bottom border-right" colspan="2" align="right"><fmt:formatNumber value='${item.billingReferenceItem.subTotal}' pattern=',##0.00'/></td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
 			</c:forEach>
