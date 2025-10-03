@@ -450,7 +450,7 @@ function addLine() {
 	$productImg = List.img('<spring:message code="product"/>', index, 'openProduct("'+index+'")');
 	$qty = List.get('<input type="text" class="input-decimal" size="6" onchange="updateDisplay();"/>','quantity['+index+']', '0.00');
 	$uom = List.get('<input type="text" class="input-disabled" disabled size="6" />','uom['+index+']');
-	$price = List.get('<input type="text" class="input-decimal" size="12" onchange="updateDisplay()"/>','amount['+index+']', '0.00');
+	$price = List.get('<input type="text" class="input-currency" size="12" onchange="updateDisplay()"/>','amount['+index+']', '0.0000');
 	$disc = List.get('<input type="text" class="input-decimal" size="5" onchange="discConvert(this);updateDisplay();"/>','discountPercent['+index+']', '0.00');
 	$discAmount = List.get('<input type="text" class="input-decimal" size="12" onchange="discConvert(this);updateDisplay();"/>','discount['+index+']', '0.00');
 	$totalDisc = List.get('<input type="text" class="input-decimal inputbox-price input-disabled" />','totalDisc['+index+']', '0.00');
@@ -470,7 +470,7 @@ function addLine() {
 	
 	$tbody.append($tr);
   	index++;
-	$(".input-decimal").bind(inputFormat);
+	//$(".input-decimal").bind(inputFormat);
 }
 
 function updateDisplay() {
@@ -545,7 +545,7 @@ function checkDuplicate(element) {
 					if(json.status == 'OK'){
 						let amount = document.getElementsByName('items['+index+'].amount')[0];
 						if(amount && json.item != null) {
-							amount.value = parseFloat(json.item.price).numberFormat('#,##0.00');
+							amount.value = parseFloat(json.item.price).numberFormat('#,##0.0000');
 						}
 					}
 				}
