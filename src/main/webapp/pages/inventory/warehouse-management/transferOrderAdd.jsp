@@ -349,9 +349,8 @@
 			organization: org.value,
 			grid: grid.value,
 			index: index,
-			ref: '4Transfer',
+			ref: '4TransferOrder',
 			status: true,
-			organization: $('#org').val(),
 		};
 		openpopup(buildUrl(baseUrl, params));
 	}
