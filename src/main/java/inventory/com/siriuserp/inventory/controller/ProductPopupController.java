@@ -13,11 +13,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.siriuserp.inventory.criteria.ProductFilterCriteria;
 import com.siriuserp.inventory.query.ProductGridViewQuery;
+import com.siriuserp.inventory.query.ProductOnHandPopupQuery;
 import com.siriuserp.inventory.query.ProductPopup4TransferGridViewQuery;
 import com.siriuserp.inventory.service.ProductService;
 import com.siriuserp.sdk.base.ControllerBase;
 import com.siriuserp.sdk.exceptions.ServiceException;
 import com.siriuserp.sdk.springmvc.JSONResponse;
+import com.siriuserp.sdk.springmvc.ModelReferenceView;
 
 import javolution.util.FastMap;
 
@@ -41,6 +43,12 @@ public class ProductPopupController extends ControllerBase
 		return view;
 	}
 
+	@RequestMapping("/popupproductonhandview.htm")
+	public ModelAndView popupOnHand(HttpServletRequest request) throws Exception
+	{
+		return new ModelReferenceView("/inventory-popup/productPopup", request.getParameter("ref"), service.view(criteriaFactory.createPopup(request, ProductFilterCriteria.class), ProductOnHandPopupQuery.class));
+	}
+
 	@RequestMapping("/popupproductforadjustmentview.htm")
 	public ModelAndView foradjustment(HttpServletRequest request, @RequestParam("target") String target, @RequestParam("index") String index) throws Exception
 	{
@@ -48,7 +56,7 @@ public class ProductPopupController extends ControllerBase
 		map.put("target", target);
 		map.put("index", index);
 
-		return new ModelAndView("/inventory-popup/product4AdjustmentPopup", map);
+		return new ModelAndView("/inventory-popup/productPopup4Adjustment", map);
 	}
 
 	@RequestMapping("/popupproductfortransfer.htm")
@@ -69,14 +77,13 @@ public class ProductPopupController extends ControllerBase
 		try
 		{
 			response.store("product", service.load(id));
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			response.statusError();
 			response.setMessage(e.getMessage());
 			e.printStackTrace();
 		}
 
-        return response;
+		return response;
 	}
 }

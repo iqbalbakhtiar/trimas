@@ -277,6 +277,9 @@
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.qty"/></th>
 							<th width="5%" nowrap="nowrap"><spring:message code="sirius.uom"/></th>
 							<th width="8%" nowrap="nowrap"><spring:message code="sirius.unitprice"/></th>
+							<th width="8%" nowrap="nowrap"><spring:message code="salesorder.disc"/> %</th>
+							<th width="8%" nowrap="nowrap"><spring:message code="salesorder.disc"/> (Rp)</th>
+							<th width="8%" nowrap="nowrap"><spring:message code="salesorder.total.disc"/></th>
 							<th width="8%" nowrap="nowrap"><spring:message code="sirius.total"/> <spring:message code="sirius.amount"/></th>
 							<th width="50%" nowrap="nowrap"><spring:message code="salesorder.packing.note"/></th>
 						</tr>
@@ -301,7 +304,7 @@
 			                <td>
 			                	<input id="amount[${idx.index}]"
 			                	size="12"
-	                          	value="${item.money.amount}"
+	                          	value="<fmt:formatNumber value='${item.money.amount}' pattern=',##0.0000'/>"
 	                          	name="salesOrder.items[${idx.index}].money.amount"
 	                          	index="${idx.index}"
 	                          	next="amount"
@@ -309,6 +312,9 @@
 	                          	class="${isApprover ? 'input-decimal' : 'input-disabled input-decimal'}"
 	                    		${isApprover ? '' : 'disabled="disabled"'} />
 			                </td>
+			                <td><input id="discountPercent[${idx.index}]" size="5" class="input-number input-disabled" disabled value="<fmt:formatNumber value='${item.discountPercent}' pattern=',##0.00'/>"/></td>
+			                <td><input id="discount[${idx.index}]" size="12" class="input-number input-disabled" disabled value="<fmt:formatNumber value='${item.discount}' pattern=',##0.00'/>"/></td>
+			                <td><input id="totalDisc[${idx.index}]" size="12" class="input-number input-disabled" disabled value="<fmt:formatNumber value='${item.discount*item.quantity}' pattern=',##0.00'/>"/></td>
 			                <td><input id="totalAmount[${idx.index}]" size="12" class="input-number input-disabled" disabled value="<fmt:formatNumber value='${item.totalAmount}' pattern=',##0.00'/>"/></td>
 			                <td><input id="note[${idx.index}]" type="text" value="${item.note}" name="salesOrder.items[${idx.index}].note"index="${idx.index}" next="note" size="40"/></td>
 							</td>

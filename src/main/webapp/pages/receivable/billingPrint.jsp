@@ -44,7 +44,10 @@
 			<tr>
 				<td width="1%" colspan="2">&nbsp;</td>
 				<td width="48%" colspan="3" valign="top">
-	  				<img style="margin-left: -4px;" src="assets/images/shunhui-logo-crop.png" width="350" height="40"/>
+	  				<!-- <img style="margin-left: -4px;" src="assets/images/shunhui-logo-crop.png" width="350" height="40"/> -->
+	  				<font style="text-transform: uppercase;font-weight: bold;font-size:x-large;">
+	  					${billing_form.organization.salutation}. ${billing_form.organization.fullName}
+	  				</font>
 	  				</br>
 	  				<font>
   					<c:forEach items='${billing_form.organization.postalAddresses}' var='address'>
@@ -88,9 +91,6 @@
 				<td>Alamat</td>
 				<td width="90%" colspan="7">:
 					<c:out value="${billing_form.shippingAddress.address}"/>
-					<c:out value="${billing_form.shippingAddress.city.name}"/>
-					<c:out value="${billing_form.shippingAddress.province.name}"/>
-					<c:out value="${billing_form.shippingAddress.postalCode}"/>
 				</td>
 			</tr>
 			<tr>
@@ -130,7 +130,7 @@
 				<td class="border-left border-bottom" colspan="2">${item.billingReferenceItem.product.name}</td>
 				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.quantity}' pattern=',##0.00'/></td>
 				<td class="border-left border-bottom" align="right"><fmt:formatNumber value='${item.billingReferenceItem.money.amount}' pattern=',##0.00'/></td>
-				<td class="border-left border-bottom border-right" colspan="2" align="right"><fmt:formatNumber value='${item.billingReferenceItem.subtotal}' pattern=',##0.00'/></td>
+				<td class="border-left border-bottom border-right" colspan="2" align="right"><fmt:formatNumber value='${item.billingReferenceItem.subTotal}' pattern=',##0.00'/></td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
 			</c:forEach>
@@ -150,7 +150,7 @@
 				<td>&nbsp;</td>
 				<td>Total Diskon</td>
 				<td>: Rp.</td>
-				<td align="right">-</td>
+				<td align="right"><fmt:formatNumber value='${billing_edit.totalDiscountAmount}' pattern=',##0.00'/></td>
 				<td colspan="2">&nbsp;</td>
 			</tr>
 			<tr>

@@ -71,7 +71,7 @@
 	{
 		if(id && name)
 		{
-			var _client = self.opener.document.getElementById('${target}');
+			var _client = self.opener.document.getElementById('${filterCriteria.target}');
 			if(_client)
 			{
 				_client.remove(_client.selectedIndex);
@@ -86,15 +86,14 @@
 			var sourceId = $('#source').val();  
 			var sourceName = $('#source option:selected').text();  
 			
-			var _onhand = self.opener.document.getElementById('onhand[${index}]');
-			var _serial = self.opener.document.getElementById('serialCheck[${index}]');
-			var _uom = self.opener.document.getElementById('uom[${index}]');
-			var _qtyBase = self.opener.document.getElementById('qtyToBase[${index}]');
-			var _code = self.opener.document.getElementById('codeprod[${index}]');
-			var _category = self.opener.document.getElementById('category[${index}]');
-			var _gridFrom = self.opener.document.getElementById('gridFrom[${index}]');
-			var _container = self.opener.document.getElementById('container[${index}]');
-			var _source = self.opener.document.getElementById('source[${index}]');
+			var _onhand = self.opener.document.getElementById('onhand[${filterCriteria.index}]');
+			var _serial = self.opener.document.getElementById('serialCheck[${filterCriteria.index}]');
+			var _uom = self.opener.document.getElementById('uom[${filterCriteria.index}]');
+			var _qtyBase = self.opener.document.getElementById('qtyToBase[${filterCriteria.index}]');
+			var _code = self.opener.document.getElementById('codeprod[${filterCriteria.index}]');
+			var _category = self.opener.document.getElementById('category[${filterCriteria.index}]');
+			var _gridFrom = self.opener.document.getElementById('gridFrom[${filterCriteria.index}]');
+			var _source = self.opener.document.getElementById('source[${filterCriteria.index}]');
 
 			if(_onhand)
 				_onhand.value = parseFloat(onhand).numberFormat('#,##0.00');
@@ -116,17 +115,6 @@
 			
 			if(_gridFrom)
 				_gridFrom.value = grid;
-			
-			if(_container)
-			{
-				_container.remove(_container.selectedIndex);
-				
-				var _opt = document.createElement('option');
-				_opt.value = containerId;
-				_opt.text = containerName.replaceAll("*", "\"");;
-				
-				_container.appendChild(_opt);
-			}
 			
 			if(_source)
 			{

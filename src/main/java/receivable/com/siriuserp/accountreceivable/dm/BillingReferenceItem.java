@@ -6,7 +6,6 @@
 package com.siriuserp.accountreceivable.dm;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -26,6 +25,7 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Type;
 
+import com.siriuserp.administration.util.TaxHelper;
 import com.siriuserp.inventory.dm.Product;
 import com.siriuserp.sdk.dm.Facility;
 import com.siriuserp.sdk.dm.Model;
@@ -133,8 +133,13 @@ public class BillingReferenceItem extends Model
 	@Fetch(FetchMode.SELECT)
 	private Product product;
 
+	public BigDecimal getAmountWithTax()
+	{
+		return getMoney().getAmount().add(TaxHelper.get(tax, getMoney().getAmount()));
+	}
+
 	// Used In Billing Preedit
-	public BigDecimal getSubtotal()
+	public BigDecimal getSubTotal()
 	{
 		return money.getAmount().multiply(quantity);
 	}
@@ -146,7 +151,12 @@ public class BillingReferenceItem extends Model
 
 	public BigDecimal getTotalAfterDiscount()
 	{
-		return getSubtotal().subtract(getTotalDiscount());
+		return getSubTotal().subtract(getTotalDiscount());
+	}
+
+	public BigDecimal getTotalWithTax()
+	{
+		return getTotalAfterDiscount().add(TaxHelper.get(tax, getTotalAfterDiscount()));
 	}
 
 	/**
@@ -173,18 +183,4 @@ public class BillingReferenceItem extends Model
 	{
 		return id + "," + referenceCode;
 	}
-	
-	public BigDecimal getTotalWithTax() {
-		
-	    BigDecimal base = (money == null || money.getAmount() == null ? BigDecimal.ZERO : money.getAmount())
-	                      .subtract(discount == null ? BigDecimal.ZERO : discount);
-
-	    if (tax == null || tax.getTaxRate() == null) 
-	        return base.setScale(2, RoundingMode.HALF_UP);
-
-	    return base.multiply(
-	                BigDecimal.ONE.add(tax.getTaxRate().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP))
-	           ).setScale(2, RoundingMode.HALF_UP);
-	}
-
 }

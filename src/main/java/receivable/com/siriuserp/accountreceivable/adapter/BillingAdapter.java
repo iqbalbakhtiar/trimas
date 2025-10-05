@@ -33,7 +33,7 @@ public class BillingAdapter extends AbstractUIAdapter
 				BillingReferenceItem refItem = item.getBillingReferenceItem();
 				if (refItem != null)
 				{
-					BigDecimal itemTotal = refItem.getSubtotal();
+					BigDecimal itemTotal = refItem.getSubTotal();
 					totalLineAmount = totalLineAmount.add(itemTotal);
 				}
 			}
